@@ -52,13 +52,13 @@ public class BGDownloader extends JFrame {
 		/**
 		 * Following lines are not compatible with gentoo :(
 		 */
-		/*
+		
 		try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
             SwingUtilities.updateComponentTreeUI(this);
         } catch (Exception e) {
             System.err.println("Couldn't use system look and feel.");
-        }*/
+        }
 		
 		/*
 		 *  For the moment the default size iss 800x600. Eventually I will configure a ini file to store useful information
