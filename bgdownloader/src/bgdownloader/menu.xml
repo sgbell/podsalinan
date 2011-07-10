@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<menubar>
+	<menu>
+		<title>File</title>
+		<menuitem>
+			<name>Add Url</name>
+			<keycode>u</keycode>
+			<quickkeycode>control U</quickkeycode>
+			<action>addURL</action>
+			<tooltip>Download a file</tooltip>
+		</menuitem>
+		<menuitem>
+			<name>Add RSS Feed</name>
+			<keycode>r</keycode>
+			<quickkeycode>control R</quickkeycode>
+			<action>addRSS</action>
+			<tooltip>Permanently queue an RSS feed for download</tooltip>
+		</menuitem>
+		<menuitem>
+			<name>Quit</name>
+			<keycode>q</keycode>
+			<quickkeycode>control Q</quickkeycode>
+			<action>quit</action>		
+		</menuitem>
+	</menu>
+	<menu>
+		<title>Feeds</title>
+		<menuitem>
+			<name>Set Download Folder</name>
+			<keycode>d</keycode>
+			<action>setDownloadFolder</action>
+		</menuitem>
+		<menuitem>
+			<name>Set update interval</name>
+			<keycode>u</keycode>
+			<action>updateInterval</action>
+		</menuitem>
+		<menuitem>
+			<name>Remove Feed</name>
+			<keycode>r</keycode>
+			<quickkeycode>control D</quickkeycode>
+			<action>removeFeed</action>
+		</menuitem>
+	</menu>
+</menubar>

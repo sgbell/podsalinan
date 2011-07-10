@@ -1,0 +1,11 @@
+To DO List
+-----------------------------------------------------------------
+1. Make program download a file from the internet and store it in a storage directory.. IE podcast feed
+2. Read the podcast feed, and extract the information to view.
+	This being -
+		Podcast img
+		Each episode
+		Episode Information
+3. Store program settings in config files.
+4. Successfully download a file to the chosen directory.
+5. Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.
