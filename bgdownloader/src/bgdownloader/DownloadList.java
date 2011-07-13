@@ -35,7 +35,10 @@ public class DownloadList extends JPanel {
 		
 		downloadList = new DefaultTableModel(headers,1);
 		JTable downloads = new JTable(downloadList);
-		//downloads = new JTable(new DownloadTableModel());
+		
+		// removing grid from table
+		downloads.setShowGrid(false);
+		
 		downloads.setRowSelectionAllowed(true);
 		previewPane = new JEditorPane();
 		previewPane.setEditable(false);
