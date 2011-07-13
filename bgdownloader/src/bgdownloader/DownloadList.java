@@ -6,6 +6,7 @@ package bgdownloader;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -13,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  * @author bugman
@@ -35,11 +37,25 @@ public class DownloadList extends JPanel {
 		
 		downloadList = new DefaultTableModel(headers,1);
 		JTable downloads = new JTable(downloadList);
+<<<<<<< HEAD
 		
 		// removing grid from table
 		downloads.setShowGrid(false);
 		
+=======
+>>>>>>> f4fd87d90abdd0ae24c0f440a0985fc41a0de5ea
 		downloads.setRowSelectionAllowed(true);
+		downloads.setShowGrid(false);
+
+		
+		Object newRow[] = new Object [] {"","","","0%"};
+		
+		downloadList.addRow(newRow);
+		downloadList.removeRow(0);
+		
+		TableColumn myCol = downloads.getColumnModel().getColumn(3);
+		myCol.setCellRenderer(new ProgressCellRenderer());
+		
 		previewPane = new JEditorPane();
 		previewPane.setEditable(false);
 		previewPane.setContentType("text/html");

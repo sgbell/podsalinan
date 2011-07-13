@@ -1,11 +1,13 @@
-To DO List
+Todo List
 -----------------------------------------------------------------
-1. Make program download a file from the internet and store it in a storage directory.. IE podcast feed
-2. Read the podcast feed, and extract the information to view.
+* Create the Dialog Boxes for Adding URL to download, and Adding Rss Feeds, and Changing Directory
+  -- Currently Working In CommandPass and AddFeedDialog to do the Adding RSS Feeds part.
+* Make program download a file from the internet and store it in a storage directory.. IE podcast feed
+* Read the podcast feed, and extract the information to view.
 	This being -
 		Podcast img
 		Each episode
 		Episode Information
-3. Store program settings in config files.
-4. Successfully download a file to the chosen directory.
-5. Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.
+* Store program settings in config files.
+* Successfully download a file to the chosen directory.
+* Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.

@@ -69,6 +69,7 @@ public class BGDownloader extends JFrame {
 	
 		setJMenuBar(menubar);
 		TreePane treePane = new TreePane();
+		aListener.setTree(treePane.getTree());
 		
 		JPanel cardPane = new JPanel(new CardLayout()); 
 		treePane.cardView(cardPane);
@@ -96,11 +97,9 @@ public class BGDownloader extends JFrame {
 			e.printStackTrace();
 		}
 		
-		Object newRow[] = new Object [] {"",new Date(),"Tempfile.exe",new JProgressBar(0,100)};
 		// url download list
 		URLDownloadList downloads = new URLDownloadList();
-		downloads.getDownloadList().getDownloads().addRow(newRow);
-		downloads.getDownloadList().getDownloads().removeRow(0);
+
 		treePane.setDownloads(downloads);
 		cardPane.add(downloads.getDownloadList(),"Downloads");
 	}

@@ -18,11 +18,11 @@ public class TreePane extends JPanel {
 	private DefaultMutableTreeNode rootNode;
 	private DefaultMutableTreeNode rssFeeds;
 	private TreeEvents treeEventHandler;
-	//private URLDownloadList urlDownloads;
+	private JTree treePanel;
 
 	public TreePane(){
 		rootNode = new DefaultMutableTreeNode("Downloads");
-		JTree treePanel = new JTree(rootNode);
+		treePanel = new JTree(rootNode);
 		treeEventHandler = new TreeEvents(treePanel);
 		treePanel.addTreeSelectionListener(treeEventHandler);
 		
@@ -63,4 +63,7 @@ public class TreePane extends JPanel {
 		treeEventHandler.cardView(cardPane);
 	}
 	
+	public JTree getTree(){
+		return treePanel;
+	}
 }
