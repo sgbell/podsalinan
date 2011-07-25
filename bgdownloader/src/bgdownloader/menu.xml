@@ -10,11 +10,11 @@
 			<tooltip>Download a file</tooltip>
 		</menuitem>
 		<menuitem>
-			<name>Add RSS Feed</name>
+			<name>Add Rss Feed</name>
 			<keycode>r</keycode>
 			<quickkeycode>control R</quickkeycode>
 			<action>addRSS</action>
-			<tooltip>Permanently queue an RSS feed for download</tooltip>
+			<tooltip>Add a Podcast/RSS Feed</tooltip>
 		</menuitem>
 		<menuitem>
 			<name>Quit</name>

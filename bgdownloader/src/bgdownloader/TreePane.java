@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  * @author bugman
@@ -45,8 +46,10 @@ public class TreePane extends JPanel {
 	 * @param newFeed
 	 */
 	public void addrssFeed (RssFeedDetails newFeed){
+		DefaultTreeModel model = (DefaultTreeModel)treePanel.getModel();
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(newFeed,false);
-		rssFeeds.add(newNode);
+
+		model.insertNodeInto(newNode, rssFeeds, rssFeeds.getChildCount());
 	}
 	
 	/**

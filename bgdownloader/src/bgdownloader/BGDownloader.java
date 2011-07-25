@@ -12,17 +12,19 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
 public class BGDownloader extends JFrame {
+	
+	private URLDownloadList downloads;
+	private TreePane treePane;
+	private JPanel cardPane;
 
 	/**
 	 * Upon execution the program will create a new instance of bgdownloader, which is where
@@ -41,6 +43,7 @@ public class BGDownloader extends JFrame {
 		JPanel pane = new JPanel();
 		
 		CommandPass aListener = new CommandPass();
+		aListener.setParent(this);
 		/* 
 		 * creating a new MenuBar passing in the instance of bgdownloader, so bgdownloader can then handle all of
 		 * the gui events, care of ActionListener. This is true, up until the time I decide it's too much, and need
@@ -68,10 +71,10 @@ public class BGDownloader extends JFrame {
 		setTitle ("bgdownloader");
 	
 		setJMenuBar(menubar);
-		TreePane treePane = new TreePane();
+		treePane = new TreePane();
 		aListener.setTree(treePane.getTree());
 		
-		JPanel cardPane = new JPanel(new CardLayout()); 
+		cardPane = new JPanel(new CardLayout()); 
 		treePane.cardView(cardPane);
 		
 		
@@ -88,7 +91,7 @@ public class BGDownloader extends JFrame {
 			RssFeedDetails hak5 = new RssFeedDetails("Hak5",
 					new URL("http://revision3.com/hak5/feed/Xvid-Large"),
 					"/home/bugman/Videos",
-					new DownloadList());
+					new DownloadList(true));
 			treePane.addrssFeed(hak5);
 			cardPane.add(hak5.getDownloadList(),hak5.getFeedName());
 			
@@ -98,10 +101,26 @@ public class BGDownloader extends JFrame {
 		}
 		
 		// url download list
-		URLDownloadList downloads = new URLDownloadList();
+		downloads = new URLDownloadList();
 
 		treePane.setDownloads(downloads);
 		cardPane.add(downloads.getDownloadList(),"Downloads");
 	}
 
+	public URLDownloadList getDownloadList(){
+		return downloads;
+	}
+	
+	public void addRssFeed(String newFeed){
+		try {
+			RssFeedDetails newRss = new RssFeedDetails("New Feed",
+					new URL(newFeed),"/home/bugman/Videos",
+					new DownloadList(true));
+			treePane.addrssFeed(newRss);
+			cardPane.add(newRss.getDownloadList(),newRss.getFeedName());
+			System.out.println("howdy");
+		} catch (MalformedURLException e){
+			e.printStackTrace();
+		}
+	}
 }

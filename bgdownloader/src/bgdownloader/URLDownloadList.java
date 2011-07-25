@@ -13,9 +13,8 @@ public class URLDownloadList {
 	private String title;
 	
 	public URLDownloadList(){
-		downloads = new DownloadList();
+		downloads = new DownloadList(false);
 		title = "URLS";
-		
 	}
 	
 	public URLDownloadList(DownloadList downloadList){

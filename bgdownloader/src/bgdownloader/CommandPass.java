@@ -2,7 +2,7 @@ package bgdownloader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -13,6 +13,7 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class CommandPass implements ActionListener {
 	private JTree tree;
+	private BGDownloader bgdownloader;
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
@@ -21,13 +22,29 @@ public class CommandPass implements ActionListener {
 		if (command.compareTo("quit")==0){
 			System.exit(0);
 		}
-		
 		if (command.compareTo("addURL")==0){
-			System.out.println("command adding url");
+			String url = (String)JOptionPane.showInputDialog(
+                    bgdownloader,
+                    "Please enter the URL to download",
+                    "Add URL",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null);
+			
+			bgdownloader.getDownloadList().getDownloadList().addDownload(url);
 		}
 		if (command.compareTo("addRSS")==0){
-			System.out.println("command adding rss feed");
-			AddFeedDialog newfeed = new AddFeedDialog();
+			String url = (String)JOptionPane.showInputDialog(
+                    bgdownloader,
+                    "Please enter the URL to download",
+                    "Add RSS Feed",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null);
+			
+			bgdownloader.addRssFeed(url);
 			
 		}
 		if (command.compareTo("setDownloadFolder")==0){
@@ -55,5 +72,9 @@ public class CommandPass implements ActionListener {
 	 */
 	public void setTree(JTree mainTree){
 		tree = mainTree;
+	}
+	
+	public void setParent(BGDownloader parent){
+		bgdownloader = parent;
 	}
 }
