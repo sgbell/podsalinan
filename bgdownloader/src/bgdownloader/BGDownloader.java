@@ -86,23 +86,12 @@ public class BGDownloader extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+
 		// rss feed
-		try {
-			RssFeedDetails hak5 = new RssFeedDetails("Hak5",
-					new URL("http://revision3.com/hak5/feed/Xvid-Large"),
-					"/home/bugman/Videos",
-					new DownloadList(true));
-			treePane.addrssFeed(hak5);
-			cardPane.add(hak5.getDownloadList(),hak5.getFeedName());
-			
-			hak5.getDownloadList().setPreviewPane("<html><img src='http://videos.revision3.com/revision3/images/shows/hak5/hak5.jpg' height=200 width=400></img>");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		addRssFeed("http://revision3.com/hak5/feed/Xvid-Large");
 		
 		// url download list
 		downloads = new URLDownloadList();
-
 		treePane.setDownloads(downloads);
 		cardPane.add(downloads.getDownloadList(),"Downloads");
 	}
@@ -113,12 +102,13 @@ public class BGDownloader extends JFrame {
 	
 	public void addRssFeed(String newFeed){
 		try {
+			XmlReader xmlFile = new XmlReader(newFeed);
+			
 			RssFeedDetails newRss = new RssFeedDetails("New Feed",
 					new URL(newFeed),"/home/bugman/Videos",
 					new DownloadList(true));
 			treePane.addrssFeed(newRss);
 			cardPane.add(newRss.getDownloadList(),newRss.getFeedName());
-			System.out.println("howdy");
 		} catch (MalformedURLException e){
 			e.printStackTrace();
 		}
