@@ -1,8 +1,10 @@
 Todo List
 -----------------------------------------------------------------
 * Create the Dialog Boxes for Adding URL to download, and Adding Rss Feeds, and Changing Directory
-  -- Currently Working In CommandPass and AddFeedDialog to do the Adding RSS Feeds part.
+  -- Completed
 * Make program download a file from the internet and store it in a storage directory.. IE podcast feed
+  -- Program is downloading files, but need to change the way it works as it does not give
+     a progress.
 * Read the podcast feed, and extract the information to view.
 	This being -
 		Podcast img

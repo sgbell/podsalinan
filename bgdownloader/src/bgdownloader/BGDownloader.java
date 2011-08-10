@@ -10,9 +10,6 @@ package bgdownloader;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -50,7 +47,7 @@ public class BGDownloader extends JFrame {
 		 * to create a whole class to handle the actions.  
 		 */
 		MenuBar menubar = new MenuBar(aListener);
-		menubar.openXML("src/bgdownloader/menu.xml");
+		menubar.createMenu("src/bgdownloader/menu.xml");
 		
 		/**
 		 * Following lines are not compatible with gentoo :(
@@ -101,16 +98,11 @@ public class BGDownloader extends JFrame {
 	}
 	
 	public void addRssFeed(String newFeed){
-		try {
-			XmlReader xmlFile = new XmlReader(newFeed);
-			
-			RssFeedDetails newRss = new RssFeedDetails("New Feed",
-					new URL(newFeed),"/home/bugman/Videos",
-					new DownloadList(true));
-			treePane.addrssFeed(newRss);
-			cardPane.add(newRss.getDownloadList(),newRss.getFeedName());
-		} catch (MalformedURLException e){
-			e.printStackTrace();
-		}
+		RssFeedDetails newRss = new RssFeedDetails("New Feed",
+				newFeed,"/home/bugman/Videos",
+				new DownloadList(true));
+		newRss.start();
+		treePane.addrssFeed(newRss);
+		cardPane.add(newRss.getDownloadList(),newRss.getFeedName());
 	}
 }

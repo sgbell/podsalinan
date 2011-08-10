@@ -1,0 +1,13 @@
+General Notes
+===========================================
+Thread list for program
+1. Main Program
+2. Startup Thread (Still deciding on this, used to speed up gui loading on program start).
+3. Add New Podcast
+	- Download podcast feed
+	- Create Local database for feed
+	- Populate database with files
+	- Check if any files from feed already exist in download folder
+4. Downloader
+	- This will control the downloaders of the files, ie depending on how many files can be
+		downloaded at a time will depend how many downloader threads will be started.
