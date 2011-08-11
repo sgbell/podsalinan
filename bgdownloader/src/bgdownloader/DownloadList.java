@@ -32,7 +32,6 @@ public class DownloadList extends JPanel {
 		if (rssFeed){
 			Object headers[] = {"Title",
 					"Date",
-					"Filename",
 					"Progress"};
 			downloadList = new DefaultTableModel(headers,1);
 		} else {
@@ -49,10 +48,10 @@ public class DownloadList extends JPanel {
 
 		
 		if (rssFeed) {
-			Object newRow[] = new Object [] {"","","","0%"};
+			Object newRow[] = new Object [] {"","","0%"};
 			downloadList.addRow(newRow);
 			downloadList.removeRow(0);
-			TableColumn myCol = downloads.getColumnModel().getColumn(3);
+			TableColumn myCol = downloads.getColumnModel().getColumn(2);
 			myCol.setCellRenderer(new ProgressCellRenderer());
 		} else {
 			Object newRow[] = new Object [] {"","0%"};
@@ -87,6 +86,16 @@ public class DownloadList extends JPanel {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}*/ 
+	}
+	
+	public void addDownload(String title, String date, String filename,String progress){
+		Object newRow[];
+		
+		newRow = new Object[] {title,date,"0%"};
+		downloadList.addRow(newRow);
+		if (downloadList.getValueAt(0, 0).toString().length()==0){
+			downloadList.removeRow(0);
+		}
 	}
 	
 	public void addDownload(String newDownload){
