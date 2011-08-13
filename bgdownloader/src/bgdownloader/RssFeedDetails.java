@@ -143,7 +143,6 @@ public class RssFeedDetails extends Thread{
 		// I don't want to start another thread, as this is already being executed
 		// in a thread, and we can't continue without the file.
 		d.getFile();
-		System.out.println("File downloaded");
 		XmlReader podcastXML = new XmlReader(outputFile);
 
 		if (newFeed){
@@ -175,8 +174,6 @@ public class RssFeedDetails extends Thread{
 			}
 			settings.addPodcast(this);
 		} else {
-			// Feed is Already is the system
-			System.out.println("Trying to open existing database");
 			// Create connection to sqlite db
 			settings.loadPodcastDB(downloadData,feedDbName,downloads);
 		}
@@ -197,16 +194,7 @@ public class RssFeedDetails extends Thread{
 				
 			// If the file is not in our list already
 			if (!inList){
-				System.out.println("Not in database");
-				// Insert it into the database.
-			/*	SQLiteStatement sql = feedDb.prepare("INSERT INTO shows(published,title,url,size,description) VALUES('"+podcastXML.getDownloadValue(counter,"pubDate",null)+"'," +
-						 							 "'"+podcastXML.getDownloadValue(counter,"title",null)+"'," +
-						 							 "'"+podcastXML.getDownloadValue(counter, "enclosure", "url")+"'," +
-						 							 podcastXML.getDownloadValue(counter, "enclosure", "length")+"," +
-						 							 "'"+description+"');");
-				sql.stepThrough();
-				sql.dispose();
-		*/		// Add the episode to our array
+				// Add the episode to our array
 				Episode ep = new Episode(podcastXML.getDownloadValue(counter,"pubDate",null),
 										 podcastXML.getDownloadValue(counter,"title",null),
 										 podcastXML.getDownloadValue(counter, "enclosure", "url"), 
