@@ -14,14 +14,14 @@ import javax.swing.tree.DefaultTreeModel;
 public class CommandPass implements ActionListener {
 	private JTree tree;
 	private BGDownloader bgdownloader;
+	private DataStorage systemSettings;
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		System.out.println("Debug: called CommandPass.actionPerformed()");
-
 		String command = event.getActionCommand();
 		
 		if (command.compareTo("quit")==0){
+			systemSettings.saveSettings();
 			System.exit(0);
 		}
 		if (command.compareTo("addURL")==0){
@@ -66,7 +66,6 @@ public class CommandPass implements ActionListener {
 		      model.removeNodeFromParent(selectedNode);
 		    }
 		}
-		System.out.println("Debug: ended CommandPass.actionPerformed()");
 	}
 
 	/**
@@ -79,5 +78,9 @@ public class CommandPass implements ActionListener {
 	
 	public void setParent(BGDownloader parent){
 		bgdownloader = parent;
+	}
+
+	public void setDataStorage(DataStorage settings) {
+		systemSettings = settings;		
 	}
 }

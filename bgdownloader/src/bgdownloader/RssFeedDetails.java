@@ -12,9 +12,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
 
-import com.almworks.sqlite4java.SQLiteConnection;
-import com.almworks.sqlite4java.SQLiteException;
-import com.almworks.sqlite4java.SQLiteStatement;
+import javax.swing.JPanel;
 
 /**
  * @author bugman
@@ -29,23 +27,29 @@ public class RssFeedDetails extends Thread{
 	//private SQLiteConnection feedDb; // Connection the the database for this feed
 	private DataStorage settings;
 	private DownloadList downloads; // Gui list for the feed
-	private boolean newFeed,  // Is this a creation of a brand new feed?
-					finished=false; // Has the rssfeed been initialized
+	private boolean newFeed;  // Is this a creation of a brand new feed?
 	private Vector<Episode> downloadData = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
+	private TreePane tree;
+	private JPanel cards;
 
 	/** This will create a podcast from previously saved database.
 	 * 
 	 * @param feedName - A String used in the Tree table
 	 * @param address - the URL
 	 * @param localStore - the local system address for the files to be downloaded to
+	 * @param cardPanel 
+	 * @param treePanel 
 	 * @param downloads - The DownloadList
 	 */
-	public RssFeedDetails(String feedName, String dbStore, String address, String localStore, DataStorage settings) {
+	public RssFeedDetails(String feedName, String dbStore, String address, String localStore, DataStorage settings, TreePane treePanel, JPanel cardPanel) {
 		try {
 			this.feedName = feedName;
 			this.address = new URL(address);
 			this.localStore = localStore;
 			this.feedDbName = dbStore;
+			this.settings = settings;
+			tree = treePanel;
+			cards = cardPanel;
 			downloads = new DownloadList(true);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -61,10 +65,12 @@ public class RssFeedDetails extends Thread{
 	 * @param cardPane 
 	 * @param treePane 
 	 */
-	public RssFeedDetails(String address, DataStorage settings){
+	public RssFeedDetails(String address, DataStorage settings, TreePane treePane, JPanel cardPane){
 		try {
 			this.address = new URL(address);
 			downloads = new DownloadList(true);
+			tree = treePane;
+			cards=cardPane;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -123,23 +129,21 @@ public class RssFeedDetails extends Thread{
 	 * information from the internet, if the podcast is not already in the system.
 	 */
 	public void run(){
-
-		/* To start off with, I'm only setting up this thread to download the podcast and
-		 * create the database. After that I'll set this thread to check for the existance
-		 * of the podcast database already and then it will only update.
-		 */
-		String localDirectory = System.getProperty("user.home");
-		localDirectory=localDirectory.concat("/.bgdownloader");
-		File settingsDir = new File(localDirectory);
-		if (!settingsDir.exists()){
-			settingsDir.mkdir();
+		int outputCount=1;
+		// temporary download destination of podcast xml file
+		System.out.println("Adding RSS Feed");
+		String outputFile = settings.getSettingsDir().concat("/temp.xml");
+		
+		while (new File(outputFile).exists()){
+			outputFile = outputFile.concat("("+outputCount+")");
+			outputCount++;
 		}
-		String outputFile = localDirectory.concat("/temp.xml");
 		
 		Downloader d = new Downloader(address,outputFile);
 		// I don't want to start another thread, as this is already being executed
 		// in a thread, and we can't continue without the file.
 		d.getFile();
+		System.out.println("File downloaded");
 		XmlReader podcastXML = new XmlReader(outputFile);
 
 		if (newFeed){
@@ -147,42 +151,21 @@ public class RssFeedDetails extends Thread{
 			feedName = podcastXML.getFeedTitle();
 			
 			// Set download directory to default directory
-			localStore=System.getProperty("user.home").concat("/Videos"+"/"+feedName);
+			localStore=System.getProperty("user.home").concat("/Videos/"+feedName);
 			File localDir = new File(localStore);
 			if (!localDir.exists()){
 				localDir.mkdirs();
+				System.out.println("Made directory");
 			}
 			
 			try {
-				// The following lines are used to create a md5
-				// hash for the filename.
+				// The following lines are used to create a md5  hash for the filename.
 				MessageDigest md = MessageDigest.getInstance("MD5");
 				byte[] bytesFeedName = feedName.getBytes("UTF-8");
 				md.update(bytesFeedName, 0, feedName.length());
 				// The feedFilename is a md5 hash.
 				feedDbName = new BigInteger(1, md.digest()).toString().substring(0, 8);
-				
-				String feedFilename=System.getProperty("user.home").concat("/.bgdownloader/"+feedDbName+".pod");
-				
-				/*
-				feedDb = new SQLiteConnection (new File(feedFilename));
-				try {
-					feedDb.open(true);
-					SQLiteStatement sql = feedDb.prepare("CREATE TABLE IF NOT EXISTS shows(" +
-														 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-														 "published TEXT," +
-														 "title TEXT," +
-														 "url TEXT," +
-														 "size INTEGER," +
-														 "description TEXT);");
-					sql.stepThrough();
-					sql.dispose();
-				} catch (SQLiteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
-				settings.createFeedDB(feedFilename);
-				
+				System.out.println("Created new feed db name");
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -190,100 +173,63 @@ public class RssFeedDetails extends Thread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			settings.addPodcast(this);
 		} else {
 			// Feed is Already is the system
-			
+			System.out.println("Trying to open existing database");
 			// Create connection to sqlite db
-			String feedFilename=System.getProperty("user.home").concat("/.bgdownloader/"+feedDbName+".pod");
-			SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
-			try {
-				feedDb.open();
-				SQLiteStatement sql = feedDb.prepare("SELECT * FROM shows;");
-				while (sql.step()){
-					Episode ep = new Episode(sql.columnString(1),
-											 sql.columnString(2),
-											 sql.columnString(3),
-											 sql.columnInt(4),
-											 sql.columnString(5));
-
-					downloadData.add(ep);
-					downloads.addDownload(ep.title,ep.date,ep.url,"0%");
-				}
-				
-			} catch (SQLiteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			settings.loadPodcastDB(downloadData,feedDbName,downloads);
 		}
 
 		for (int counter=0; counter < podcastXML.getDownloadCount(); counter++){
-		//	try {
-				boolean inList=false;
+			boolean inList=false;
 				
-				for (int dlc=0; dlc < downloadData.size(); dlc++){
-					if (downloadData.get(dlc).url.equals(podcastXML.getDownloadValue(counter, "enclosure", "url")))
-						inList=true;
-				}
+			for (int dlc=0; dlc < downloadData.size(); dlc++){
+				if (downloadData.get(dlc).url.equals(podcastXML.getDownloadValue(counter, "enclosure", "url")))
+					inList=true;
+			}
 
-				String description = podcastXML.getDownloadValue(counter, "description", null);
-				// Need to change the ' to a html friendly version, otherwise we can't add it to the database.
-				description=description.replaceAll("\'", "&apos;");
-				// Removing new lines from data, as we don't need it
-				description=description.replaceAll("\n", "");
+			String description = podcastXML.getDownloadValue(counter, "description", null);
+			// Need to change the ' to a html friendly version, otherwise we can't add it to the database.
+			description=description.replaceAll("\'", "&apos;");
+			// Removing new lines from data, as we don't need it
+			description=description.replaceAll("\n", "");
 				
-				// If the file is not in our list already
-				if (!inList){
-					// Insert it into the database.
-				/*	SQLiteStatement sql = feedDb.prepare("INSERT INTO shows(published,title,url,size,description) VALUES('"+podcastXML.getDownloadValue(counter,"pubDate",null)+"'," +
-							 							 "'"+podcastXML.getDownloadValue(counter,"title",null)+"'," +
-							 							 "'"+podcastXML.getDownloadValue(counter, "enclosure", "url")+"'," +
-							 							 podcastXML.getDownloadValue(counter, "enclosure", "length")+"," +
-							 							 "'"+description+"');");
-					sql.stepThrough();
-					sql.dispose();
-			*/		// Add the episode to our array
-					Episode ep = new Episode(description, description, description, counter, description);
-					downloadData.add(ep);
-					// Add the episode to the download list
-					downloads.addDownload(podcastXML.getDownloadValue(counter,"title",null),
-							  podcastXML.getDownloadValue(counter,"pubDate",null),
-							  podcastXML.getDownloadValue(counter, "enclosure", "url"),
-							  "0%");
-				}
-				
-		/*	} catch (SQLiteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
+			// If the file is not in our list already
+			if (!inList){
+				System.out.println("Not in database");
+				// Insert it into the database.
+			/*	SQLiteStatement sql = feedDb.prepare("INSERT INTO shows(published,title,url,size,description) VALUES('"+podcastXML.getDownloadValue(counter,"pubDate",null)+"'," +
+						 							 "'"+podcastXML.getDownloadValue(counter,"title",null)+"'," +
+						 							 "'"+podcastXML.getDownloadValue(counter, "enclosure", "url")+"'," +
+						 							 podcastXML.getDownloadValue(counter, "enclosure", "length")+"," +
+						 							 "'"+description+"');");
+				sql.stepThrough();
+				sql.dispose();
+		*/		// Add the episode to our array
+				Episode ep = new Episode(podcastXML.getDownloadValue(counter,"pubDate",null),
+										 podcastXML.getDownloadValue(counter,"title",null),
+										 podcastXML.getDownloadValue(counter, "enclosure", "url"), 
+										 podcastXML.getDownloadValue(counter, "enclosure", "length"), description);
+				downloadData.add(ep);
+				// Add the episode to the download list
+				downloads.addDownload(podcastXML.getDownloadValue(counter,"title",null),
+						  			  podcastXML.getDownloadValue(counter,"pubDate",null),
+						  			  podcastXML.getDownloadValue(counter, "enclosure", "url"),
+						  			  "0%");
+				System.out.println("Added to display and list");
+			}
 		}
+		new File(outputFile).delete();
+		settings.savePodcastDB(downloadData, feedDbName);
+		System.out.println("Saved to database file");
+		
+		tree.addrssFeed(this);
+		cards.add(getDownloadList(),getFeedName());
 
-		finished = true;
 	}
 	
-	public boolean isFinished() {
-		if (finished)
-			System.out.println("thread done");
-		return finished;
-	}
-
 	public String getdb() {
 		return feedDbName;
 	}
-
-	
-	public class Episode {
-		public Episode(String published, String title,
-				String url, int length, String desc) {
-			date = published;
-			this.title=title;
-			this.url=url;
-			size=length;
-			description=desc;
-		}
-		public String date,
-					  title,
-					  url,
-					  description;
-		public int size;
-	};
 }

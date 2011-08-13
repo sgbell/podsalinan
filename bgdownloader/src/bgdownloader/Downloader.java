@@ -20,7 +20,6 @@ public class Downloader extends Thread{
 	public Downloader(URL urlDownload, String outputFile) {
 		fileDownload = urlDownload;
 		destination = outputFile;
-		System.out.println("Debug: called Downloader.Downloader(URL, String)");
 
 	}
 	
@@ -28,7 +27,6 @@ public class Downloader extends Thread{
 	 * 
 	 */
 	public void getFile(){
-		System.out.println("Debug: called Downloader.getFile()");
 		try {
 			ReadableByteChannel rbc = Channels.newChannel(fileDownload.openStream());
 			FileOutputStream fos = new FileOutputStream(destination);
@@ -42,7 +40,6 @@ public class Downloader extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Debug: ended Downloader.getFile()");
 	}
 	
 	public void run(){

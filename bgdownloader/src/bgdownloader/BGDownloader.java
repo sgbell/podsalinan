@@ -83,7 +83,8 @@ public class BGDownloader extends JFrame {
 		treePane.cardView(cardPane);
 
 		settings = new DataStorage();
-		settings.openSettings();
+		settings.loadSettings();
+		aListener.setDataStorage(settings);
 		
 		JSplitPane splitpane = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT,treePane,cardPane);
 		splitpane.setDividerLocation(250);
@@ -92,8 +93,6 @@ public class BGDownloader extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// Currently in the process of moving stuff into a settings class.
-		settings.getPodcasts(treePane, cardPane);
 		
 		// url download list
 		downloads = new URLDownloadList();
@@ -102,6 +101,9 @@ public class BGDownloader extends JFrame {
 		CardLayout cardLayout = (CardLayout)(cardPane.getLayout());
 		cardLayout.show(cardPane, "Downloads");
 		setVisible(true);
+
+		// Currently in the process of moving stuff into a settings class.
+		settings.showPodcasts(treePane, cardPane);
 	}
 
 	public URLDownloadList getDownloadList(){
@@ -110,17 +112,9 @@ public class BGDownloader extends JFrame {
 	
 	public void addRssFeed(String newFeed){
 	
-		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings);
+		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings,treePane, cardPane);
 		
 		newPodcast.start();
-		// Loop installed to wait till downloading of the podcast is done.
-		// Might shift this off to a thread at some stage
-		while(!newPodcast.isFinished()){
-		}
-		// The following SQL statement adds the newly created podcast into the main database.
-		settings.addPodcast(newPodcast,newFeed);
 		
-		treePane.addrssFeed(newPodcast);
-		cardPane.add(newPodcast.getDownloadList(),newPodcast.getFeedName());
 	}
 }
