@@ -5,10 +5,10 @@ package bgdownloader;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JEditorPane;
+//import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
+//import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -21,7 +21,7 @@ import javax.swing.table.TableColumn;
 public class DownloadList extends JPanel {
 	
 	private DefaultTableModel downloadList;
-	private JEditorPane previewPane;
+	//private JEditorPane previewPane;
 	private boolean isRssFeed;
 	
 	public DownloadList(boolean rssFeed){
@@ -61,17 +61,18 @@ public class DownloadList extends JPanel {
 			myCol.setCellRenderer(new ProgressCellRenderer());
 		}
 		
-		previewPane = new JEditorPane();
-		previewPane.setEditable(false);
-		previewPane.setContentType("text/html");
+		//previewPane = new JEditorPane();
+		//previewPane.setEditable(false);
+		//previewPane.setContentType("text/html");
 		
+		/*
 		if (rssFeed){
 			JSplitPane downloadSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT,new JScrollPane(downloads),previewPane);
 			downloadSplit.setDividerLocation(300);
 			add(downloadSplit);
-		} else {
+		} else {*/
 			add(new JScrollPane(downloads));
-		}
+		//}
 	}
 	
 	public DefaultTableModel getDownloads(){
@@ -79,9 +80,9 @@ public class DownloadList extends JPanel {
 	}
 	
 	public void setPreviewPane(String url){
-		if (url != null)
+		/*	if (url != null)
 			previewPane.setText(url);
-	/*	try {
+		try {
 				
 		} catch (IOException e) {
 			e.printStackTrace();

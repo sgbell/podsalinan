@@ -10,6 +10,6 @@ Todo List
 		Podcast img
 		Each episode
 		Episode Information
+  -- Completed
 * Store program settings in config files.
-* Successfully download a file to the chosen directory.
 * Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.

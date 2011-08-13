@@ -31,6 +31,7 @@ public class BGDownloader extends JFrame {
 	private TreePane treePane;
 	private JPanel cardPane;
 	private SQLiteConnection rssListdb;
+	private DataStorage settings;
 
 	/**
 	 * Upon execution the program will create a new instance of bgdownloader, which is where
@@ -82,62 +83,40 @@ public class BGDownloader extends JFrame {
 		treePane = new TreePane();
 		aListener.setTree(treePane.getTree());
 		
+		// cardPane is used for the individual views of each downloding screen, otherwise
+		// we can't swap between download queues
 		cardPane = new JPanel(new CardLayout()); 
 		treePane.cardView(cardPane);
-		
-		String localDirectory = System.getProperty("user.home");
-		localDirectory=localDirectory.concat("/.bgdownloader");
-		File settingsDir = new File(localDirectory);
-		if (!settingsDir.exists()){
-			settingsDir.mkdir();
-		}
-		String rssListFile = localDirectory.concat("/podcast.db");
 
-		if (new File(rssListFile).exists()){
-			rssExists = true;
-		} else {
-			rssExists = false;
-		}
-		
-		Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);
-		rssListdb = new SQLiteConnection (new File(rssListFile));
-		try {
-			rssListdb.open(true);
-			if (!rssExists){
-				SQLiteStatement sql = rssListdb.prepare("CREATE TABLE IF NOT EXISTS podcasts (" +
-						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-						"name TEXT, " +
-						"localFile TEXT, " +
-						"url TEXT, " +
-						"directory TEXT);");
-				sql.stepThrough();
-				sql.dispose();
-			} 
-		} catch (SQLiteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		settings = new DataStorage();
+		settings.openSettings();
 		
 		JSplitPane splitpane = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT,treePane,cardPane);
 		splitpane.setDividerLocation(250);
 		
 		getContentPane().add(splitpane,BorderLayout.CENTER);
 		
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 
+		// Currently in the process of moving stuff into a settings class.
+		
 		try {
+			// Do a search in the podcasts table for podcasts stored in the system
 			SQLiteStatement sql = rssListdb.prepare("SELECT * from podcasts;");
 			while (sql.step()){
 				if (sql.hasRow()){
+					// With the podcasts found, import the information into the system
+					// and load the podcast data from the database.
 					RssFeedDetails podcast = new RssFeedDetails(sql.columnString(1),
 																sql.columnString(2),
 																sql.columnString(3),
 																sql.columnString(4));
+					podcast.start();
 					treePane.addrssFeed(podcast);
 					cardPane.add(podcast.getDownloadList(),podcast.getFeedName());
+				} else {
+					
 				}
 			}
 			sql.dispose();
@@ -146,7 +125,7 @@ public class BGDownloader extends JFrame {
 			e.printStackTrace();
 		}
 		// rss feed
-		addRssFeed("http://revision3.com/hak5/feed/Xvid-Large");
+		//addRssFeed("http://revision3.com/hak5/feed/Xvid-Large");
 		
 		// url download list
 		downloads = new URLDownloadList();
@@ -163,10 +142,24 @@ public class BGDownloader extends JFrame {
 		RssFeedDetails newPodcast = new RssFeedDetails(newFeed);
 		
 		newPodcast.start();
+		// Loop installed to wait till downloading of the podcast is done.
+		// Might shift this off to a thread at some stage
 		while(!newPodcast.isFinished()){
+		}
+		// The following SQL statement adds the newly created podcast into the main database.
+		try {
+			SQLiteStatement sql = rssListdb.prepare("INSERT INTO podcasts(name,localfile,url,directory) VALUES (" +
+													"'"+newPodcast.getFeedName()+"'," +
+													"'"+newPodcast.getdb()+"'," +
+													"'"+newFeed+"'," +
+													"'"+newPodcast.getLocalStore()+"');");
+			sql.stepThrough();
+			sql.dispose();
+		} catch (SQLiteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		treePane.addrssFeed(newPodcast);
 		cardPane.add(newPodcast.getDownloadList(),newPodcast.getFeedName());
-
 	}
 }

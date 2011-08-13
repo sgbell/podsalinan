@@ -11,3 +11,8 @@ Thread list for program
 4. Downloader
 	- This will control the downloaders of the files, ie depending on how many files can be
 		downloaded at a time will depend how many downloader threads will be started.
+		
+Suggested Functionality
+===========================================
+* Filter downloads, For instance it will download all files in podcast, except for files
+  with xxx in the description.
