@@ -22,27 +22,12 @@ import com.almworks.sqlite4java.SQLiteStatement;
  */
 public class RssFeedDetails extends Thread{
 
-	public class Episode {
-		public Episode(String published, String title,
-				String url, int length, String desc) {
-			date = published;
-			this.title=title;
-			this.url=url;
-			size=length;
-			description=desc;
-		}
-		public String date,
-					  title,
-					  url,
-					  description;
-		public int size;
-	};
-	
 	private String feedName; // String storing the feed.
 	private URL address; // The Address for the podcast
 	private String localStore; // Directory to download files to.
 	private String feedDbName; // filename of Database.
-	private SQLiteConnection feedDb; // Connection the the database for this feed
+	//private SQLiteConnection feedDb; // Connection the the database for this feed
+	private DataStorage settings;
 	private DownloadList downloads; // Gui list for the feed
 	private boolean newFeed,  // Is this a creation of a brand new feed?
 					finished=false; // Has the rssfeed been initialized
@@ -55,7 +40,7 @@ public class RssFeedDetails extends Thread{
 	 * @param localStore - the local system address for the files to be downloaded to
 	 * @param downloads - The DownloadList
 	 */
-	public RssFeedDetails(String feedName, String dbStore, String address, String localStore) {
+	public RssFeedDetails(String feedName, String dbStore, String address, String localStore, DataStorage settings) {
 		try {
 			this.feedName = feedName;
 			this.address = new URL(address);
@@ -72,8 +57,11 @@ public class RssFeedDetails extends Thread{
 	/** This is used when creating a brand new feed
 	 * 
 	 * @param address
+	 * @param settings 
+	 * @param cardPane 
+	 * @param treePane 
 	 */
-	public RssFeedDetails(String address){
+	public RssFeedDetails(String address, DataStorage settings){
 		try {
 			this.address = new URL(address);
 			downloads = new DownloadList(true);
@@ -82,6 +70,7 @@ public class RssFeedDetails extends Thread{
 			e.printStackTrace();
 		}
 		newFeed = true;
+		this.settings=settings;
 	}
 
 	/**
@@ -134,6 +123,7 @@ public class RssFeedDetails extends Thread{
 	 * information from the internet, if the podcast is not already in the system.
 	 */
 	public void run(){
+
 		/* To start off with, I'm only setting up this thread to download the podcast and
 		 * create the database. After that I'll set this thread to check for the existance
 		 * of the podcast database already and then it will only update.
@@ -174,6 +164,7 @@ public class RssFeedDetails extends Thread{
 				
 				String feedFilename=System.getProperty("user.home").concat("/.bgdownloader/"+feedDbName+".pod");
 				
+				/*
 				feedDb = new SQLiteConnection (new File(feedFilename));
 				try {
 					feedDb.open(true);
@@ -189,7 +180,8 @@ public class RssFeedDetails extends Thread{
 				} catch (SQLiteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
+				settings.createFeedDB(feedFilename);
 				
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
@@ -203,7 +195,7 @@ public class RssFeedDetails extends Thread{
 			
 			// Create connection to sqlite db
 			String feedFilename=System.getProperty("user.home").concat("/.bgdownloader/"+feedDbName+".pod");
-			feedDb = new SQLiteConnection (new File(feedFilename));
+			SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
 			try {
 				feedDb.open();
 				SQLiteStatement sql = feedDb.prepare("SELECT * FROM shows;");
@@ -225,7 +217,7 @@ public class RssFeedDetails extends Thread{
 		}
 
 		for (int counter=0; counter < podcastXML.getDownloadCount(); counter++){
-			try {
+		//	try {
 				boolean inList=false;
 				
 				for (int dlc=0; dlc < downloadData.size(); dlc++){
@@ -242,14 +234,14 @@ public class RssFeedDetails extends Thread{
 				// If the file is not in our list already
 				if (!inList){
 					// Insert it into the database.
-					SQLiteStatement sql = feedDb.prepare("INSERT INTO shows(published,title,url,size,description) VALUES('"+podcastXML.getDownloadValue(counter,"pubDate",null)+"'," +
+				/*	SQLiteStatement sql = feedDb.prepare("INSERT INTO shows(published,title,url,size,description) VALUES('"+podcastXML.getDownloadValue(counter,"pubDate",null)+"'," +
 							 							 "'"+podcastXML.getDownloadValue(counter,"title",null)+"'," +
 							 							 "'"+podcastXML.getDownloadValue(counter, "enclosure", "url")+"'," +
 							 							 podcastXML.getDownloadValue(counter, "enclosure", "length")+"," +
 							 							 "'"+description+"');");
 					sql.stepThrough();
 					sql.dispose();
-					// Add the episode to our array
+			*/		// Add the episode to our array
 					Episode ep = new Episode(description, description, description, counter, description);
 					downloadData.add(ep);
 					// Add the episode to the download list
@@ -259,20 +251,39 @@ public class RssFeedDetails extends Thread{
 							  "0%");
 				}
 				
-			} catch (SQLiteException e) {
+		/*	} catch (SQLiteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 		}
 
 		finished = true;
 	}
 	
 	public boolean isFinished() {
+		if (finished)
+			System.out.println("thread done");
 		return finished;
 	}
 
 	public String getdb() {
 		return feedDbName;
 	}
+
+	
+	public class Episode {
+		public Episode(String published, String title,
+				String url, int length, String desc) {
+			date = published;
+			this.title=title;
+			this.url=url;
+			size=length;
+			description=desc;
+		}
+		public String date,
+					  title,
+					  url,
+					  description;
+		public int size;
+	};
 }

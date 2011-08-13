@@ -39,7 +39,6 @@ public class TreePane extends JPanel {
 		category = new DefaultMutableTreeNode("RSS Feeds",true);
 		rssFeeds = category;
 		rootNode.add(category);
-		
 	}
 	/**
 	 * addrssFeed is used to add new RSS Feeds into the downloader.

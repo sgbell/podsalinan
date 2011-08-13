@@ -27,6 +27,7 @@ public class DownloadList extends JPanel {
 	public DownloadList(boolean rssFeed){
 		super();
 
+
 		isRssFeed = rssFeed;
 		setLayout(new BorderLayout());
 		if (rssFeed){

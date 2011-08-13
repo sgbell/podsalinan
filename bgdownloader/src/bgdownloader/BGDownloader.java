@@ -10,19 +10,12 @@ package bgdownloader;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-import com.almworks.sqlite4java.SQLiteConnection;
-import com.almworks.sqlite4java.SQLiteException;
-import com.almworks.sqlite4java.SQLiteStatement;
 
 @SuppressWarnings("serial")
 public class BGDownloader extends JFrame {
@@ -30,7 +23,6 @@ public class BGDownloader extends JFrame {
 	private URLDownloadList downloads;
 	private TreePane treePane;
 	private JPanel cardPane;
-	private SQLiteConnection rssListdb;
 	private DataStorage settings;
 
 	/**
@@ -46,8 +38,6 @@ public class BGDownloader extends JFrame {
 	}
 
 	public BGDownloader(){
-		boolean rssExists;
-		
 		@SuppressWarnings("unused")
 		JPanel pane = new JPanel();
 		
@@ -64,13 +54,17 @@ public class BGDownloader extends JFrame {
 		/**
 		 * Following lines are not compatible with gentoo :(
 		 */
-		
+		/*
 		try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
             SwingUtilities.updateComponentTreeUI(this);
         } catch (Exception e) {
             System.err.println("Couldn't use system look and feel.");
         }
+		*/
+
+		// disables sqlite4java's logging
+		Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);
 		
 		/*
 		 *  For the moment the default size iss 800x600. Eventually I will configure a ini file to store useful information
@@ -97,40 +91,17 @@ public class BGDownloader extends JFrame {
 		getContentPane().add(splitpane,BorderLayout.CENTER);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
 
 		// Currently in the process of moving stuff into a settings class.
-		
-		try {
-			// Do a search in the podcasts table for podcasts stored in the system
-			SQLiteStatement sql = rssListdb.prepare("SELECT * from podcasts;");
-			while (sql.step()){
-				if (sql.hasRow()){
-					// With the podcasts found, import the information into the system
-					// and load the podcast data from the database.
-					RssFeedDetails podcast = new RssFeedDetails(sql.columnString(1),
-																sql.columnString(2),
-																sql.columnString(3),
-																sql.columnString(4));
-					podcast.start();
-					treePane.addrssFeed(podcast);
-					cardPane.add(podcast.getDownloadList(),podcast.getFeedName());
-				} else {
-					
-				}
-			}
-			sql.dispose();
-		} catch (SQLiteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// rss feed
-		//addRssFeed("http://revision3.com/hak5/feed/Xvid-Large");
+		settings.getPodcasts(treePane, cardPane);
 		
 		// url download list
 		downloads = new URLDownloadList();
 		treePane.setDownloads(downloads);
 		cardPane.add(downloads.getDownloadList(),"Downloads");
+		CardLayout cardLayout = (CardLayout)(cardPane.getLayout());
+		cardLayout.show(cardPane, "Downloads");
+		setVisible(true);
 	}
 
 	public URLDownloadList getDownloadList(){
@@ -139,7 +110,7 @@ public class BGDownloader extends JFrame {
 	
 	public void addRssFeed(String newFeed){
 	
-		RssFeedDetails newPodcast = new RssFeedDetails(newFeed);
+		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings);
 		
 		newPodcast.start();
 		// Loop installed to wait till downloading of the podcast is done.
@@ -147,18 +118,8 @@ public class BGDownloader extends JFrame {
 		while(!newPodcast.isFinished()){
 		}
 		// The following SQL statement adds the newly created podcast into the main database.
-		try {
-			SQLiteStatement sql = rssListdb.prepare("INSERT INTO podcasts(name,localfile,url,directory) VALUES (" +
-													"'"+newPodcast.getFeedName()+"'," +
-													"'"+newPodcast.getdb()+"'," +
-													"'"+newFeed+"'," +
-													"'"+newPodcast.getLocalStore()+"');");
-			sql.stepThrough();
-			sql.dispose();
-		} catch (SQLiteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		settings.addPodcast(newPodcast,newFeed);
+		
 		treePane.addrssFeed(newPodcast);
 		cardPane.add(newPodcast.getDownloadList(),newPodcast.getFeedName());
 	}

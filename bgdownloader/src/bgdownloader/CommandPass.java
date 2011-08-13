@@ -17,6 +17,8 @@ public class CommandPass implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
+		System.out.println("Debug: called CommandPass.actionPerformed()");
+
 		String command = event.getActionCommand();
 		
 		if (command.compareTo("quit")==0){
@@ -64,6 +66,7 @@ public class CommandPass implements ActionListener {
 		      model.removeNodeFromParent(selectedNode);
 		    }
 		}
+		System.out.println("Debug: ended CommandPass.actionPerformed()");
 	}
 
 	/**
