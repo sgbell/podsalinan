@@ -15,12 +15,14 @@ public class CommandPass implements ActionListener {
 	private JTree tree;
 	private BGDownloader bgdownloader;
 	private DataStorage systemSettings;
+	private boolean programExiting;
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		String command = event.getActionCommand();
 		
 		if (command.compareTo("quit")==0){
+			programExiting=true;
 			systemSettings.saveSettings();
 			System.exit(0);
 		}
@@ -88,7 +90,8 @@ public class CommandPass implements ActionListener {
 		bgdownloader = parent;
 	}
 
-	public void setDataStorage(DataStorage settings) {
-		systemSettings = settings;		
+	public void setDataStorage(DataStorage settings, boolean programExiting) {
+		systemSettings = settings;
+		this.programExiting=programExiting;
 	}
 }

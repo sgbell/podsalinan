@@ -27,7 +27,8 @@ public class BGDownloader extends JFrame {
 	private TreePane treePane;
 	private JPanel cardPane;
 	private DataStorage settings;
-
+	private DownloadQueue podcastQueue;
+	private boolean programExiting=false;
 	/**
 	 * Upon execution the program will create a new instance of bgdownloader, which is where
 	 * most of the work happens. Creating the new instance builds the main window.
@@ -85,7 +86,7 @@ public class BGDownloader extends JFrame {
 
 		settings = new DataStorage();
 		settings.loadSettings();
-		aListener.setDataStorage(settings);
+		aListener.setDataStorage(settings,programExiting);
 		
 		JSplitPane splitpane = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT,treePane,cardPane);
 		splitpane.setDividerLocation(250);
@@ -102,7 +103,10 @@ public class BGDownloader extends JFrame {
 		cardLayout.show(cardPane, "Downloads");
 		setVisible(true);
 
-		settings.showPodcasts(treePane, cardPane);
+		podcastQueue = new DownloadQueue(programExiting);
+		podcastQueue.start();
+		
+		settings.showPodcasts(treePane, cardPane, podcastQueue);
 	}
 
 	public URLDownloadList getDownloadList(){
@@ -110,7 +114,7 @@ public class BGDownloader extends JFrame {
 	}
 	
 	public void addRssFeed(String newFeed){
-		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings,treePane, cardPane);
+		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings,treePane, cardPane, podcastQueue);
 		newPodcast.start();
 	}
 	

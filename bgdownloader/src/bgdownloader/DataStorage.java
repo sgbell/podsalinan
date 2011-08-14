@@ -98,15 +98,20 @@ public class DataStorage {
 	 * 
 	 * @param tree
 	 * @param cards
+	 * @param podcastQueue 
 	 * @return
 	 */
-	public int showPodcasts(TreePane tree, JPanel cards){
+	public int showPodcasts(TreePane tree, JPanel cards, DownloadQueue podcastQueue){
 		
 		for (int pcc=0; pcc < podcastDB.size(); pcc++){
 			RssFeedDetails podcast = new RssFeedDetails(podcastDB.elementAt(pcc).name,
 														podcastDB.elementAt(pcc).datafile,
 														podcastDB.elementAt(pcc).url,
-														podcastDB.elementAt(pcc).directory,this, tree, cards);
+														podcastDB.elementAt(pcc).directory,
+														this, 
+														tree, 
+														cards,
+														podcastQueue);
 			podcast.start();
 		}
 		

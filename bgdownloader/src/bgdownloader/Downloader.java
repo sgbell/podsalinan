@@ -22,6 +22,10 @@ public class Downloader extends Thread{
 	private long fileSize;
 	private int percentage=0;
 	
+	public String getFilenameDownload(){
+		return fileDownload.toString();
+	}
+	
 	public Downloader(URL urlDownload, String outputFile, String size){
 		fileDownload = urlDownload;
 		destination = outputFile;
@@ -81,6 +85,7 @@ public class Downloader extends Thread{
 		try {
 			if (isInternetReachable()){
 				ReadableByteChannel rbc = Channels.newChannel(fileDownload.openStream());
+				System.out.println(destination);
 				FileOutputStream fos = new FileOutputStream(destination);
 				
 				if (fileSize>0){
@@ -91,7 +96,7 @@ public class Downloader extends Thread{
 					for (percentage=0; percentage < 100; percentage++){
 						filepos=partSize*percentage;
 						fos.getChannel().transferFrom(rbc, filepos, filepos+partSize);
-						System.out.println("Percentage Downloaded: "+percentage+" - Size: "+filepos);
+						System.out.println("Percentage in Downloader: "+percentage);
 					}
 				} else {
 					fos.getChannel().transferFrom(rbc, 0, 1 << 24);

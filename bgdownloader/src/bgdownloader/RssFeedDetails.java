@@ -31,6 +31,7 @@ public class RssFeedDetails extends Thread{
 	private Vector<Episode> downloadData = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
 	private TreePane tree;
 	private JPanel cards;
+	private DownloadQueue mainDownloadQueue;
 
 	/** This will create a podcast from previously saved database.
 	 * 
@@ -41,7 +42,8 @@ public class RssFeedDetails extends Thread{
 	 * @param treePanel 
 	 * @param downloads - The DownloadList
 	 */
-	public RssFeedDetails(String feedName, String dbStore, String address, String localStore, DataStorage settings, TreePane treePanel, JPanel cardPanel) {
+	public RssFeedDetails(String feedName, String dbStore, String address, String localStore,
+						  DataStorage settings, TreePane treePanel, JPanel cardPanel, DownloadQueue podcastQueue) {
 		try {
 			this.feedName = feedName;
 			this.address = new URL(address);
@@ -51,6 +53,7 @@ public class RssFeedDetails extends Thread{
 			tree = treePanel;
 			cards = cardPanel;
 			downloads = new DownloadList(true);
+			mainDownloadQueue=podcastQueue;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,16 +64,21 @@ public class RssFeedDetails extends Thread{
 	/** This is used when creating a brand new feed
 	 * 
 	 * @param address
+	 * @param directory 
+	 * @param url 
+	 * @param datafile 
 	 * @param settings 
 	 * @param cardPane 
 	 * @param treePane 
+	 * @param podcastQueue 
 	 */
-	public RssFeedDetails(String address, DataStorage settings, TreePane treePane, JPanel cardPane){
+	public RssFeedDetails(String address, DataStorage settings, TreePane treePane, JPanel cardPane, DownloadQueue podcastQueue){
 		try {
 			this.address = new URL(address);
 			downloads = new DownloadList(true);
 			tree = treePane;
 			cards=cardPane;
+			mainDownloadQueue=podcastQueue; 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -209,13 +217,13 @@ public class RssFeedDetails extends Thread{
 		if (newFeed){
 			
 			downloadFeed();
-			settings.addPodcast(this);
 			// Set download directory to the default directory
 			localStore=System.getProperty("user.home").concat("/Videos/"+feedName);
 			File localDir = new File(localStore);
 			if (!localDir.exists()){
 				localDir.mkdirs();
 			}
+			settings.addPodcast(this);
 		} else {
 			// Load podcast from sqlite database
 			settings.loadPodcastDB(downloadData,feedDbName,downloads);
@@ -223,9 +231,32 @@ public class RssFeedDetails extends Thread{
 		
 		tree.addrssFeed(this);
 		cards.add(getDownloadList(),getFeedName());
+		queueDownloads();
 	}
 	
 	public String getdb() {
 		return feedDbName;
+	}
+	
+	/** This will search through the array of downloads for the feed, mark the files that are already downloaded
+	 *  and then queues the files that are not downloaded yet. 
+	 */
+	public void queueDownloads(){
+		// Travel through the array
+		for (int dlc=0; dlc<downloadData.size(); dlc++){
+			if (!downloadData.get(dlc).downloaded){
+				String filename=downloadData.get(dlc).url;
+				filename=localStore+"/"+filename.substring(filename.lastIndexOf('/')+1);
+				if((!(new File(filename).exists()))||
+				   ((new File(filename).length()<Long.getLong(downloadData.get(dlc).size)))){
+					try {
+						mainDownloadQueue.addDownload(new URL(downloadData.get(dlc).url), filename,downloads);
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 }

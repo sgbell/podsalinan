@@ -4,6 +4,7 @@
 package bgdownloader;
 
 import java.awt.BorderLayout;
+import java.util.Vector;
 
 //import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -21,13 +22,14 @@ import javax.swing.table.TableColumn;
 public class DownloadList extends JPanel {
 	
 	private DefaultTableModel downloadList;
+	private Vector<String> filenames;
 	//private JEditorPane previewPane;
 	private boolean isRssFeed;
 	
 	public DownloadList(boolean rssFeed){
 		super();
 
-
+		filenames = new Vector<String>();
 		isRssFeed = rssFeed;
 		setLayout(new BorderLayout());
 		if (rssFeed){
@@ -95,8 +97,18 @@ public class DownloadList extends JPanel {
 		
 		newRow = new Object[] {title,date,"0%"};
 		downloadList.addRow(newRow);
+		filenames.add(filename);
 		if (downloadList.getValueAt(0, 0).toString().length()==0){
 			downloadList.removeRow(0);
+		}
+	}
+	
+	public void downloadProgress(String filename, int progress){
+		System.out.println("Progress in DownloadList: "+progress);
+		String newProgress = Integer.toString(progress)+"%";
+		for (int dlc=0; dlc<downloadList.getRowCount(); dlc++){
+			if (filenames.get(dlc).equals(filename))
+				downloadList.setValueAt(newProgress, dlc, 2);
 		}
 	}
 	
