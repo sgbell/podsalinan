@@ -13,3 +13,5 @@ Todo List
   -- Completed
 * Store program settings in config files.
 * Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.
+
+* Working in CommandPass Right now.

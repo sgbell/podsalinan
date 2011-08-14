@@ -192,7 +192,6 @@ public class DataStorage {
 				episodes.add(ep);
 				downloads.addDownload(ep.title,ep.date,ep.url,"0%");
 			}
-			System.out.println("loadPodcastDB called.");
 		} catch (SQLiteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

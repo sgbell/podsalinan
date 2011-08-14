@@ -62,9 +62,15 @@ public class CommandPass implements ActionListener {
 			Object nodeInfo = selectedNode.getUserObject();
 			// Read below. if the node is a Leaf, not a branch, and it's also an RssFeed then we want to delete it. 
 		    if (selectedNode.isLeaf() && (nodeInfo instanceof RssFeedDetails)){
-		      DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-		      model.removeNodeFromParent(selectedNode);
+		    	// Grab the object so we can delete the file and the entry
+		    	// in the podcast databast
+		    	RssFeedDetails podcast = (RssFeedDetails) selectedNode.getUserObject();
+		    	
+		    	// Following 2 lines remove rss feed from node.
+		    	DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+		    	model.removeNodeFromParent(selectedNode);
 		    }
+		    
 		}
 	}
 

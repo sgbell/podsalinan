@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
 public class BGDownloader extends JFrame {
@@ -54,14 +56,12 @@ public class BGDownloader extends JFrame {
 		/**
 		 * Following lines are not compatible with gentoo :(
 		 */
-		/*
 		try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
             SwingUtilities.updateComponentTreeUI(this);
         } catch (Exception e) {
             System.err.println("Couldn't use system look and feel.");
         }
-		*/
 
 		// disables sqlite4java's logging
 		Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);

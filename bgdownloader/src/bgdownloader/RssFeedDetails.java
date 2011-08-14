@@ -122,16 +122,13 @@ public class RssFeedDetails extends Thread{
 	public String toString(){
 		return feedName;
 	}
-	
-	/**
-	 * This will start a thread, which will initialize the podcast information,
-	 * by either loading it from a current stored file, or by downloading the podcast
-	 * information from the internet, if the podcast is not already in the system.
+
+	/** Function to download Feed
+	 * 
 	 */
-	public void run(){
+	public void downloadFeed(){
 		int outputCount=1;
 		// temporary download destination of podcast xml file
-		System.out.println("Adding RSS Feed");
 		String outputFile = settings.getSettingsDir().concat("/temp.xml");
 		
 		while (new File(outputFile).exists()){
@@ -139,24 +136,17 @@ public class RssFeedDetails extends Thread{
 			outputCount++;
 		}
 		
+		// Following 3 lines of code download podcast XML file
 		Downloader d = new Downloader(address,outputFile);
 		// I don't want to start another thread, as this is already being executed
 		// in a thread, and we can't continue without the file.
 		d.getFile();
 		XmlReader podcastXML = new XmlReader(outputFile);
-
+	
 		if (newFeed){
 			// Grab the feed name from the podcast feed
 			feedName = podcastXML.getFeedTitle();
-			
-			// Set download directory to default directory
-			localStore=System.getProperty("user.home").concat("/Videos/"+feedName);
-			File localDir = new File(localStore);
-			if (!localDir.exists()){
-				localDir.mkdirs();
-				System.out.println("Made directory");
-			}
-			
+
 			try {
 				// The following lines are used to create a md5  hash for the filename.
 				MessageDigest md = MessageDigest.getInstance("MD5");
@@ -164,7 +154,6 @@ public class RssFeedDetails extends Thread{
 				md.update(bytesFeedName, 0, feedName.length());
 				// The feedFilename is a md5 hash.
 				feedDbName = new BigInteger(1, md.digest()).toString().substring(0, 8);
-				System.out.println("Created new feed db name");
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -172,10 +161,7 @@ public class RssFeedDetails extends Thread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			settings.addPodcast(this);
-		} else {
-			// Create connection to sqlite db
-			settings.loadPodcastDB(downloadData,feedDbName,downloads);
+
 		}
 
 		for (int counter=0; counter < podcastXML.getDownloadCount(); counter++){
@@ -191,12 +177,15 @@ public class RssFeedDetails extends Thread{
 			description=description.replaceAll("\'", "&apos;");
 			// Removing new lines from data, as we don't need it
 			description=description.replaceAll("\n", "");
-				
+			
+			String title=podcastXML.getDownloadValue(counter,"title",null);
+			title=title.replaceAll("\'", "&apos;");
+			
 			// If the file is not in our list already
 			if (!inList){
 				// Add the episode to our array
 				Episode ep = new Episode(podcastXML.getDownloadValue(counter,"pubDate",null),
-										 podcastXML.getDownloadValue(counter,"title",null),
+										 title,
 										 podcastXML.getDownloadValue(counter, "enclosure", "url"), 
 										 podcastXML.getDownloadValue(counter, "enclosure", "length"), description);
 				downloadData.add(ep);
@@ -210,11 +199,31 @@ public class RssFeedDetails extends Thread{
 		}
 		new File(outputFile).delete();
 		settings.savePodcastDB(downloadData, feedDbName);
-		System.out.println("Saved to database file");
+	}
+	
+	/**
+	 * This will start a thread, which will initialize the podcast information,
+	 * by either loading it from a current stored file, or by downloading the podcast
+	 * information from the internet, if the podcast is not already in the system.
+	 */
+	public void run(){
+		if (newFeed){
+			// Set download directory to the default directory
+			localStore=System.getProperty("user.home").concat("/Videos/"+feedName);
+			File localDir = new File(localStore);
+			if (!localDir.exists()){
+				localDir.mkdirs();
+			}
+			
+			downloadFeed();
+			settings.addPodcast(this);
+		} else {
+			// Load podcast from sqlite database
+			settings.loadPodcastDB(downloadData,feedDbName,downloads);
+		}
 		
 		tree.addrssFeed(this);
 		cards.add(getDownloadList(),getFeedName());
-
 	}
 	
 	public String getdb() {
