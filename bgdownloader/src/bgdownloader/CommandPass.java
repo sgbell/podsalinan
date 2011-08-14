@@ -33,8 +33,8 @@ public class CommandPass implements ActionListener {
                     null,
                     null,
                     null);
-			
-			bgdownloader.getDownloadList().getDownloadList().addDownload(url);
+			if (!url.isEmpty())
+				bgdownloader.getDownloadList().getDownloadList().addDownload(url);
 		}
 		if (command.compareTo("addRSS")==0){
 			String url = (String)JOptionPane.showInputDialog(
@@ -45,8 +45,8 @@ public class CommandPass implements ActionListener {
                     null,
                     null,
                     null);
-			
-			bgdownloader.addRssFeed(url);
+			if (!url.isEmpty())
+				bgdownloader.addRssFeed(url);
 			
 		}
 		if (command.compareTo("setDownloadFolder")==0){
@@ -65,10 +65,12 @@ public class CommandPass implements ActionListener {
 		    	// Grab the object so we can delete the file and the entry
 		    	// in the podcast databast
 		    	RssFeedDetails podcast = (RssFeedDetails) selectedNode.getUserObject();
+		    	systemSettings.deletePodcast(podcast.getFeedName());
 		    	
 		    	// Following 2 lines remove rss feed from node.
 		    	DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
 		    	model.removeNodeFromParent(selectedNode);
+		    	bgdownloader.getTreePane().changeDownloadList("Downloads");
 		    }
 		    
 		}

@@ -39,6 +39,9 @@ public class DataStorage {
 		}
 	}
 	
+	public Vector<Podcast> getPodcastDB(){
+		return podcastDB;
+	}
 	
 	/** loadSettings loads the settings from the database.
 	 * 
@@ -147,7 +150,7 @@ public class DataStorage {
 		try {
 			settingsDB.open(true);
 			for (int pcc=0; pcc < podcastDB.size(); pcc++){
-				if (!podcastDB.get(pcc).added){
+				if ((!podcastDB.get(pcc).added)&&(!podcastDB.get(pcc).remove)){
 					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+podcastDB.get(pcc).name+"'," +
 												"'"+podcastDB.get(pcc).datafile+"'," +
 												"'"+podcastDB.get(pcc).url+"'," +
@@ -155,6 +158,10 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 					podcastDB.get(pcc).added=true;
+				} else if (podcastDB.get(pcc).remove){
+					sql = settingsDB.prepare("DELETE FROM podcasts WHERE localfile='"+podcastDB.get(pcc).datafile+"';");
+					sql.stepThrough();
+					sql.dispose();
 				}
 			}
 			settingsDB.dispose();
@@ -229,7 +236,6 @@ public class DataStorage {
 			}
 			for (int epc=0; epc < episodes.size(); epc++){
 				if (!episodes.get(epc).added){
-					System.out.println(episodes.get(epc).date);
 					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description) VALUES('"+
 														episodes.get(epc).date+"'," +
 							 							 "'"+episodes.get(epc).title+"'," +
@@ -239,8 +245,7 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 					episodes.get(epc).added=true;
-				}
-					
+				}					
 			}
 			feedDB.dispose();
 		} catch (SQLiteException e) {
@@ -255,5 +260,18 @@ public class DataStorage {
 	 */
 	public String getSettingsDir(){
 		return settingsDir;
+	}
+
+	/**
+	 * 
+	 * @param feedName
+	 */
+	public void deletePodcast(String feedName) {
+		int pcc=0;
+		while (podcastDB.get(pcc).name!=feedName){
+			pcc++;
+		}
+		new File(settingsDir+"/"+podcastDB.get(pcc).datafile+".pod").delete();
+		podcastDB.get(pcc).remove=true;
 	}
 }

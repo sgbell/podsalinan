@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -18,18 +19,33 @@ import java.nio.channels.ReadableByteChannel;
 public class Downloader extends Thread{
 	private URL fileDownload;
 	private String destination;
+	private long fileSize;
+	private int percentage=0;
+	
+	public Downloader(URL urlDownload, String outputFile, String size){
+		fileDownload = urlDownload;
+		destination = outputFile;
+		fileSize = Long.valueOf(size);
+	}
 	
 	public Downloader(URL urlDownload, String outputFile) {
 		fileDownload = urlDownload;
 		destination = outputFile;
-
-	}
-	
+		
+		try {
+			URLConnection conn = fileDownload.openConnection();
+			fileSize = conn.getContentLength();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}	
 	
 	/** code found at: 
 	 * http://stackoverflow.com/questions/1139547/detect-internet-connection-using-java
 	 * This test will cover if a download can occur or not.
-	 * @return
+	 * @return if its connected to the internet
 	 */
 	public static boolean isInternetReachable()
     {
@@ -42,7 +58,8 @@ public class Downloader extends Thread{
 
                     //trying to retrieve data from the source. If there
                     //is no connection, this line will fail
-                    Object objData = urlConnect.getContent();
+                    @SuppressWarnings("unused")
+					Object objData = urlConnect.getContent();
 
             } catch (UnknownHostException e) {
                     // TODO Auto-generated catch block
@@ -65,17 +82,29 @@ public class Downloader extends Thread{
 			if (isInternetReachable()){
 				ReadableByteChannel rbc = Channels.newChannel(fileDownload.openStream());
 				FileOutputStream fos = new FileOutputStream(destination);
-				/* To use the progress bar, we'll need to set it up so transferFrom copies the file in stages,
-				 *  and updates a precentages for the progress bar.
-				 *  Can't use the channels stuff, cos I can't get the file size... for the progress bar :(
-				 */
-			
-				fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+				
+				if (fileSize>0){
+					long partSize = 0;
+					partSize =fileSize/100;
+					long filepos=0;
+				
+					for (percentage=0; percentage < 100; percentage++){
+						filepos=partSize*percentage;
+						fos.getChannel().transferFrom(rbc, filepos, filepos+partSize);
+						System.out.println("Percentage Downloaded: "+percentage+" - Size: "+filepos);
+					}
+				} else {
+					fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+	}
+	
+	public int downloadCompleted(){
+		return percentage;
 	}
 	
 	public void run(){

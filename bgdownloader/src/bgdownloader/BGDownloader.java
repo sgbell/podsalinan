@@ -10,6 +10,7 @@ package bgdownloader;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +20,7 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "unused" })
 public class BGDownloader extends JFrame {
 	
 	private URLDownloadList downloads;
@@ -35,12 +36,10 @@ public class BGDownloader extends JFrame {
 	 *   Nothing to pass in just yet
 	 */
 	public static void main(String[] args) {
-		@SuppressWarnings("unused")
 		BGDownloader mainProgram = new BGDownloader();
 	}
 
 	public BGDownloader(){
-		@SuppressWarnings("unused")
 		JPanel pane = new JPanel();
 		
 		CommandPass aListener = new CommandPass();
@@ -56,13 +55,15 @@ public class BGDownloader extends JFrame {
 		/**
 		 * Following lines are not compatible with gentoo :(
 		 */
+		/*
 		try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
             SwingUtilities.updateComponentTreeUI(this);
         } catch (Exception e) {
             System.err.println("Couldn't use system look and feel.");
         }
-
+		*/
+		
 		// disables sqlite4java's logging
 		Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);
 		
@@ -92,7 +93,6 @@ public class BGDownloader extends JFrame {
 		getContentPane().add(splitpane,BorderLayout.CENTER);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		
 		// url download list
 		downloads = new URLDownloadList();
@@ -102,7 +102,6 @@ public class BGDownloader extends JFrame {
 		cardLayout.show(cardPane, "Downloads");
 		setVisible(true);
 
-		// Currently in the process of moving stuff into a settings class.
 		settings.showPodcasts(treePane, cardPane);
 	}
 
@@ -111,10 +110,11 @@ public class BGDownloader extends JFrame {
 	}
 	
 	public void addRssFeed(String newFeed){
-	
 		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings,treePane, cardPane);
-		
 		newPodcast.start();
-		
+	}
+	
+	public TreePane getTreePane(){
+		return treePane;
 	}
 }

@@ -194,7 +194,6 @@ public class RssFeedDetails extends Thread{
 						  			  podcastXML.getDownloadValue(counter,"pubDate",null),
 						  			  podcastXML.getDownloadValue(counter, "enclosure", "url"),
 						  			  "0%");
-				System.out.println("Added to display and list");
 			}
 		}
 		new File(outputFile).delete();
@@ -208,15 +207,15 @@ public class RssFeedDetails extends Thread{
 	 */
 	public void run(){
 		if (newFeed){
+			
+			downloadFeed();
+			settings.addPodcast(this);
 			// Set download directory to the default directory
 			localStore=System.getProperty("user.home").concat("/Videos/"+feedName);
 			File localDir = new File(localStore);
 			if (!localDir.exists()){
 				localDir.mkdirs();
 			}
-			
-			downloadFeed();
-			settings.addPodcast(this);
 		} else {
 			// Load podcast from sqlite database
 			settings.loadPodcastDB(downloadData,feedDbName,downloads);

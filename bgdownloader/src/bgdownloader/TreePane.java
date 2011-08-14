@@ -61,6 +61,10 @@ public class TreePane extends JPanel {
 		rootNode.add(newNode);
 	}
 
+	public void changeDownloadList(String viewName){
+		treeEventHandler.setDownloadPane(viewName);
+	}
+	
 	public void cardView(JPanel cardPane) {
 		treeEventHandler.cardView(cardPane);
 	}
