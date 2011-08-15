@@ -104,7 +104,6 @@ public class DownloadList extends JPanel {
 	}
 	
 	public void downloadProgress(String filename, int progress){
-		System.out.println("Progress in DownloadList: "+progress);
 		String newProgress = Integer.toString(progress)+"%";
 		for (int dlc=0; dlc<downloadList.getRowCount(); dlc++){
 			if (filenames.get(dlc).equals(filename))

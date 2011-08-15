@@ -14,6 +14,7 @@ public class DownloadQueue extends Thread{
 	private Vector<Download> queue;
 	private Vector<Downloader> downloaders;
 	private boolean programExiting;
+	private int maxDownloaders=1;	// Maximum Number of Downloaders;
 
 	private class Download {
 		public URL file;			// The file to be downloaded.
@@ -45,12 +46,12 @@ public class DownloadQueue extends Thread{
 		// While the program is running continue downloading.
 		while (!programExiting){
 			// Downloaders size, determines how many files can be downloaded at a time.
-			if (downloaders.size()<1){
+			if (downloaders.size()<maxDownloaders){
 				boolean foundNew=false;
 				int qc=0;
 				// If there are files to download
 				if (queue.size()>0){
-					while (!foundNew){
+					while ((!foundNew)&&(qc<queue.size())){
 						// qc - queue count. Travel through the queue to file an item not currently being downloaded
 						if (queue.get(qc).state!=0)
 							qc++;
@@ -58,7 +59,7 @@ public class DownloadQueue extends Thread{
 							foundNew=true;
 					}
 					// If item not being downloaded is found, create a downloader and start it.
-					if (queue.get(qc).state==0){
+					if ((foundNew)&&(queue.get(qc).state==0)){
 						Downloader newDownloader = new Downloader(queue.get(qc).file,queue.get(qc).destination);
 						downloaders.add(newDownloader);
 						newDownloader.start();
@@ -68,19 +69,24 @@ public class DownloadQueue extends Thread{
 				}
 			}
 			// Need to update the gui, on the status of the download, and thought here is the best place to do it from.
-			for (int dlc=0; dlc<downloaders.size(); dlc++){
-				int qc=0;
-				boolean itemFound=false;
-				while ((qc<queue.size())&&(!itemFound)){
-					if (downloaders.get(dlc).getFilenameDownload()==queue.get(qc).file.toString())
-						itemFound=true;
+			//System.out.println("Downloaders Active: "+downloaders.size());
+			if (downloaders.size()>0)
+				for (int dlc=0; dlc<downloaders.size(); dlc++){
+					int qc=0;
+					boolean itemFound=false;
+					while ((qc<queue.size())&&(!itemFound)){
+						if (downloaders.get(dlc).getFilenameDownload().equals(queue.get(qc).file.toString()))
+							itemFound=true;
+						else
+							qc++;
+					}
+					if (qc<queue.size()){
+						queue.get(qc).downloadTable.downloadProgress(queue.get(qc).file.toString(),
+																	 downloaders.get(dlc).downloadCompleted());
+					}
+					if (downloaders.get(dlc).downloadCompleted()==100)
+						downloaders.remove(dlc);
 				}
-				System.out.println("Percentage in DownloadQueue: "+downloaders.get(dlc).downloadCompleted());
-				queue.get(qc).downloadTable.downloadProgress(queue.get(qc).file.toString(),
-															 downloaders.get(dlc).downloadCompleted());
-				if (downloaders.get(dlc).downloadCompleted()==100)
-					downloaders.remove(dlc);
-			}
 		}
 	}
 }
