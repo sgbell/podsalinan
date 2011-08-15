@@ -16,7 +16,14 @@ Todo List
   -- Completed	
 * Use Wait/Notify between DownloadQueue and Downloader so we don't waste cpu cycles
 	on nothing.
+  -- Completed
+  
 
+* Add functionality to "Change Download Directory"
+* Change Classes that extend Thread Class to Implement Runnable instead.
+* Create a listener, as found in http://stackoverflow.com/questions/702415/how-to-know-if-other-threads-have-finished
+	to monitor when a thread is finished and remove it from the downloaderqueue.
+	
 * Store program settings in config files.
 * Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.
 

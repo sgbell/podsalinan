@@ -247,8 +247,7 @@ public class RssFeedDetails extends Thread{
 			if (!downloadData.get(dlc).downloaded){
 				String filename=downloadData.get(dlc).url;
 				filename=localStore+"/"+filename.substring(filename.lastIndexOf('/')+1);
-				if((!(new File(filename).exists()))||
-				   ((new File(filename).length()<Long.getLong(downloadData.get(dlc).size)))){
+				if (!(new File(filename).exists())){
 					try {
 						mainDownloadQueue.addDownload(new URL(downloadData.get(dlc).url), filename,downloads);
 					} catch (MalformedURLException e) {

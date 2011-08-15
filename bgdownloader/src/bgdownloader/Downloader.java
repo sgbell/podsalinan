@@ -24,15 +24,25 @@ public class Downloader extends Thread{
 	private String destination;
 	private long fileSize;
 	private int percentage=0;
+	private Object syncObject;
+	private DownloadList downloadTable;
 	
 	public String getFilenameDownload(){
 		return fileDownload.toString();
 	}
 	
-	public Downloader(URL urlDownload, String outputFile, String size){
+	public Downloader(URL urlDownload, String outputFile, String size, Object syncObject, DownloadList downloadTable){
 		fileDownload = urlDownload;
 		destination = outputFile;
 		fileSize = Long.valueOf(size);
+		this.downloadTable = downloadTable;
+		this.syncObject = syncObject;
+	}
+	
+	public Downloader(URL urlDownload, String outputFile, Object syncObject, DownloadList downloadTable) {
+		this(urlDownload,outputFile);
+		this.syncObject = syncObject;
+		this.downloadTable=downloadTable;
 	}
 	
 	public Downloader(URL urlDownload, String outputFile) {
@@ -48,7 +58,7 @@ public class Downloader extends Thread{
 		}
 		
 	}	
-	
+
 	/** code found at: 
 	 * http://stackoverflow.com/questions/1139547/detect-internet-connection-using-java
 	 * This test will cover if a download can occur or not.
@@ -86,6 +96,8 @@ public class Downloader extends Thread{
 	 */
 	public void getFile(){
 		boolean viaChannel=false;
+
+		System.out.println("Download Initiated");
 		try {
 			if (isInternetReachable()){
 				if (viaChannel){
@@ -102,7 +114,6 @@ public class Downloader extends Thread{
 							// transferring via Channel's is soooooooooooo slow.
 							fos.getChannel().transferFrom(rbc, filepos, filepos+partSize);
 							filepos+=partSize;
-							System.out.println("File position: "+filepos);
 						}
 					} else {
 						fos.getChannel().transferFrom(rbc, 0, 1 << 24);
@@ -111,6 +122,7 @@ public class Downloader extends Thread{
 					byte buf[]=new byte[1024];
 					int byteRead;	// Number of bytes read from file being downloaded
 					long saved=0;	// Number of bytes saved
+					//int lastPercent=-1;
 					OutputStream outStream= new BufferedOutputStream(new FileOutputStream(destination));
 					
 					InputStream inStream = fileDownload.openStream();
@@ -120,6 +132,7 @@ public class Downloader extends Thread{
 						if (fileSize>0){
 							double temppercent=((double)saved/(double)fileSize);
 							percentage=(int)((temppercent)*100);
+							downloadTable.downloadProgress(fileDownload.toString(), percentage);
 						}
 					}
 					inStream.close();
@@ -138,5 +151,8 @@ public class Downloader extends Thread{
 	
 	public void run(){
 		getFile();
+		synchronized (syncObject){
+			syncObject.notify();
+		}
 	}
 }

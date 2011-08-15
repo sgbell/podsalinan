@@ -15,6 +15,7 @@ public class DownloadQueue extends Thread{
 	private Vector<Downloader> downloaders;
 	private boolean programExiting;
 	private int maxDownloaders=1;	// Maximum Number of Downloaders;
+	private Object syncObject=new Object();
 
 	private class Download {
 		public URL file;			// The file to be downloaded.
@@ -38,6 +39,16 @@ public class DownloadQueue extends Thread{
 		newDownload.downloadTable=downloads;
 		
 		queue.add(newDownload);
+		
+		// If the queue is asleep wake it up when a new item is added.
+		synchronized (syncObject){
+			syncObject.notify();
+		}
+
+	}
+
+	public Object getSyncObject(){
+		return syncObject;
 	}
 	
 	public void run(){
@@ -60,7 +71,10 @@ public class DownloadQueue extends Thread{
 					}
 					// If item not being downloaded is found, create a downloader and start it.
 					if ((foundNew)&&(queue.get(qc).state==0)){
-						Downloader newDownloader = new Downloader(queue.get(qc).file,queue.get(qc).destination);
+						Downloader newDownloader = new Downloader(queue.get(qc).file,
+																  queue.get(qc).destination,
+																  syncObject,
+																  queue.get(qc).downloadTable);
 						downloaders.add(newDownloader);
 						newDownloader.start();
 						// Set the state to being downloaded.
@@ -68,25 +82,24 @@ public class DownloadQueue extends Thread{
 					}
 				}
 			}
-			// Need to update the gui, on the status of the download, and thought here is the best place to do it from.
-			//System.out.println("Downloaders Active: "+downloaders.size());
-			if (downloaders.size()>0)
-				for (int dlc=0; dlc<downloaders.size(); dlc++){
-					int qc=0;
-					boolean itemFound=false;
-					while ((qc<queue.size())&&(!itemFound)){
-						if (downloaders.get(dlc).getFilenameDownload().equals(queue.get(qc).file.toString()))
-							itemFound=true;
-						else
-							qc++;
-					}
-					if (qc<queue.size()){
-						queue.get(qc).downloadTable.downloadProgress(queue.get(qc).file.toString(),
-																	 downloaders.get(dlc).downloadCompleted());
-					}
-					if (downloaders.get(dlc).downloadCompleted()==100)
-						downloaders.remove(dlc);
+			// Pausing this until notify() is sent from one of the downloaders,
+			// or when a new item is added to the queue.
+			synchronized (syncObject){
+				try {
+					syncObject.wait();
+					// For the moment using an extra wait, timed so if a downloader has
+					// just finished and woken this up, it will have enough time to end
+					// for us to pick it up.
+					syncObject.wait(10000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+			}
+			for (int dc=0; dc<downloaders.size(); dc++){
+				if (!downloaders.get(dc).isAlive())
+					downloaders.remove(dc);
+			}
 		}
 	}
 }

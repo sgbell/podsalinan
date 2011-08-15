@@ -29,6 +29,7 @@ public class BGDownloader extends JFrame {
 	private DataStorage settings;
 	private DownloadQueue podcastQueue;
 	private boolean programExiting=false;
+	private Object syncObject;
 	/**
 	 * Upon execution the program will create a new instance of bgdownloader, which is where
 	 * most of the work happens. Creating the new instance builds the main window.
@@ -105,6 +106,7 @@ public class BGDownloader extends JFrame {
 
 		podcastQueue = new DownloadQueue(programExiting);
 		podcastQueue.start();
+		syncObject=podcastQueue.getSyncObject();
 		
 		settings.showPodcasts(treePane, cardPane, podcastQueue);
 	}
