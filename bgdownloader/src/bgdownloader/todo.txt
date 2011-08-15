@@ -11,7 +11,12 @@ Todo List
 		Each episode
 		Episode Information
   -- Completed
+* Need to fix the Downloader class. It's either downloading way too slow or it's just faulty. Need to
+	download the file the old fashioned way.
+  -- Completed	
+* Use Wait/Notify between DownloadQueue and Downloader so we don't waste cpu cycles
+	on nothing.
+
 * Store program settings in config files.
 * Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.
 
-* Working in CommandPass Right now.

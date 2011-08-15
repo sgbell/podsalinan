@@ -3,8 +3,11 @@
  */
 package bgdownloader;
 
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -82,22 +85,45 @@ public class Downloader extends Thread{
 	 * 
 	 */
 	public void getFile(){
+		boolean viaChannel=false;
 		try {
 			if (isInternetReachable()){
-				ReadableByteChannel rbc = Channels.newChannel(fileDownload.openStream());
-				FileOutputStream fos = new FileOutputStream(destination);
-				
-				if (fileSize>0){
-					long partSize = 0;
-					partSize =fileSize/100;
-					long filepos=0;
-				
-					for (percentage=0; percentage < 100; percentage++){
-						filepos=partSize*percentage;
-						fos.getChannel().transferFrom(rbc, filepos, filepos+partSize);
+				if (viaChannel){
+					ReadableByteChannel rbc = Channels.newChannel(fileDownload.openStream());
+					FileOutputStream fos = new FileOutputStream(destination);
+					
+					if (fileSize>0){
+						long partSize = 1024;
+						long filepos=0;
+						percentage=0;
+					
+						while (filepos<fileSize){
+							percentage=(int) ((filepos/fileSize)*100);
+							// transferring via Channel's is soooooooooooo slow.
+							fos.getChannel().transferFrom(rbc, filepos, filepos+partSize);
+							filepos+=partSize;
+							System.out.println("File position: "+filepos);
+						}
+					} else {
+						fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 					}
 				} else {
-					fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+					byte buf[]=new byte[1024];
+					int byteRead;	// Number of bytes read from file being downloaded
+					long saved=0;	// Number of bytes saved
+					OutputStream outStream= new BufferedOutputStream(new FileOutputStream(destination));
+					
+					InputStream inStream = fileDownload.openStream();
+					while ((byteRead = inStream.read(buf)) != -1){
+						outStream.write(buf, 0, byteRead);
+						saved+=byteRead;
+						if (fileSize>0){
+							double temppercent=((double)saved/(double)fileSize);
+							percentage=(int)((temppercent)*100);
+						}
+					}
+					inStream.close();
+					outStream.close();
 				}
 			}
 		} catch (IOException e) {
