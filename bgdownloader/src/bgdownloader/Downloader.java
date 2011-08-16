@@ -19,7 +19,7 @@ import java.nio.channels.ReadableByteChannel;
  * @author bugman
  *
  */
-public class Downloader extends Thread{
+public class Downloader implements Runnable{
 	private URL fileDownload;
 	private String destination;
 	private long fileSize;
@@ -97,7 +97,6 @@ public class Downloader extends Thread{
 	public void getFile(){
 		boolean viaChannel=false;
 
-		System.out.println("Download Initiated");
 		try {
 			if (isInternetReachable()){
 				if (viaChannel){

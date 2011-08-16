@@ -100,15 +100,21 @@ public class BGDownloader extends JFrame {
 		downloads = new URLDownloadList();
 		treePane.setDownloads(downloads);
 		cardPane.add(downloads.getDownloadList(),"Downloads");
+		
+		// Following 3 lines make downloads window default view 
 		CardLayout cardLayout = (CardLayout)(cardPane.getLayout());
 		cardLayout.show(cardPane, "Downloads");
 		setVisible(true);
 
-		podcastQueue = new DownloadQueue(programExiting);
-		podcastQueue.start();
-		syncObject=podcastQueue.getSyncObject();
+		/* This is the class that does all of the downloading
+		   Need to change it so it scans through each of the rss feeds,
+		   and the download window, to download files.
+		*/
+		podcastQueue = new DownloadQueue(programExiting,treePane);
+		Thread downloadingQueue = new Thread(podcastQueue);
+		downloadingQueue.start();
 		
-		settings.showPodcasts(treePane, cardPane, podcastQueue);
+		settings.showPodcasts(treePane, cardPane);
 	}
 
 	public URLDownloadList getDownloadList(){
@@ -116,8 +122,9 @@ public class BGDownloader extends JFrame {
 	}
 	
 	public void addRssFeed(String newFeed){
-		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings,treePane, cardPane, podcastQueue);
-		newPodcast.start();
+		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings,treePane, cardPane);
+		Thread podcastRunner = new Thread(newPodcast);
+		podcastRunner.start();
 	}
 	
 	public TreePane getTreePane(){

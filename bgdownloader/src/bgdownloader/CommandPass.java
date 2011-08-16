@@ -2,6 +2,9 @@ package bgdownloader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -15,6 +18,7 @@ public class CommandPass implements ActionListener {
 	private JTree tree;
 	private BGDownloader bgdownloader;
 	private DataStorage systemSettings;
+	@SuppressWarnings("unused")
 	private boolean programExiting;
 
 	@Override
@@ -52,7 +56,37 @@ public class CommandPass implements ActionListener {
 			
 		}
 		if (command.compareTo("setDownloadFolder")==0){
-			System.out.println("command changing download folder");
+			// Grab the selected Node, so we can change it's download folder.
+			DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+			if (selectedNode!=null){
+				// Make an Object out of the selected node.
+				Object nodeInfo = selectedNode.getUserObject();
+				// Read below. if the node is a Leaf, not a branch, and it's also an RssFeed then we want to delete it. 
+			    if (selectedNode.isLeaf() && (nodeInfo instanceof RssFeedDetails)){
+			    	// Grab the object so we can delete the file and the entry
+			    	// in the podcast databast
+			    	RssFeedDetails podcast = (RssFeedDetails) selectedNode.getUserObject();
+			    	// Create and Show a Directory Dialog for the user to choose the feed
+			    	// directory.
+			    	JFileChooser browseWindow= new JFileChooser();
+			    	// Sets what is able to be selected. in this case, a folder.
+			    	browseWindow.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			    	// bwr is browser window result
+			    	int bwr = browseWindow.showOpenDialog(bgdownloader);
+			    	// 
+			    	if (bwr==JFileChooser.APPROVE_OPTION){
+			    		File chosenDir = browseWindow.getSelectedFile();
+		    			// Don't need to test if chosen Dir is a folder, as it has already
+			    		// been tested in the if statement.
+			    		
+			    		// If podcast folder has been changed, re-queue downloads, as download folder has changed
+			    		if(podcast.setLocalStore(chosenDir.toString())==0)
+			    			podcast.queueDownloads();
+			    	} else {
+			    		
+			    	}
+			    }
+			}
 		}
 		if (command.compareTo("updateInterval")==0){
 			System.out.println("command update interval");

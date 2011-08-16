@@ -12,26 +12,25 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
  * @author bugman
  *
  */
-public class RssFeedDetails extends Thread{
+public class RssFeedDetails implements Runnable{
 
 	private String feedName; // String storing the feed.
 	private URL address; // The Address for the podcast
 	private String localStore; // Directory to download files to.
 	private String feedDbName; // filename of Database.
-	//private SQLiteConnection feedDb; // Connection the the database for this feed
 	private DataStorage settings;
 	private DownloadList downloads; // Gui list for the feed
 	private boolean newFeed;  // Is this a creation of a brand new feed?
 	private Vector<Episode> downloadData = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
 	private TreePane tree;
 	private JPanel cards;
-	private DownloadQueue mainDownloadQueue;
 
 	/** This will create a podcast from previously saved database.
 	 * 
@@ -43,7 +42,7 @@ public class RssFeedDetails extends Thread{
 	 * @param downloads - The DownloadList
 	 */
 	public RssFeedDetails(String feedName, String dbStore, String address, String localStore,
-						  DataStorage settings, TreePane treePanel, JPanel cardPanel, DownloadQueue podcastQueue) {
+						  DataStorage settings, TreePane treePanel, JPanel cardPanel) {
 		try {
 			this.feedName = feedName;
 			this.address = new URL(address);
@@ -53,7 +52,6 @@ public class RssFeedDetails extends Thread{
 			tree = treePanel;
 			cards = cardPanel;
 			downloads = new DownloadList(true);
-			mainDownloadQueue=podcastQueue;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,13 +70,12 @@ public class RssFeedDetails extends Thread{
 	 * @param treePane 
 	 * @param podcastQueue 
 	 */
-	public RssFeedDetails(String address, DataStorage settings, TreePane treePane, JPanel cardPane, DownloadQueue podcastQueue){
+	public RssFeedDetails(String address, DataStorage settings, TreePane treePane, JPanel cardPane){
 		try {
 			this.address = new URL(address);
 			downloads = new DownloadList(true);
 			tree = treePane;
 			cards=cardPane;
-			mainDownloadQueue=podcastQueue; 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,8 +108,19 @@ public class RssFeedDetails extends Thread{
 		}
 	}
 	
-	public void setLocalStore(String localDir){
-		localStore = localDir;
+	public int setLocalStore(String localDir){
+		File directory = new File(localDir);
+		System.out.println(localDir);
+		if (directory.exists()){
+			if (directory.isDirectory()){
+				localStore = localDir;
+				return 0;
+			} else {
+				JOptionPane.showMessageDialog(null, "Error in moving Podcast folder.", "bgDownloader", JOptionPane.ERROR_MESSAGE);
+				return 1;
+			}
+		}
+		return 1;
 	}
 	
 	public String getFeedName(){
@@ -247,14 +255,10 @@ public class RssFeedDetails extends Thread{
 			if (!downloadData.get(dlc).downloaded){
 				String filename=downloadData.get(dlc).url;
 				filename=localStore+"/"+filename.substring(filename.lastIndexOf('/')+1);
-				if (!(new File(filename).exists())){
-					try {
-						mainDownloadQueue.addDownload(new URL(downloadData.get(dlc).url), filename,downloads);
-					} catch (MalformedURLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+				File checkFile = new File(filename);
+				if (checkFile.exists())
+					if (checkFile.length()==Long.parseLong(downloadData.get(dlc).size))
+						downloadData.get(dlc).downloaded=true;
 			}
 		}
 	}
