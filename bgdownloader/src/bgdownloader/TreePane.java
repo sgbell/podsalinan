@@ -72,4 +72,8 @@ public class TreePane extends JPanel {
 	public JTree getTree(){
 		return treePanel;
 	}
+	
+	public DefaultMutableTreeNode getRssFeeds(){
+		return rssFeeds;
+	}
 }

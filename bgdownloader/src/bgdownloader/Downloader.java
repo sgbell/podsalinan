@@ -12,14 +12,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 
 /**
  * @author bugman
  *
  */
-public class Downloader implements Runnable{
+public class Downloader extends NotifyingRunnable{
 	private URL fileDownload;
 	private String destination;
 	private long fileSize;
@@ -95,48 +93,44 @@ public class Downloader implements Runnable{
 	 * 
 	 */
 	public void getFile(){
-		boolean viaChannel=false;
 
 		try {
 			if (isInternetReachable()){
-				if (viaChannel){
-					ReadableByteChannel rbc = Channels.newChannel(fileDownload.openStream());
-					FileOutputStream fos = new FileOutputStream(destination);
-					
-					if (fileSize>0){
-						long partSize = 1024;
-						long filepos=0;
-						percentage=0;
-					
-						while (filepos<fileSize){
-							percentage=(int) ((filepos/fileSize)*100);
-							// transferring via Channel's is soooooooooooo slow.
-							fos.getChannel().transferFrom(rbc, filepos, filepos+partSize);
-							filepos+=partSize;
-						}
-					} else {
-						fos.getChannel().transferFrom(rbc, 0, 1 << 24);
-					}
-				} else {
-					byte buf[]=new byte[1024];
-					int byteRead;	// Number of bytes read from file being downloaded
-					long saved=0;	// Number of bytes saved
-					//int lastPercent=-1;
-					OutputStream outStream= new BufferedOutputStream(new FileOutputStream(destination));
-					
-					InputStream inStream = fileDownload.openStream();
-					while ((byteRead = inStream.read(buf)) != -1){
-						outStream.write(buf, 0, byteRead);
-						saved+=byteRead;
-						if (fileSize>0){
-							double temppercent=((double)saved/(double)fileSize);
-							percentage=(int)((temppercent)*100);
-							downloadTable.downloadProgress(fileDownload.toString(), percentage);
-						}
-					}
-					inStream.close();
-					outStream.close();
+				byte buf[]=new byte[1024];
+				int byteRead;	// Number of bytes read from file being downloaded
+				long saved=0;	// Number of bytes saved
+
+				// The following if statement checks if the file exists, and then get's the size
+				/*
+				File checkFile = new File(destination);
+				if (checkFile.exists()){
+					saved=checkFile.length();
 				}
+				*/
+				
+				OutputStream outStream= new BufferedOutputStream(new FileOutputStream(destination));
+					
+				InputStream inStream = fileDownload.openStream();
+				
+				// If the size of the file already saved is bigger than 0 and smaller than the download size
+				// skip to the point in the file we need to continue from.
+				/*
+				if (saved>0&&saved<fileSize){
+					inStream.skip(saved);
+				}
+				*/
+				
+				while ((byteRead = inStream.read(buf)) != -1){
+					outStream.write(buf, 0, byteRead);
+					saved+=byteRead;
+					if (fileSize>0){
+						double temppercent=((double)saved/(double)fileSize);
+						percentage=(int)((temppercent)*100);
+						downloadTable.downloadProgress(fileDownload.toString(), percentage);
+					}
+				}
+				inStream.close();
+				outStream.close();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -148,10 +142,11 @@ public class Downloader implements Runnable{
 		return percentage;
 	}
 	
-	public void run(){
+	@Override
+	public void doRun() {
 		getFile();
 		synchronized (syncObject){
 			syncObject.notify();
-		}
+		}		
 	}
 }

@@ -31,6 +31,7 @@ public class RssFeedDetails implements Runnable{
 	private Vector<Episode> downloadData = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
 	private TreePane tree;
 	private JPanel cards;
+	private Object syncObject;
 
 	/** This will create a podcast from previously saved database.
 	 * 
@@ -42,7 +43,7 @@ public class RssFeedDetails implements Runnable{
 	 * @param downloads - The DownloadList
 	 */
 	public RssFeedDetails(String feedName, String dbStore, String address, String localStore,
-						  DataStorage settings, TreePane treePanel, JPanel cardPanel) {
+						  DataStorage settings, TreePane treePanel, JPanel cardPanel, Object syncObject) {
 		try {
 			this.feedName = feedName;
 			this.address = new URL(address);
@@ -52,6 +53,7 @@ public class RssFeedDetails implements Runnable{
 			tree = treePanel;
 			cards = cardPanel;
 			downloads = new DownloadList(true);
+			this.syncObject=syncObject;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,12 +72,13 @@ public class RssFeedDetails implements Runnable{
 	 * @param treePane 
 	 * @param podcastQueue 
 	 */
-	public RssFeedDetails(String address, DataStorage settings, TreePane treePane, JPanel cardPane){
+	public RssFeedDetails(String address, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
 		try {
 			this.address = new URL(address);
 			downloads = new DownloadList(true);
 			tree = treePane;
 			cards=cardPane;
+			this.syncObject=syncObject;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -94,6 +97,10 @@ public class RssFeedDetails implements Runnable{
 	
 	public DownloadList getDownloadList(){
 		return downloads;
+	}
+	
+	public Vector<Episode> getDownloadData(){
+		return downloadData;
 	}
 	
 	public void setFeedName(String feed){
@@ -239,7 +246,13 @@ public class RssFeedDetails implements Runnable{
 		
 		tree.addrssFeed(this);
 		cards.add(getDownloadList(),getFeedName());
-		queueDownloads();
+		checkDownloads();
+
+		// The following Tells the DownloadQueue to wake up, cos there's something there
+		synchronized (syncObject){
+			syncObject.notify();
+		}
+
 	}
 	
 	public String getdb() {
@@ -249,16 +262,29 @@ public class RssFeedDetails implements Runnable{
 	/** This will search through the array of downloads for the feed, mark the files that are already downloaded
 	 *  and then queues the files that are not downloaded yet. 
 	 */
-	public void queueDownloads(){
+	public void checkDownloads(){
 		// Travel through the array
 		for (int dlc=0; dlc<downloadData.size(); dlc++){
-			if (!downloadData.get(dlc).downloaded){
+			if (downloadData.get(dlc).downloaded!=downloadData.get(dlc).FINISHED){
 				String filename=downloadData.get(dlc).url;
 				filename=localStore+"/"+filename.substring(filename.lastIndexOf('/')+1);
 				File checkFile = new File(filename);
-				if (checkFile.exists())
-					if (checkFile.length()==Long.parseLong(downloadData.get(dlc).size))
-						downloadData.get(dlc).downloaded=true;
+				if (checkFile.exists()){
+					if (checkFile.length()==Long.parseLong(downloadData.get(dlc).size)){
+						downloadData.get(dlc).downloaded=downloadData.get(dlc).FINISHED;
+						downloads.getDownloads().setValueAt("100%", dlc, 2);
+					//	System.out.println("RSF - Filename: "+checkFile.toString());
+					//	System.out.println("RSF - Status: "+downloadData.get(dlc).downloaded);
+					}
+					else if (checkFile.length()<Long.parseLong(downloadData.get(dlc).size)){
+						downloadData.get(dlc).downloaded=downloadData.get(dlc).PREVIOUSLY_STARTED;
+						double temppercent=((double)checkFile.length()/Double.parseDouble(downloadData.get(dlc).size));
+						int percentage=(int)((temppercent)*100);
+						downloads.getDownloads().setValueAt(percentage+"%", dlc, 2);
+					}
+				} else {
+					downloadData.get(dlc).downloaded=downloadData.get(dlc).NOT_STARTED;
+				}
 			}
 		}
 	}

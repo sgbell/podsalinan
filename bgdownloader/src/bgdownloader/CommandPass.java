@@ -81,7 +81,7 @@ public class CommandPass implements ActionListener {
 			    		
 			    		// If podcast folder has been changed, re-queue downloads, as download folder has changed
 			    		if(podcast.setLocalStore(chosenDir.toString())==0)
-			    			podcast.queueDownloads();
+			    			podcast.checkDownloads();
 			    	} else {
 			    		
 			    	}

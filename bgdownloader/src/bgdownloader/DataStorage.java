@@ -19,11 +19,13 @@ import com.almworks.sqlite4java.SQLiteStatement;
 public class DataStorage {
 	private String settingsDir;
 	private Vector<Podcast> podcastDB;
+	private Object syncObject;
 	
 	/**
 	 * 
 	 */
-	public DataStorage(){
+	public DataStorage(Object syncObject){
+		this.syncObject=syncObject;
 		
 		// This if Block checks to see if it's windows or linux, and sets the
 		// settings directory appropriately.
@@ -110,9 +112,11 @@ public class DataStorage {
 														podcastDB.elementAt(pcc).directory,
 														this, 
 														tree, 
-														cards);
+														cards,
+														syncObject);
 			Thread podcastRunner = new Thread(podcast);
 			podcastRunner.start();
+			
 		}
 		
 		return 0;

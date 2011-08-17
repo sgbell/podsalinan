@@ -29,7 +29,7 @@ public class BGDownloader extends JFrame {
 	private DataStorage settings;
 	private DownloadQueue podcastQueue;
 	private boolean programExiting=false;
-	private Object syncObject;
+	private Object syncObject=new Object();
 	/**
 	 * Upon execution the program will create a new instance of bgdownloader, which is where
 	 * most of the work happens. Creating the new instance builds the main window.
@@ -85,7 +85,7 @@ public class BGDownloader extends JFrame {
 		cardPane = new JPanel(new CardLayout()); 
 		treePane.cardView(cardPane);
 
-		settings = new DataStorage();
+		settings = new DataStorage(syncObject);
 		settings.loadSettings();
 		aListener.setDataStorage(settings,programExiting);
 		
@@ -110,7 +110,7 @@ public class BGDownloader extends JFrame {
 		   Need to change it so it scans through each of the rss feeds,
 		   and the download window, to download files.
 		*/
-		podcastQueue = new DownloadQueue(programExiting,treePane);
+		podcastQueue = new DownloadQueue(programExiting,treePane, syncObject);
 		Thread downloadingQueue = new Thread(podcastQueue);
 		downloadingQueue.start();
 		
@@ -122,7 +122,7 @@ public class BGDownloader extends JFrame {
 	}
 	
 	public void addRssFeed(String newFeed){
-		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings,treePane, cardPane);
+		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings,treePane, cardPane, syncObject);
 		Thread podcastRunner = new Thread(newPodcast);
 		podcastRunner.start();
 	}
