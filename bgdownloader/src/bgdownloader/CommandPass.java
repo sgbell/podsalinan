@@ -17,9 +17,11 @@ import javax.swing.tree.DefaultTreeModel;
 public class CommandPass implements ActionListener {
 	private JTree tree;
 	private BGDownloader bgdownloader;
-	private DataStorage systemSettings;
-	@SuppressWarnings("unused")
 	private boolean programExiting;
+
+	public CommandPass(boolean programExiting) {
+		this.programExiting=programExiting;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
@@ -27,7 +29,7 @@ public class CommandPass implements ActionListener {
 		
 		if (command.compareTo("quit")==0){
 			programExiting=true;
-			systemSettings.saveSettings();
+			bgdownloader.saveSettings();
 			System.exit(0);
 		}
 		if (command.compareTo("addURL")==0){
@@ -80,8 +82,8 @@ public class CommandPass implements ActionListener {
 			    		// been tested in the if statement.
 			    		
 			    		// If podcast folder has been changed, re-queue downloads, as download folder has changed
-			    		if(podcast.setLocalStore(chosenDir.toString())==0)
-			    			podcast.checkDownloads();
+			    		podcast.setLocalStore(chosenDir.toString());
+			    			
 			    	} else {
 			    		
 			    	}
@@ -101,7 +103,7 @@ public class CommandPass implements ActionListener {
 		    	// Grab the object so we can delete the file and the entry
 		    	// in the podcast databast
 		    	RssFeedDetails podcast = (RssFeedDetails) selectedNode.getUserObject();
-		    	systemSettings.deletePodcast(podcast.getFeedName());
+		    	podcast.getDetails().remove=true;
 		    	
 		    	// Following 2 lines remove rss feed from node.
 		    	DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
@@ -122,10 +124,5 @@ public class CommandPass implements ActionListener {
 	
 	public void setParent(BGDownloader parent){
 		bgdownloader = parent;
-	}
-
-	public void setDataStorage(DataStorage settings, boolean programExiting) {
-		systemSettings = settings;
-		this.programExiting=programExiting;
 	}
 }

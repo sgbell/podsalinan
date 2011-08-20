@@ -114,7 +114,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					downloaders.add(newDownloader);
 					newDownloader.addListener(this);
 					Thread downloadThread = new Thread(newDownloader);
-					downloadThread.start();
+					//downloadThread.start();
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

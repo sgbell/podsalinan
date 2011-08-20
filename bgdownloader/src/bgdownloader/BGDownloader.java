@@ -11,6 +11,7 @@ package bgdownloader;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.util.Timer;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,10 +27,12 @@ public class BGDownloader extends JFrame {
 	private URLDownloadList downloads;
 	private TreePane treePane;
 	private JPanel cardPane;
+	private Vector<RssFeedDetails> podcasts;
 	private DataStorage settings;
 	private DownloadQueue podcastQueue;
 	private boolean programExiting=false;
 	private Object syncObject=new Object();
+
 	/**
 	 * Upon execution the program will create a new instance of bgdownloader, which is where
 	 * most of the work happens. Creating the new instance builds the main window.
@@ -42,9 +45,12 @@ public class BGDownloader extends JFrame {
 	}
 
 	public BGDownloader(){
+		// Centralizing all of the podcast information, to make it easier to pass around the system
+		podcasts = new Vector<RssFeedDetails>();
+		
 		JPanel pane = new JPanel();
 		
-		CommandPass aListener = new CommandPass();
+		CommandPass aListener = new CommandPass(programExiting);
 		aListener.setParent(this);
 		/* 
 		 * creating a new MenuBar passing in the instance of bgdownloader, so bgdownloader can then handle all of
@@ -86,8 +92,7 @@ public class BGDownloader extends JFrame {
 		treePane.cardView(cardPane);
 
 		settings = new DataStorage(syncObject);
-		settings.loadSettings();
-		aListener.setDataStorage(settings,programExiting);
+		settings.loadSettings(podcasts,treePane,cardPane);
 		
 		JSplitPane splitpane = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT,treePane,cardPane);
 		splitpane.setDividerLocation(250);
@@ -95,6 +100,8 @@ public class BGDownloader extends JFrame {
 		getContentPane().add(splitpane,BorderLayout.CENTER);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		showPodcasts();
 		
 		// url download list
 		downloads = new URLDownloadList();
@@ -114,15 +121,25 @@ public class BGDownloader extends JFrame {
 		Thread downloadingQueue = new Thread(podcastQueue);
 		downloadingQueue.start();
 		
-		settings.showPodcasts(treePane, cardPane);
+	}
+	
+	public void showPodcasts(){
+		for (int pcc=00; pcc < podcasts.size(); pcc++){
+			Thread podcast = new Thread(podcasts.get(pcc));
+			podcast.start();
+		}
 	}
 
+	public void saveSettings(){
+		settings.saveSettings(podcasts);
+	}
+	
 	public URLDownloadList getDownloadList(){
 		return downloads;
 	}
 	
 	public void addRssFeed(String newFeed){
-		RssFeedDetails newPodcast = new RssFeedDetails(newFeed,settings,treePane, cardPane, syncObject);
+		RssFeedDetails newPodcast= new RssFeedDetails(new Details(newFeed), settings, treePane, cardPane, syncObject);
 		Thread podcastRunner = new Thread(newPodcast);
 		podcastRunner.start();
 	}
@@ -130,4 +147,5 @@ public class BGDownloader extends JFrame {
 	public TreePane getTreePane(){
 		return treePane;
 	}
+
 }

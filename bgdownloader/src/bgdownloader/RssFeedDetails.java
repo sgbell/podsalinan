@@ -21,10 +21,7 @@ import javax.swing.JPanel;
  */
 public class RssFeedDetails implements Runnable{
 
-	private String feedName; // String storing the feed.
-	private URL address; // The Address for the podcast
-	private String localStore; // Directory to download files to.
-	private String feedDbName; // filename of Database.
+	private Details details;
 	private DataStorage settings;
 	private DownloadList downloads; // Gui list for the feed
 	private boolean newFeed;  // Is this a creation of a brand new feed?
@@ -33,60 +30,33 @@ public class RssFeedDetails implements Runnable{
 	private JPanel cards;
 	private Object syncObject;
 
-	/** This will create a podcast from previously saved database.
-	 * 
-	 * @param feedName - A String used in the Tree table
-	 * @param address - the URL
-	 * @param localStore - the local system address for the files to be downloaded to
-	 * @param cardPanel 
-	 * @param treePanel 
-	 * @param downloads - The DownloadList
-	 */
-	public RssFeedDetails(String feedName, String dbStore, String address, String localStore,
-						  DataStorage settings, TreePane treePanel, JPanel cardPanel, Object syncObject) {
-		try {
-			this.feedName = feedName;
-			this.address = new URL(address);
-			this.localStore = localStore;
-			this.feedDbName = dbStore;
-			this.settings = settings;
-			tree = treePanel;
-			cards = cardPanel;
-			downloads = new DownloadList(true);
-			this.syncObject=syncObject;
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		newFeed = false;
-	}
-	
 	/** This is used when creating a brand new feed
-	 * 
-	 * @param address
-	 * @param directory 
-	 * @param url 
-	 * @param datafile 
+	 *
+	 * @param newPodcast
 	 * @param settings 
 	 * @param cardPane 
 	 * @param treePane 
 	 * @param podcastQueue 
 	 */
-	public RssFeedDetails(String address, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
-		try {
-			this.address = new URL(address);
-			downloads = new DownloadList(true);
-			tree = treePane;
-			cards=cardPane;
-			this.syncObject=syncObject;
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		newFeed = true;
+	public RssFeedDetails(Details newPodcast, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
+		details=newPodcast;
+		
+		tree = treePane;
+		cards=cardPane;
+		downloads = new DownloadList(true);
 		this.settings=settings;
+		this.syncObject=syncObject;
+		
+		if (details.name.isEmpty())
+			newFeed = true;
+		else
+			newFeed = false;
 	}
 
+	public Details getDetails(){
+		return details;
+	}
+	
 	/**
 	 * setDownloadList modifies the download list
 	 * @param downloads
@@ -104,23 +74,19 @@ public class RssFeedDetails implements Runnable{
 	}
 	
 	public void setFeedName(String feed){
-		feedName = feed;
+		details.name = feed;
 	}
 	
 	public void setURL(String url){
-		try {
-			address = new URL(url);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		details.url=url;
 	}
 	
 	public int setLocalStore(String localDir){
 		File directory = new File(localDir);
-		System.out.println(localDir);
 		if (directory.exists()){
 			if (directory.isDirectory()){
-				localStore = localDir;
+				details.directory = localDir;
+				details.changed=true;
 				return 0;
 			} else {
 				JOptionPane.showMessageDialog(null, "Error in moving Podcast folder.", "bgDownloader", JOptionPane.ERROR_MESSAGE);
@@ -131,19 +97,19 @@ public class RssFeedDetails implements Runnable{
 	}
 	
 	public String getFeedName(){
-		return feedName;
+		return details.name;
 	}
 	
-	public URL getURL(){
-		return address;
+	public String getURL(){
+		return details.url;
 	}
 	
 	public String getLocalStore(){
-		return localStore;
+		return details.directory;
 	}
 	
 	public String toString(){
-		return feedName;
+		return details.name;
 	}
 
 	/** Function to download Feed
@@ -152,7 +118,7 @@ public class RssFeedDetails implements Runnable{
 	public void downloadFeed(){
 		int outputCount=1;
 		// temporary download destination of podcast xml file
-		String outputFile = settings.getSettingsDir().concat("/temp.xml");
+		String outputFile = details.directory.concat("/temp.xml");
 		
 		while (new File(outputFile).exists()){
 			outputFile = outputFile.concat("("+outputCount+")");
@@ -160,23 +126,29 @@ public class RssFeedDetails implements Runnable{
 		}
 		
 		// Following 3 lines of code download podcast XML file
-		Downloader d = new Downloader(address,outputFile);
-		// I don't want to start another thread, as this is already being executed
-		// in a thread, and we can't continue without the file.
-		d.getFile();
+		Downloader d;
+		try {
+			d = new Downloader(new URL(details.url),outputFile);
+			// I don't want to start another thread, as this is already being executed
+			// in a thread, and we can't continue without the file.
+			d.getFile();
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		XmlReader podcastXML = new XmlReader(outputFile);
 	
 		if (newFeed){
 			// Grab the feed name from the podcast feed
-			feedName = podcastXML.getFeedTitle();
+			details.name = podcastXML.getFeedTitle();
 
 			try {
 				// The following lines are used to create a md5  hash for the filename.
 				MessageDigest md = MessageDigest.getInstance("MD5");
-				byte[] bytesFeedName = feedName.getBytes("UTF-8");
-				md.update(bytesFeedName, 0, feedName.length());
+				byte[] bytesFeedName = details.name.getBytes("UTF-8");
+				md.update(bytesFeedName, 0, details.name.length());
 				// The feedFilename is a md5 hash.
-				feedDbName = new BigInteger(1, md.digest()).toString().substring(0, 8);
+				details.datafile = new BigInteger(1, md.digest()).toString().substring(0, 8);
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -220,7 +192,7 @@ public class RssFeedDetails implements Runnable{
 			}
 		}
 		new File(outputFile).delete();
-		settings.savePodcastDB(downloadData, feedDbName);
+		settings.savePodcastDB(downloadData, details.datafile);
 	}
 	
 	/**
@@ -233,15 +205,17 @@ public class RssFeedDetails implements Runnable{
 			
 			downloadFeed();
 			// Set download directory to the default directory
-			localStore=System.getProperty("user.home").concat("/Videos/"+feedName);
-			File localDir = new File(localStore);
+			details.directory=System.getProperty("user.home").concat("/Videos/"+details.name);
+			File localDir = new File(details.directory);
 			if (!localDir.exists()){
 				localDir.mkdirs();
 			}
-			settings.addPodcast(this);
 		} else {
 			// Load podcast from sqlite database
-			settings.loadPodcastDB(downloadData,feedDbName,downloads);
+			settings.loadPodcastDB(downloadData,details.datafile,downloads);
+			details.added=true;
+			details.remove=false;
+			details.changed=false;
 		}
 		
 		tree.addrssFeed(this);
@@ -256,7 +230,7 @@ public class RssFeedDetails implements Runnable{
 	}
 	
 	public String getdb() {
-		return feedDbName;
+		return details.datafile;
 	}
 	
 	/** This will search through the array of downloads for the feed, mark the files that are already downloaded
@@ -267,14 +241,12 @@ public class RssFeedDetails implements Runnable{
 		for (int dlc=0; dlc<downloadData.size(); dlc++){
 			if (downloadData.get(dlc).downloaded!=downloadData.get(dlc).FINISHED){
 				String filename=downloadData.get(dlc).url;
-				filename=localStore+"/"+filename.substring(filename.lastIndexOf('/')+1);
+				filename=details.directory+"/"+filename.substring(filename.lastIndexOf('/')+1);
 				File checkFile = new File(filename);
 				if (checkFile.exists()){
 					if (checkFile.length()==Long.parseLong(downloadData.get(dlc).size)){
 						downloadData.get(dlc).downloaded=downloadData.get(dlc).FINISHED;
 						downloads.getDownloads().setValueAt("100%", dlc, 2);
-					//	System.out.println("RSF - Filename: "+checkFile.toString());
-					//	System.out.println("RSF - Status: "+downloadData.get(dlc).downloaded);
 					}
 					else if (checkFile.length()<Long.parseLong(downloadData.get(dlc).size)){
 						downloadData.get(dlc).downloaded=downloadData.get(dlc).PREVIOUSLY_STARTED;

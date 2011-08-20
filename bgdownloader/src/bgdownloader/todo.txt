@@ -18,13 +18,18 @@ Todo List
 	on nothing.
   -- Completed
 * Add functionality to "Change Download Directory"
+  + To do this we need to link the data in the podcast vector directly into rssfeed, saving
+  		memory usage, and only having the information in 1 place.
   -- In Progress
 * Changing linking of RssFeed vector and DownloadQueue vector, so when details are changed from RssFeed,
 	it automatically changes the details, as they will all be pointing to the same information.
+  -- Completed
 * Change Classes that extend Thread Class to Implement Runnable instead.
+  --Completed
 * Create a listener, as found in http://stackoverflow.com/questions/702415/how-to-know-if-other-threads-have-finished
 	to monitor when a thread is finished and remove it from the downloaderqueue.
-	
-* Store program settings in config files.
+  -- Completed
 * Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.
-
+  -- Completed
+* Store program settings in config files.
+  

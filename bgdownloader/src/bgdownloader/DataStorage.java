@@ -18,7 +18,6 @@ import com.almworks.sqlite4java.SQLiteStatement;
  */
 public class DataStorage {
 	private String settingsDir;
-	private Vector<Podcast> podcastDB;
 	private Object syncObject;
 	
 	/**
@@ -41,15 +40,11 @@ public class DataStorage {
 		}
 	}
 	
-	public Vector<Podcast> getPodcastDB(){
-		return podcastDB;
-	}
-	
 	/** loadSettings loads the settings from the database.
 	 * 
 	 * @return
 	 */
-	public int loadSettings(){
+	public int loadSettings(Vector<RssFeedDetails> podcasts, TreePane tree, JPanel card){
 		boolean firstRun = true;
 		SQLiteStatement sql;
 		
@@ -63,7 +58,7 @@ public class DataStorage {
 		
 		try {
 			settingsDB.open(true);
-			podcastDB = new Vector<Podcast>(); 
+			
 			if (firstRun){
 				sql = settingsDB.prepare("CREATE TABLE IF NOT EXISTS podcasts (" +
 						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -77,12 +72,15 @@ public class DataStorage {
 				sql = settingsDB.prepare("SELECT * from podcasts;");
 				while (sql.step()){
 					if (sql.hasRow()){
-						Podcast podcast = new Podcast(sql.columnString(1),
-													  sql.columnString(2),
-													  sql.columnString(3),
-													  sql.columnString(4));
-						podcast.added=true;
-						podcastDB.add(podcast);
+						RssFeedDetails newPodcast = new RssFeedDetails(new Details(sql.columnString(1),
+													  							   sql.columnString(2),
+													  							   sql.columnString(3),
+													  							   sql.columnString(4)),
+													  							   this,
+													  							   tree,
+													  							   card,
+													  							   syncObject);
+						podcasts.add(newPodcast);
 					}
 				}
 			}
@@ -93,32 +91,6 @@ public class DataStorage {
 			e.printStackTrace();
 			return 1;
 		}
-		return 0;
-	}
-	
-	/**
-	 * 
-	 * @param tree
-	 * @param cards
-	 * @param podcastQueue 
-	 * @return
-	 */
-	public int showPodcasts(TreePane tree, JPanel cards){
-		
-		for (int pcc=0; pcc < podcastDB.size(); pcc++){
-			RssFeedDetails podcast = new RssFeedDetails(podcastDB.elementAt(pcc).name,
-														podcastDB.elementAt(pcc).datafile,
-														podcastDB.elementAt(pcc).url,
-														podcastDB.elementAt(pcc).directory,
-														this, 
-														tree, 
-														cards,
-														syncObject);
-			Thread podcastRunner = new Thread(podcast);
-			podcastRunner.start();
-			
-		}
-		
 		return 0;
 	}
 	
@@ -150,7 +122,7 @@ public class DataStorage {
 	/**
 	 * 
 	 */
-	public void saveSettings() {
+	public void saveSettings(Vector<RssFeedDetails> podcasts) {
 		SQLiteStatement sql;
 		
 		String configFile = settingsDir.concat("/podcast.db");
@@ -158,17 +130,22 @@ public class DataStorage {
 
 		try {
 			settingsDB.open(true);
-			for (int pcc=0; pcc < podcastDB.size(); pcc++){
-				if ((!podcastDB.get(pcc).added)&&(!podcastDB.get(pcc).remove)){
-					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+podcastDB.get(pcc).name+"'," +
-												"'"+podcastDB.get(pcc).datafile+"'," +
-												"'"+podcastDB.get(pcc).url+"'," +
-												"'"+podcastDB.get(pcc).directory+"');");
+			for (int pcc=0; pcc < podcasts.size(); pcc++){
+				Details currentPodcast=podcasts.get(pcc).getDetails();
+				if ((!currentPodcast.added)&&(!currentPodcast.remove)){
+					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+currentPodcast.name+"'," +
+												"'"+currentPodcast.datafile+"'," +
+												"'"+currentPodcast.url+"'," +
+												"'"+currentPodcast.directory+"');");
 					sql.stepThrough();
 					sql.dispose();
-					podcastDB.get(pcc).added=true;
-				} else if (podcastDB.get(pcc).remove){
-					sql = settingsDB.prepare("DELETE FROM podcasts WHERE localfile='"+podcastDB.get(pcc).datafile+"';");
+					currentPodcast.added=true;
+				} else if (currentPodcast.remove){
+					sql = settingsDB.prepare("DELETE FROM podcasts WHERE localfile='"+currentPodcast.datafile+"';");
+					sql.stepThrough();
+					sql.dispose();
+				} else if (currentPodcast.changed){
+					sql = settingsDB.prepare("UPDATE podcasts SET directory='"+currentPodcast.directory+"';");
 					sql.stepThrough();
 					sql.dispose();
 				}
@@ -178,18 +155,6 @@ public class DataStorage {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * 
-	 * @param newPodcast
-	 */
-	public void addPodcast(RssFeedDetails newPodcast) {
-		Podcast podcast = new Podcast(newPodcast.getFeedName(),
-									  newPodcast.getdb(),
-									  newPodcast.getURL().toString(),
-									  newPodcast.getLocalStore());
-		podcastDB.add(podcast);
 	}
 
 	public void loadPodcastDB(Vector<Episode> episodes, String feedDbName, DownloadList downloads){
@@ -271,16 +236,4 @@ public class DataStorage {
 		return settingsDir;
 	}
 
-	/**
-	 * 
-	 * @param feedName
-	 */
-	public void deletePodcast(String feedName) {
-		int pcc=0;
-		while (podcastDB.get(pcc).name!=feedName){
-			pcc++;
-		}
-		new File(settingsDir+"/"+podcastDB.get(pcc).datafile+".pod").delete();
-		podcastDB.get(pcc).remove=true;
-	}
 }
