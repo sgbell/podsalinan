@@ -44,16 +44,38 @@ public class DataStorage {
 	 * 
 	 * @return
 	 */
-	public int loadSettings(Vector<RssFeedDetails> podcasts, TreePane tree, JPanel card){
+	public int loadSettings(Vector<RssFeedDetails> podcasts, URLDownloadList downloads, Vector<ProgSettings> progSettings, TreePane tree, JPanel card){
 		boolean firstRun = true;
 		SQLiteStatement sql;
+		
+		// Path to the downloads database
+		File downloadsDBFile = new File(settingsDir.concat("/downloads.db"));
+		// does the download file exist
+		if (downloadsDBFile.exists()){
+			SQLiteConnection downloadDB = new SQLiteConnection(downloadsDBFile);
+			
+			try {
+				downloadDB.open(true);
+				sql = downloadDB.prepare("SELECT * FROM downloads;");
+				
+				while (sql.step()){
+					if (sql.hasRow()){
+						downloads.addDownload(sql.columnString(1));
+					}
+				}
+			} catch (SQLiteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		
 		String configFile = settingsDir.concat("/podcast.db");
 		
 		if (new File(configFile).exists()){
 			firstRun = false;
 		}
-
+		
 		SQLiteConnection settingsDB = new SQLiteConnection(new File(configFile));
 		
 		try {
@@ -67,12 +89,18 @@ public class DataStorage {
 						"url TEXT, " +
 						"directory TEXT);");
 				sql.stepThrough();
+				sql.dispose();
+				sql = settingsDB.prepare("CREATE TABLE IF NOT EXISTS settings (" +
+						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+						"name TEXT, " +
+						"value TEXT);");
+				sql.stepThrough();
 			} else {
 				// Do a search in the podcasts table for podcasts stored in the system
 				sql = settingsDB.prepare("SELECT * from podcasts;");
 				while (sql.step()){
 					if (sql.hasRow()){
-						RssFeedDetails newPodcast = new RssFeedDetails(new Details(sql.columnString(1),
+						RssFeedDetails newPodcast = new RssFeedDetails(new PodDetails(sql.columnString(1),
 													  							   sql.columnString(2),
 													  							   sql.columnString(3),
 													  							   sql.columnString(4)),
@@ -81,6 +109,15 @@ public class DataStorage {
 													  							   card,
 													  							   syncObject);
 						podcasts.add(newPodcast);
+					}
+				}
+				sql.dispose();
+				sql = settingsDB.prepare("SELECT * from settings;");
+				while (sql.step()){
+					if (sql.hasRow()){
+						ProgSettings newSetting = new ProgSettings(sql.columnString(1),
+															  sql.columnString(2));
+						progSettings.add(newSetting);
 					}
 				}
 			}
@@ -120,10 +157,39 @@ public class DataStorage {
 	}
 
 	/**
+	 * @param downloads 
 	 * 
 	 */
-	public void saveSettings(Vector<RssFeedDetails> podcasts) {
+	public void saveSettings(Vector<RssFeedDetails> podcasts, URLDownloadList downloads) {
 		SQLiteStatement sql;
+		boolean dbExists;
+		
+		File downloadsDBFile = new File(settingsDir.concat("/downloads.db"));
+		dbExists = downloadsDBFile.exists();
+		SQLiteConnection downloadsDB = new SQLiteConnection(downloadsDBFile);
+
+		try {
+			downloadsDB.open(true);
+			if (!dbExists){
+				sql = downloadsDB.prepare("CREATE TABLE IF NOT EXISTS downloads(" +
+						  								"id INTEGER PRIMARY KEY AUTOINCREMENT," +
+						  								"url TEXT);");
+				sql.stepThrough();
+				sql.dispose();
+				for (int dlc=0; dlc < downloads.getDownloads().size(); dlc++){
+					sql = downloadsDB.prepare("INSERT downloads(url) VALUES " +
+													"('"+downloads.getDownloads().get(dlc)+"');");
+					sql.stepThrough();
+					sql.dispose();
+				}
+			} else {
+
+			}
+			
+		} catch (SQLiteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		String configFile = settingsDir.concat("/podcast.db");
 		SQLiteConnection settingsDB = new SQLiteConnection(new File(configFile));
@@ -131,7 +197,7 @@ public class DataStorage {
 		try {
 			settingsDB.open(true);
 			for (int pcc=0; pcc < podcasts.size(); pcc++){
-				Details currentPodcast=podcasts.get(pcc).getDetails();
+				PodDetails currentPodcast=podcasts.get(pcc).getDetails();
 				if ((!currentPodcast.added)&&(!currentPodcast.remove)){
 					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+currentPodcast.name+"'," +
 												"'"+currentPodcast.datafile+"'," +

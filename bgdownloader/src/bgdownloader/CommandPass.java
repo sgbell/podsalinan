@@ -42,7 +42,7 @@ public class CommandPass implements ActionListener {
                     null,
                     null);
 			if (!url.isEmpty())
-				bgdownloader.getDownloadList().getDownloadList().addDownload(url);
+				bgdownloader.addDownload(url);
 		}
 		if (command.compareTo("addRSS")==0){
 			String url = (String)JOptionPane.showInputDialog(

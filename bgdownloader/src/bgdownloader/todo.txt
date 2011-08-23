@@ -20,7 +20,7 @@ Todo List
 * Add functionality to "Change Download Directory"
   + To do this we need to link the data in the podcast vector directly into rssfeed, saving
   		memory usage, and only having the information in 1 place.
-  -- In Progress
+  -- Completed
 * Changing linking of RssFeed vector and DownloadQueue vector, so when details are changed from RssFeed,
 	it automatically changes the details, as they will all be pointing to the same information.
   -- Completed
@@ -32,4 +32,14 @@ Todo List
 * Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.
   -- Completed
 * Store program settings in config files.
-  
+  -- Completed
+* Store URL Downloads
+	+ Need to Redesign Details class. It needs to hold the following:
+		= the URL
+		= added - Boolean value, to define if it has been added to the database.
+		= removed - Boolean value, to define if it has been deleted from the system.
+		-- Completed
+	+ Create PodDetails class to extend Details Class to add details needed for
+		podcasts.
+		-- Completed 
+  -- In progress

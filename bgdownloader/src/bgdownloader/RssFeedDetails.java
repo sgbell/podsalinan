@@ -21,7 +21,7 @@ import javax.swing.JPanel;
  */
 public class RssFeedDetails implements Runnable{
 
-	private Details details;
+	private PodDetails details;
 	private DataStorage settings;
 	private DownloadList downloads; // Gui list for the feed
 	private boolean newFeed;  // Is this a creation of a brand new feed?
@@ -38,7 +38,7 @@ public class RssFeedDetails implements Runnable{
 	 * @param treePane 
 	 * @param podcastQueue 
 	 */
-	public RssFeedDetails(Details newPodcast, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
+	public RssFeedDetails(PodDetails newPodcast, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
 		details=newPodcast;
 		
 		tree = treePane;
@@ -53,7 +53,7 @@ public class RssFeedDetails implements Runnable{
 			newFeed = false;
 	}
 
-	public Details getDetails(){
+	public PodDetails getDetails(){
 		return details;
 	}
 	
@@ -246,13 +246,13 @@ public class RssFeedDetails implements Runnable{
 				if (checkFile.exists()){
 					if (checkFile.length()==Long.parseLong(downloadData.get(dlc).size)){
 						downloadData.get(dlc).downloaded=downloadData.get(dlc).FINISHED;
-						downloads.getDownloads().setValueAt("100%", dlc, 2);
+						downloads.downloadProgress(dlc, 100);
 					}
 					else if (checkFile.length()<Long.parseLong(downloadData.get(dlc).size)){
 						downloadData.get(dlc).downloaded=downloadData.get(dlc).PREVIOUSLY_STARTED;
 						double temppercent=((double)checkFile.length()/Double.parseDouble(downloadData.get(dlc).size));
 						int percentage=(int)((temppercent)*100);
-						downloads.getDownloads().setValueAt(percentage+"%", dlc, 2);
+						downloads.downloadProgress(dlc,percentage);
 					}
 				} else {
 					downloadData.get(dlc).downloaded=downloadData.get(dlc).NOT_STARTED;

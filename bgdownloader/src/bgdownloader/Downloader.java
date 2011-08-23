@@ -21,20 +21,28 @@ public class Downloader extends NotifyingRunnable{
 	private URL fileDownload;
 	private String destination;
 	private long fileSize;
-	private int percentage=0;
+	private int percentage=0,
+				listNum;
 	private Object syncObject;
 	private DownloadList downloadTable;
+	private boolean podcast;
 	
 	public String getFilenameDownload(){
 		return fileDownload.toString();
 	}
 	
-	public Downloader(URL urlDownload, String outputFile, String size, Object syncObject, DownloadList downloadTable){
+	public boolean isPodcast(){
+		return podcast;
+	}
+	
+	public Downloader(URL urlDownload, String outputFile, String size, Object syncObject, DownloadList downloadTable, int listNum, boolean podcast){
 		fileDownload = urlDownload;
 		destination = outputFile;
 		fileSize = Long.valueOf(size);
 		this.downloadTable = downloadTable;
 		this.syncObject = syncObject;
+		this.podcast=podcast;
+		this.listNum=listNum;
 	}
 	
 	public Downloader(URL urlDownload, String outputFile, Object syncObject, DownloadList downloadTable) {
@@ -123,11 +131,12 @@ public class Downloader extends NotifyingRunnable{
 				while ((byteRead = inStream.read(buf)) != -1){
 					outStream.write(buf, 0, byteRead);
 					saved+=byteRead;
-					if (fileSize>0){
-						double temppercent=((double)saved/(double)fileSize);
-						percentage=(int)((temppercent)*100);
-						downloadTable.downloadProgress(fileDownload.toString(), percentage);
-					}
+					if (downloadTable!=null)						
+						if (fileSize>0){
+							double temppercent=((double)saved/(double)fileSize);
+							percentage=(int)((temppercent)*100);
+							downloadTable.downloadProgress(listNum, percentage);
+						}
 				}
 				inStream.close();
 				outStream.close();

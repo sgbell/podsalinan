@@ -3,33 +3,38 @@
  */
 package bgdownloader;
 
+import java.util.Vector;
+
 /**
  * @author bugman
  *
  */
 public class URLDownloadList {
 
-	private DownloadList downloads;
+	private DownloadList downloadlist;
+	private Vector<String> downloads;
 	private String title;
 	
 	public URLDownloadList(){
-		downloads = new DownloadList(false);
+		downloadlist = new DownloadList(false);
+		downloads = new Vector<String>();
 		title = "URLS";
 	}
 	
-	public URLDownloadList(DownloadList downloadList){
-		downloads = downloadList;
-	}
-	
-	public void setDownloads(DownloadList downloadList){
-		this.downloads = downloadList;
-	}
-	
 	public DownloadList getDownloadList(){
+		return downloadlist;
+	}
+	
+	public Vector<String> getDownloads(){
 		return downloads;
 	}
 	
 	public String toString(){
 		return title;
+	}
+
+	public void addDownload(String url) {
+		downloads.add(url);
+		downloadlist.addDownload(url);
 	}
 }

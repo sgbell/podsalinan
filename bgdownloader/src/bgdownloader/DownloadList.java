@@ -22,14 +22,14 @@ import javax.swing.table.TableColumn;
 public class DownloadList extends JPanel {
 	
 	private DefaultTableModel downloadList;
-	private Vector<String> filenames;
+	//private Vector<String> filenames;
 	//private JEditorPane previewPane;
 	private boolean isRssFeed;
 	
 	public DownloadList(boolean rssFeed){
 		super();
 
-		filenames = new Vector<String>();
+		//filenames = new Vector<String>();
 		isRssFeed = rssFeed;
 		setLayout(new BorderLayout());
 		if (rssFeed){
@@ -64,22 +64,7 @@ public class DownloadList extends JPanel {
 			myCol.setCellRenderer(new ProgressCellRenderer());
 		}
 		
-		//previewPane = new JEditorPane();
-		//previewPane.setEditable(false);
-		//previewPane.setContentType("text/html");
-		
-		/*
-		if (rssFeed){
-			JSplitPane downloadSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT,new JScrollPane(downloads),previewPane);
-			downloadSplit.setDividerLocation(300);
-			add(downloadSplit);
-		} else {*/
-			add(new JScrollPane(downloads));
-		//}
-	}
-	
-	public DefaultTableModel getDownloads(){
-		return downloadList;
+		add(new JScrollPane(downloads));
 	}
 	
 	public void setPreviewPane(String url){
@@ -92,29 +77,38 @@ public class DownloadList extends JPanel {
 		}*/ 
 	}
 	
+	/** Used for Adding a download in a podcast
+	 * 
+	 * @param title
+	 * @param date
+	 * @param filename
+	 * @param progress
+	 */
 	public void addDownload(String title, String date, String filename,String progress){
 		Object newRow[];
 		
-		newRow = new Object[] {title,date,"0%"};
-		downloadList.addRow(newRow);
-		filenames.add(filename);
-		if (downloadList.getValueAt(0, 0).toString().length()==0){
-			downloadList.removeRow(0);
+		if (filename!=null){
+			if (isRssFeed){
+				newRow = new Object[] {title,date,"0%"};
+				downloadList.addRow(newRow);
+				//filenames.add(filename);
+				if (downloadList.getValueAt(0, 0).toString().length()==0){
+					downloadList.removeRow(0);
+				}			
+			}
 		}
 	}
 	
-	public void downloadProgress(String filename, int progress){
-		String newProgress = Integer.toString(progress)+"%";
-		for (int dlc=0; dlc<downloadList.getRowCount(); dlc++){
-			if (filenames.get(dlc).equals(filename))
-				downloadList.setValueAt(newProgress, dlc, 2);
-		}
-	}
-	
+	/** Used for Adding a stand-alone download
+	 * 
+	 * @param newDownload
+	 */
 	public void addDownload(String newDownload){
 		Object newRow[];
 	
 		if (newDownload != null){
+			// Adding just the filename to the window
+			newDownload=newDownload.substring(newDownload.lastIndexOf('/')+1);
 			if (!isRssFeed){
 				newRow = new Object[] {newDownload,"0%"};
 				downloadList.addRow(newRow);
@@ -124,4 +118,17 @@ public class DownloadList extends JPanel {
 			}
 		}
 	}
+	
+	public void downloadProgress(int dlc, int progress){
+		String newProgress = Integer.toString(progress)+"%";
+		//for (int dlc=0; dlc<downloadList.getRowCount(); dlc++){
+			//if (filenames.get(dlc).equals(filename))
+			// Need another way to find the right one
+		if (isRssFeed)
+			downloadList.setValueAt(newProgress, dlc, 2);
+		else
+			downloadList.setValueAt(newProgress, dlc, 1);
+		//}
+	}
+	
 }

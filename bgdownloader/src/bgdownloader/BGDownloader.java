@@ -28,6 +28,7 @@ public class BGDownloader extends JFrame {
 	private TreePane treePane;
 	private JPanel cardPane;
 	private Vector<RssFeedDetails> podcasts;
+	private Vector<ProgSettings> progSettings;
 	private DataStorage settings;
 	private DownloadQueue podcastQueue;
 	private boolean programExiting=false;
@@ -47,6 +48,7 @@ public class BGDownloader extends JFrame {
 	public BGDownloader(){
 		// Centralizing all of the podcast information, to make it easier to pass around the system
 		podcasts = new Vector<RssFeedDetails>();
+		progSettings = new Vector<ProgSettings>();
 		
 		JPanel pane = new JPanel();
 		
@@ -91,8 +93,14 @@ public class BGDownloader extends JFrame {
 		cardPane = new JPanel(new CardLayout()); 
 		treePane.cardView(cardPane);
 
+		// url download list
+		downloads = new URLDownloadList();
+		// In the process of Sorting out DownloadList and the singleDownloads vector
+		treePane.setDownloads(downloads);
+		cardPane.add(downloads.getDownloadList(),"Downloads");
+		
 		settings = new DataStorage(syncObject);
-		settings.loadSettings(podcasts,treePane,cardPane);
+		settings.loadSettings(podcasts, downloads, progSettings, treePane, cardPane);
 		
 		JSplitPane splitpane = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT,treePane,cardPane);
 		splitpane.setDividerLocation(250);
@@ -103,11 +111,6 @@ public class BGDownloader extends JFrame {
 		
 		showPodcasts();
 		
-		// url download list
-		downloads = new URLDownloadList();
-		treePane.setDownloads(downloads);
-		cardPane.add(downloads.getDownloadList(),"Downloads");
-		
 		// Following 3 lines make downloads window default view 
 		CardLayout cardLayout = (CardLayout)(cardPane.getLayout());
 		cardLayout.show(cardPane, "Downloads");
@@ -117,12 +120,15 @@ public class BGDownloader extends JFrame {
 		   Need to change it so it scans through each of the rss feeds,
 		   and the download window, to download files.
 		*/
-		podcastQueue = new DownloadQueue(programExiting,treePane, syncObject);
+		podcastQueue = new DownloadQueue(programExiting,treePane, progSettings, syncObject);
 		Thread downloadingQueue = new Thread(podcastQueue);
 		downloadingQueue.start();
 		
 	}
 	
+	/** This is used to start the podcast Threads, which populate the system with
+	 * the data from the podcasts. 
+	 */
 	public void showPodcasts(){
 		for (int pcc=00; pcc < podcasts.size(); pcc++){
 			Thread podcast = new Thread(podcasts.get(pcc));
@@ -131,21 +137,29 @@ public class BGDownloader extends JFrame {
 	}
 
 	public void saveSettings(){
-		settings.saveSettings(podcasts);
+		settings.saveSettings(podcasts, downloads);
 	}
 	
 	public URLDownloadList getDownloadList(){
 		return downloads;
 	}
 	
+	/** Adds a new podcast to the system, this is called from CommandPass when the 
+	 * user adds the new podcast
+	 * @param newFeed - Url to the new podcast
+	 */
 	public void addRssFeed(String newFeed){
-		RssFeedDetails newPodcast= new RssFeedDetails(new Details(newFeed), settings, treePane, cardPane, syncObject);
+		RssFeedDetails newPodcast= new RssFeedDetails(new PodDetails(newFeed), settings, treePane, cardPane, syncObject);
 		Thread podcastRunner = new Thread(newPodcast);
 		podcastRunner.start();
 	}
 	
 	public TreePane getTreePane(){
 		return treePane;
+	}
+
+	public void addDownload(String url) {
+		downloads.addDownload(url);
 	}
 
 }

@@ -18,6 +18,7 @@ import javax.swing.tree.DefaultTreeModel;
 public class TreePane extends JPanel {
 	private DefaultMutableTreeNode rootNode;
 	private DefaultMutableTreeNode rssFeeds;
+	private URLDownloadList downloads;
 	private TreeEvents treeEventHandler;
 	private JTree treePanel;
 
@@ -56,9 +57,13 @@ public class TreePane extends JPanel {
 	 * @param downloadsList
 	 */
 	public void setDownloads (URLDownloadList downloadsList){
-		DefaultMutableTreeNode newNode;
-		newNode = new DefaultMutableTreeNode(downloadsList,false);
-		rootNode.add(newNode);
+		DefaultMutableTreeNode newDownloads = new DefaultMutableTreeNode(downloadsList,false);
+		rootNode.add(newDownloads);
+		downloads = downloadsList;
+	}
+	
+	public URLDownloadList getDownloads (){
+		return downloads;
 	}
 
 	public void changeDownloadList(String viewName){
