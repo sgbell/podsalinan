@@ -215,6 +215,8 @@ public class Podcast extends DownloadDetails
 		cards.add(getDownloadList(),getName());
 		checkDownloads();
 
+		
+		System.out.println("You what up DownloadQueue?!");
 		// The following Tells the DownloadQueue to wake up, cos there's something there
 		synchronized (syncObject){
 			syncObject.notify();

@@ -160,7 +160,7 @@ public class DataStorage {
 	 * @param downloads 
 	 * 
 	 */
-	public void saveSettings(Vector<Podcast> podcasts, URLDownloadList downloads) {
+	public void saveSettings(Vector<Podcast> podcasts, URLDownloadList downloads, Vector<ProgSettings> progSettings) {
 		SQLiteStatement sql;
 		boolean dbExists;
 		
@@ -168,8 +168,6 @@ public class DataStorage {
 		dbExists = downloadsDBFile.exists();
 		SQLiteConnection downloadsDB = new SQLiteConnection(downloadsDBFile);
 
-		System.out.println(downloads.getDownloads().size());
-		
 		try {
 			downloadsDB.open(true);
 			if (!dbExists){
@@ -192,7 +190,7 @@ public class DataStorage {
 					sql.dispose();
 				}
 			}
-			
+			downloadsDB.dispose();
 		} catch (SQLiteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -223,6 +221,16 @@ public class DataStorage {
 					sql.dispose();
 				}
 			}
+			sql = settingsDB.prepare("DELETE FROM settings;");
+			sql.stepThrough();
+			sql.dispose();
+			for (int sc=0; sc<progSettings.size(); sc++){
+				sql = settingsDB.prepare("INSERT INTO settings(name,value) VALUES('"+progSettings.get(sc).setting+"'," +
+										 "'"+progSettings.get(sc).value+"');");
+				sql.stepThrough();
+				sql.dispose();
+			}
+			
 			settingsDB.dispose();
 		} catch (SQLiteException e) {
 			// TODO Auto-generated catch block

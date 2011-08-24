@@ -32,6 +32,10 @@ Todo List
 * Scan the chosen directory to see what needs to be downloaded, and then proceed with a download queue.
   -- Completed
 * Store program settings in config files.
+  + Program should read settings from database
+  		-- Completed
+  + Program should write settings back to database on close
+  		-- Completed
   -- Completed
 * Store URL Downloads
 	+ Need to Redesign Details class. It needs to hold the following:

@@ -130,7 +130,6 @@ public class BGDownloader extends JFrame {
 		podcastQueue = new DownloadQueue(programExiting,treePane, progSettings, syncObject);
 		Thread downloadingQueue = new Thread(podcastQueue);
 		downloadingQueue.start();
-		
 	}
 	
 	/** This is used to start the podcast Threads, which populate the system with
@@ -144,7 +143,7 @@ public class BGDownloader extends JFrame {
 	}
 
 	public void saveSettings(){
-		settings.saveSettings(podcasts, downloads);
+		settings.saveSettings(podcasts, downloads, progSettings);
 	}
 	
 	public URLDownloadList getDownloadList(){

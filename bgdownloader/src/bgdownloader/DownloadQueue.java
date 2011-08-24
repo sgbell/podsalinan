@@ -50,15 +50,18 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		while (!programExiting){
 			// Pausing this until notify() is sent from one of the downloaders,
 			// or when a new item is added to the queue.
+			System.out.println("Going to Sleep");
 			synchronized (syncObject){
 				try {
 					syncObject.wait();
-					//System.out.println("Wake up");
+					System.out.println("Wake up");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
+			}
+			System.out.println("Going to search for something to download");
+			
 			int maxPodcastDownloaders=0;
 			int maxDownloaders=0;
 			for (int ps=0; ps < progSettings.size(); ps++){
@@ -66,6 +69,13 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					maxPodcastDownloaders=Integer.parseInt(progSettings.get(ps).value);
 				if (progSettings.get(ps).setting.equals("maxDownloaders"))
 					maxDownloaders=Integer.parseInt(progSettings.get(ps).value);
+			}
+			System.out.println("progSettings size: "+progSettings.size());
+			if (progSettings.size()<1){
+				progSettings.add(new ProgSettings("maxPodcastDownloaders","3"));
+				maxPodcastDownloaders=3;
+				progSettings.add(new ProgSettings("maxDownloaders","3"));
+				maxDownloaders=3;
 			}
 			
 			fileToDownload=true;
@@ -139,18 +149,13 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					newDownloader.addListener(this);
 					Thread downloadThread = new Thread(newDownloader);
 					downloadThread.start();
+					System.out.println("Download Started");
 					runningPoddownloaders++;
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			}
-			/* Need to set the program up to delete dead downloaders again
-			 * Look at bookmark for instructions on making Runnable throw an action
-			 * when it finishes.
-			 */
-			
 		}
 	}
 

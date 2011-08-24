@@ -26,11 +26,16 @@ public class URLDownloadList extends DownloadDetails {
 	public void addDownload(String url) {
 		downloads.add(new Details(url));
 		getDownloadList().addDownload(url);
+		synchronized (syncObject){
+			syncObject.notify();
+		}
 	}
 
 	public void addDownload(String url, boolean added) {
 		downloads.add(new Details(url,added));
 		getDownloadList().addDownload(url);
-		
+		synchronized (syncObject){
+			syncObject.notify();
+		}
 	}
 }
