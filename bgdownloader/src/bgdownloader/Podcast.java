@@ -19,23 +19,13 @@ import javax.swing.JPanel;
  * @author bugman
  *
  */
-public class Podcast implements Runnable{
+public class Podcast extends DownloadDetails 
+					 implements Runnable{
 
-	/* Need to sit down and compare URLDownloadList and Podcast and make a
-	 * super class that both can inherit from to handle the downloads, as the properties
-	 * are mostly the same, and should therefore be able to just inherit functionality
-	 * from a common ancestor.
-	 */
-	
-	// going to move PodDetails back into this class.
-	private PodDetails details;
-	// Stuff I had in PodDetails.
-	private String name,
-				   datafile,
-				   directory,
+	private String datafile,
 				   url;
-	private boolean changed,
-					removed,
+	public boolean  changed,
+					remove,
 					added;
 	
 	private Vector<Episode> downloadData = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
@@ -44,11 +34,8 @@ public class Podcast implements Runnable{
 	
 	private boolean newFeed;  // Is this a creation of a brand new feed?
 
-	private DownloadList downloads; // Gui list for the feed
 	private TreePane tree;
 	private JPanel cards;
-
-	private Object syncObject;
 
 	/** This is used when creating a brand new feed
 	 *
@@ -59,54 +46,33 @@ public class Podcast implements Runnable{
 	 * @param podcastQueue 
 	 */
 	public Podcast(PodDetails newPodcast, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
-		details=newPodcast;
-		
+		super(newPodcast.name,syncObject);
+		setDownloadList(new DownloadList(true));
+
 		tree = treePane;
 		cards=cardPane;
-		downloads = new DownloadList(true);
 		this.settings=settings;
-		this.syncObject=syncObject;
 		
-		if (details.name.isEmpty())
+		if (getName().isEmpty())
 			newFeed = true;
 		else
 			newFeed = false;
 	}
 
-	public PodDetails getDetails(){
-		return details;
-	}
-	
-	/**
-	 * setDownloadList modifies the download list
-	 * @param downloads
-	 */
-	public void setDownloadList(DownloadList downloads){
-		this.downloads = downloads;
-	}
-	
-	public DownloadList getDownloadList(){
-		return downloads;
-	}
-	
 	public Vector<Episode> getDownloadData(){
 		return downloadData;
 	}
 	
-	public void setFeedName(String feed){
-		details.name = feed;
-	}
-	
 	public void setURL(String url){
-		details.url=url;
+		this.url=url;
 	}
 	
 	public int setLocalStore(String localDir){
 		File directory = new File(localDir);
 		if (directory.exists()){
 			if (directory.isDirectory()){
-				details.directory = localDir;
-				details.changed=true;
+				setDirectory(localDir);
+				changed=true;
 				return 0;
 			} else {
 				JOptionPane.showMessageDialog(null, "Error in moving Podcast folder.", "bgDownloader", JOptionPane.ERROR_MESSAGE);
@@ -116,20 +82,8 @@ public class Podcast implements Runnable{
 		return 1;
 	}
 	
-	public String getFeedName(){
-		return details.name;
-	}
-	
 	public String getURL(){
-		return details.url;
-	}
-	
-	public String getLocalStore(){
-		return details.directory;
-	}
-	
-	public String toString(){
-		return details.name;
+		return url;
 	}
 
 	/** Function to download Feed
@@ -138,7 +92,7 @@ public class Podcast implements Runnable{
 	public void downloadFeed(){
 		int outputCount=1;
 		// temporary download destination of podcast xml file
-		String outputFile = details.directory.concat("/temp.xml");
+		String outputFile = getDirectory().concat("/temp.xml");
 		
 		while (new File(outputFile).exists()){
 			outputFile = outputFile.concat("("+outputCount+")");
@@ -148,7 +102,7 @@ public class Podcast implements Runnable{
 		// Following 3 lines of code download podcast XML file
 		Downloader d;
 		try {
-			d = new Downloader(new URL(details.url),outputFile);
+			d = new Downloader(new URL(url),outputFile);
 			// I don't want to start another thread, as this is already being executed
 			// in a thread, and we can't continue without the file.
 			d.getFile();
@@ -160,15 +114,15 @@ public class Podcast implements Runnable{
 	
 		if (newFeed){
 			// Grab the feed name from the podcast feed
-			details.name = podcastXML.getFeedTitle();
+			setName(podcastXML.getFeedTitle());
 
 			try {
 				// The following lines are used to create a md5  hash for the filename.
 				MessageDigest md = MessageDigest.getInstance("MD5");
-				byte[] bytesFeedName = details.name.getBytes("UTF-8");
-				md.update(bytesFeedName, 0, details.name.length());
+				byte[] bytesFeedName = getName().getBytes("UTF-8");
+				md.update(bytesFeedName, 0, getName().length());
 				// The feedFilename is a md5 hash.
-				details.datafile = new BigInteger(1, md.digest()).toString().substring(0, 8);
+				datafile = new BigInteger(1, md.digest()).toString().substring(0, 8);
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -205,14 +159,14 @@ public class Podcast implements Runnable{
 										 podcastXML.getDownloadValue(counter, "enclosure", "length"), description);
 				downloadData.add(ep);
 				// Add the episode to the download list
-				downloads.addDownload(podcastXML.getDownloadValue(counter,"title",null),
+				getDownloadList().addDownload(podcastXML.getDownloadValue(counter,"title",null),
 						  			  podcastXML.getDownloadValue(counter,"pubDate",null),
 						  			  podcastXML.getDownloadValue(counter, "enclosure", "url"),
 						  			  "0%");
 			}
 		}
 		new File(outputFile).delete();
-		settings.savePodcastDB(downloadData, details.datafile);
+		settings.savePodcastDB(downloadData, datafile);
 	}
 	
 	/**
@@ -225,21 +179,21 @@ public class Podcast implements Runnable{
 			
 			downloadFeed();
 			// Set download directory to the default directory
-			details.directory=System.getProperty("user.home").concat("/Videos/"+details.name);
-			File localDir = new File(details.directory);
+			setDirectory(System.getProperty("user.home").concat("/Videos/"+getName()));
+			File localDir = new File(getDirectory());
 			if (!localDir.exists()){
 				localDir.mkdirs();
 			}
 		} else {
 			// Load podcast from sqlite database
-			settings.loadPodcastDB(downloadData,details.datafile,downloads);
-			details.added=true;
-			details.remove=false;
-			details.changed=false;
+			settings.loadPodcastDB(downloadData,datafile,getDownloadList());
+			added=true;
+			remove=false;
+			changed=false;
 		}
 		
 		tree.addrssFeed(this);
-		cards.add(getDownloadList(),getFeedName());
+		cards.add(getDownloadList(),getName());
 		checkDownloads();
 
 		// The following Tells the DownloadQueue to wake up, cos there's something there
@@ -249,8 +203,8 @@ public class Podcast implements Runnable{
 
 	}
 	
-	public String getdb() {
-		return details.datafile;
+	public String getdatafile() {
+		return datafile;
 	}
 	
 	/** This will search through the array of downloads for the feed, mark the files that are already downloaded
@@ -261,18 +215,18 @@ public class Podcast implements Runnable{
 		for (int dlc=0; dlc<downloadData.size(); dlc++){
 			if (downloadData.get(dlc).downloaded!=downloadData.get(dlc).FINISHED){
 				String filename=downloadData.get(dlc).url;
-				filename=details.directory+"/"+filename.substring(filename.lastIndexOf('/')+1);
+				filename=getDirectory()+"/"+filename.substring(filename.lastIndexOf('/')+1);
 				File checkFile = new File(filename);
 				if (checkFile.exists()){
 					if (checkFile.length()==Long.parseLong(downloadData.get(dlc).size)){
 						downloadData.get(dlc).downloaded=downloadData.get(dlc).FINISHED;
-						downloads.downloadProgress(dlc, 100);
+						getDownloadList().downloadProgress(dlc, 100);
 					}
 					else if (checkFile.length()<Long.parseLong(downloadData.get(dlc).size)){
 						downloadData.get(dlc).downloaded=downloadData.get(dlc).PREVIOUSLY_STARTED;
 						double temppercent=((double)checkFile.length()/Double.parseDouble(downloadData.get(dlc).size));
 						int percentage=(int)((temppercent)*100);
-						downloads.downloadProgress(dlc,percentage);
+						getDownloadList().downloadProgress(dlc,percentage);
 					}
 				} else {
 					downloadData.get(dlc).downloaded=downloadData.get(dlc).NOT_STARTED;

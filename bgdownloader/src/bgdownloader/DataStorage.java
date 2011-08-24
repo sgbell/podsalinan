@@ -197,21 +197,21 @@ public class DataStorage {
 		try {
 			settingsDB.open(true);
 			for (int pcc=0; pcc < podcasts.size(); pcc++){
-				PodDetails currentPodcast=podcasts.get(pcc).getDetails();
+				Podcast currentPodcast=podcasts.get(pcc);
 				if ((!currentPodcast.added)&&(!currentPodcast.remove)){
-					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+currentPodcast.name+"'," +
-												"'"+currentPodcast.datafile+"'," +
-												"'"+currentPodcast.url+"'," +
-												"'"+currentPodcast.directory+"');");
+					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+currentPodcast.getName()+"'," +
+												"'"+currentPodcast.getdatafile()+"'," +
+												"'"+currentPodcast.getURL()+"'," +
+												"'"+currentPodcast.getDirectory()+"');");
 					sql.stepThrough();
 					sql.dispose();
 					currentPodcast.added=true;
 				} else if (currentPodcast.remove){
-					sql = settingsDB.prepare("DELETE FROM podcasts WHERE localfile='"+currentPodcast.datafile+"';");
+					sql = settingsDB.prepare("DELETE FROM podcasts WHERE localfile='"+currentPodcast.getdatafile()+"';");
 					sql.stepThrough();
 					sql.dispose();
 				} else if (currentPodcast.changed){
-					sql = settingsDB.prepare("UPDATE podcasts SET directory='"+currentPodcast.directory+"';");
+					sql = settingsDB.prepare("UPDATE podcasts SET directory='"+currentPodcast.getDirectory()+"';");
 					sql.stepThrough();
 					sql.dispose();
 				}

@@ -53,7 +53,7 @@ public class BGDownloader extends JFrame {
 		// Centralizing all of the podcast information, to make it easier to pass around the system
 		podcasts = new Vector<Podcast>();
 		// URL Downloads
-		downloads = new URLDownloadList();
+		downloads = new URLDownloadList(syncObject);
 		// Program Settings
 		progSettings = new Vector<ProgSettings>();
 		

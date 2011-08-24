@@ -103,7 +103,7 @@ public class CommandPass implements ActionListener {
 		    	// Grab the object so we can delete the file and the entry
 		    	// in the podcast databast
 		    	Podcast podcast = (Podcast) selectedNode.getUserObject();
-		    	podcast.getDetails().remove=true;
+		    	podcast.remove=true;
 		    	
 		    	// Following 2 lines remove rss feed from node.
 		    	DefaultTreeModel model = (DefaultTreeModel)tree.getModel();

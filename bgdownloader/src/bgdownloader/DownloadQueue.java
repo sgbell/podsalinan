@@ -109,7 +109,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 										// Fill the new download object with the data.
 										newDownload.url=downloadData.get(currentfile).url;
 										// Destination is the path + the filename
-										newDownload.destination=podcast.getLocalStore()+"/"+
+										newDownload.destination=podcast.getDirectory()+"/"+
 																downloadData.get(currentfile).url.substring(
 																		downloadData.get(currentfile).url.lastIndexOf('/')+1);
 										// String version of the file size
