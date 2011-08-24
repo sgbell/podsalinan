@@ -12,12 +12,12 @@ import java.util.Vector;
 public class URLDownloadList {
 
 	private DownloadList downloadlist;
-	private Vector<String> downloads;
+	private Vector<Details> downloads;
 	private String title;
 	
 	public URLDownloadList(){
 		downloadlist = new DownloadList(false);
-		downloads = new Vector<String>();
+		downloads = new Vector<Details>();
 		title = "URLS";
 	}
 	
@@ -25,7 +25,7 @@ public class URLDownloadList {
 		return downloadlist;
 	}
 	
-	public Vector<String> getDownloads(){
+	public Vector<Details> getDownloads(){
 		return downloads;
 	}
 	
@@ -34,7 +34,7 @@ public class URLDownloadList {
 	}
 
 	public void addDownload(String url) {
-		downloads.add(url);
+		downloads.add(new Details(url));
 		downloadlist.addDownload(url);
 	}
 }

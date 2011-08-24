@@ -15,5 +15,6 @@ public class Details {
 	
 	public Details(String url){
 		this.url=url;
+		added=false;
 	}
 }

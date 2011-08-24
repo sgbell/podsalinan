@@ -97,8 +97,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 						DefaultMutableTreeNode currentrssFeed = (DefaultMutableTreeNode)tree.getTree().getModel().getChild(tree.getRssFeeds(),currentPodcast);
 						if (currentrssFeed!=null){
 							Object nodeInfo = currentrssFeed.getUserObject();
-							if (currentrssFeed.isLeaf() && (nodeInfo instanceof RssFeedDetails)){
-								RssFeedDetails podcast = (RssFeedDetails) currentrssFeed.getUserObject();
+							if (currentrssFeed.isLeaf() && (nodeInfo instanceof Podcast)){
+								Podcast podcast = (Podcast) currentrssFeed.getUserObject();
 								currentfile=0;
 								Vector<Episode> downloadData = podcast.getDownloadData();
 								while ((currentfile < downloadData.size())&&(!foundNew)){

@@ -45,7 +45,7 @@ public class TreePane extends JPanel {
 	 * addrssFeed is used to add new RSS Feeds into the downloader.
 	 * @param newFeed
 	 */
-	public void addrssFeed (RssFeedDetails newFeed){
+	public void addrssFeed (Podcast newFeed){
 		DefaultTreeModel model = (DefaultTreeModel)treePanel.getModel();
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(newFeed,false);
 

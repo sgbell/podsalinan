@@ -31,8 +31,8 @@ public class TreeEvents implements TreeSelectionListener {
 		
 		Object nodeInfo = node.getUserObject();
 		if (node.isLeaf()){
-			if (nodeInfo instanceof RssFeedDetails){
-				RssFeedDetails rssFeeds = (RssFeedDetails)nodeInfo;
+			if (nodeInfo instanceof Podcast){
+				Podcast rssFeeds = (Podcast)nodeInfo;
 				setDownloadPane(rssFeeds.getFeedName());
 			} else if (nodeInfo instanceof URLDownloadList){
 				setDownloadPane("Downloads");

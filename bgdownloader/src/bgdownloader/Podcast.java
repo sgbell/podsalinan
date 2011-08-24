@@ -19,15 +19,35 @@ import javax.swing.JPanel;
  * @author bugman
  *
  */
-public class RssFeedDetails implements Runnable{
+public class Podcast implements Runnable{
 
+	/* Need to sit down and compare URLDownloadList and Podcast and make a
+	 * super class that both can inherit from to handle the downloads, as the properties
+	 * are mostly the same, and should therefore be able to just inherit functionality
+	 * from a common ancestor.
+	 */
+	
+	// going to move PodDetails back into this class.
 	private PodDetails details;
-	private DataStorage settings;
-	private DownloadList downloads; // Gui list for the feed
-	private boolean newFeed;  // Is this a creation of a brand new feed?
+	// Stuff I had in PodDetails.
+	private String name,
+				   datafile,
+				   directory,
+				   url;
+	private boolean changed,
+					removed,
+					added;
+	
 	private Vector<Episode> downloadData = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
+	
+	private DataStorage settings;
+	
+	private boolean newFeed;  // Is this a creation of a brand new feed?
+
+	private DownloadList downloads; // Gui list for the feed
 	private TreePane tree;
 	private JPanel cards;
+
 	private Object syncObject;
 
 	/** This is used when creating a brand new feed
@@ -38,7 +58,7 @@ public class RssFeedDetails implements Runnable{
 	 * @param treePane 
 	 * @param podcastQueue 
 	 */
-	public RssFeedDetails(PodDetails newPodcast, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
+	public Podcast(PodDetails newPodcast, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
 		details=newPodcast;
 		
 		tree = treePane;

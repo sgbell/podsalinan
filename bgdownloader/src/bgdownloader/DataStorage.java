@@ -44,7 +44,7 @@ public class DataStorage {
 	 * 
 	 * @return
 	 */
-	public int loadSettings(Vector<RssFeedDetails> podcasts, URLDownloadList downloads, Vector<ProgSettings> progSettings, TreePane tree, JPanel card){
+	public int loadSettings(Vector<Podcast> podcasts, URLDownloadList downloads, Vector<ProgSettings> progSettings, TreePane tree, JPanel card){
 		boolean firstRun = true;
 		SQLiteStatement sql;
 		
@@ -100,7 +100,7 @@ public class DataStorage {
 				sql = settingsDB.prepare("SELECT * from podcasts;");
 				while (sql.step()){
 					if (sql.hasRow()){
-						RssFeedDetails newPodcast = new RssFeedDetails(new PodDetails(sql.columnString(1),
+						Podcast newPodcast = new Podcast(new PodDetails(sql.columnString(1),
 													  							   sql.columnString(2),
 													  							   sql.columnString(3),
 													  							   sql.columnString(4)),
@@ -160,7 +160,7 @@ public class DataStorage {
 	 * @param downloads 
 	 * 
 	 */
-	public void saveSettings(Vector<RssFeedDetails> podcasts, URLDownloadList downloads) {
+	public void saveSettings(Vector<Podcast> podcasts, URLDownloadList downloads) {
 		SQLiteStatement sql;
 		boolean dbExists;
 		

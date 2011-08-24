@@ -64,10 +64,10 @@ public class CommandPass implements ActionListener {
 				// Make an Object out of the selected node.
 				Object nodeInfo = selectedNode.getUserObject();
 				// Read below. if the node is a Leaf, not a branch, and it's also an RssFeed then we want to delete it. 
-			    if (selectedNode.isLeaf() && (nodeInfo instanceof RssFeedDetails)){
+			    if (selectedNode.isLeaf() && (nodeInfo instanceof Podcast)){
 			    	// Grab the object so we can delete the file and the entry
 			    	// in the podcast databast
-			    	RssFeedDetails podcast = (RssFeedDetails) selectedNode.getUserObject();
+			    	Podcast podcast = (Podcast) selectedNode.getUserObject();
 			    	// Create and Show a Directory Dialog for the user to choose the feed
 			    	// directory.
 			    	JFileChooser browseWindow= new JFileChooser();
@@ -99,10 +99,10 @@ public class CommandPass implements ActionListener {
 			// Make an Object out of the selected node.
 			Object nodeInfo = selectedNode.getUserObject();
 			// Read below. if the node is a Leaf, not a branch, and it's also an RssFeed then we want to delete it. 
-		    if (selectedNode.isLeaf() && (nodeInfo instanceof RssFeedDetails)){
+		    if (selectedNode.isLeaf() && (nodeInfo instanceof Podcast)){
 		    	// Grab the object so we can delete the file and the entry
 		    	// in the podcast databast
-		    	RssFeedDetails podcast = (RssFeedDetails) selectedNode.getUserObject();
+		    	Podcast podcast = (Podcast) selectedNode.getUserObject();
 		    	podcast.getDetails().remove=true;
 		    	
 		    	// Following 2 lines remove rss feed from node.

@@ -25,12 +25,16 @@ import javax.swing.UIManager;
 public class BGDownloader extends JFrame {
 	
 	private URLDownloadList downloads;
+	private Vector<Podcast> podcasts;
+	private Vector<ProgSettings> progSettings;
+	
 	private TreePane treePane;
 	private JPanel cardPane;
-	private Vector<RssFeedDetails> podcasts;
-	private Vector<ProgSettings> progSettings;
+	
 	private DataStorage settings;
-	private DownloadQueue podcastQueue;
+	
+	private DownloadQueue podcastQueue; // This scans through the lists of files to download and starts a downloader with the next available file
+	
 	private boolean programExiting=false;
 	private Object syncObject=new Object();
 
@@ -47,11 +51,16 @@ public class BGDownloader extends JFrame {
 
 	public BGDownloader(){
 		// Centralizing all of the podcast information, to make it easier to pass around the system
-		podcasts = new Vector<RssFeedDetails>();
+		podcasts = new Vector<Podcast>();
+		// URL Downloads
+		downloads = new URLDownloadList();
+		// Program Settings
 		progSettings = new Vector<ProgSettings>();
 		
+		// Main Window Pane;
 		JPanel pane = new JPanel();
 		
+		// Action Listener for the main window
 		CommandPass aListener = new CommandPass(programExiting);
 		aListener.setParent(this);
 		/* 
@@ -85,6 +94,7 @@ public class BGDownloader extends JFrame {
 		setTitle ("bgdownloader");
 	
 		setJMenuBar(menubar);
+		
 		treePane = new TreePane();
 		aListener.setTree(treePane.getTree());
 		
@@ -93,8 +103,6 @@ public class BGDownloader extends JFrame {
 		cardPane = new JPanel(new CardLayout()); 
 		treePane.cardView(cardPane);
 
-		// url download list
-		downloads = new URLDownloadList();
 		// In the process of Sorting out DownloadList and the singleDownloads vector
 		treePane.setDownloads(downloads);
 		cardPane.add(downloads.getDownloadList(),"Downloads");
@@ -111,15 +119,14 @@ public class BGDownloader extends JFrame {
 		
 		showPodcasts();
 		
-		// Following 3 lines make downloads window default view 
+		// Following 3 lines Set downloads window as current view 
 		CardLayout cardLayout = (CardLayout)(cardPane.getLayout());
 		cardLayout.show(cardPane, "Downloads");
+		
+		// show the window
 		setVisible(true);
 
-		/* This is the class that does all of the downloading
-		   Need to change it so it scans through each of the rss feeds,
-		   and the download window, to download files.
-		*/
+		/* This is the class that does all of the downloading. */
 		podcastQueue = new DownloadQueue(programExiting,treePane, progSettings, syncObject);
 		Thread downloadingQueue = new Thread(podcastQueue);
 		downloadingQueue.start();
@@ -149,7 +156,7 @@ public class BGDownloader extends JFrame {
 	 * @param newFeed - Url to the new podcast
 	 */
 	public void addRssFeed(String newFeed){
-		RssFeedDetails newPodcast= new RssFeedDetails(new PodDetails(newFeed), settings, treePane, cardPane, syncObject);
+		Podcast newPodcast= new Podcast(new PodDetails(newFeed), settings, treePane, cardPane, syncObject);
 		Thread podcastRunner = new Thread(newPodcast);
 		podcastRunner.start();
 	}
