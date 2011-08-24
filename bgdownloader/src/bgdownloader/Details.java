@@ -17,4 +17,9 @@ public class Details {
 		this.url=url;
 		added=false;
 	}
+	
+	public Details(String url, boolean added){
+		this.url=url;
+		this.added=added;
+	}
 }

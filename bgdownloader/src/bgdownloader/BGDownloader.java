@@ -156,7 +156,8 @@ public class BGDownloader extends JFrame {
 	 * @param newFeed - Url to the new podcast
 	 */
 	public void addRssFeed(String newFeed){
-		Podcast newPodcast= new Podcast(new PodDetails(newFeed), settings, treePane, cardPane, syncObject);
+		Podcast newPodcast = new Podcast(newFeed, settings, treePane, cardPane, syncObject);
+		podcasts.add(newPodcast);
 		Thread podcastRunner = new Thread(newPodcast);
 		podcastRunner.start();
 	}

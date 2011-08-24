@@ -27,4 +27,10 @@ public class URLDownloadList extends DownloadDetails {
 		downloads.add(new Details(url));
 		getDownloadList().addDownload(url);
 	}
+
+	public void addDownload(String url, boolean added) {
+		downloads.add(new Details(url,added));
+		getDownloadList().addDownload(url);
+		
+	}
 }

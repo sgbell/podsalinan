@@ -60,7 +60,7 @@ public class DataStorage {
 				
 				while (sql.step()){
 					if (sql.hasRow()){
-						downloads.addDownload(sql.columnString(1));
+						downloads.addDownload(sql.columnString(1),true);
 					}
 				}
 			} catch (SQLiteException e) {
@@ -100,14 +100,14 @@ public class DataStorage {
 				sql = settingsDB.prepare("SELECT * from podcasts;");
 				while (sql.step()){
 					if (sql.hasRow()){
-						Podcast newPodcast = new Podcast(new PodDetails(sql.columnString(1),
-													  							   sql.columnString(2),
-													  							   sql.columnString(3),
-													  							   sql.columnString(4)),
-													  							   this,
-													  							   tree,
-													  							   card,
-													  							   syncObject);
+						Podcast newPodcast = new Podcast(sql.columnString(1),
+													  	 sql.columnString(3),
+													  	 sql.columnString(4),
+													  	 sql.columnString(2),
+													  	 this,
+													  	 tree,
+													  	 card,
+													  	 syncObject);
 						podcasts.add(newPodcast);
 					}
 				}
@@ -168,6 +168,8 @@ public class DataStorage {
 		dbExists = downloadsDBFile.exists();
 		SQLiteConnection downloadsDB = new SQLiteConnection(downloadsDBFile);
 
+		System.out.println(downloads.getDownloads().size());
+		
 		try {
 			downloadsDB.open(true);
 			if (!dbExists){
@@ -176,14 +178,19 @@ public class DataStorage {
 						  								"url TEXT);");
 				sql.stepThrough();
 				sql.dispose();
-				for (int dlc=0; dlc < downloads.getDownloads().size(); dlc++){
-					sql = downloadsDB.prepare("INSERT downloads(url) VALUES " +
-													"('"+downloads.getDownloads().get(dlc)+"');");
+			}
+			for (int dlc=0; dlc < downloads.getDownloads().size(); dlc++){
+				if (!downloads.getDownloads().get(dlc).added){
+					sql = downloadsDB.prepare("INSERT INTO downloads(url) VALUES " +
+							"('"+downloads.getDownloads().get(dlc).url+"');");
 					sql.stepThrough();
 					sql.dispose();
 				}
-			} else {
-
+				if (downloads.getDownloads().get(dlc).remove){
+					sql = downloadsDB.prepare("DELETE FROM downloads WHERE url='"+downloads.getDownloads().get(dlc)+"';");
+					sql.stepThrough();
+					sql.dispose();
+				}
 			}
 			
 		} catch (SQLiteException e) {

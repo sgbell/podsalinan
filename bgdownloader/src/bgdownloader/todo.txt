@@ -42,4 +42,7 @@ Todo List
 	+ Create PodDetails class to extend Details Class to add details needed for
 		podcasts.
 		-- Completed 
-  -- In progress
+  -- Completed
+* Delete URL downloads
+* Set default settings when program first run
+* Create Thread or Timer to update the podcasts 

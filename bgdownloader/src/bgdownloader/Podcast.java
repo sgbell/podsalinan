@@ -37,28 +37,48 @@ public class Podcast extends DownloadDetails
 	private TreePane tree;
 	private JPanel cards;
 
-	/** This is used when creating a brand new feed
-	 *
-	 * @param newPodcast
-	 * @param settings 
-	 * @param cardPane 
-	 * @param treePane 
-	 * @param podcastQueue 
+	/**This is used to create a new Podcast with only a url.
+	 * 
+	 * @param newURL
+	 * @param settings
+	 * @param treePane
+	 * @param cardPane
+	 * @param syncObject
 	 */
-	public Podcast(PodDetails newPodcast, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
-		super(newPodcast.name,syncObject);
+	public Podcast(String newURL, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
+		super(null,syncObject);
 		setDownloadList(new DownloadList(true));
-
-		tree = treePane;
+		url = newURL;
+		
+		tree=treePane;
 		cards=cardPane;
 		this.settings=settings;
 		
-		if (getName().isEmpty())
-			newFeed = true;
-		else
-			newFeed = false;
+		newFeed=true;
 	}
-
+	
+	/** Used to create a Podcast from the information in the systems database. 
+	 * 
+	 * @param newName
+	 * @param newURL
+	 * @param newDirectory
+	 * @param newDatastore
+	 * @param settings
+	 * @param treePane
+	 * @param cardPane
+	 * @param syncObject
+	 */
+	public Podcast(String newName, String newURL, String newDirectory, String newDatastore,
+				   DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
+		this(newURL, settings, treePane, cardPane, syncObject);
+		
+		setName(newName);
+		setDirectory(newDirectory);
+		datafile = newDatastore;
+		
+		newFeed=false;
+	}
+	
 	public Vector<Episode> getDownloadData(){
 		return downloadData;
 	}
@@ -92,7 +112,7 @@ public class Podcast extends DownloadDetails
 	public void downloadFeed(){
 		int outputCount=1;
 		// temporary download destination of podcast xml file
-		String outputFile = getDirectory().concat("/temp.xml");
+		String outputFile = settings.getSettingsDir().concat("/temp.xml");
 		
 		while (new File(outputFile).exists()){
 			outputFile = outputFile.concat("("+outputCount+")");
@@ -176,7 +196,6 @@ public class Podcast extends DownloadDetails
 	 */
 	public void run(){
 		if (newFeed){
-			
 			downloadFeed();
 			// Set download directory to the default directory
 			setDirectory(System.getProperty("user.home").concat("/Videos/"+getName()));
