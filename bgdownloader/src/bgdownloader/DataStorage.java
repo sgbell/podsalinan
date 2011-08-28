@@ -60,7 +60,9 @@ public class DataStorage {
 				
 				while (sql.step()){
 					if (sql.hasRow()){
-						downloads.addDownload(sql.columnString(1),true);
+						downloads.addDownload(sql.columnString(1),
+											  sql.columnString(2),
+											  true);
 					}
 				}
 			} catch (SQLiteException e) {
@@ -173,14 +175,16 @@ public class DataStorage {
 			if (!dbExists){
 				sql = downloadsDB.prepare("CREATE TABLE IF NOT EXISTS downloads(" +
 						  								"id INTEGER PRIMARY KEY AUTOINCREMENT," +
-						  								"url TEXT);");
+						  								"url TEXT," +
+						  								"size TEXT);");
 				sql.stepThrough();
 				sql.dispose();
 			}
 			for (int dlc=0; dlc < downloads.getDownloads().size(); dlc++){
 				if (!downloads.getDownloads().get(dlc).added){
-					sql = downloadsDB.prepare("INSERT INTO downloads(url) VALUES " +
-							"('"+downloads.getDownloads().get(dlc).url+"');");
+					sql = downloadsDB.prepare("INSERT INTO downloads(url,size) VALUES " +
+							"('"+downloads.getDownloads().get(dlc).url+"'," +
+									"'"+downloads.getDownloads().get(dlc).size+"');");
 					sql.stepThrough();
 					sql.dispose();
 				}

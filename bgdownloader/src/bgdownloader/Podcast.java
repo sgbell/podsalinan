@@ -216,10 +216,10 @@ public class Podcast extends DownloadDetails
 		checkDownloads();
 
 		
-		System.out.println("You what up DownloadQueue?!");
 		// The following Tells the DownloadQueue to wake up, cos there's something there
 		synchronized (syncObject){
 			syncObject.notify();
+			//System.out.println("You what up DownloadQueue?!");
 		}
 
 	}

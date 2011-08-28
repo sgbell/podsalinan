@@ -36,7 +36,7 @@ public class BGDownloader extends JFrame {
 	private DownloadQueue podcastQueue; // This scans through the lists of files to download and starts a downloader with the next available file
 	
 	private boolean programExiting=false;
-	private Object syncObject=new Object();
+	private Object syncObject;
 
 	/**
 	 * Upon execution the program will create a new instance of bgdownloader, which is where
@@ -50,6 +50,7 @@ public class BGDownloader extends JFrame {
 	}
 
 	public BGDownloader(){
+		syncObject=new Object();
 		// Centralizing all of the podcast information, to make it easier to pass around the system
 		podcasts = new Vector<Podcast>();
 		// URL Downloads
@@ -70,6 +71,8 @@ public class BGDownloader extends JFrame {
 		 */
 		MenuBar menubar = new MenuBar(aListener);
 		menubar.createMenu("src/bgdownloader/menu.xml");
+		
+		//System.out.println("Menubar created");
 		
 		/**
 		 * Following lines are not compatible with gentoo :(
@@ -103,12 +106,14 @@ public class BGDownloader extends JFrame {
 		cardPane = new JPanel(new CardLayout()); 
 		treePane.cardView(cardPane);
 
+		//System.out.println("Adding Downloads to Tree and Main Pane");
 		// In the process of Sorting out DownloadList and the singleDownloads vector
 		treePane.setDownloads(downloads);
 		cardPane.add(downloads.getDownloadList(),"Downloads");
 		
 		settings = new DataStorage(syncObject);
 		settings.loadSettings(podcasts, downloads, progSettings, treePane, cardPane);
+		//System.out.println("Called DataStorage.loadSettings");
 		
 		JSplitPane splitpane = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT,treePane,cardPane);
 		splitpane.setDividerLocation(250);
@@ -117,12 +122,12 @@ public class BGDownloader extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		showPodcasts();
 		
 		// Following 3 lines Set downloads window as current view 
 		CardLayout cardLayout = (CardLayout)(cardPane.getLayout());
 		cardLayout.show(cardPane, "Downloads");
 		
+		//System.out.println("Window Visible");
 		// show the window
 		setVisible(true);
 
@@ -130,6 +135,11 @@ public class BGDownloader extends JFrame {
 		podcastQueue = new DownloadQueue(programExiting,treePane, progSettings, syncObject);
 		Thread downloadingQueue = new Thread(podcastQueue);
 		downloadingQueue.start();
+		//System.out.println("DownloadQueue Created and Started");
+
+		showPodcasts();
+		//System.out.println("Added Podcasts to Gui");
+	
 	}
 	
 	/** This is used to start the podcast Threads, which populate the system with
@@ -139,6 +149,7 @@ public class BGDownloader extends JFrame {
 		for (int pcc=00; pcc < podcasts.size(); pcc++){
 			Thread podcast = new Thread(podcasts.get(pcc));
 			podcast.start();
+			//System.out.println("Podcast Started: "+podcasts.get(pcc).getName());
 		}
 	}
 
