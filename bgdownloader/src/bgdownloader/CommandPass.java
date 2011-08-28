@@ -3,10 +3,14 @@ package bgdownloader;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Vector;
 
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.JTree;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -17,10 +21,12 @@ import javax.swing.tree.DefaultTreeModel;
 public class CommandPass implements ActionListener {
 	private JTree tree;
 	private BGDownloader bgdownloader;
+	private Vector<ProgSettings> progSettings;
 	private boolean programExiting;
 
-	public CommandPass(boolean programExiting) {
+	public CommandPass(boolean programExiting, Vector<ProgSettings> progSettings) {
 		this.programExiting=programExiting;
+		this.progSettings=progSettings;
 	}
 
 	@Override
@@ -84,14 +90,43 @@ public class CommandPass implements ActionListener {
 			    		// If podcast folder has been changed, re-queue downloads, as download folder has changed
 			    		podcast.setLocalStore(chosenDir.toString());
 			    			
-			    	} else {
-			    		
 			    	}
 			    }
 			}
 		}
 		if (command.compareTo("updateInterval")==0){
-			System.out.println("command update interval");
+			boolean updateValFound=false;
+			int updateVal;
+			
+			int psc=0;
+			while ((!updateValFound)&&(psc < progSettings.size())){
+				if (progSettings.get(psc).setting.equals("updateTimer")){
+					updateValFound=true;
+				} else
+					psc++;
+			}
+			System.out.println("Update Interval: "+progSettings.get(psc).value);
+			if (updateValFound)
+				updateVal=Integer.parseInt(progSettings.get(psc).value);
+			else
+				updateVal=10;
+			if (updateVal==0)
+				updateVal=10;
+			JSpinner spinner = new JSpinner(new SpinnerNumberModel(updateVal,10,360,10));
+			Object[] message = {"Mins ", spinner};
+			JOptionPane updateValWindow= new JOptionPane(message,
+														JOptionPane.PLAIN_MESSAGE,
+														JOptionPane.OK_CANCEL_OPTION,
+														null,null);
+			JDialog dialog = updateValWindow.createDialog(bgdownloader, "Update Interval");
+			dialog.setVisible(true);
+			if (updateValFound)
+				progSettings.get(psc).value=spinner.getValue().toString();
+			else {
+				ProgSettings newSetting = new ProgSettings("updateTimer",
+															spinner.getValue().toString());
+				progSettings.add(newSetting);
+			}
 		}
 		if (command.compareTo("removeFeed")==0){
 			// Grab the selected Node, so we can remove it.

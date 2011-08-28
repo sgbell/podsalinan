@@ -62,7 +62,7 @@ public class BGDownloader extends JFrame {
 		JPanel pane = new JPanel();
 		
 		// Action Listener for the main window
-		CommandPass aListener = new CommandPass(programExiting);
+		CommandPass aListener = new CommandPass(programExiting,progSettings);
 		aListener.setParent(this);
 		/* 
 		 * creating a new MenuBar passing in the instance of bgdownloader, so bgdownloader can then handle all of

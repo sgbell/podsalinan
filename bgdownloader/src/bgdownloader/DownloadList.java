@@ -42,13 +42,16 @@ public class DownloadList extends JPanel {
 					"Progress"};
 			downloadList = new DefaultTableModel(headers,1);
 		}
-		JTable downloads = new JTable(downloadList);
+		JTable downloads = new JTable(downloadList){
+		    public boolean isCellEditable(int rowIndex, int vColIndex) {
+		        return false;
+		    }
+		};
 		
 		// removing grid from table
 		downloads.setShowGrid(false);
 		
 		downloads.setRowSelectionAllowed(true);
-
 		
 		if (rssFeed) {
 			Object newRow[] = new Object [] {"","","0%"};

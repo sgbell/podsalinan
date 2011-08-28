@@ -49,4 +49,5 @@ Todo List
   -- Completed
 * Delete URL downloads
 * Set default settings when program first run
+  -- Completed
 * Create Thread or Timer to update the podcasts 

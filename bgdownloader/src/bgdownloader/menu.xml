@@ -31,15 +31,41 @@
 			<action>setDownloadFolder</action>
 		</menuitem>
 		<menuitem>
-			<name>Set update interval</name>
-			<keycode>u</keycode>
-			<action>updateInterval</action>
-		</menuitem>
-		<menuitem>
 			<name>Remove Feed</name>
 			<keycode>r</keycode>
 			<quickkeycode>control D</quickkeycode>
 			<action>removeFeed</action>
+		</menuitem>
+	</menu>
+	<menu>
+		<title>Downloads</title>
+		<menuitem>
+			<name>Change Download Folder</name>
+			<keycode>f</keycode>
+			<action>setURLFolder</action>
+		</menuitem>
+		<menuitem>
+			<name>Delete Download</name>
+			<keycode>d</keycode>
+			<action>deleteURL</action>
+		</menuitem>
+	</menu>
+	<menu>
+		<title>Settings</title>
+		<menuitem>
+			<name>Number of Podcast Downloaders</name>
+			<keycode>p</keycode>
+			<action>numPodcasts</action>
+		</menuitem>
+		<menuitem>
+			<name>Number of URL Downloaders</name>
+			<keycode>u</keycode>
+			<action>numDownloads</action>
+		</menuitem>
+		<menuitem>
+			<name>Set update interval</name>
+			<keycode>u</keycode>
+			<action>updateInterval</action>
 		</menuitem>
 	</menu>
 </menubar>
