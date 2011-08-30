@@ -22,6 +22,7 @@ public class CommandPass implements ActionListener {
 	private JTree tree;
 	private BGDownloader bgdownloader;
 	private Vector<ProgSettings> progSettings;
+	@SuppressWarnings("unused")
 	private boolean programExiting;
 
 	public CommandPass(boolean programExiting, Vector<ProgSettings> progSettings) {
@@ -39,61 +40,30 @@ public class CommandPass implements ActionListener {
 			System.exit(0);
 		}
 		if (command.compareTo("addURL")==0){
-			String url = (String)JOptionPane.showInputDialog(
-                    bgdownloader,
-                    "Please enter the URL to download",
-                    "Add URL",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    null,
-                    null);
-			if (!url.isEmpty())
-				bgdownloader.addDownload(url);
+			addURL(false);
 		}
 		if (command.compareTo("addRSS")==0){
-			String url = (String)JOptionPane.showInputDialog(
-                    bgdownloader,
-                    "Please enter the URL to download",
-                    "Add RSS Feed",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    null,
-                    null);
-			if (!url.isEmpty())
-				bgdownloader.addRssFeed(url);
-			
+			addURL(true);
 		}
 		if (command.compareTo("setDownloadFolder")==0){
-			// Grab the selected Node, so we can change it's download folder.
-			DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-			if (selectedNode!=null){
-				// Make an Object out of the selected node.
-				Object nodeInfo = selectedNode.getUserObject();
-				// Read below. if the node is a Leaf, not a branch, and it's also an RssFeed then we want to delete it. 
-			    if (selectedNode.isLeaf() && (nodeInfo instanceof Podcast)){
-			    	// Grab the object so we can delete the file and the entry
-			    	// in the podcast databast
-			    	Podcast podcast = (Podcast) selectedNode.getUserObject();
-			    	// Create and Show a Directory Dialog for the user to choose the feed
-			    	// directory.
-			    	JFileChooser browseWindow= new JFileChooser();
-			    	// Sets what is able to be selected. in this case, a folder.
-			    	browseWindow.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			    	// bwr is browser window result
-			    	int bwr = browseWindow.showOpenDialog(bgdownloader);
-			    	// 
-			    	if (bwr==JFileChooser.APPROVE_OPTION){
-			    		File chosenDir = browseWindow.getSelectedFile();
-		    			// Don't need to test if chosen Dir is a folder, as it has already
-			    		// been tested in the if statement.
-			    		
-			    		// If podcast folder has been changed, re-queue downloads, as download folder has changed
-			    		podcast.setLocalStore(chosenDir.toString());
-			    			
-			    	}
-			    }
+			// Changing Podcast Download Folder 
+			Podcast podcast = getSelectedPodcast();
+			String newDirectory = changeDirectory();
+			if (newDirectory!=null){
+				podcast.setLocalStore(newDirectory);
 			}
 		}
+		if (command.compareTo("removeFeed")==0){
+			// Removing Podcast from the system
+			Podcast podcast = getSelectedPodcast();
+		    podcast.remove=true;
+		    	
+		    // Following 2 lines remove the podcast from the tree.
+		    DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+		    model.removeNodeFromParent((DefaultMutableTreeNode)tree.getLastSelectedPathComponent());
+		    bgdownloader.getTreePane().changeDownloadList("Downloads");
+		}
+		
 		if (command.compareTo("updateInterval")==0){
 			boolean updateValFound=false;
 			int updateVal;
@@ -105,13 +75,15 @@ public class CommandPass implements ActionListener {
 				} else
 					psc++;
 			}
-			System.out.println("Update Interval: "+progSettings.get(psc).value);
+			//System.out.println("Update Interval: "+progSettings.get(psc).value);
 			if (updateValFound)
 				updateVal=Integer.parseInt(progSettings.get(psc).value);
 			else
 				updateVal=10;
+			// Following if statement added if error in database
 			if (updateVal==0)
 				updateVal=10;
+			
 			JSpinner spinner = new JSpinner(new SpinnerNumberModel(updateVal,10,360,10));
 			Object[] message = {"Mins ", spinner};
 			JOptionPane updateValWindow= new JOptionPane(message,
@@ -128,9 +100,29 @@ public class CommandPass implements ActionListener {
 				progSettings.add(newSetting);
 			}
 		}
-		if (command.compareTo("removeFeed")==0){
-			// Grab the selected Node, so we can remove it.
-			DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		if (command.compareTo("setURLFolder")==0){
+			URLDownloadList urlDownloads = bgdownloader.getDownloadList();
+			
+			String newDirectory = changeDirectory();
+			if (newDirectory!=null){
+				urlDownloads.setDirectory(newDirectory);
+			}		
+		}
+		if (command.compareTo("deleteURL")==0){
+			
+		}
+		if (command.compareTo("numPodcasts")==0){
+			
+		}
+		if (command.compareTo("numDownloads")==0){
+			
+		}
+	}
+
+	public Podcast getSelectedPodcast(){
+		// Grab the selected Node, so we can change it's download folder.
+		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		if (selectedNode!=null){
 			// Make an Object out of the selected node.
 			Object nodeInfo = selectedNode.getUserObject();
 			// Read below. if the node is a Leaf, not a branch, and it's also an RssFeed then we want to delete it. 
@@ -138,15 +130,57 @@ public class CommandPass implements ActionListener {
 		    	// Grab the object so we can delete the file and the entry
 		    	// in the podcast databast
 		    	Podcast podcast = (Podcast) selectedNode.getUserObject();
-		    	podcast.remove=true;
-		    	
-		    	// Following 2 lines remove rss feed from node.
-		    	DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-		    	model.removeNodeFromParent(selectedNode);
-		    	bgdownloader.getTreePane().changeDownloadList("Downloads");
+		    	return podcast;
 		    }
-		    
 		}
+		return null;
+	}
+	
+	/**
+	 * This function creates and shows a directory dialog window for the user to
+	 * select a directory.
+	 * @return String - returns the new directory.
+	 */
+	public String changeDirectory(){
+    	// Create and Show a Directory Dialog for the user to choose the feed
+    	// directory.
+    	JFileChooser browseWindow= new JFileChooser();
+    	// Sets what is able to be selected. in this case, a folder.
+    	browseWindow.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    	// bwr is browser window result
+    	int bwr = browseWindow.showOpenDialog(bgdownloader);
+    	
+    	if (bwr==JFileChooser.APPROVE_OPTION){
+			// Don't need to test if chosen Dir is a folder, as it has already
+    		// been tested in the if statement.
+    		File chosenDir = browseWindow.getSelectedFile();
+    		
+    		return chosenDir.toString();
+    			
+    	} else
+    		return null;
+	}
+	
+	/**
+	 * This combines the two addURL functions for Add Download URL and Add Podcast
+	 * @param podcast - false : url is just a file to download
+	 * 				  - true  : url is podcast
+	 */
+	public void addURL(boolean podcast){
+		String url = (String)JOptionPane.showInputDialog(
+                bgdownloader,
+                "Please enter the URL to download",
+                "Add URL",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                null);
+		if (url!=null)
+			if (!url.isEmpty())
+				if (podcast)
+					bgdownloader.addRssFeed(url);
+				else 
+					bgdownloader.addDownload(url);
 	}
 
 	/**
