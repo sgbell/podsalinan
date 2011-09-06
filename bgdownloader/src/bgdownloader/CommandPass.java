@@ -65,40 +65,7 @@ public class CommandPass implements ActionListener {
 		}
 		
 		if (command.compareTo("updateInterval")==0){
-			boolean updateValFound=false;
-			int updateVal;
-			
-			int psc=0;
-			while ((!updateValFound)&&(psc < progSettings.size())){
-				if (progSettings.get(psc).setting.equals("updateTimer")){
-					updateValFound=true;
-				} else
-					psc++;
-			}
-			//System.out.println("Update Interval: "+progSettings.get(psc).value);
-			if (updateValFound)
-				updateVal=Integer.parseInt(progSettings.get(psc).value);
-			else
-				updateVal=10;
-			// Following if statement added if error in database
-			if (updateVal==0)
-				updateVal=10;
-			
-			JSpinner spinner = new JSpinner(new SpinnerNumberModel(updateVal,10,360,10));
-			Object[] message = {"Mins ", spinner};
-			JOptionPane updateValWindow= new JOptionPane(message,
-														JOptionPane.PLAIN_MESSAGE,
-														JOptionPane.OK_CANCEL_OPTION,
-														null,null);
-			JDialog dialog = updateValWindow.createDialog(bgdownloader, "Update Interval");
-			dialog.setVisible(true);
-			if (updateValFound)
-				progSettings.get(psc).value=spinner.getValue().toString();
-			else {
-				ProgSettings newSetting = new ProgSettings("updateTimer",
-															spinner.getValue().toString());
-				progSettings.add(newSetting);
-			}
+			dialogSpinner("updateTimer", "Update Value", "Mins ", 10, 360, 10);
 		}
 		if (command.compareTo("setURLFolder")==0){
 			URLDownloadList urlDownloads = bgdownloader.getDownloadList();
@@ -112,13 +79,54 @@ public class CommandPass implements ActionListener {
 			bgdownloader.getDownloadList().removeDownload();
 		}
 		if (command.compareTo("numPodcasts")==0){
-			
+			dialogSpinner("maxPodcastDownloaders", "Maximum Podcast Downloaders", "", 1,30,1);
 		}
 		if (command.compareTo("numDownloads")==0){
-			
+			dialogSpinner("maxDownloaders", "Maximum URL Downloaders", "",1,30,1);
 		}
 	}
 
+	/**
+	 * This creates a document
+	 * @param valToChange
+	 */
+	public void dialogSpinner(String valToChange, String dialogTitle, String dialogMessage, int start, int end, int interval){
+		boolean valFound=false;
+		int value;
+		
+		int psc=0;
+		while ((!valFound)&&(psc < progSettings.size())){
+			if (progSettings.get(psc).setting.equals(valToChange)){
+				valFound=true;
+			} else
+				psc++;
+		}
+		
+		if (valFound)
+			value=Integer.parseInt(progSettings.get(psc).value);
+		else
+			value=10;
+		// Following if statement added if error in database
+		if (value==0)
+			value=start;
+		
+		JSpinner spinner = new JSpinner(new SpinnerNumberModel(value,start,end,interval));
+		Object[] message = {dialogMessage, spinner};
+		JOptionPane updateValWindow= new JOptionPane(message,
+													JOptionPane.PLAIN_MESSAGE,
+													JOptionPane.OK_CANCEL_OPTION,
+													null,null);
+		JDialog dialog = updateValWindow.createDialog(bgdownloader, dialogTitle);
+		dialog.setVisible(true);
+		if (valFound)
+			progSettings.get(psc).value=spinner.getValue().toString();
+		else {
+			ProgSettings newSetting = new ProgSettings(valToChange,
+														spinner.getValue().toString());
+			progSettings.add(newSetting);
+		}
+	}
+	
 	public Podcast getSelectedPodcast(){
 		// Grab the selected Node, so we can change it's download folder.
 		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
