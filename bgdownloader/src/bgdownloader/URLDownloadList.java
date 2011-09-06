@@ -38,6 +38,15 @@ public class URLDownloadList extends DownloadDetails {
 		}
 	}
 
+	public void removeDownload(){
+		String url = this.getDownloadList().removeDownload();
+		for (int dlc=0; dlc < downloads.size(); dlc++){
+			if (downloads.get(dlc).url.substring(downloads.get(dlc).url.lastIndexOf('/')+1).equals(url)){
+				downloads.get(dlc).remove=true;
+			}
+		}
+	}
+	
 	public void addDownload(String url, String size, boolean added) {
 		Details newFile= new Details(url,added);
 		//System.out.println("URLDownloadList fileSize: "+size);

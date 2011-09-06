@@ -25,6 +25,7 @@ public class DownloadList extends JPanel {
 	//private Vector<String> filenames;
 	//private JEditorPane previewPane;
 	private boolean isRssFeed;
+	private JTable table;
 	
 	public DownloadList(boolean rssFeed){
 		super();
@@ -42,32 +43,40 @@ public class DownloadList extends JPanel {
 					"Progress"};
 			downloadList = new DefaultTableModel(headers,1);
 		}
-		JTable downloads = new JTable(downloadList){
+		table = new JTable(downloadList){
 		    public boolean isCellEditable(int rowIndex, int vColIndex) {
 		        return false;
 		    }
 		};
 		
 		// removing grid from table
-		downloads.setShowGrid(false);
+		table.setShowGrid(false);
 		
-		downloads.setRowSelectionAllowed(true);
+		table.setRowSelectionAllowed(true);
 		
 		if (rssFeed) {
 			Object newRow[] = new Object [] {"","","0%"};
 			downloadList.addRow(newRow);
 			downloadList.removeRow(0);
-			TableColumn myCol = downloads.getColumnModel().getColumn(2);
+			TableColumn myCol = table.getColumnModel().getColumn(2);
 			myCol.setCellRenderer(new ProgressCellRenderer());
 		} else {
 			Object newRow[] = new Object [] {"","0%"};
 			downloadList.addRow(newRow);
 			downloadList.removeRow(0);
-			TableColumn myCol = downloads.getColumnModel().getColumn(1);
+			TableColumn myCol = table.getColumnModel().getColumn(1);
 			myCol.setCellRenderer(new ProgressCellRenderer());
 		}
 		
-		add(new JScrollPane(downloads));
+		add(new JScrollPane(table));
+	}
+	
+	public String removeDownload(){
+		int row = table.getSelectedRow();
+		String url = (String) downloadList.getValueAt(row, 0);
+		downloadList.removeRow(row);
+		
+		return url;
 	}
 	
 	public void setPreviewPane(String url){

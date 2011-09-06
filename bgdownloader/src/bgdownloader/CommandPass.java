@@ -109,7 +109,7 @@ public class CommandPass implements ActionListener {
 			}		
 		}
 		if (command.compareTo("deleteURL")==0){
-			
+			bgdownloader.getDownloadList().removeDownload();
 		}
 		if (command.compareTo("numPodcasts")==0){
 			

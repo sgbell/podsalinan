@@ -189,7 +189,7 @@ public class DataStorage {
 					sql.dispose();
 				}
 				if (downloads.getDownloads().get(dlc).remove){
-					sql = downloadsDB.prepare("DELETE FROM downloads WHERE url='"+downloads.getDownloads().get(dlc)+"';");
+					sql = downloadsDB.prepare("DELETE FROM downloads WHERE url='"+downloads.getDownloads().get(dlc).url+"';");
 					sql.stepThrough();
 					sql.dispose();
 				}
