@@ -141,6 +141,7 @@ public class BGDownloader extends JFrame {
 		//System.out.println("Added Podcasts to Gui");
 	
 		// Create timer to scan all podcasts dependant on time limit set
+		
 	}
 	
 	/** This is used to start the podcast Threads, which populate the system with
