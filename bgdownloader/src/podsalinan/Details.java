@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bgdownloader;
+package podsalinan;
 
 /**
  * @author bugman

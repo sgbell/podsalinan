@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bgdownloader;
+package podsalinan;
 
 import java.net.MalformedURLException;
 import java.net.URL;

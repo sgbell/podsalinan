@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bgdownloader;
+package podsalinan;
 
 import java.io.File;
 import java.util.Vector;

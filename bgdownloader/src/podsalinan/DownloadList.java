@@ -1,11 +1,9 @@
 /**
  * 
  */
-package bgdownloader;
+package podsalinan;
 
 import java.awt.BorderLayout;
-import java.util.Vector;
-
 //import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;

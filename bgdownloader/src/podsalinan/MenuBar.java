@@ -6,7 +6,7 @@
  *    Written By: Sam Bell
  */
 
-package bgdownloader;
+package podsalinan;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;

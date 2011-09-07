@@ -1,4 +1,4 @@
-package bgdownloader;
+package podsalinan;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +20,7 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class CommandPass implements ActionListener {
 	private JTree tree;
-	private BGDownloader bgdownloader;
+	private Podsalinan bgdownloader;
 	private Vector<ProgSettings> progSettings;
 	@SuppressWarnings("unused")
 	private boolean programExiting;
@@ -199,7 +199,7 @@ public class CommandPass implements ActionListener {
 		tree = mainTree;
 	}
 	
-	public void setParent(BGDownloader parent){
+	public void setParent(Podsalinan parent){
 		bgdownloader = parent;
 	}
 }

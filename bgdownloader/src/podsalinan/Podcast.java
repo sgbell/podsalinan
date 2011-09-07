@@ -1,7 +1,7 @@
 /**
  *  This is the class used to store details about the rss feed
  */
-package bgdownloader;
+package podsalinan;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;

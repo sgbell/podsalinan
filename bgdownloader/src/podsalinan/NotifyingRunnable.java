@@ -2,7 +2,7 @@
  *  For proper handling of threads on end of execution.
  * 
  */
-package bgdownloader;
+package podsalinan;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;

@@ -1,7 +1,7 @@
 /**
  * This is the class for building the treepane.
  */
-package bgdownloader;
+package podsalinan;
 
 import java.awt.BorderLayout;
 import javax.swing.JPanel;

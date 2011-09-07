@@ -2,7 +2,7 @@
  * 
  */
 
-package bgdownloader;
+package podsalinan;
 
 
 /**

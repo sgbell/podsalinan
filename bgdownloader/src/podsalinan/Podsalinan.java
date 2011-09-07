@@ -1,12 +1,13 @@
 /**
- *   bgdownloader is a project written to 1, get me familiar with java again. and 2, create a
+ *   podsalinan is a project written to 1, get me familiar with java again. and 2, create a
  *   program that will download any url it is given, as well as podcasts from rss feeds that a user
  *   sources.
+ *   Podsalinan - loosely translated pod copy from indonesian
  *   
  *   Written By: Sam Bell
  *   
  */
-package bgdownloader;
+package podsalinan;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -22,7 +23,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 @SuppressWarnings({ "serial", "unused" })
-public class BGDownloader extends JFrame {
+public class Podsalinan extends JFrame {
 	
 	private URLDownloadList downloads;
 	private Vector<Podcast> podcasts;
@@ -46,10 +47,10 @@ public class BGDownloader extends JFrame {
 	 *   Nothing to pass in just yet
 	 */
 	public static void main(String[] args) {
-		BGDownloader mainProgram = new BGDownloader();
+		Podsalinan mainProgram = new Podsalinan();
 	}
 
-	public BGDownloader(){
+	public Podsalinan(){
 		syncObject=new Object();
 		// Centralizing all of the podcast information, to make it easier to pass around the system
 		podcasts = new Vector<Podcast>();
@@ -141,7 +142,7 @@ public class BGDownloader extends JFrame {
 		//System.out.println("Added Podcasts to Gui");
 	
 		// Create timer to scan all podcasts dependant on time limit set
-		
+		// make a loop here while(!programExiting) with a timed wait statement to update the podcasts
 	}
 	
 	/** This is used to start the podcast Threads, which populate the system with
