@@ -141,8 +141,7 @@ public class Podsalinan extends JFrame {
 		showPodcasts();
 		//System.out.println("Added Podcasts to Gui");
 	
-		// Create timer to scan all podcasts dependant on time limit set
-		// make a loop here while(!programExiting) with a timed wait statement to update the podcasts
+		// loop here to update the podcasts with a sleep
 		while (!programExiting){
 			int updateInterval=60;
 

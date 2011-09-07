@@ -94,11 +94,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 																		 tree.getDownloads().getDirectory(),
 																		 syncObject,
 																		 tree.getDownloads().getDownloadList());
-								downloaders.add(newDownloader);
-								newDownloader.addListener(this);
-								Thread downloadThread = new Thread(newDownloader);
-								//downloadThread.start();
-								//System.out.println("Download Started");
+								startDownload(newDownloader);
 								runningDownloaders++;
 							} catch (MalformedURLException e) {
 								// TODO Auto-generated catch block
@@ -183,11 +179,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 															  newDownload.list,
 															  newDownload.itemNum,
 															  true);
-					downloaders.add(newDownloader);
-					newDownloader.addListener(this);
-					Thread downloadThread = new Thread(newDownloader);
-					//downloadThread.start();
-					//System.out.println("Download Started");
+					startDownload(newDownloader);
 					runningPoddownloaders++;
 					//System.out.println("DownloadQueue: Running Podcast Downloaders - "+runningPoddownloaders);
 					//System.out.println("DownloadQueue: Running URL Downloaders - "+runningDownloaders);
@@ -199,6 +191,18 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		}
 	}
 
+	/**
+	 * Moved these lines to it's own method, as podcasts and url downloads are essentially doing the same
+	 * @param newDownloader
+	 */
+	public void startDownload(Downloader newDownloader){
+		downloaders.add(newDownloader);
+		newDownloader.addListener(this);
+		Thread downloadThread = new Thread(newDownloader);
+		downloadThread.start();
+		//System.out.println("Download Started");		
+	}
+	
 	@Override
 	public void notifyOfThreadComplete(Runnable runnable) {
 		for (int dc=0; dc < downloaders.size(); dc++){
