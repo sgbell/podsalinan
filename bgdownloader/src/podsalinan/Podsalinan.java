@@ -143,6 +143,26 @@ public class Podsalinan extends JFrame {
 	
 		// Create timer to scan all podcasts dependant on time limit set
 		// make a loop here while(!programExiting) with a timed wait statement to update the podcasts
+		while (!programExiting){
+			int updateInterval=60;
+
+			
+			// Add code here to get podcasts to do an update
+			
+			for (int psc=0; psc < progSettings.size(); psc++){
+				if (progSettings.get(psc).setting.equals("updateTimer")){
+					updateInterval=Integer.parseInt(progSettings.get(psc).value);
+				}
+			}
+			try {
+				// wait is being updated everytime with the amount of time it has to wait, in minutes
+				// before it wakes up.
+				wait(updateInterval*60000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/** This is used to start the podcast Threads, which populate the system with
