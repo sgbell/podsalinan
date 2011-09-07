@@ -71,7 +71,7 @@ public class Podsalinan extends JFrame {
 		 * to create a whole class to handle the actions.  
 		 */
 		MenuBar menubar = new MenuBar(aListener);
-		menubar.createMenu("menu.xml");
+		menubar.createMenu("src/podsalinan/menu.xml");
 		
 		//System.out.println("Menubar created");
 		
@@ -146,8 +146,8 @@ public class Podsalinan extends JFrame {
 		while (!programExiting){
 			int updateInterval=60;
 
-			
 			// Add code here to get podcasts to do an update
+			
 			
 			for (int psc=0; psc < progSettings.size(); psc++){
 				if (progSettings.get(psc).setting.equals("updateTimer")){
@@ -155,11 +155,9 @@ public class Podsalinan extends JFrame {
 				}
 			}
 			try {
-				// wait is being updated everytime with the amount of time it has to wait, in minutes
-				// before it wakes up.
-				wait(updateInterval*60000);
+				// Put the thread to sleep
+				Thread.sleep((long)updateInterval*60000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
