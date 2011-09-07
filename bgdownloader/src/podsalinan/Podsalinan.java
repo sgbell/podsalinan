@@ -147,7 +147,9 @@ public class Podsalinan extends JFrame {
 			int updateInterval=60;
 
 			// Add code here to get podcasts to do an update
-			
+			for (int pcc=0; pcc < podcasts.size(); pcc++){
+				podcasts.get(pcc).downloadFeed();
+			}
 			
 			for (int psc=0; psc < progSettings.size(); psc++){
 				if (progSettings.get(psc).setting.equals("updateTimer")){
