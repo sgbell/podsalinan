@@ -2,7 +2,7 @@
  *   podsalinan is a project written to 1, get me familiar with java again. and 2, create a
  *   program that will download any url it is given, as well as podcasts from rss feeds that a user
  *   sources.
- *   Podsalinan - loosely translated pod copy from indonesian
+ *   Podsalinan - loosely translated pod copy
  *   
  *   Written By: Sam Bell
  *   
@@ -71,7 +71,7 @@ public class Podsalinan extends JFrame {
 		 * to create a whole class to handle the actions.  
 		 */
 		MenuBar menubar = new MenuBar(aListener);
-		menubar.createMenu("src/bgdownloader/menu.xml");
+		menubar.createMenu("menu.xml");
 		
 		//System.out.println("Menubar created");
 		
@@ -95,7 +95,7 @@ public class Podsalinan extends JFrame {
 		 *  like windows size, position, and anything else I can think of that's needed.
 		 */
 		setSize (800,600);
-		setTitle ("bgdownloader");
+		setTitle ("podsalinan");
 	
 		setJMenuBar(menubar);
 		
