@@ -220,7 +220,8 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 				} else if (currentPodcast.changed){
-					sql = settingsDB.prepare("UPDATE podcasts SET directory='"+currentPodcast.getDirectory()+"';");
+					sql = settingsDB.prepare("UPDATE podcasts SET directory='"+currentPodcast.getDirectory()+
+											 "' WHERE localfile='"+currentPodcast.getdatafile()+"';");
 					sql.stepThrough();
 					sql.dispose();
 				}

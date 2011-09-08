@@ -132,6 +132,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					if (numPodcasts>0){
 						if (currentPodcast>=numPodcasts){
 							podcastToDownload=false;
+							currentPodcast=0;
 						}
 						DefaultMutableTreeNode currentrssFeed = (DefaultMutableTreeNode)tree.getTree().getModel().getChild(tree.getRssFeeds(),currentPodcast);
 						if (currentrssFeed!=null){
