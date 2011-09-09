@@ -115,6 +115,13 @@ public class Podsalinan extends JFrame {
 		
 		settings = new DataStorage(syncObject);
 		settings.loadSettings(podcasts, downloads, progSettings, treePane, cardPane);
+		
+		for (int psc=0; psc < progSettings.size(); psc++){
+			if (progSettings.get(psc).setting.equals("urlDirectory")){
+				downloads.setDirectory(progSettings.get(psc).value);
+			}
+		}
+		
 		//System.out.println("Called DataStorage.loadSettings");
 		
 		JSplitPane splitpane = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT,treePane,cardPane);

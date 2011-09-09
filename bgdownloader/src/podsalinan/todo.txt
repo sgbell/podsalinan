@@ -52,3 +52,6 @@ Todo List
 * Set default settings when program first run
   -- Completed
 * Create Thread or Timer to update the podcasts
+  -- Completed
+* Need to save download folder for urls, as we had never set it or saved it. :(
+  -- Completed

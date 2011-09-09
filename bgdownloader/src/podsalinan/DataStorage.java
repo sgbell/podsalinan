@@ -97,6 +97,7 @@ public class DataStorage {
 						"name TEXT, " +
 						"value TEXT);");
 				sql.stepThrough();
+				downloads.setDirectory(System.getProperty("user.home").concat("/Downloads"));
 			} else {
 				// Do a search in the podcasts table for podcasts stored in the system
 				sql = settingsDB.prepare("SELECT * from podcasts;");

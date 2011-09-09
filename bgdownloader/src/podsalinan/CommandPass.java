@@ -73,6 +73,17 @@ public class CommandPass implements ActionListener {
 			String newDirectory = changeDirectory();
 			if (newDirectory!=null){
 				urlDownloads.setDirectory(newDirectory);
+				boolean found=false;
+				for (int psc=0; psc < progSettings.size(); psc++){
+					if (progSettings.get(psc).setting.equals("urlDirectory")){
+						progSettings.get(psc).value=newDirectory;
+						found=true;
+					}
+				}
+				if (!found){
+					ProgSettings newSetting = new ProgSettings("urlDirectory",newDirectory);
+					progSettings.add(newSetting);
+				}
 			}		
 		}
 		if (command.compareTo("deleteURL")==0){
