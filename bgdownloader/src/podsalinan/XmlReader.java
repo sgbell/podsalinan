@@ -143,7 +143,11 @@ public class XmlReader {
 		Element titleElmnt = (Element) titleElmntLst.item(0);
 		if (titleElmnt != null) {
 			NodeList menuName = titleElmnt.getChildNodes();
-			nodeValue = ((Node) menuName.item(0)).getNodeValue();
+			try {
+				nodeValue = ((Node) menuName.item(0)).getNodeValue();
+			} catch (NullPointerException e){
+				nodeValue=null;
+			}
 		} else
 			nodeValue = null;
 		return nodeValue;

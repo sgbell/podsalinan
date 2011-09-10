@@ -135,6 +135,7 @@ public class Podcast extends DownloadDetails
 		if (newFeed){
 			// Grab the feed name from the podcast feed
 			setName(podcastXML.getFeedTitle());
+			setName(getName().replaceAll("\'", ""));
 
 			try {
 				// The following lines are used to create a md5  hash for the filename.
@@ -155,6 +156,7 @@ public class Podcast extends DownloadDetails
 
 		for (int counter=0; counter < podcastXML.getDownloadCount(); counter++){
 			boolean inList=false;
+			//boolean itunesPodcast=false;
 				
 			for (int dlc=0; dlc < downloadData.size(); dlc++){
 				if (downloadData.get(dlc).url.equals(podcastXML.getDownloadValue(counter, "enclosure", "url")))
@@ -162,6 +164,8 @@ public class Podcast extends DownloadDetails
 			}
 
 			String description = podcastXML.getDownloadValue(counter, "description", null);
+			if (description==null)
+				description="";
 			// Need to change the ' to a html friendly version, otherwise we can't add it to the database.
 			description=description.replaceAll("\'", "&apos;");
 			// Removing new lines from data, as we don't need it

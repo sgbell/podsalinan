@@ -29,9 +29,9 @@ public class DataStorage {
 		// This if Block checks to see if it's windows or linux, and sets the
 		// settings directory appropriately.
 		if (System.getProperty("os.name").equalsIgnoreCase("linux"))
-			settingsDir = System.getProperty("user.home").concat("/.bgdownloader");
+			settingsDir = System.getProperty("user.home").concat("/.podsalinan");
 		else if (System.getProperty("os.name").startsWith("Windows"))
-			settingsDir = System.getProperty("user.home").concat("\\appdata\\local\\bgdownloader");
+			settingsDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
 
 		// Check if the settings directory exists, and if not, create it.
 		File settings = new File(settingsDir);
