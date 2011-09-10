@@ -4,10 +4,12 @@
 package podsalinan;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -105,37 +107,32 @@ public class Downloader extends NotifyingRunnable{
 				long saved=0;	// Number of bytes saved
 
 				// The following if statement checks if the file exists, and then get's the size
-				/*
-				File checkFile = new File(destination);
-				if (checkFile.exists()){
-					saved=checkFile.length();
-				}
-				*/
 				
-				OutputStream outStream= new BufferedOutputStream(new FileOutputStream(destination));
+				File outputFile = new File(destination);
+				if (outputFile.exists()){
+					saved=outputFile.length();
+				}
+				if (saved<fileSize){
+					RandomAccessFile outStream = new RandomAccessFile(outputFile,"rw");
+					outStream.seek(saved);
 					
-				InputStream inStream = fileDownload.openStream();
-				
-				// If the size of the file already saved is bigger than 0 and smaller than the download size
-				// skip to the point in the file we need to continue from.
-				/*
-				if (saved>0&&saved<fileSize){
-					inStream.skip(saved);
+					InputStream inStream = fileDownload.openStream();
+					
+					while ((byteRead = inStream.read(buf)) != -1){
+						outStream.write(buf, 0, byteRead);
+						saved+=byteRead;
+						if (downloadTable!=null)						
+							if (fileSize>0){
+								double temppercent=((double)saved/(double)fileSize);
+								percentage=(int)((temppercent)*100);
+								downloadTable.downloadProgress(listNum, percentage);
+							}
+					}
+					inStream.close();
+					outStream.close();					
+				} else if (saved==fileSize){
+					downloadTable.downloadProgress(listNum, 100);
 				}
-				*/
-				
-				while ((byteRead = inStream.read(buf)) != -1){
-					outStream.write(buf, 0, byteRead);
-					saved+=byteRead;
-					if (downloadTable!=null)						
-						if (fileSize>0){
-							double temppercent=((double)saved/(double)fileSize);
-							percentage=(int)((temppercent)*100);
-							downloadTable.downloadProgress(listNum, percentage);
-						}
-				}
-				inStream.close();
-				outStream.close();
 			} else {
 				// No internet connection.
 				return 1;
