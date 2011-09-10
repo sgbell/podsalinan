@@ -109,7 +109,7 @@ public class Podcast extends DownloadDetails
 	/** Function to download Feed
 	 * 
 	 */
-	public void downloadFeed(){
+	public int downloadFeed(){
 		int outputCount=1;
 		// temporary download destination of podcast xml file
 		String outputFile = settings.getSettingsDir().concat("/temp.xml");
@@ -119,78 +119,86 @@ public class Podcast extends DownloadDetails
 			outputCount++;
 		}
 		
+		int result=0;
 		// Following 3 lines of code download podcast XML file
 		Downloader d;
 		try {
 			d = new Downloader(new URL(url),outputFile);
 			// I don't want to start another thread, as this is already being executed
 			// in a thread, and we can't continue without the file.
-			d.getFile();
-		} catch (MalformedURLException e1) {
+			result=d.getFile();
+		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
-		XmlReader podcastXML = new XmlReader(outputFile);
-	
-		if (newFeed){
-			// Grab the feed name from the podcast feed
-			setName(podcastXML.getFeedTitle());
-			setName(getName().replaceAll("\'", ""));
+		
+		if (result==0){
+			XmlReader podcastXML = new XmlReader(outputFile);
+			
+			if (newFeed){
+				// Grab the feed name from the podcast feed
+				setName(podcastXML.getFeedTitle());
+				setName(getName().replaceAll("\'", ""));
 
-			try {
-				// The following lines are used to create a md5  hash for the filename.
-				MessageDigest md = MessageDigest.getInstance("MD5");
-				byte[] bytesFeedName = getName().getBytes("UTF-8");
-				md.update(bytesFeedName, 0, getName().length());
-				// The feedFilename is a md5 hash.
-				datafile = new BigInteger(1, md.digest()).toString().substring(0, 8);
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					// The following lines are used to create a md5  hash for the filename.
+					MessageDigest md = MessageDigest.getInstance("MD5");
+					byte[] bytesFeedName = getName().getBytes("UTF-8");
+					md.update(bytesFeedName, 0, getName().length());
+					// The feedFilename is a md5 hash.
+					datafile = new BigInteger(1, md.digest()).toString().substring(0, 8);
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
 
-		}
+			for (int counter=0; counter < podcastXML.getDownloadCount(); counter++){
+				boolean inList=false;
+				//boolean itunesPodcast=false;
+					
+				for (int dlc=0; dlc < downloadData.size(); dlc++){
+					if (downloadData.get(dlc).url.equals(podcastXML.getDownloadValue(counter, "enclosure", "url")))
+						inList=true;
+				}
 
-		for (int counter=0; counter < podcastXML.getDownloadCount(); counter++){
-			boolean inList=false;
-			//boolean itunesPodcast=false;
+				String description = podcastXML.getDownloadValue(counter, "description", null);
+				if (description==null)
+					description="";
+				// Need to change the ' to a html friendly version, otherwise we can't add it to the database.
+				description=description.replaceAll("\'", "&apos;");
+				// Removing new lines from data, as we don't need it
+				description=description.replaceAll("\n", "");
 				
-			for (int dlc=0; dlc < downloadData.size(); dlc++){
-				if (downloadData.get(dlc).url.equals(podcastXML.getDownloadValue(counter, "enclosure", "url")))
-					inList=true;
+				String title=podcastXML.getDownloadValue(counter,"title",null);
+				title=title.replaceAll("\'", "&apos;");
+				
+				// If the file is not in our list already
+				if (!inList){
+					// Add the episode to our array
+					Episode ep = new Episode(podcastXML.getDownloadValue(counter,"pubDate",null),
+											 title,
+											 podcastXML.getDownloadValue(counter, "enclosure", "url"), 
+											 podcastXML.getDownloadValue(counter, "enclosure", "length"), description);
+					downloadData.add(ep);
+					// Add the episode to the download list
+					getDownloadList().addDownload(podcastXML.getDownloadValue(counter,"title",null),
+							  			  podcastXML.getDownloadValue(counter,"pubDate",null),
+							  			  podcastXML.getDownloadValue(counter, "enclosure", "url"),
+							  			  "0%");
+				}
 			}
-
-			String description = podcastXML.getDownloadValue(counter, "description", null);
-			if (description==null)
-				description="";
-			// Need to change the ' to a html friendly version, otherwise we can't add it to the database.
-			description=description.replaceAll("\'", "&apos;");
-			// Removing new lines from data, as we don't need it
-			description=description.replaceAll("\n", "");
-			
-			String title=podcastXML.getDownloadValue(counter,"title",null);
-			title=title.replaceAll("\'", "&apos;");
-			
-			// If the file is not in our list already
-			if (!inList){
-				// Add the episode to our array
-				Episode ep = new Episode(podcastXML.getDownloadValue(counter,"pubDate",null),
-										 title,
-										 podcastXML.getDownloadValue(counter, "enclosure", "url"), 
-										 podcastXML.getDownloadValue(counter, "enclosure", "length"), description);
-				downloadData.add(ep);
-				// Add the episode to the download list
-				getDownloadList().addDownload(podcastXML.getDownloadValue(counter,"title",null),
-						  			  podcastXML.getDownloadValue(counter,"pubDate",null),
-						  			  podcastXML.getDownloadValue(counter, "enclosure", "url"),
-						  			  "0%");
-			}
+			new File(outputFile).delete();
+			settings.savePodcastDB(downloadData, datafile);
+			return 0;
+		} else {
+			JOptionPane.showMessageDialog(null, "Cannot connect to podcast");
+			return 1;
 		}
-		new File(outputFile).delete();
-		settings.savePodcastDB(downloadData, datafile);
 	}
 	
 	/**
@@ -199,13 +207,16 @@ public class Podcast extends DownloadDetails
 	 * information from the internet, if the podcast is not already in the system.
 	 */
 	public void run(){
+		int success=0;
 		if (newFeed){
-			downloadFeed();
-			// Set download directory to the default directory
-			setDirectory(System.getProperty("user.home").concat("/Videos/"+getName()));
-			File localDir = new File(getDirectory());
-			if (!localDir.exists()){
-				localDir.mkdirs();
+			success=downloadFeed();
+			if (success==0){
+				// Set download directory to the default directory
+				setDirectory(System.getProperty("user.home").concat("/Videos/"+getName()));
+				File localDir = new File(getDirectory());
+				if (!localDir.exists()){
+					localDir.mkdirs();
+				}
 			}
 		} else {
 			// Load podcast from sqlite database
@@ -215,17 +226,18 @@ public class Podcast extends DownloadDetails
 			changed=false;
 		}
 		
-		tree.addrssFeed(this);
-		cards.add(getDownloadList(),getName());
-		checkDownloads();
+		if (success==0){
+			tree.addrssFeed(this);
+			cards.add(getDownloadList(),getName());
+			checkDownloads();
 
-		
-		// The following Tells the DownloadQueue to wake up, cos there's something there
-		synchronized (syncObject){
-			syncObject.notify();
-			//System.out.println("You what up DownloadQueue?!");
+			
+			// The following Tells the DownloadQueue to wake up, cos there's something there
+			synchronized (syncObject){
+				syncObject.notify();
+				//System.out.println("You what up DownloadQueue?!");
+			}			
 		}
-
 	}
 	
 	public String getdatafile() {

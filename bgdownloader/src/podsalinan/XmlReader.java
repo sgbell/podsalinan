@@ -25,17 +25,19 @@ public class XmlReader {
 
 	public XmlReader(String filename){
 		File file = new File(filename);
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			doc = db.parse(file);
-			doc.getDocumentElement().normalize();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (file.length()>1024){
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			try {
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				doc = db.parse(file);
+				doc.getDocumentElement().normalize();
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			} catch (SAXException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
 		}
 	}
 	

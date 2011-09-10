@@ -85,13 +85,9 @@ public class Downloader extends NotifyingRunnable{
 					Object objData = urlConnect.getContent();
 
             } catch (UnknownHostException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
                     return false;
             }
             catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
                     return false;
             }
             return true;
@@ -100,7 +96,7 @@ public class Downloader extends NotifyingRunnable{
 	/** This is where the file gets downloaded from
 	 * 
 	 */
-	public void getFile(){
+	public int getFile(){
 
 		try {
 			if (isInternetReachable()){
@@ -140,11 +136,16 @@ public class Downloader extends NotifyingRunnable{
 				}
 				inStream.close();
 				outStream.close();
+			} else {
+				// No internet connection.
+				return 1;
 			}
+		} catch (UnknownHostException e){
+			return 1;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+			return 1;
+		}
+		return 0;
 	}
 	
 	public int downloadCompleted(){
