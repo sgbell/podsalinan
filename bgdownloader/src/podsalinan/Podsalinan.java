@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Sam Bell.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     Sam Bell - initial API and implementation
+ ******************************************************************************/
 /**
  *   podsalinan is a project written to 1, get me familiar with java again. and 2, create a
  *   program that will download any url it is given, as well as podcasts from rss feeds that a user
