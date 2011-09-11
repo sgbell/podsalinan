@@ -180,10 +180,17 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 															  newDownload.list,
 															  newDownload.itemNum,
 															  true);
-					startDownload(newDownloader);
-					runningPoddownloaders++;
-					//System.out.println("DownloadQueue: Running Podcast Downloaders - "+runningPoddownloaders);
-					//System.out.println("DownloadQueue: Running URL Downloaders - "+runningDownloaders);
+					boolean found=false;
+					for (int dqc=0; dqc < downloaders.size(); dqc++){
+						if (downloaders.get(dqc).getFilenameDownload().equals(newDownloader.getFilenameDownload()))
+							found=true;
+					}
+					if (!found){
+						startDownload(newDownloader);
+						runningPoddownloaders++;
+						//System.out.println("DownloadQueue: Running Podcast Downloaders - "+runningPoddownloaders);
+						//System.out.println("DownloadQueue: Running URL Downloaders - "+runningDownloaders);
+					}
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -201,13 +208,14 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		newDownloader.addListener(this);
 		Thread downloadThread = new Thread(newDownloader);
 		downloadThread.start();
-		//System.out.println("Download Started");		
+		//System.out.println("Download Started: "+newDownloader.getFilenameDownload());		
 	}
 	
 	@Override
 	public void notifyOfThreadComplete(Runnable runnable) {
 		for (int dc=0; dc < downloaders.size(); dc++){
 			if (downloaders.get(dc).downloadCompleted()==100){
+				//System.out.println("Finished: "+downloaders.get(dc).getFilenameDownload());
 				if (downloaders.get(dc).isPodcast()){
 					runningPoddownloaders--;
 				} else {

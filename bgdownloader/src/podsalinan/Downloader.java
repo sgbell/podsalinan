@@ -3,12 +3,9 @@
  */
 package podsalinan;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -61,7 +58,6 @@ public class Downloader extends NotifyingRunnable{
 			URLConnection conn = fileDownload.openConnection();
 			fileSize = conn.getContentLength();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -99,7 +95,8 @@ public class Downloader extends NotifyingRunnable{
 	 * 
 	 */
 	public int getFile(){
-
+		RandomAccessFile outStream;
+		
 		try {
 			if (isInternetReachable()){
 				byte buf[]=new byte[1024];
@@ -112,11 +109,21 @@ public class Downloader extends NotifyingRunnable{
 				if (outputFile.exists()){
 					saved=outputFile.length();
 				}
-				if (saved<fileSize){
-					RandomAccessFile outStream = new RandomAccessFile(outputFile,"rw");
+				
+				URLConnection conn = fileDownload.openConnection();
+				long tempfileSize = conn.getContentLength();
+				if (fileSize!=tempfileSize)
+					fileSize=tempfileSize;
+				
+				//System.out.println(fileDownload.toString()+" - "+fileSize);
+				if ((saved<fileSize)||(fileSize==-1)){
+					outStream = new RandomAccessFile(outputFile,"rw");
 					outStream.seek(saved);
 					
 					InputStream inStream = fileDownload.openStream();
+					inStream.skip(saved);
+					//System.out.println(fileDownload.toString());
+					//System.out.println(saved+" of "+fileSize);					
 					
 					while ((byteRead = inStream.read(buf)) != -1){
 						outStream.write(buf, 0, byteRead);
@@ -131,6 +138,7 @@ public class Downloader extends NotifyingRunnable{
 					inStream.close();
 					outStream.close();					
 				} else if (saved==fileSize){
+					percentage=100;
 					downloadTable.downloadProgress(listNum, 100);
 				}
 			} else {

@@ -156,7 +156,7 @@ public class Podcast extends DownloadDetails
 				}
 
 			}
-
+			//System.out.println(getName()+" : "+outputFile);
 			for (int counter=0; counter < podcastXML.getDownloadCount(); counter++){
 				boolean inList=false;
 				//boolean itunesPodcast=false;
