@@ -26,9 +26,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
+
+import javax.swing.table.DefaultTableModel;
 
 /**
  * @author bugman
@@ -42,6 +46,7 @@ public class Downloader extends NotifyingRunnable{
 				listNum;
 	private Object syncObject;
 	private DownloadList downloadTable;
+	private DefaultTableModel downloadGui;
 	private boolean podcast;
 	
 	public String getFilenameDownload(){
@@ -52,7 +57,7 @@ public class Downloader extends NotifyingRunnable{
 		return podcast;
 	}
 	
-	public Downloader(URL urlDownload, String outputFile, String size, Object syncObject, DownloadList downloadTable, int listNum, boolean podcast){
+	public Downloader(URL urlDownload, String outputFile, String size, Object syncObject, DownloadList downloadTable, DefaultTableModel queueGui, int listNum, boolean podcast){
 		fileDownload = urlDownload;
 		destination = outputFile;
 		fileSize = Long.valueOf(size);
@@ -60,12 +65,18 @@ public class Downloader extends NotifyingRunnable{
 		this.syncObject = syncObject;
 		this.podcast=podcast;
 		this.listNum=listNum;
+		downloadGui=queueGui;
+		
+		downloadGui.addRow(new Object[]{fileDownload.toString(),"",""});
 	}
 	
-	public Downloader(URL urlDownload, String outputFile, Object syncObject, DownloadList downloadTable) {
+	public Downloader(URL urlDownload, String outputFile, Object syncObject, DownloadList downloadTable, DefaultTableModel queueGui) {
 		this(urlDownload,outputFile);
 		this.syncObject = syncObject;
 		this.downloadTable=downloadTable;
+		downloadGui=queueGui;
+
+		downloadGui.addRow(new Object[]{fileDownload.toString(),"",""});
 	}
 	
 	public Downloader(URL urlDownload, String outputFile) {
@@ -75,6 +86,8 @@ public class Downloader extends NotifyingRunnable{
 		try {
 			URLConnection conn = fileDownload.openConnection();
 			fileSize = conn.getContentLength();
+		} catch (MalformedURLException e) {
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -89,6 +102,7 @@ public class Downloader extends NotifyingRunnable{
 	public static boolean isInternetReachable()
     {
             try {
+            	//System.out.println("Checking the internet");
                     //make a URL to a known source
                     URL url = new URL("http://www.google.com");
 
@@ -101,11 +115,14 @@ public class Downloader extends NotifyingRunnable{
 					Object objData = urlConnect.getContent();
 
             } catch (UnknownHostException e) {
+            		//System.out.println("No it isn't");
                     return false;
             }
             catch (IOException e) {
+        			//System.out.println("No it isn't");
                     return false;
             }
+            //System.out.println("Yes it is");
             return true;
     }
 	
@@ -116,13 +133,14 @@ public class Downloader extends NotifyingRunnable{
 		RandomAccessFile outStream;
 		
 		try {
+			//System.out.println("Is internet Reachable?");
 			if (isInternetReachable()){
 				byte buf[]=new byte[1024];
 				int byteRead;	// Number of bytes read from file being downloaded
 				long saved=0;	// Number of bytes saved
+				String totalSizeModifier;
 
 				// The following if statement checks if the file exists, and then get's the size
-				
 				File outputFile = new File(destination);
 				if (outputFile.exists()){
 					saved=outputFile.length();
@@ -133,24 +151,91 @@ public class Downloader extends NotifyingRunnable{
 				if (fileSize!=tempfileSize)
 					fileSize=tempfileSize;
 				
+				double fileSizeModified = 0;
+				totalSizeModifier="";
+				if (fileSize>1073741824){
+					totalSizeModifier=" Gb";
+					fileSizeModified=fileSize/1073741824;
+				} else if (fileSize>1048576){
+					totalSizeModifier=" Mb";
+					fileSizeModified=fileSize/1048576;					
+				} else if (fileSize>1024){
+					totalSizeModifier=" Kb";
+					fileSizeModified=fileSize/1024;
+				}
+				
 				//System.out.println(fileDownload.toString()+" - "+fileSize);
+				//System.out.println(saved);
+				System.out.println(outputFile);
 				if ((saved<fileSize)||(fileSize==-1)){
 					outStream = new RandomAccessFile(outputFile,"rw");
 					outStream.seek(saved);
 					
 					InputStream inStream = fileDownload.openStream();
 					inStream.skip(saved);
-					//System.out.println(fileDownload.toString());
-					//System.out.println(saved+" of "+fileSize);					
 					
+					long time=System.currentTimeMillis();
+					int chunkCount=0;
+					//System.out.println("before while");
 					while ((byteRead = inStream.read(buf)) != -1){
+						//System.out.println("Downloading");
 						outStream.write(buf, 0, byteRead);
 						saved+=byteRead;
-						if (downloadTable!=null)						
+						chunkCount++;
+						//System.out.println("Saved: "+saved);
+						if (downloadTable!=null)	
 							if (fileSize>0){
 								double temppercent=((double)saved/(double)fileSize);
 								percentage=(int)((temppercent)*100);
 								downloadTable.downloadProgress(listNum, percentage);
+								
+								String savedModifier="";
+								double savedModified=0;
+								// Download window output
+								if (saved>1073741824){
+									savedModifier=" Gb";
+									savedModified = (double)saved/1073741824;
+								} else if (saved>1048576){
+									savedModifier=" Mb";
+									savedModified = (double)saved/1048576;
+								} else if (saved>1024){
+									savedModifier=" Kb";
+									savedModified = (double)saved/1024;
+								} else
+									savedModified=saved;
+
+								String outputString = savedModified + savedModifier + " of " + fileSizeModified + totalSizeModifier;
+								downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
+								if (System.currentTimeMillis()-time>999){
+									downloadGui.setValueAt(chunkCount, getRow(fileDownload.toString()), 2);
+									time=System.currentTimeMillis();
+									chunkCount=0;
+								}
+							} else {
+								String savedModifier="";
+								double savedModified=0;
+								// Download window output
+								if (saved>1073741824){
+									savedModifier=" Gb";
+									savedModified = (double)saved/1073741824;
+								} else if (saved>1048576){
+									savedModifier=" Mb";
+									savedModified = (double)saved/1048576;
+								} else if (saved>1024){
+									savedModifier=" Kb";
+									savedModified = (double)saved/1024;
+								} else
+									savedModified=saved;
+
+								savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
+								
+								String outputString = savedModified + savedModifier;
+								downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
+								if (System.currentTimeMillis()-time>999){
+									downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
+									time=System.currentTimeMillis();
+									chunkCount=0;
+								}
 							}
 					}
 					inStream.close();
@@ -177,9 +262,28 @@ public class Downloader extends NotifyingRunnable{
 	
 	@Override
 	public void doRun() {
+		System.out.println("Before get file");
 		getFile();
+		System.out.println("After get file");
 		synchronized (syncObject){
 			syncObject.notify();
 		}		
+	}
+	
+	public int getRow(String url){
+		int rowNum=0;
+		boolean found=false;
+		
+		//System.out.println("getRow: "+url);
+		while((rowNum<downloadGui.getRowCount())&&(!found)){
+			String tableURL = (String)downloadGui.getValueAt(rowNum, 0);
+			//System.out.println("getRow: tableURL="+tableURL);
+			if (tableURL.equals(url))
+				found=true;
+			else
+				rowNum++;
+		}
+		//System.out.println(rowNum);
+		return rowNum;
 	}
 }

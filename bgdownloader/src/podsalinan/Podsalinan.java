@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -53,6 +54,7 @@ public class Podsalinan extends JFrame {
 	private DataStorage settings;
 	
 	private DownloadQueue podcastQueue; // This scans through the lists of files to download and starts a downloader with the next available file
+	private DownloadList downloadView;
 	
 	private boolean programExiting=false;
 	private Object syncObject;
@@ -89,8 +91,8 @@ public class Podsalinan extends JFrame {
 		 * to create a whole class to handle the actions.  
 		 */
 		MenuBar menubar = new MenuBar(aListener);
-		//menubar.createMenu("src/podsalinan/menu.xml");
-		menubar.createMenu("menu.xml");
+		menubar.createMenu("src/podsalinan/menu.xml");
+		//menubar.createMenu("menu.xml");
 		
 		//System.out.println("Menubar created");
 		
@@ -140,9 +142,12 @@ public class Podsalinan extends JFrame {
 			}
 		}
 		
-		//System.out.println("Called DataStorage.loadSettings");
+		// New Code adding a Download pane to the screen
+		podcastQueue = new DownloadQueue(programExiting,treePane, progSettings,downloadView, syncObject);
+		JSplitPane downloadSplitPane = new JSplitPane (JSplitPane.VERTICAL_SPLIT,cardPane,new JScrollPane(podcastQueue.getdownloadQueue()));
+		downloadSplitPane.setDividerLocation(400);
 		
-		JSplitPane splitpane = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT,treePane,cardPane);
+		JSplitPane splitpane = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT,treePane,downloadSplitPane);
 		splitpane.setDividerLocation(250);
 		
 		getContentPane().add(splitpane,BorderLayout.CENTER);
@@ -159,7 +164,6 @@ public class Podsalinan extends JFrame {
 		setVisible(true);
 
 		/* This is the class that does all of the downloading. */
-		podcastQueue = new DownloadQueue(programExiting,treePane, progSettings, syncObject);
 		Thread downloadingQueue = new Thread(podcastQueue);
 		downloadingQueue.start();
 		//System.out.println("DownloadQueue Created and Started");

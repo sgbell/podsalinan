@@ -30,35 +30,36 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-/**
- * @author bugman
- *
- */
 @SuppressWarnings("serial")
 public class DownloadList extends JPanel {
+
+	static final int IS_PODCAST = 0;
+	static final int IS_URL_WINDOW = 1;
 	
 	private DefaultTableModel downloadList;
-	//private Vector<String> filenames;
-	//private JEditorPane previewPane;
-	private boolean isRssFeed;
+	private int listType;
 	private JTable table;
 	
-	public DownloadList(boolean rssFeed){
+	public DownloadList(int windowType){
 		super();
+		
+		Object headers[];
 
-		//filenames = new Vector<String>();
-		isRssFeed = rssFeed;
+		listType = windowType;
 		setLayout(new BorderLayout());
-		if (rssFeed){
-			Object headers[] = {"Title",
-					"Date",
-					"Progress"};
-			downloadList = new DefaultTableModel(headers,1);
-		} else {
-			Object headers[] = {"Filename",
-					"Progress"};
-			downloadList = new DefaultTableModel(headers,1);
+		switch(listType){
+			case IS_URL_WINDOW:
+				headers = new Object[]{"Filename",
+									   "Progress"};
+				break;
+			case IS_PODCAST:
+			default:
+				headers = new Object[]{"Title",
+									   "Date",
+									   "Progress"};
+				break;
 		}
+		downloadList = new DefaultTableModel(headers,1);
 		table = new JTable(downloadList){
 		    public boolean isCellEditable(int rowIndex, int vColIndex) {
 		        return false;
@@ -70,20 +71,26 @@ public class DownloadList extends JPanel {
 		
 		table.setRowSelectionAllowed(true);
 		
-		if (rssFeed) {
-			Object newRow[] = new Object [] {"","","0%"};
-			downloadList.addRow(newRow);
-			downloadList.removeRow(0);
-			TableColumn myCol = table.getColumnModel().getColumn(2);
-			myCol.setCellRenderer(new ProgressCellRenderer());
-		} else {
-			Object newRow[] = new Object [] {"","0%"};
-			downloadList.addRow(newRow);
-			downloadList.removeRow(0);
-			TableColumn myCol = table.getColumnModel().getColumn(1);
-			myCol.setCellRenderer(new ProgressCellRenderer());
-		}
+		Object newRow[];
+		TableColumn myCol;
 		
+		switch(listType){
+			case IS_URL_WINDOW:
+				newRow = new Object [] {"","0%"};
+				downloadList.addRow(newRow);
+				downloadList.removeRow(0);
+				myCol = table.getColumnModel().getColumn(1);
+				myCol.setCellRenderer(new ProgressCellRenderer());
+				break;
+			case IS_PODCAST:
+			default:
+				newRow = new Object [] {"","","0%"};
+				downloadList.addRow(newRow);
+				downloadList.removeRow(0);
+				myCol = table.getColumnModel().getColumn(2);
+				myCol.setCellRenderer(new ProgressCellRenderer());
+				break;
+		}
 		add(new JScrollPane(table));
 	}
 	
@@ -94,15 +101,27 @@ public class DownloadList extends JPanel {
 		
 		return url;
 	}
+
+	public void removeDownload(String url){
+		for (int tblc=0; tblc < table.getRowCount(); tblc++){
+			String tableUrl = (String)downloadList.getValueAt(tblc, 0);
+			if (tableUrl.equals(url)){
+				downloadList.removeRow(tblc);
+			}
+		}
+	}
 	
-	public void setPreviewPane(String url){
-		/*	if (url != null)
-			previewPane.setText(url);
-		try {
-				
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/ 
+	public int getRow(String url){
+		int rowNum=0;
+		
+		while(rowNum<downloadList.getRowCount()){
+			String tableURL = (String)downloadList.getValueAt(rowNum, 0);
+			if (tableURL.equals(url.substring(url.lastIndexOf('/')+1))){
+				return rowNum;
+			} else
+				rowNum++;
+		}
+		return -1;
 	}
 	
 	/** Used for Adding a download in a podcast
@@ -116,10 +135,9 @@ public class DownloadList extends JPanel {
 		Object newRow[];
 		
 		if (filename!=null){
-			if (isRssFeed){
+			if (listType==IS_PODCAST){
 				newRow = new Object[] {title,date,"0%"};
 				downloadList.addRow(newRow);
-				//filenames.add(filename);
 				if (downloadList.getValueAt(0, 0).toString().length()==0){
 					downloadList.removeRow(0);
 				}			
@@ -137,26 +155,30 @@ public class DownloadList extends JPanel {
 		if (newDownload != null){
 			// Adding just the filename to the window
 			newDownload=newDownload.substring(newDownload.lastIndexOf('/')+1);
-			if (!isRssFeed){
-				newRow = new Object[] {newDownload,"0%"};
-				downloadList.addRow(newRow);
-				if (downloadList.getValueAt(0, 0).toString().length()==0){
-					downloadList.removeRow(0);
-				}
+
+			newRow = new Object[] {newDownload,"0%"};
+			downloadList.addRow(newRow);
+			
+			if (downloadList.getValueAt(0, 0).toString().length()==0){
+				downloadList.removeRow(0);
 			}
 		}
+	}
+
+	public void downloadSpeed (int dlc, String speed){
+		downloadList.setValueAt(speed, dlc, 2);
+	}
+	
+	public void downloadProgress(int dlc, String progress){
+		downloadList.setValueAt(progress, dlc, 1);
 	}
 	
 	public void downloadProgress(int dlc, int progress){
 		String newProgress = Integer.toString(progress)+"%";
-		//for (int dlc=0; dlc<downloadList.getRowCount(); dlc++){
-			//if (filenames.get(dlc).equals(filename))
-			// Need another way to find the right one
-		if (isRssFeed)
+
+		if (listType==IS_PODCAST)
 			downloadList.setValueAt(newProgress, dlc, 2);
-		else
+		else if (listType==IS_URL_WINDOW)
 			downloadList.setValueAt(newProgress, dlc, 1);
-		//}
 	}
-	
 }

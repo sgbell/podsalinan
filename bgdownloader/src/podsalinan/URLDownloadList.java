@@ -38,7 +38,7 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public URLDownloadList(Object syncObject){
 		super("URLS", syncObject);
-		setDownloadList(new DownloadList(false));
+		setDownloadList(new DownloadList(DownloadList.IS_URL_WINDOW));
 		downloads = new Vector<Details>();
 	}
 	

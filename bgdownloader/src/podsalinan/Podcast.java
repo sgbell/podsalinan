@@ -65,7 +65,7 @@ public class Podcast extends DownloadDetails
 	 */
 	public Podcast(String newURL, DataStorage settings, TreePane treePane, JPanel cardPane, Object syncObject){
 		super(null,syncObject);
-		setDownloadList(new DownloadList(true));
+		setDownloadList(new DownloadList(DownloadList.IS_PODCAST));
 		url = newURL;
 		
 		tree=treePane;

@@ -43,7 +43,7 @@ public class ProgressCellRenderer extends JProgressBar implements TableCellRende
 	    setString("0%");
 	    setStringPainted(true);
 	}
-
+	
 	public Component getTableCellRendererComponent(
         JTable table,
         Object value,

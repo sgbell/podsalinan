@@ -25,6 +25,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Vector;
 
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -43,6 +45,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private Vector<ProgSettings> progSettings;
 	private int runningPoddownloaders,
 				runningDownloaders;
+	
+	private DefaultTableModel queueGui;
+	private JTable table;
 
 	public class Download {
 		public String url,
@@ -52,11 +57,23 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		public DownloadList list;
 	}
 	
-	public DownloadQueue(boolean programExiting, TreePane treePane, Vector<ProgSettings> progSettings, Object syncObject){
+	@SuppressWarnings("serial")
+	public DownloadQueue(boolean programExiting, TreePane treePane, Vector<ProgSettings> progSettings, DownloadList downloadView, Object syncObject){
 		this.programExiting=programExiting;
 		tree=treePane;
 		this.syncObject=syncObject;
 		this.progSettings=progSettings;
+		
+		String headers[] = {"Filename","Progress","Speed"};
+		queueGui = new DefaultTableModel(headers,0);
+		table = new JTable(queueGui){
+			public boolean isCellEditable(int rowIndex, int vColIndex){
+				return false;
+			}
+		};
+		table.setShowGrid(false);
+		table.setRowSelectionAllowed(true);
+		
 	}
 	
 	public void run(){
@@ -66,19 +83,6 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		
 		// While the program is running continue downloading.
 		while (!programExiting){
-			// Pausing this until notify() is sent from one of the downloaders,
-			// or when a new item is added to the queue.
-			//System.out.println("DownloadQueue: Going to Sleep");
-			synchronized (syncObject){
-				try {
-					syncObject.wait();
-					//System.out.println("DownloadQueue: Woken up");
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
 			int maxPodcastDownloaders=0;
 			int maxDownloaders=0;
 			for (int ps=0; ps < progSettings.size(); ps++){
@@ -109,13 +113,15 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 							urlDownloads.get(udc).downloaded=2;
 							try {
 								Downloader newDownloader= new Downloader(new URL(urlDownloads.get(udc).url),
-																		 tree.getDownloads().getDirectory(),
+																		 tree.getDownloads().getDirectory()+"/"+
+																				 urlDownloads.get(udc).url.substring(
+																						 urlDownloads.get(udc).url.lastIndexOf('/')+1),
 																		 syncObject,
-																		 tree.getDownloads().getDownloadList());
+																		 tree.getDownloads().getDownloadList(),
+																		 queueGui);
 								startDownload(newDownloader);
 								runningDownloaders++;
 							} catch (MalformedURLException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						} else {
@@ -127,8 +133,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					fileToDownload=false;
 				}
 			}
-			
-			//System.out.println("Podcast Download loop");
+			//System.out.println("Exited URL downloads");
 			podcastToDownload=true;
 			// Downloaders size, determines how many files can be downloaded at a time.
 			while ((podcastToDownload)&&(runningPoddownloaders<maxPodcastDownloaders)){
@@ -179,6 +184,33 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 										newDownload.list=podcast.getDownloadList();
 										newDownload.itemNum=currentfile;
 										foundNew=true;
+
+										//System.out.println("DownloadQueue: Creating new Downloader");
+										Downloader newDownloader;
+										try {
+											newDownloader = new Downloader(new URL(newDownload.url),
+																					  newDownload.destination,
+																					  newDownload.size,
+																					  syncObject,
+																					  newDownload.list,
+																					  queueGui,
+																					  newDownload.itemNum,
+																					  true);
+											boolean found=false;
+											for (int dqc=0; dqc < downloaders.size(); dqc++){
+												if (downloaders.get(dqc).getFilenameDownload().equals(newDownloader.getFilenameDownload()))
+													found=true;
+											}
+											if (!found){
+												startDownload(newDownloader);
+												runningPoddownloaders++;
+												//System.out.println("DownloadQueue: Running Podcast Downloaders - "+runningPoddownloaders);
+												//System.out.println("DownloadQueue: Running URL Downloaders - "+runningDownloaders);
+											}
+										} catch (MalformedURLException e) {
+											e.printStackTrace();
+										}
+
 									} else {
 										currentfile++;
 									}
@@ -186,31 +218,20 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 								//System.out.println("DownloadQueue: Finished Scanning for new download");
 							}
 						}
-					}	
+					} else {
+						podcastToDownload=false;
+					}
 				}
-				//System.out.println("DownloadQueue: Creating new Downloader");
-				Downloader newDownloader;
+				//System.out.println("No podcasts to download");
+			}
+			// Pausing this until notify() is sent from one of the downloaders,
+			// or when a new item is added to the queue.
+			//System.out.println("DownloadQueue: Going to Sleep");
+			synchronized (syncObject){
 				try {
-					newDownloader = new Downloader(new URL(newDownload.url),
-															  newDownload.destination,
-															  newDownload.size,
-															  syncObject,
-															  newDownload.list,
-															  newDownload.itemNum,
-															  true);
-					boolean found=false;
-					for (int dqc=0; dqc < downloaders.size(); dqc++){
-						if (downloaders.get(dqc).getFilenameDownload().equals(newDownloader.getFilenameDownload()))
-							found=true;
-					}
-					if (!found){
-						startDownload(newDownloader);
-						runningPoddownloaders++;
-						//System.out.println("DownloadQueue: Running Podcast Downloaders - "+runningPoddownloaders);
-						//System.out.println("DownloadQueue: Running URL Downloaders - "+runningDownloaders);
-					}
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
+					syncObject.wait();
+					//System.out.println("DownloadQueue: Woken up");
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
@@ -224,7 +245,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	public void startDownload(Downloader newDownloader){
 		downloaders.add(newDownloader);
 		newDownloader.addListener(this);
-		Thread downloadThread = new Thread(newDownloader);
+		Thread downloadThread = new Thread(newDownloader,"Downloader");
 		downloadThread.start();
 		//System.out.println("Download Started: "+newDownloader.getFilenameDownload());		
 	}
@@ -246,4 +267,10 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			}
 		}
 	}
+
+	public JTable getdownloadQueue() {
+		return table;
+	}
+	
+	
 }
