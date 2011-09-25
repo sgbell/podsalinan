@@ -262,12 +262,16 @@ public class Downloader extends NotifyingRunnable{
 	
 	@Override
 	public void doRun() {
-		System.out.println("Before get file");
+		//System.out.println("Before get file");
 		getFile();
-		System.out.println("After get file");
+		//System.out.println("After get file");
 		synchronized (syncObject){
 			syncObject.notify();
 		}		
+	}
+	
+	public int getRow(){
+		return getRow(fileDownload.toString());
 	}
 	
 	public int getRow(String url){

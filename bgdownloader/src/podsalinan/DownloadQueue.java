@@ -255,6 +255,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		for (int dc=0; dc < downloaders.size(); dc++){
 			if (downloaders.get(dc).downloadCompleted()==100){
 				//System.out.println("Finished: "+downloaders.get(dc).getFilenameDownload());
+				queueGui.removeRow(downloaders.get(dc).getRow());
 				if (downloaders.get(dc).isPodcast()){
 					runningPoddownloaders--;
 				} else {
