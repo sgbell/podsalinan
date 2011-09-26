@@ -132,6 +132,8 @@ public class Downloader extends NotifyingRunnable{
 	public int getFile(){
 		RandomAccessFile outStream;
 		boolean remoteFileExists=false;
+		int numTries=0;
+		URLConnection conn;
 		
 			//System.out.println("Is internet Reachable?");
 		if (isInternetReachable()){
@@ -146,34 +148,11 @@ public class Downloader extends NotifyingRunnable{
 				saved=outputFile.length();
 			}
 				
-			URLConnection conn;
-			try {
-				conn = fileDownload.openConnection();
-				long tempfileSize = conn.getContentLength();
-				if (fileSize!=tempfileSize)
-					fileSize=tempfileSize;
-				remoteFileExists=true;
-			} catch (MalformedURLException e) {
-				remoteFileExists=false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				remoteFileExists=false;
-			}
 			
-			if (!remoteFileExists){
-				String protocol;
-				if (fileDownload.toString().substring(0, 3).equals("http")){
-					protocol = "ftp";
-				} else
-					protocol = "http";
-				try {
-					fileDownload = new URL(protocol,fileDownload.getHost(),fileDownload.getPort(),fileDownload.getFile());
-				} catch (MalformedURLException e) {
-					remoteFileExists=false;
-				}
+			while ((!remoteFileExists)&&(numTries<2)){
 				try {
 					conn = fileDownload.openConnection();
-					long tempfileSize = conn.getContentLength();
+					long tempfileSize = Long.parseLong(conn.getHeaderField("Content-Length"));
 					if (fileSize!=tempfileSize)
 						fileSize=tempfileSize;
 					remoteFileExists=true;
@@ -183,6 +162,20 @@ public class Downloader extends NotifyingRunnable{
 					e.printStackTrace();
 					remoteFileExists=false;
 				}
+
+				if (!remoteFileExists){
+					String protocol;
+					if (fileDownload.toString().substring(0, 3).equals("http")){
+						protocol = "ftp";
+					} else
+						protocol = "http";
+					try {
+						fileDownload = new URL(protocol,fileDownload.getHost(),fileDownload.getPort(),fileDownload.getFile());
+					} catch (MalformedURLException e) {
+						remoteFileExists=false;
+					}
+				}
+				numTries++;
 			}
 			
 			if (remoteFileExists){
@@ -207,13 +200,17 @@ public class Downloader extends NotifyingRunnable{
 						outStream = new RandomAccessFile(outputFile,"rw");
 						outStream.seek(saved);
 						
-						InputStream inStream = fileDownload.openStream();
-						inStream.skip(saved);
+						conn = fileDownload.openConnection();
+						conn.setRequestProperty("Range", "bytes="+ saved + "-");
+						conn.connect();
+						InputStream inStream = conn.getInputStream();
+						
 						
 						long time=System.currentTimeMillis();
 						int chunkCount=0;
 						//System.out.println("before while");
-						while ((byteRead = inStream.read(buf)) != -1){
+						while ((byteRead = inStream.read(buf)) > 0){
+							//System.out.println("byteRead: "+byteRead);
 							//System.out.println("Downloading");
 							outStream.write(buf, 0, byteRead);
 							saved+=byteRead;
@@ -240,10 +237,12 @@ public class Downloader extends NotifyingRunnable{
 									} else
 										savedModified=saved;
 
+									savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
+
 									String outputString = savedModified + savedModifier + " of " + fileSizeModified + totalSizeModifier;
 									downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
 									if (System.currentTimeMillis()-time>999){
-										downloadGui.setValueAt(chunkCount, getRow(fileDownload.toString()), 2);
+										downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
 										time=System.currentTimeMillis();
 										chunkCount=0;
 									}
@@ -274,6 +273,7 @@ public class Downloader extends NotifyingRunnable{
 									}
 								}
 						}
+						//System.out.println("File Finished");
 						inStream.close();
 						outStream.close();					
 					} else if (saved==fileSize){
@@ -283,6 +283,7 @@ public class Downloader extends NotifyingRunnable{
 				} catch (UnknownHostException e){
 					return 1;
 				} catch (IOException e) {
+					e.printStackTrace();
 					return 1;
 				}				
 			}
