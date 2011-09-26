@@ -152,7 +152,14 @@ public class Downloader extends NotifyingRunnable{
 			while ((!remoteFileExists)&&(numTries<2)){
 				try {
 					conn = fileDownload.openConnection();
-					long tempfileSize = Long.parseLong(conn.getHeaderField("Content-Length"));
+					/* The following line gets the file size of the Download. had to do it this 
+					 * way cos URLConnection.getContentLength was an int and couldn't handle over
+					 * 2GB
+					 */
+					String length=conn.getHeaderField("Content-Length");
+					long tempfileSize=-1;
+					if (length!=null)
+						tempfileSize = Long.parseLong(length);
 					if (fileSize!=tempfileSize)
 						fileSize=tempfileSize;
 					remoteFileExists=true;
@@ -163,6 +170,9 @@ public class Downloader extends NotifyingRunnable{
 					remoteFileExists=false;
 				}
 
+				/* Just incase the link (whether it was manually added or via a podcast)
+				 * is incorrect, we will try to switch it from http to ftp and vice versa.
+				 */
 				if (!remoteFileExists){
 					String protocol;
 					if (fileDownload.toString().substring(0, 3).equals("http")){
@@ -201,6 +211,9 @@ public class Downloader extends NotifyingRunnable{
 						outStream.seek(saved);
 						
 						conn = fileDownload.openConnection();
+						/* Skip incoming connection ahead before we connect a stream to it,
+						 * otherwise it'll waste user bandwidth						
+						 */
 						conn.setRequestProperty("Range", "bytes="+ saved + "-");
 						conn.connect();
 						InputStream inStream = conn.getInputStream();
