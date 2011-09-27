@@ -34,10 +34,6 @@ import java.text.DecimalFormat;
 
 import javax.swing.table.DefaultTableModel;
 
-/**
- * @author bugman
- *
- */
 public class Downloader extends NotifyingRunnable{
 	private URL fileDownload;
 	private String destination;
@@ -67,7 +63,9 @@ public class Downloader extends NotifyingRunnable{
 		this.listNum=listNum;
 		downloadGui=queueGui;
 		
-		downloadGui.addRow(new Object[]{fileDownload.toString(),"",""});
+		synchronized (downloadGui){
+			downloadGui.addRow(new Object[]{fileDownload.toString(),"",""});			
+		}
 	}
 	
 	public Downloader(URL urlDownload, String outputFile, Object syncObject, DownloadList downloadTable, DefaultTableModel queueGui) {
@@ -76,7 +74,9 @@ public class Downloader extends NotifyingRunnable{
 		this.downloadTable=downloadTable;
 		downloadGui=queueGui;
 
-		downloadGui.addRow(new Object[]{fileDownload.toString(),"",""});
+		synchronized (downloadGui){
+			downloadGui.addRow(new Object[]{fileDownload.toString(),"",""});			
+		}
 	}
 	
 	public Downloader(URL urlDownload, String outputFile) {
@@ -253,11 +253,14 @@ public class Downloader extends NotifyingRunnable{
 									savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
 
 									String outputString = savedModified + savedModifier + " of " + fileSizeModified + totalSizeModifier;
-									downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
-									if (System.currentTimeMillis()-time>999){
-										downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
-										time=System.currentTimeMillis();
-										chunkCount=0;
+									// Attempting to keep the gui thread safe as items are updated in the downloadGui
+									synchronized (downloadGui){
+										downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
+										if (System.currentTimeMillis()-time>999){
+											downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
+											time=System.currentTimeMillis();
+											chunkCount=0;
+										}										
 									}
 								} else {
 									String savedModifier="";
@@ -278,11 +281,13 @@ public class Downloader extends NotifyingRunnable{
 									savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
 									
 									String outputString = savedModified + savedModifier;
-									downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
-									if (System.currentTimeMillis()-time>999){
-										downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
-										time=System.currentTimeMillis();
-										chunkCount=0;
+									synchronized (downloadGui){
+										downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
+										if (System.currentTimeMillis()-time>999){
+											downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
+											time=System.currentTimeMillis();
+											chunkCount=0;
+										}
 									}
 								}
 						}

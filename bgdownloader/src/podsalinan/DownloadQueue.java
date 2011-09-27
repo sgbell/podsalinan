@@ -29,10 +29,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-/**
- * @author bugman
- *
- */
 public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private Vector<Downloader> downloaders;	// Collection of running downloaders
 	private TreePane tree;	// This will be used to track stuff that needs to be downloaded
@@ -255,7 +251,10 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		for (int dc=0; dc < downloaders.size(); dc++){
 			if (downloaders.get(dc).downloadCompleted()==100){
 				//System.out.println("Finished: "+downloaders.get(dc).getFilenameDownload());
-				queueGui.removeRow(downloaders.get(dc).getRow());
+				// Locking on the queueGui so it can't be updated while an item is being released.
+				synchronized (queueGui){
+					queueGui.removeRow(downloaders.get(dc).getRow());
+				}
 				if (downloaders.get(dc).isPodcast()){
 					runningPoddownloaders--;
 				} else {
