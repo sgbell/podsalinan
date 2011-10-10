@@ -249,7 +249,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	@Override
 	public void notifyOfThreadComplete(Runnable runnable) {
 		for (int dc=0; dc < downloaders.size(); dc++){
-			if (downloaders.get(dc).downloadCompleted()==100){
+			if ((downloaders.get(dc).getResult()==1)||(downloaders.get(dc).downloadCompleted()==100)){
 				//System.out.println("Finished: "+downloaders.get(dc).getFilenameDownload());
 				// Locking on the queueGui so it can't be updated while an item is being released.
 				synchronized (queueGui){

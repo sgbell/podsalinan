@@ -248,12 +248,11 @@ public class Podcast extends DownloadDetails
 			tree.addrssFeed(this);
 			cards.add(getDownloadList(),getName());
 			checkDownloads();
-
 			
 			// The following Tells the DownloadQueue to wake up, cos there's something there
 			synchronized (syncObject){
 				syncObject.notify();
-				//System.out.println("You what up DownloadQueue?!");
+				//System.out.println("Yo what up DownloadQueue?!");
 			}			
 		}
 	}

@@ -185,6 +185,11 @@ public class Podsalinan extends JFrame {
 					updateInterval=Integer.parseInt(progSettings.get(psc).value);
 				}
 			}
+
+			synchronized (syncObject){
+				syncObject.notify();
+			}			
+			
 			try {
 				// Put the thread to sleep
 				Thread.sleep((long)updateInterval*60000);

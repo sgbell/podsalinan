@@ -44,6 +44,7 @@ public class Downloader extends NotifyingRunnable{
 	private DownloadList downloadTable;
 	private DefaultTableModel downloadGui;
 	private boolean podcast;
+	private int downloadResult=0; // This is used to remove the item from the download queue if it cannot be downloaded at this time
 	
 	public String getFilenameDownload(){
 		return fileDownload.toString();
@@ -229,67 +230,46 @@ public class Downloader extends NotifyingRunnable{
 							saved+=byteRead;
 							chunkCount++;
 							//System.out.println("Saved: "+saved);
-							if (downloadTable!=null)	
+							if (downloadTable!=null){
 								if (fileSize>0){
 									double temppercent=((double)saved/(double)fileSize);
 									percentage=(int)((temppercent)*100);
 									downloadTable.downloadProgress(listNum, percentage);
-									
-									String savedModifier="";
-									double savedModified=0;
-									// Download window output
-									if (saved>1073741824){
-										savedModifier=" Gb";
-										savedModified = (double)saved/1073741824;
-									} else if (saved>1048576){
-										savedModifier=" Mb";
-										savedModified = (double)saved/1048576;
-									} else if (saved>1024){
-										savedModifier=" Kb";
-										savedModified = (double)saved/1024;
-									} else
-										savedModified=saved;
-
-									savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
-
-									String outputString = savedModified + savedModifier + " of " + fileSizeModified + totalSizeModifier;
-									// Attempting to keep the gui thread safe as items are updated in the downloadGui
-									synchronized (downloadGui){
-										downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
-										if (System.currentTimeMillis()-time>999){
-											downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
-											time=System.currentTimeMillis();
-											chunkCount=0;
-										}										
-									}
-								} else {
-									String savedModifier="";
-									double savedModified=0;
-									// Download window output
-									if (saved>1073741824){
-										savedModifier=" Gb";
-										savedModified = (double)saved/1073741824;
-									} else if (saved>1048576){
-										savedModifier=" Mb";
-										savedModified = (double)saved/1048576;
-									} else if (saved>1024){
-										savedModifier=" Kb";
-										savedModified = (double)saved/1024;
-									} else
-										savedModified=saved;
-
-									savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
-									
-									String outputString = savedModified + savedModifier;
-									synchronized (downloadGui){
-										downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
-										if (System.currentTimeMillis()-time>999){
-											downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
-											time=System.currentTimeMillis();
-											chunkCount=0;
-										}
-									}
 								}
+								
+								String outputString;
+								String savedModifier="";
+								double savedModified=0;
+								// Download window output
+								if (saved>1073741824){
+									savedModifier=" Gb";
+									savedModified = (double)saved/1073741824;
+								} else if (saved>1048576){
+									savedModifier=" Mb";
+									savedModified = (double)saved/1048576;
+								} else if (saved>1024){
+									savedModifier=" Kb";
+									savedModified = (double)saved/1024;
+								} else
+									savedModified=saved;
+
+								savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
+
+								if (fileSize>0)
+									outputString = savedModified + savedModifier + " of " + fileSizeModified + totalSizeModifier;
+								else
+									outputString = savedModified + savedModifier;
+								
+								// Attempting to keep the gui thread safe as items are updated in the downloadGui
+								synchronized (downloadGui){
+									downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
+									if (System.currentTimeMillis()-time>999){
+										downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
+										time=System.currentTimeMillis();
+										chunkCount=0;
+									}										
+								}
+							}
 						}
 						//System.out.println("File Finished");
 						inStream.close();
@@ -319,11 +299,15 @@ public class Downloader extends NotifyingRunnable{
 	@Override
 	public void doRun() {
 		//System.out.println("Before get file");
-		getFile();
+		downloadResult=getFile();
 		//System.out.println("After get file");
 		synchronized (syncObject){
 			syncObject.notify();
 		}		
+	}
+	
+	public int getResult(){
+		return downloadResult;
 	}
 	
 	public int getRow(){
