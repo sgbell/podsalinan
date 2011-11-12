@@ -133,6 +133,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			podcastToDownload=true;
 			// Downloaders size, determines how many files can be downloaded at a time.
 			while ((podcastToDownload)&&(runningPoddownloaders<maxPodcastDownloaders)){
+				//System.out.println("Searching Podcasts");
 				boolean foundNew=false;
 				currentPodcast=-1;
 				Download newDownload = new Download();

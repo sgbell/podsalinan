@@ -229,6 +229,7 @@ public class Downloader extends NotifyingRunnable{
 							outStream.write(buf, 0, byteRead);
 							saved+=byteRead;
 							chunkCount++;
+							
 							//System.out.println("Saved: "+saved);
 							if (downloadTable!=null){
 								if (fileSize>0){
@@ -260,10 +261,19 @@ public class Downloader extends NotifyingRunnable{
 								else
 									outputString = savedModified + savedModifier;
 								
+								// Download speed limited to 300kb/sec
+								if (chunkCount>=300){
+									try {
+										Thread.sleep(1000-(System.currentTimeMillis()-time));
+									} catch (InterruptedException e) {
+										// sleep interrupted
+									}
+								}
+								
 								// Attempting to keep the gui thread safe as items are updated in the downloadGui
 								synchronized (downloadGui){
-									downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
 									if (System.currentTimeMillis()-time>999){
+										downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
 										downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
 										time=System.currentTimeMillis();
 										chunkCount=0;

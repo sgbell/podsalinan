@@ -86,7 +86,7 @@ public class Podsalinan extends JFrame {
 		CommandPass aListener = new CommandPass(programExiting,progSettings);
 		aListener.setParent(this);
 		/* 
-		 * creating a new MenuBar passing in the instance of bgdownloader, so bgdownloader can then handle all of
+		 * creating a new MenuBar passing in the instance of podsalinan, so podsalinan can then handle all of
 		 * the gui events, care of ActionListener. This is true, up until the time I decide it's too much, and need
 		 * to create a whole class to handle the actions.  
 		 */

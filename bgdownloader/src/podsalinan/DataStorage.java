@@ -81,7 +81,6 @@ public class DataStorage {
 					}
 				}
 			} catch (SQLiteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -145,7 +144,6 @@ public class DataStorage {
 			sql.dispose();
 			settingsDB.dispose();
 		} catch (SQLiteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return 1;
 		}
@@ -171,7 +169,6 @@ public class DataStorage {
 			sql.stepThrough();
 			sql.dispose();
 		} catch (SQLiteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0;
@@ -215,7 +212,6 @@ public class DataStorage {
 			}
 			downloadsDB.dispose();
 		} catch (SQLiteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -257,7 +253,6 @@ public class DataStorage {
 			
 			settingsDB.dispose();
 		} catch (SQLiteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -279,7 +274,6 @@ public class DataStorage {
 				downloads.addDownload(ep.title,ep.date,ep.url,"0%");
 			}
 		} catch (SQLiteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -328,7 +322,6 @@ public class DataStorage {
 			}
 			feedDB.dispose();
 		} catch (SQLiteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
