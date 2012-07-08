@@ -31,6 +31,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -157,7 +158,13 @@ public class Downloader extends NotifyingRunnable{
 					 * way cos URLConnection.getContentLength was an int and couldn't handle over
 					 * 2GB
 					 */
-					String length=conn.getHeaderField("Content-Length");
+					//String length=conn.getHeaderField("content-Length");
+					String length=null;
+					List values = conn.getHeaderFields().get("content-Length");
+					if (values != null && !values.isEmpty()){
+						length = (String) values.get(0);
+					}
+					
 					long tempfileSize=-1;
 					if (length!=null)
 						tempfileSize = Long.parseLong(length);
@@ -281,9 +288,17 @@ public class Downloader extends NotifyingRunnable{
 				} catch (UnknownHostException e){
 					return 1;
 				} catch (IOException e) {
-					e.printStackTrace();
-					return 1;
-				}				
+					//e.printStackTrace();
+					//System.err.println(e.getMessage());
+					// If file has already finished downloading, set it to downloaded.
+					if (e.getMessage().contains("Server returned HTTP response code: 416 for URL:")){
+						downloadTable.downloadProgress(listNum, 100);
+						percentage=100;
+						return 0;
+					} else {
+						return 1;
+					}
+				}
 			}
 		} else {
 			// No internet connection.
