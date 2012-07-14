@@ -91,8 +91,8 @@ public class Podsalinan extends JFrame {
 		 * to create a whole class to handle the actions.  
 		 */
 		MenuBar menubar = new MenuBar(aListener);
-		menubar.createMenu("src/podsalinan/menu.xml");
-		//menubar.createMenu("menu.xml");
+		//menubar.createMenu("src/podsalinan/menu.xml");
+		menubar.createMenu("menu.xml");
 		
 		//System.out.println("Menubar created");
 		
