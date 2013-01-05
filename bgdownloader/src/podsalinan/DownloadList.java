@@ -213,9 +213,11 @@ public class DownloadList extends JPanel {
 	public void downloadProgress(int dlc, int progress){
 		String newProgress = Integer.toString(progress)+"%";
 
-		if (listType==IS_PODCAST)
-			downloadList.setValueAt(newProgress, dlc, 2);
-		else if (listType==IS_URL_WINDOW)
-			downloadList.setValueAt(newProgress, dlc, 1);
+		if (dlc<downloadList.getRowCount()){
+			if (listType==IS_PODCAST)
+				downloadList.setValueAt(newProgress, dlc, 2);
+			else if (listType==IS_URL_WINDOW)
+				downloadList.setValueAt(newProgress, dlc, 1);
+		}
 	}
 }
