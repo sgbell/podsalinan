@@ -123,7 +123,7 @@ public class DataStorage {
 						Podcast newPodcast = new Podcast(sql.columnString(1),
 													  	 sql.columnString(3),
 													  	 sql.columnString(4),
-													  	 sql.columnString(2),
+													  	 sql.columnString(2).replaceAll("&apos;", "\'"),
 													  	 this,
 													  	 tree,
 													  	 card,
@@ -223,7 +223,8 @@ public class DataStorage {
 			for (int pcc=0; pcc < podcasts.size(); pcc++){
 				Podcast currentPodcast=podcasts.get(pcc);
 				if ((!currentPodcast.added)&&(!currentPodcast.remove)){
-					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+currentPodcast.getName()+"'," +
+					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+
+												    currentPodcast.getName()+"'," +
 												"'"+currentPodcast.getdatafile()+"'," +
 												"'"+currentPodcast.getURL()+"'," +
 												"'"+currentPodcast.getDirectory()+"');");
@@ -265,13 +266,13 @@ public class DataStorage {
 			SQLiteStatement sql = feedDb.prepare("SELECT * FROM shows;");
 			while (sql.step()){
 				Episode ep = new Episode(sql.columnString(1),
-										 sql.columnString(2),
-										 sql.columnString(3),
+										 sql.columnString(2).replaceAll("&apos;", "\'"),
+										 sql.columnString(3).replaceAll("&apos;", "\'"),
 										 sql.columnString(4),
-										 sql.columnString(5));
+										 sql.columnString(5).replaceAll("&apos;", "\'"));
 				ep.added=true;
 				episodes.add(ep);
-				downloads.addDownload(ep.title,ep.date,ep.url,"0%");
+				downloads.addDownload(ep.title,ep.getDate(),ep.url,"0%");
 			}
 		} catch (SQLiteException e) {
 			e.printStackTrace();
@@ -310,11 +311,11 @@ public class DataStorage {
 			for (int epc=0; epc < episodes.size(); epc++){
 				if (!episodes.get(epc).added){
 					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description) VALUES('"+
-														episodes.get(epc).date+"'," +
-							 							 "'"+episodes.get(epc).title+"'," +
-							 							 "'"+episodes.get(epc).url+"'," +
+														     episodes.get(epc).date+"'," +
+							 							 "'"+episodes.get(epc).title.replaceAll("\'", "&apos;")+"'," +
+							 							 "'"+episodes.get(epc).url.replaceAll("\'", "&apos;")+"'," +
 							 							 "'"+episodes.get(epc).size+"'," +
-							 							 "'"+episodes.get(epc).description+"');");
+							 							 "'"+episodes.get(epc).description.replaceAll("\'", "&apos;")+"');");
 					sql.stepThrough();
 					sql.dispose();
 					episodes.get(epc).added=true;

@@ -188,12 +188,12 @@ public class Podcast extends DownloadDetails
 				if (description==null)
 					description="";
 				// Need to change the ' to a html friendly version, otherwise we can't add it to the database.
-				description=description.replaceAll("\'", "&apos;");
+				//description=description.replaceAll("\'", "&apos;");
 				// Removing new lines from data, as we don't need it
 				description=description.replaceAll("\n", "");
 				
 				String title=podcastXML.getDownloadValue(counter,"title",null);
-				title=title.replaceAll("\'", "&apos;");
+				//title=title.replaceAll("\'", "&apos;");
 				
 				// If the file is not in our list already
 				if (!inList){

@@ -21,6 +21,11 @@
  */
 package podsalinan;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * @author bugman
  *
@@ -35,5 +40,17 @@ public class Episode extends Details {
 		date = published;
 		this.title=title;
 		description=desc;
+	}
+	
+	public String getDate(){
+		DateFormat df = new SimpleDateFormat("EEE, dd MMM yyy HH:mm:ss zzz");
+		try {
+			Date newDate = df.parse(date);
+			DateFormat newFormat = new SimpleDateFormat("EEE, dd-MMM-yyy HH:mm:ss");
+			System.out.println ("Date: "+newFormat.format(newDate));
+			return newFormat.format(newDate);
+		} catch (ParseException e) {
+		}
+		return "";
 	}
 };
