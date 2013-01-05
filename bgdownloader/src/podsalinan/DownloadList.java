@@ -135,7 +135,7 @@ public class DownloadList extends JPanel {
 	 * @param filename
 	 * @param progress
 	 */
-	public void addDownload(String title, String date, String filename,String progress){
+	public void addDownload(String title, String date, String filename,String progress, String dateFormat){
 		Object newRow[];
 		
 		if (filename!=null){
@@ -157,7 +157,7 @@ public class DownloadList extends JPanel {
 					while ((!found)&&(rowCount<downloadList.getRowCount())){
 						if (downloadList.getValueAt(rowCount, 0).toString().length()!=0){
 							// Date format as defined in the Episode class
-							DateFormat newFormat = new SimpleDateFormat("EEE, dd-MMM-yyy HH:mm:ss");
+							DateFormat newFormat = new SimpleDateFormat(dateFormat);
 							try {
 								// Grab date from current row in the downloadList
 								Date currentDate = newFormat.parse(downloadList.getValueAt(rowCount, 1).toString());

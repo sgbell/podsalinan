@@ -34,6 +34,8 @@ public class Episode extends Details {
 	public String date,
 				  title,
 				  description;
+	
+	private final String dateFormat="EEE, dd-MMM-yyy HH:mm:ss";
 
 	public Episode(String published, String title, String url, String length, String desc) {
 		super(url,length);
@@ -46,10 +48,14 @@ public class Episode extends Details {
 		DateFormat df = new SimpleDateFormat("EEE, dd MMM yyy HH:mm:ss zzz");
 		try {
 			Date newDate = df.parse(date);
-			DateFormat newFormat = new SimpleDateFormat("EEE, dd-MMM-yyy HH:mm:ss");
+			DateFormat newFormat = new SimpleDateFormat(dateFormat);
 			return newFormat.format(newDate);
 		} catch (ParseException e) {
 		}
 		return "";
+	}
+	
+	public String getDateFormat(){
+		return dateFormat;
 	}
 };

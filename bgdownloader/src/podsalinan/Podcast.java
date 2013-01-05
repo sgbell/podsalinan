@@ -187,13 +187,10 @@ public class Podcast extends DownloadDetails
 				String description = podcastXML.getDownloadValue(counter, "description", null);
 				if (description==null)
 					description="";
-				// Need to change the ' to a html friendly version, otherwise we can't add it to the database.
-				//description=description.replaceAll("\'", "&apos;");
 				// Removing new lines from data, as we don't need it
 				description=description.replaceAll("\n", "");
 				
 				String title=podcastXML.getDownloadValue(counter,"title",null);
-				//title=title.replaceAll("\'", "&apos;");
 				
 				// If the file is not in our list already
 				if (!inList){
@@ -207,7 +204,8 @@ public class Podcast extends DownloadDetails
 					getDownloadList().addDownload(podcastXML.getDownloadValue(counter,"title",null),
 							  			  podcastXML.getDownloadValue(counter,"pubDate",null),
 							  			  podcastXML.getDownloadValue(counter, "enclosure", "url"),
-							  			  "0%");
+							  			  "0%",
+							  			  ep.getDateFormat());
 				}
 			}
 			new File(outputFile).delete();

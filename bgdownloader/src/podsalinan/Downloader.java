@@ -271,7 +271,9 @@ public class Downloader extends NotifyingRunnable{
 								// Download speed limited to 300kb/sec
 								if (chunkCount>=300){
 									try {
-										Thread.sleep(1000-(System.currentTimeMillis()-time));
+										if ((System.currentTimeMillis()-time)<1000){
+											Thread.sleep(1000-(System.currentTimeMillis()-time));
+										}
 									} catch (InterruptedException e) {
 										// sleep interrupted
 									}

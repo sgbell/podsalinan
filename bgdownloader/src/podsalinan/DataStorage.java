@@ -272,7 +272,7 @@ public class DataStorage {
 										 sql.columnString(5).replaceAll("&apos;", "\'"));
 				ep.added=true;
 				episodes.add(ep);
-				downloads.addDownload(ep.title,ep.getDate(),ep.url,"0%");
+				downloads.addDownload(ep.title,ep.getDate(),ep.url,"0%",ep.getDateFormat());
 			}
 		} catch (SQLiteException e) {
 			e.printStackTrace();

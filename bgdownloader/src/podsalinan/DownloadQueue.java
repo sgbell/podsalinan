@@ -93,6 +93,12 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				progSettings.add(new ProgSettings("maxDownloaders","3"));
 				maxDownloaders=3;
 			}
+			// Just incase the settings containt some kind of malfunction.
+			if (maxPodcastDownloaders==0)
+				maxPodcastDownloaders=3;
+			if (maxDownloaders==0)
+				maxDownloaders=3;
+			
 			//System.out.println ("DownloadQueue: num downloaders set");
 			
 			fileToDownload=true;
@@ -100,7 +106,6 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			while ((fileToDownload)&&(runningDownloaders<maxDownloaders)){
 				// Check out download list, set it up to download.
 				Vector<Details> urlDownloads=tree.getDownloads().getDownloads();
-				//System.out.println("URL Downloads size: "+urlDownloads.size());
 				int udc=0;
 				if (urlDownloads.size()>0){
 					while (udc<urlDownloads.size()){
@@ -129,11 +134,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					fileToDownload=false;
 				}
 			}
-			//System.out.println("Exited URL downloads");
 			podcastToDownload=true;
 			// Downloaders size, determines how many files can be downloaded at a time.
 			while ((podcastToDownload)&&(runningPoddownloaders<maxPodcastDownloaders)){
-				//System.out.println("Searching Podcasts");
 				boolean foundNew=false;
 				currentPodcast=-1;
 				Download newDownload = new Download();
@@ -141,13 +144,11 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				/* Need to set this to travel through the tree, to each download queue
 				 *  and start maxDownloaders number of downloaders on files found in the queues
 				 */
-				//System.out.println("There is a podcast to download");
 				while ((podcastToDownload)&&(!foundNew)){
 					currentPodcast++;
 					//System.out.println ("New Podcast not found yet");
 					
 					int numPodcasts=tree.getTree().getModel().getChildCount(tree.getRssFeeds());
-					//System.out.println("Number of podcasts in the system: "+numPodcasts);
 					// If there are rssfeeds available
 					if (numPodcasts>0){
 						if (currentPodcast>=numPodcasts){
