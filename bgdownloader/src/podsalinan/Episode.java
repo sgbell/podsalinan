@@ -47,7 +47,6 @@ public class Episode extends Details {
 		try {
 			Date newDate = df.parse(date);
 			DateFormat newFormat = new SimpleDateFormat("EEE, dd-MMM-yyy HH:mm:ss");
-			System.out.println ("Date: "+newFormat.format(newDate));
 			return newFormat.format(newDate);
 		} catch (ParseException e) {
 		}

@@ -22,6 +22,10 @@
 package podsalinan;
 
 import java.awt.BorderLayout;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 //import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -137,10 +141,43 @@ public class DownloadList extends JPanel {
 		if (filename!=null){
 			if (listType==IS_PODCAST){
 				newRow = new Object[] {title,date,"0%"};
-				downloadList.addRow(newRow);
-				if (downloadList.getValueAt(0, 0).toString().length()==0){
+				if ((downloadList.getRowCount()<2)&&
+					(downloadList.getValueAt(0, 0).toString().length()==0)){
+					/* If this is the first item to be added to the downloadList window add the new row
+					 * and delete the blank row.
+					 */
+					downloadList.addRow(newRow);
 					downloadList.removeRow(0);
-				}			
+				} else {
+					/* If this is not the first item added to the downloadList window, check the date,
+					 * to position the download in the appropriate time space. 
+					 */
+					int rowCount=0;
+					boolean found=false;
+					while ((!found)&&(rowCount<downloadList.getRowCount())){
+						if (downloadList.getValueAt(rowCount, 0).toString().length()!=0){
+							// Date format as defined in the Episode class
+							DateFormat newFormat = new SimpleDateFormat("EEE, dd-MMM-yyy HH:mm:ss");
+							try {
+								// Grab date from current row in the downloadList
+								Date currentDate = newFormat.parse(downloadList.getValueAt(rowCount, 1).toString());
+								// Grab the date from the new Item to be added
+								Date newDate = newFormat.parse(date);
+								// If the new date is earlier then the current date in the list mark as found
+								if (newDate.before(currentDate)){
+									found=true;
+								} else {
+									rowCount++;
+								}
+							} catch (ParseException e) {
+								//e.printStackTrace();
+							}
+							
+						}
+					}
+					// Add new item to downloadList at selected position.
+					downloadList.insertRow(rowCount, newRow);
+				}
 			}
 		}
 	}
