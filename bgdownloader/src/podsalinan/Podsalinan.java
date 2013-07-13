@@ -91,7 +91,6 @@ public class Podsalinan extends JFrame {
 		 * to create a whole class to handle the actions.  
 		 */
 		MenuBar menubar = new MenuBar(aListener);
-		//menubar.createMenu("src/podsalinan/menu.xml");
 		menubar.createMenu("menu.xml");
 		
 		//System.out.println("Menubar created");
@@ -112,7 +111,7 @@ public class Podsalinan extends JFrame {
 		Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);
 		
 		/*
-		 *  For the moment the default size iss 800x600. Eventually I will configure a ini file to store useful information
+		 *  For the moment the default size is 800x600. Eventually I will configure a ini file to store useful information
 		 *  like windows size, position, and anything else I can think of that's needed.
 		 */
 		setSize (800,600);
@@ -123,7 +122,7 @@ public class Podsalinan extends JFrame {
 		treePane = new TreePane();
 		aListener.setTree(treePane.getTree());
 		
-		// cardPane is used for the individual views of each downloding screen, otherwise
+		// cardPane is used for the individual views of each downloading screen, otherwise
 		// we can't swap between download queues
 		cardPane = new JPanel(new CardLayout()); 
 		treePane.cardView(cardPane);
