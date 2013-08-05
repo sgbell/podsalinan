@@ -222,7 +222,7 @@ public class DataStorage {
 			settingsDB.open(true);
 			for (int pcc=0; pcc < podcasts.size(); pcc++){
 				Podcast currentPodcast=podcasts.get(pcc);
-				if ((!currentPodcast.added)&&(!currentPodcast.remove)){
+				if ((!currentPodcast.isAdded())&&(!currentPodcast.isRemoved())){
 					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+
 												    currentPodcast.getName()+"'," +
 												"'"+currentPodcast.getdatafile()+"'," +
@@ -230,12 +230,12 @@ public class DataStorage {
 												"'"+currentPodcast.getDirectory()+"');");
 					sql.stepThrough();
 					sql.dispose();
-					currentPodcast.added=true;
-				} else if (currentPodcast.remove){
+					currentPodcast.setAdded(true);
+				} else if (currentPodcast.isRemoved()){
 					sql = settingsDB.prepare("DELETE FROM podcasts WHERE localfile='"+currentPodcast.getdatafile()+"';");
 					sql.stepThrough();
 					sql.dispose();
-				} else if (currentPodcast.changed){
+				} else if (currentPodcast.isChanged()){
 					sql = settingsDB.prepare("UPDATE podcasts SET directory='"+currentPodcast.getDirectory()+
 											 "' WHERE localfile='"+currentPodcast.getdatafile()+"';");
 					sql.stepThrough();

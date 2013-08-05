@@ -27,20 +27,20 @@ package podsalinan;
  */
 public class Details {
 
-	public String url,
-				  size;
-	public boolean added,	// Has this podcast been added to the database
-	   			   remove=false; // Does this podcast need to be deleted from the system
-	public int	   downloaded;  // This is used to track if the system has already downloaded the file.
-								// 0 - not started
-								// 1 - was previously started, but not yet handled by a downloader
-								// 2 - currently downloading
-								// 3 - finished
+	private String  url,
+				    size;
+	private boolean added,		  // Has this podcast been added to the database
+	   			    remove=false; // Does this podcast need to be deleted from the system
+	private int	    status;  	  // This is used to track if the system has already downloaded the file.
+								  // 0 - not started
+								  // 1 - was previously started, but not yet handled by a downloader
+								  // 2 - currently downloading
+								  // 3 - finished
 	
-	public final int NOT_STARTED=0,
-			 		 PREVIOUSLY_STARTED=1,
-			 		 CURRENTLY_DOWNLOADING=2,
-			 		 FINISHED=3;
+	public static final int NOT_STARTED=0,
+			 		 		PREVIOUSLY_STARTED=1,
+			 		 		CURRENTLY_DOWNLOADING=2,
+			 		 		FINISHED=3;
 	
 	public Details (String url){
 		this.url=url;
@@ -72,6 +72,29 @@ public class Details {
 	
 	public void setSize(String size){
 		this.size=size;
-		//System.out.println("Details: "+this.size);
+	}
+	
+	public boolean isAdded(){
+		return added;
+	}
+	
+	public void setAdded(boolean added){
+		this.added = added;
+	}
+	
+	public boolean isRemoved(){
+		return remove;
+	}
+	
+	public void setRemoved(boolean removed){
+		remove=removed;
+	}
+	
+	public int getStatus(){
+		return status;
+	}
+	
+	public void setStatus(int newStatus){
+		status=newStatus;
 	}
 }

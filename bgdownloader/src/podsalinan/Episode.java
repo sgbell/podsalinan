@@ -31,9 +31,9 @@ import java.util.Date;
  *
  */
 public class Episode extends Details {
-	public String date,
-				  title,
-				  description;
+	private String date,
+				   title,
+				   description;
 	
 	private final String dateFormat="EEE, dd-MMM-yyy HH:mm:ss";
 
@@ -55,7 +55,27 @@ public class Episode extends Details {
 		return "";
 	}
 	
+	public void setDate(String newDate){
+		date = newDate;
+	}
+	
 	public String getDateFormat(){
 		return dateFormat;
 	}
-};
+	
+	public String getDescription(){
+		return description;
+	}
+	
+	public void setDescription(String newDescription){
+		description = newDescription;
+	}
+	
+	public String getTitle(){
+		return title;
+	}
+	
+	public void setTitle(String newTitle){
+		title=newTitle;
+	}
+}

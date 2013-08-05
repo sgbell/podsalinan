@@ -34,72 +34,50 @@ import java.util.Vector;
  */
 public class URLDownloadList extends DownloadDetails {
 
-	private Vector<Details> downloads;
+	private Vector<URLDownload> downloads;
 	
-	public URLDownloadList(Object syncObject){
-		super("URLS", syncObject);
-		setDownloadList(new DownloadList(DownloadList.IS_URL_WINDOW));
-		downloads = new Vector<Details>();
+	public URLDownloadList(){
+		super("Downloads");
+		downloads = new Vector<URLDownload>();
 	}
 	
-	public Vector<Details> getDownloads(){
+	public Vector<URLDownload> getDownloads(){
 		return downloads;
 	}
 	
 	public void addDownload(String url) {
-		Details newFile= new Details(url);
+		URLDownload newFile= new URLDownload(url);
 		downloads.add(newFile);
-		getDownloadList().addDownload(url);
 		checkDownloadSize(newFile);
-		synchronized (syncObject){
-			syncObject.notify();
-		}
-	}
-
-	public void removeDownload(){
-		String url = this.getDownloadList().removeDownload();
-		for (int dlc=0; dlc < downloads.size(); dlc++){
-			if (downloads.get(dlc).url.substring(downloads.get(dlc).url.lastIndexOf('/')+1).equals(url)){
-				downloads.get(dlc).remove=true;
-			}
-		}
 	}
 	
 	public void addDownload(String url, String size, boolean added) {
-		Details newFile= new Details(url,added);
-		//System.out.println("URLDownloadList fileSize: "+size);
+		URLDownload newFile= new URLDownload(url, added);
 		newFile.setSize(size);
 		downloads.add(newFile);
-		getDownloadList().addDownload(url);
 		checkDownloadSize(newFile);
-		synchronized (syncObject){
-			syncObject.notify();
-		}
 	}
 	
-	public void checkDownloadSize(Details newFile){
-		//System.out.println("URLDownloadList.checkDownloadSize: "+newFile.getSize());
+	public void checkDownloadSize(URLDownload newFile){
 		if (Long.parseLong(newFile.getSize())==0){
 			try {
 				URLConnection stream = new URL(newFile.getURL()).openConnection();
 				int fileSize=stream.getContentLength();
 				newFile.setSize(Long.toString(fileSize));
-				newFile.downloaded=newFile.NOT_STARTED;
+				newFile.setStatus(Details.NOT_STARTED);
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		String filename=getDirectory()+"/"+newFile.getURL().substring(newFile.getURL().lastIndexOf('/')+1);
+		String filename=newFile.getDestination()+"/"+newFile.getURL().substring(newFile.getURL().lastIndexOf('/')+1);
 		File localFile = new File(filename);
 		if (localFile.exists())
 			if (localFile.length() < Long.parseLong(newFile.getSize())){
-				newFile.downloaded=newFile.PREVIOUSLY_STARTED;
-			} else if (localFile.length() == Long.parseLong(newFile.getSize())){
-				newFile.downloaded=newFile.FINISHED;					
+				newFile.setStatus(Details.PREVIOUSLY_STARTED);
+			} else if (localFile.length() >= Long.parseLong(newFile.getSize())){
+				newFile.setStatus(Details.FINISHED);					
 			}
 	}
 }
