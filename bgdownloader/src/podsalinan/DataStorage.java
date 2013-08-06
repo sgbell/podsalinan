@@ -33,13 +33,11 @@ import com.almworks.sqlite4java.SQLiteStatement;
  */
 public class DataStorage {
 	private String settingsDir;
-	private Object syncObject;
 	
 	/**
 	 * 
 	 */
-	public DataStorage(Object syncObject){
-		this.syncObject=syncObject;
+	public DataStorage(){
 		
 		// This if Block checks to see if it's windows or linux, and sets the
 		// settings directory appropriately.
@@ -59,7 +57,10 @@ public class DataStorage {
 	 * 
 	 * @return
 	 */
-	public int loadSettings(Vector<Podcast> podcasts, URLDownloadList downloads, Vector<ProgSettings> progSettings, TreePane tree, JPanel card){
+	public int loadSettings(Vector<Podcast> podcasts,
+							Vector<URLDownload> downloadQueue,
+							URLDownloadList downloads,
+							Vector<ProgSettings> progSettings){
 		boolean firstRun = true;
 		SQLiteStatement sql;
 		
@@ -112,8 +113,7 @@ public class DataStorage {
 						"value TEXT);");
 				sql.stepThrough();
 				String newDirectory = System.getProperty("user.home").concat("/Downloads");
-				downloads.setDirectory(newDirectory);
-				ProgSettings newSetting = new ProgSettings("urlDirectory",newDirectory);
+				ProgSettings newSetting = new ProgSettings("defaultDownloadDirectory",newDirectory);
 				progSettings.add(newSetting);
 			} else {
 				// Do a search in the podcasts table for podcasts stored in the system
@@ -123,11 +123,7 @@ public class DataStorage {
 						Podcast newPodcast = new Podcast(sql.columnString(1),
 													  	 sql.columnString(3),
 													  	 sql.columnString(4),
-													  	 sql.columnString(2).replaceAll("&apos;", "\'"),
-													  	 this,
-													  	 tree,
-													  	 card,
-													  	 syncObject);
+													  	 sql.columnString(2).replaceAll("&apos;", "\'"));
 						podcasts.add(newPodcast);
 					}
 				}
@@ -155,7 +151,7 @@ public class DataStorage {
 	 * @param feedFilename
 	 * @return
 	 */
-	public int createFeedDB(String feedFilename){
+	public int createPodcastDB(String feedFilename){
 		SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
 		try {
 			feedDb.open(true);
@@ -178,7 +174,10 @@ public class DataStorage {
 	 * @param downloads 
 	 * 
 	 */
-	public void saveSettings(Vector<Podcast> podcasts, URLDownloadList downloads, Vector<ProgSettings> progSettings) {
+	public void saveSettings(Vector<Podcast> podcasts,
+							 Vector<URLDownload> downloadQueue,
+							 URLDownloadList downloads,
+							 Vector<ProgSettings> progSettings) {
 		SQLiteStatement sql;
 		boolean dbExists;
 		
@@ -258,7 +257,7 @@ public class DataStorage {
 		}
 	}
 
-	public void loadPodcastDB(Vector<Episode> episodes, String feedDbName, DownloadList downloads){
+	public Podcast loadPodcast(String feedDbName){
 		String feedFilename=settingsDir.concat("/"+feedDbName+".pod");
 		SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
 		try {
@@ -284,7 +283,7 @@ public class DataStorage {
 	 * @param episodes
 	 * @param feedDBName
 	 */
-	public void savePodcastDB(Vector<Episode> episodes, String feedDBName){
+	public void savePodcastDB(Podcast savedPodcast){
 		boolean feedDBExists=false;
 		SQLiteStatement sql;
 		
@@ -334,5 +333,4 @@ public class DataStorage {
 	public String getSettingsDir(){
 		return settingsDir;
 	}
-
 }

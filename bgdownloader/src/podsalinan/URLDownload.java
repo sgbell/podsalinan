@@ -11,7 +11,10 @@ public class URLDownload extends Details {
 	
 	private String destination;
 	
-
+	public URLDownload(){
+		super(null);
+	}
+	
 	public URLDownload(String url) {
 		super(url);
 	}

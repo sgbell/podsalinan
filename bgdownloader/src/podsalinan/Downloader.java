@@ -36,57 +36,29 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 public class Downloader extends NotifyingRunnable{
-	private URL fileDownload;
-	private String destination;
+	private URLDownload downloadItem;
 	private long fileSize;
 	private int percentage=0,
-				listNum;
-	private Object syncObject;
-	private DownloadList downloadTable;
-	private DefaultTableModel downloadGui;
-	private boolean podcast;
-	private int downloadResult=0; // This is used to remove the item from the download queue if it cannot be downloaded at this time
+				result;
 	
 	public String getFilenameDownload(){
-		return fileDownload.toString();
+		return downloadItem.getURL();
 	}
 	
-	public boolean isPodcast(){
-		return podcast;
-	}
-	
-	public Downloader(URL urlDownload, String outputFile, String size, Object syncObject, DownloadList downloadTable, DefaultTableModel queueGui, int listNum, boolean podcast){
-		fileDownload = urlDownload;
-		destination = outputFile;
+	public Downloader(URL urlDownload, String outputFile, String size){
+		downloadItem = new URLDownload();
+		downloadItem.setURL(urlDownload.toString());
+		downloadItem.setDestination(outputFile);
 		fileSize = Long.valueOf(size);
-		this.downloadTable = downloadTable;
-		this.syncObject = syncObject;
-		this.podcast=podcast;
-		this.listNum=listNum;
-		downloadGui=queueGui;
-		
-		synchronized (downloadGui){
-			downloadGui.addRow(new Object[]{fileDownload.toString(),"",""});			
-		}
-	}
-	
-	public Downloader(URL urlDownload, String outputFile, Object syncObject, DownloadList downloadTable, DefaultTableModel queueGui) {
-		this(urlDownload,outputFile);
-		this.syncObject = syncObject;
-		this.downloadTable=downloadTable;
-		downloadGui=queueGui;
-
-		synchronized (downloadGui){
-			downloadGui.addRow(new Object[]{fileDownload.toString(),"",""});			
-		}
 	}
 	
 	public Downloader(URL urlDownload, String outputFile) {
-		fileDownload = urlDownload;
-		destination = outputFile;
+		downloadItem = new URLDownload();
+		downloadItem.setURL(urlDownload.toString());
+		downloadItem.setDestination(outputFile);
 		
 		try {
-			URLConnection conn = fileDownload.openConnection();
+			URLConnection conn = new URL(downloadItem.getURL()).openConnection();
 			fileSize = conn.getContentLength();
 		} catch (MalformedURLException e) {
 			
@@ -105,26 +77,21 @@ public class Downloader extends NotifyingRunnable{
     {
             try {
             	//System.out.println("Checking the internet");
-                    //make a URL to a known source
-                    URL url = new URL("http://www.google.com");
+                //make a URL to a known source
+                URL url = new URL("http://www.google.com");
 
-                    //open a connection to that source
-                    HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
+                //open a connection to that source
+                HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
 
-                    //trying to retrieve data from the source. If there
-                    //is no connection, this line will fail
-                    @SuppressWarnings("unused")
-					Object objData = urlConnect.getContent();
-
+                //trying to retrieve data from the source. If there
+                //is no connection, this line will fail
+                Object objData = urlConnect.getContent();
             } catch (UnknownHostException e) {
-            		//System.out.println("No it isn't");
                     return false;
             }
             catch (IOException e) {
-        			//System.out.println("No it isn't");
                     return false;
             }
-            //System.out.println("Yes it is");
             return true;
     }
 	
@@ -145,7 +112,7 @@ public class Downloader extends NotifyingRunnable{
 			String totalSizeModifier;
 
 			// The following if statement checks if the file exists, and then get's the size
-			File outputFile = new File(destination);
+			File outputFile = new File(downloadItem.getDestination());
 			if (outputFile.exists()){
 				saved=outputFile.length();
 			}
@@ -153,7 +120,7 @@ public class Downloader extends NotifyingRunnable{
 			
 			while ((!remoteFileExists)&&(numTries<2)){
 				try {
-					conn = fileDownload.openConnection();
+					conn = new URL(downloadItem.getURL()).openConnection();
 					/* The following line gets the file size of the Download. had to do it this 
 					 * way cos URLConnection.getContentLength was an int and couldn't handle over
 					 * 2GB
@@ -174,7 +141,6 @@ public class Downloader extends NotifyingRunnable{
 				} catch (MalformedURLException e) {
 					remoteFileExists=false;
 				} catch (IOException e) {
-					e.printStackTrace();
 					remoteFileExists=false;
 				}
 
@@ -183,12 +149,16 @@ public class Downloader extends NotifyingRunnable{
 				 */
 				if (!remoteFileExists){
 					String protocol;
-					if (fileDownload.toString().substring(0, 3).equals("http")){
+					if (downloadItem.getURL().substring(0, 3).equals("http")){
 						protocol = "ftp";
 					} else
 						protocol = "http";
 					try {
-						fileDownload = new URL(protocol,fileDownload.getHost(),fileDownload.getPort(),fileDownload.getFile());
+						URL newDownload = new URL(downloadItem.getURL());
+						downloadItem.setURL(new URL(protocol,
+													newDownload.getHost(),
+													newDownload.getPort(),
+													newDownload.getFile()).toString());
 					} catch (MalformedURLException e) {
 						remoteFileExists=false;
 					}
@@ -211,14 +181,11 @@ public class Downloader extends NotifyingRunnable{
 				}
 					
 				try {
-					//System.out.println(fileDownload.toString()+" - "+fileSize);
-					//System.out.println(saved);
-					//System.out.println(outputFile);
 					if ((saved<fileSize)||(fileSize==-1)){
 						outStream = new RandomAccessFile(outputFile,"rw");
 						outStream.seek(saved);
 						
-						conn = fileDownload.openConnection();
+						conn = new URL(downloadItem.getURL()).openConnection();
 						/* Skip incoming connection ahead before we connect a stream to it,
 						 * otherwise it'll waste user bandwidth						
 						 */
@@ -229,87 +196,55 @@ public class Downloader extends NotifyingRunnable{
 						
 						long time=System.currentTimeMillis();
 						int chunkCount=0;
-						//System.out.println("before while");
 						while ((byteRead = inStream.read(buf)) > 0){
-							//System.out.println("byteRead: "+byteRead);
-							//System.out.println("Downloading");
 							outStream.write(buf, 0, byteRead);
 							saved+=byteRead;
 							chunkCount++;
 							
-							//System.out.println("Saved: "+saved);
-							if (downloadTable!=null){
-								if (fileSize>0){
-									double temppercent=((double)saved/(double)fileSize);
-									percentage=(int)((temppercent)*100);
-									downloadTable.downloadProgress(listNum, percentage);
-								}
-								
-								String outputString;
-								String savedModifier="";
-								double savedModified=0;
-								// Download window output
-								if (saved>1073741824){
-									savedModifier=" Gb";
-									savedModified = (double)saved/1073741824;
-								} else if (saved>1048576){
-									savedModifier=" Mb";
-									savedModified = (double)saved/1048576;
-								} else if (saved>1024){
-									savedModifier=" Kb";
-									savedModified = (double)saved/1024;
-								} else
-									savedModified=saved;
+							String outputString;
+							String savedModifier="";
+							double savedModified=0;
+							// Download window output
+							if (saved>1073741824){
+								savedModifier=" Gb";
+								savedModified = (double)saved/1073741824;
+							} else if (saved>1048576){
+								savedModifier=" Mb";
+								savedModified = (double)saved/1048576;
+							} else if (saved>1024){
+								savedModifier=" Kb";
+								savedModified = (double)saved/1024;
+							} else
+								savedModified=saved;
 
-								savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
+							savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
 
-								if (fileSize>0)
-									outputString = savedModified + savedModifier + " of " + fileSizeModified + totalSizeModifier;
-								else
-									outputString = savedModified + savedModifier;
+							if (fileSize>0)
+								outputString = savedModified + savedModifier + " of " + fileSizeModified + totalSizeModifier;
+							else
+								outputString = savedModified + savedModifier;
 								
-								// Download speed limited to 300kb/sec
-								if (chunkCount>=300){
-									try {
-										if ((System.currentTimeMillis()-time)<1000){
-											Thread.sleep(1000-(System.currentTimeMillis()-time));
-										}
-									} catch (InterruptedException e) {
-										// sleep interrupted
+							// Download speed limited to 300kb/sec
+							if (chunkCount>=300){
+								try {
+									if ((System.currentTimeMillis()-time)<1000){
+										Thread.sleep(1000-(System.currentTimeMillis()-time));
 									}
-								}
-								
-								// Attempting to keep the gui thread safe as items are updated in the downloadGui
-								synchronized (downloadGui){
-									if (System.currentTimeMillis()-time>999){
-										downloadGui.setValueAt(outputString, getRow(fileDownload.toString()), 1);
-										downloadGui.setValueAt(chunkCount+"Kbps", getRow(fileDownload.toString()), 2);
-										time=System.currentTimeMillis();
-										chunkCount=0;
-									}										
+								} catch (InterruptedException e) {
+									// sleep interrupted
 								}
 							}
+								
 						}
-						//System.out.println("File Finished");
 						inStream.close();
 						outStream.close();					
 					} else if (saved==fileSize){
 						percentage=100;
-						downloadTable.downloadProgress(listNum, 100);
 					}
 				} catch (UnknownHostException e){
 					return 1;
 				} catch (IOException e) {
-					//e.printStackTrace();
-					//System.err.println(e.getMessage());
-					// If file has already finished downloading, set it to downloaded.
-					if (e.getMessage().contains("Server returned HTTP response code: 416 for URL:")){
-						downloadTable.downloadProgress(listNum, 100);
-						percentage=100;
-						return 0;
-					} else {
-						return 1;
-					}
+					return 1;
 				}
 			}
 		} else {
@@ -323,38 +258,15 @@ public class Downloader extends NotifyingRunnable{
 		return percentage;
 	}
 	
-	@Override
+	/**
+	 * doRun is just a reconfiguration because4 of the NotifyingRunnable, it is called by the run method in the
+	 * interface Downloader inherits
+	 */
 	public void doRun() {
-		//System.out.println("Before get file");
-		downloadResult=getFile();
-		//System.out.println("After get file");
-		synchronized (syncObject){
-			syncObject.notify();
-		}		
+
 	}
 	
 	public int getResult(){
-		return downloadResult;
-	}
-	
-	public int getRow(){
-		return getRow(fileDownload.toString());
-	}
-	
-	public int getRow(String url){
-		int rowNum=0;
-		boolean found=false;
-		
-		//System.out.println("getRow: "+url);
-		while((rowNum<downloadGui.getRowCount())&&(!found)){
-			String tableURL = (String)downloadGui.getValueAt(rowNum, 0);
-			//System.out.println("getRow: tableURL="+tableURL);
-			if (tableURL.equals(url))
-				found=true;
-			else
-				rowNum++;
-		}
-		//System.out.println(rowNum);
-		return rowNum;
+		return result;
 	}
 }
