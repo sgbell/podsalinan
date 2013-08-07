@@ -79,9 +79,14 @@ public class Podsalinan {
 	public void initialize(){
 		DataStorage dataFiles = new DataStorage();
 		
+		// load the program settings
 		dataFiles.loadSettings (podcasts, null, urlDownloads, progSettings);
-		for (int podcastCounter=0; podcastCounter < podcasts.size(); podcastCounter++){
-			dataFiles.loadPodcast(podcasts.get(podcastCounter));
-		}
+		// Load the podcast data
+		for (Podcast podcast : podcasts)
+			dataFiles.loadPodcast(podcast);
+
+		// List the podcast titles.
+		for (Podcast podcast : podcasts)
+			System.out.println("Podcast Name: "+podcast.getName());
 	}
 }
