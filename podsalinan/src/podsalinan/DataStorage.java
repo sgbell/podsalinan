@@ -21,8 +21,6 @@ package podsalinan;
 import java.io.File;
 import java.util.Vector;
 
-import javax.swing.JPanel;
-
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
 import com.almworks.sqlite4java.SQLiteStatement;
@@ -196,15 +194,15 @@ public class DataStorage {
 				sql.dispose();
 			}
 			for (int dlc=0; dlc < downloads.getDownloads().size(); dlc++){
-				if (!downloads.getDownloads().get(dlc).added){
+				if (!downloads.getDownloads().get(dlc).isAdded()){
 					sql = downloadsDB.prepare("INSERT INTO downloads(url,size) VALUES " +
-							"('"+downloads.getDownloads().get(dlc).url+"'," +
-									"'"+downloads.getDownloads().get(dlc).size+"');");
+							"('"+downloads.getDownloads().get(dlc).getURL()+"'," +
+									"'"+downloads.getDownloads().get(dlc).getSize()+"');");
 					sql.stepThrough();
 					sql.dispose();
 				}
-				if (downloads.getDownloads().get(dlc).remove){
-					sql = downloadsDB.prepare("DELETE FROM downloads WHERE url='"+downloads.getDownloads().get(dlc).url+"';");
+				if (downloads.getDownloads().get(dlc).isRemoved()){
+					sql = downloadsDB.prepare("DELETE FROM downloads WHERE url='"+downloads.getDownloads().get(dlc).getURL()+"';");
 					sql.stepThrough();
 					sql.dispose();
 				}
@@ -224,19 +222,19 @@ public class DataStorage {
 				if ((!currentPodcast.isAdded())&&(!currentPodcast.isRemoved())){
 					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+
 												    currentPodcast.getName()+"'," +
-												"'"+currentPodcast.getdatafile()+"'," +
+												"'"+currentPodcast.getDatafile()+"'," +
 												"'"+currentPodcast.getURL()+"'," +
 												"'"+currentPodcast.getDirectory()+"');");
 					sql.stepThrough();
 					sql.dispose();
 					currentPodcast.setAdded(true);
 				} else if (currentPodcast.isRemoved()){
-					sql = settingsDB.prepare("DELETE FROM podcasts WHERE localfile='"+currentPodcast.getdatafile()+"';");
+					sql = settingsDB.prepare("DELETE FROM podcasts WHERE localfile='"+currentPodcast.getDatafile()+"';");
 					sql.stepThrough();
 					sql.dispose();
 				} else if (currentPodcast.isChanged()){
 					sql = settingsDB.prepare("UPDATE podcasts SET directory='"+currentPodcast.getDirectory()+
-											 "' WHERE localfile='"+currentPodcast.getdatafile()+"';");
+											 "' WHERE localfile='"+currentPodcast.getDatafile()+"';");
 					sql.stepThrough();
 					sql.dispose();
 				}
@@ -257,9 +255,10 @@ public class DataStorage {
 		}
 	}
 
-	public Podcast loadPodcast(String feedDbName){
-		String feedFilename=settingsDir.concat("/"+feedDbName+".pod");
+	public void loadPodcast(Podcast podcast){
+		String feedFilename=settingsDir.concat("/"+podcast.getDatafile()+".pod");
 		SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
+		
 		try {
 			feedDb.open();
 			SQLiteStatement sql = feedDb.prepare("SELECT * FROM shows;");
@@ -269,9 +268,8 @@ public class DataStorage {
 										 sql.columnString(3).replaceAll("&apos;", "\'"),
 										 sql.columnString(4),
 										 sql.columnString(5).replaceAll("&apos;", "\'"));
-				ep.added=true;
-				episodes.add(ep);
-				downloads.addDownload(ep.title,ep.getDate(),ep.url,"0%",ep.getDateFormat());
+				ep.setAdded(true);
+				podcast.getEpisodes().add(ep);
 			}
 		} catch (SQLiteException e) {
 			e.printStackTrace();
@@ -283,11 +281,11 @@ public class DataStorage {
 	 * @param episodes
 	 * @param feedDBName
 	 */
-	public void savePodcastDB(Podcast savedPodcast){
+	public void savePodcast(Podcast savedPodcast){
 		boolean feedDBExists=false;
 		SQLiteStatement sql;
 		
-		String feedFilename=settingsDir.concat("/"+feedDBName+".pod");
+		String feedFilename=settingsDir.concat("/"+savedPodcast.getDatafile()+".pod");
 		
 		if (new File(feedFilename).exists())
 			feedDBExists = true;
@@ -307,17 +305,17 @@ public class DataStorage {
 				sql.stepThrough();
 				sql.dispose();
 			}
-			for (int epc=0; epc < episodes.size(); epc++){
-				if (!episodes.get(epc).added){
+			for (int epc=0; epc < savedPodcast.getEpisodes().size(); epc++){
+				if (!savedPodcast.getEpisodes().get(epc).isAdded()){
 					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description) VALUES('"+
-														     episodes.get(epc).date+"'," +
-							 							 "'"+episodes.get(epc).title.replaceAll("\'", "&apos;")+"'," +
-							 							 "'"+episodes.get(epc).url.replaceAll("\'", "&apos;")+"'," +
-							 							 "'"+episodes.get(epc).size+"'," +
-							 							 "'"+episodes.get(epc).description.replaceAll("\'", "&apos;")+"');");
+														     savedPodcast.getEpisodes().get(epc).getDate()+"'," +
+							 							 "'"+savedPodcast.getEpisodes().get(epc).getTitle().replaceAll("\'", "&apos;")+"'," +
+							 							 "'"+savedPodcast.getEpisodes().get(epc).getURL().replaceAll("\'", "&apos;")+"'," +
+							 							 "'"+savedPodcast.getEpisodes().get(epc).getSize()+"'," +
+							 							 "'"+savedPodcast.getEpisodes().get(epc).getDescription().replaceAll("\'", "&apos;")+"');");
 					sql.stepThrough();
 					sql.dispose();
-					episodes.get(epc).added=true;
+					savedPodcast.getEpisodes().get(epc).setAdded(true);
 				}					
 			}
 			feedDB.dispose();

@@ -59,6 +59,7 @@ public class Podsalinan {
 	 */
 	public static void main(String[] args) {
 		Podsalinan mainProgram = new Podsalinan();
+		mainProgram.initialize();
 	}
 
 	public Podsalinan(){
@@ -73,10 +74,14 @@ public class Podsalinan {
 
 		// disables sqlite4java's logging
 		Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);
-		
 	}
 	
 	public void initialize(){
+		DataStorage dataFiles = new DataStorage();
 		
+		dataFiles.loadSettings (podcasts, null, urlDownloads, progSettings);
+		for (int podcastCounter=0; podcastCounter < podcasts.size(); podcastCounter++){
+			dataFiles.loadPodcast(podcasts.get(podcastCounter));
+		}
 	}
 }

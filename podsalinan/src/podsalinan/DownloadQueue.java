@@ -64,10 +64,12 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			if ((downloaders.get(dc).getResult()==1)||(downloaders.get(dc).downloadCompleted()==100)){
 				//System.out.println("Finished: "+downloaders.get(dc).getFilenameDownload());
 				// Locking on the queueGui so it can't be updated while an item is being released.
+				/*
 				if (downloaders.get(dc).isPodcast()){
 				} else {
 				}
-					downloaders.remove(dc);
+				downloaders.remove(dc);
+					*/
 			}
 		}
 	}
