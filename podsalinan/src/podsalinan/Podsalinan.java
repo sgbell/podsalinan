@@ -60,6 +60,17 @@ public class Podsalinan {
 	public static void main(String[] args) {
 		Podsalinan mainProgram = new Podsalinan();
 		mainProgram.initialize();
+		mainProgram.backgroundProcess();
+	}
+
+	private void backgroundProcess() {
+		
+		// List the podcast titles.
+		for (Podcast podcast : podcasts)
+			System.out.println("Podcast Name: "+podcast.getName());
+		
+		for (ProgSettings setting : progSettings)
+			System.out.println(setting.setting+" - "+setting.value);
 	}
 
 	public Podsalinan(){
@@ -84,9 +95,5 @@ public class Podsalinan {
 		// Load the podcast data
 		for (Podcast podcast : podcasts)
 			dataFiles.loadPodcast(podcast);
-
-		// List the podcast titles.
-		for (Podcast podcast : podcasts)
-			System.out.println("Podcast Name: "+podcast.getName());
 	}
 }

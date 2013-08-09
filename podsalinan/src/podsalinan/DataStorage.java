@@ -31,6 +31,31 @@ import com.almworks.sqlite4java.SQLiteStatement;
  */
 public class DataStorage {
 	private String settingsDir;
+	private final String CREATE_PODCAST = "CREATE TABLE IF NOT EXISTS podcasts (" +
+										  "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+										  "name TEXT, " +
+										  "localFile TEXT, " +
+										  "url TEXT, " +
+										  "directory TEXT);",
+						CREATE_SETTINGS = "CREATE TABLE IF NOT EXISTS settings (" +
+										  "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+										  "name TEXT, " +
+										  "value TEXT);",
+						CREATE_SHOWS = "CREATE TABLE IF NOT EXISTS shows(" +
+								 	   "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+								 	   "published TEXT," +
+								 	   "title TEXT," +
+								 	   "url TEXT," +
+								 	   "size INTEGER," +
+								 	   "description TEXT," +
+								 	   "status INTEGER);",
+						CREATE_DOWNLOADS = "CREATE TABLE IF NOT EXISTS downloads(" +
+				  								"id INTEGER PRIMARY KEY AUTOINCREMENT," +
+				  								"url TEXT," +
+				  								"size TEXT," +
+				  								"destination TEXT);",
+						SELECT_ALL_PODCASTS = "SELECT * from podcasts;",
+						SELECT_ALL_SETTINGS = "SELECT * from settings;";
 	
 	/**
 	 * 
@@ -97,25 +122,17 @@ public class DataStorage {
 			settingsDB.open(true);
 			
 			if (firstRun){
-				sql = settingsDB.prepare("CREATE TABLE IF NOT EXISTS podcasts (" +
-						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-						"name TEXT, " +
-						"localFile TEXT, " +
-						"url TEXT, " +
-						"directory TEXT);");
+				sql = settingsDB.prepare(CREATE_PODCAST);
 				sql.stepThrough();
 				sql.dispose();
-				sql = settingsDB.prepare("CREATE TABLE IF NOT EXISTS settings (" +
-						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-						"name TEXT, " +
-						"value TEXT);");
+				sql = settingsDB.prepare(CREATE_SETTINGS);
 				sql.stepThrough();
 				String newDirectory = System.getProperty("user.home").concat("/Downloads");
-				ProgSettings newSetting = new ProgSettings("defaultDownloadDirectory",newDirectory);
+				ProgSettings newSetting = new ProgSettings("defaultDirectory",newDirectory);
 				progSettings.add(newSetting);
 			} else {
 				// Do a search in the podcasts table for podcasts stored in the system
-				sql = settingsDB.prepare("SELECT * from podcasts;");
+				sql = settingsDB.prepare(SELECT_ALL_PODCASTS);
 				while (sql.step()){
 					if (sql.hasRow()){
 						Podcast newPodcast = new Podcast(sql.columnString(1),
@@ -126,7 +143,7 @@ public class DataStorage {
 					}
 				}
 				sql.dispose();
-				sql = settingsDB.prepare("SELECT * from settings;");
+				sql = settingsDB.prepare(SELECT_ALL_SETTINGS);
 				while (sql.step()){
 					if (sql.hasRow()){
 						ProgSettings newSetting = new ProgSettings(sql.columnString(1),
@@ -140,30 +157,6 @@ public class DataStorage {
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 			return 1;
-		}
-		return 0;
-	}
-	
-	/**
-	 * 
-	 * @param feedFilename
-	 * @return
-	 */
-	public int createPodcastDB(String feedFilename){
-		SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
-		try {
-			feedDb.open(true);
-			SQLiteStatement sql = feedDb.prepare("CREATE TABLE IF NOT EXISTS shows(" +
-												 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-												 "published TEXT," +
-												 "title TEXT," +
-												 "url TEXT," +
-												 "size INTEGER," +
-												 "description TEXT);");
-			sql.stepThrough();
-			sql.dispose();
-		} catch (SQLiteException e) {
-			e.printStackTrace();
 		}
 		return 0;
 	}
@@ -186,18 +179,15 @@ public class DataStorage {
 		try {
 			downloadsDB.open(true);
 			if (!dbExists){
-				sql = downloadsDB.prepare("CREATE TABLE IF NOT EXISTS downloads(" +
-						  								"id INTEGER PRIMARY KEY AUTOINCREMENT," +
-						  								"url TEXT," +
-						  								"size TEXT);");
+				sql = downloadsDB.prepare(CREATE_DOWNLOADS);
 				sql.stepThrough();
 				sql.dispose();
 			}
 			for (int dlc=0; dlc < downloads.getDownloads().size(); dlc++){
 				if (!downloads.getDownloads().get(dlc).isAdded()){
-					sql = downloadsDB.prepare("INSERT INTO downloads(url,size) VALUES " +
-							"('"+downloads.getDownloads().get(dlc).getURL()+"'," +
-									"'"+downloads.getDownloads().get(dlc).getSize()+"');");
+					sql = downloadsDB.prepare("INSERT INTO downloads(url,size) " +
+											  "VALUES ('"+downloads.getDownloads().get(dlc).getURL()+"'," +
+											  		  "'"+downloads.getDownloads().get(dlc).getSize()+"');");
 					sql.stepThrough();
 					sql.dispose();
 				}
@@ -267,7 +257,8 @@ public class DataStorage {
 										 sql.columnString(2).replaceAll("&apos;", "\'"),
 										 sql.columnString(3).replaceAll("&apos;", "\'"),
 										 sql.columnString(4),
-										 sql.columnString(5).replaceAll("&apos;", "\'"));
+										 sql.columnString(5).replaceAll("&apos;", "\'"),
+										 sql.columnInt(6));
 				ep.setAdded(true);
 				podcast.getEpisodes().add(ep);
 			}
@@ -295,28 +286,26 @@ public class DataStorage {
 			feedDB.open(true);
 			
 			if (!feedDBExists){
-				sql = feedDB.prepare("CREATE TABLE IF NOT EXISTS shows(" +
-										"id INTEGER PRIMARY KEY AUTOINCREMENT," +
-										"published TEXT," +
-										"title TEXT," +
-										"url TEXT," +
-										"size INTEGER," +
-										"description TEXT);");
+				sql = feedDB.prepare(CREATE_SHOWS);
 				sql.stepThrough();
 				sql.dispose();
 			}
-			for (int epc=0; epc < savedPodcast.getEpisodes().size(); epc++){
-				if (!savedPodcast.getEpisodes().get(epc).isAdded()){
-					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description) VALUES('"+
-														     savedPodcast.getEpisodes().get(epc).getDate()+"'," +
-							 							 "'"+savedPodcast.getEpisodes().get(epc).getTitle().replaceAll("\'", "&apos;")+"'," +
-							 							 "'"+savedPodcast.getEpisodes().get(epc).getURL().replaceAll("\'", "&apos;")+"'," +
-							 							 "'"+savedPodcast.getEpisodes().get(epc).getSize()+"'," +
-							 							 "'"+savedPodcast.getEpisodes().get(epc).getDescription().replaceAll("\'", "&apos;")+"');");
+			//for (int epc=0; epc < savedPodcast.getEpisodes().size(); epc++){
+			for (Episode currentEpisode : savedPodcast.getEpisodes()){
+				if (!currentEpisode.isAdded()){
+					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description,status)" +
+							"						VALUES ('"+currentEpisode.getDate()+"'," +
+							 							   "'"+currentEpisode.getTitle().replaceAll("\'", "&apos;")+"'," +
+							 							   "'"+currentEpisode.getURL().replaceAll("\'", "&apos;")+"'," +
+							 							   "'"+currentEpisode.getSize()+"'," +
+							 							   "'"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"'," +
+							 							   	   currentEpisode.getStatus()+");");
 					sql.stepThrough();
 					sql.dispose();
-					savedPodcast.getEpisodes().get(epc).setAdded(true);
-				}					
+					currentEpisode.setAdded(true);
+				} else {
+					// Need to check the status and update it in the database.
+				}
 			}
 			feedDB.dispose();
 		} catch (SQLiteException e) {

@@ -37,11 +37,13 @@ public class Episode extends Details {
 	
 	private final String dateFormat="EEE, dd-MMM-yyy HH:mm:ss";
 
-	public Episode(String published, String title, String url, String length, String desc) {
+	public Episode(String published, String title, String url, String length,
+			       String desc, int status) {
 		super(url,length);
 		date = published;
 		this.title=title;
 		description=desc;
+		setStatus(status);
 	}
 	
 	public String getDate(){
