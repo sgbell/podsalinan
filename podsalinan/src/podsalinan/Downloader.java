@@ -42,31 +42,35 @@ public class Downloader extends NotifyingRunnable{
 				result;
 	
 	public String getFilenameDownload(){
-		return downloadItem.getURL();
+		return downloadItem.getURL().toString();
 	}
 	
 	public Downloader(URL urlDownload, String outputFile, String size){
 		downloadItem = new URLDownload();
-		downloadItem.setURL(urlDownload.toString());
+		downloadItem.setURL(urlDownload);
 		downloadItem.setDestination(outputFile);
 		fileSize = Long.valueOf(size);
 	}
 	
 	public Downloader(URL urlDownload, String outputFile) {
 		downloadItem = new URLDownload();
-		downloadItem.setURL(urlDownload.toString());
+		downloadItem.setURL(urlDownload);
 		downloadItem.setDestination(outputFile);
 		
 		try {
-			URLConnection conn = new URL(downloadItem.getURL()).openConnection();
+			URLConnection conn = downloadItem.getURL().openConnection();
 			fileSize = conn.getContentLength();
 		} catch (MalformedURLException e) {
-			
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		
-	}	
+	}
+	
+	public Downloader(URL urlDownload, File outputFile){
+		downloadItem = new URLDownload();
+		downloadItem.setURL(urlDownload);
+		downloadItem.setDestination(outputFile);
+	}
 
 	/** code found at: 
 	 * http://stackoverflow.com/questions/1139547/detect-internet-connection-using-java
@@ -120,7 +124,7 @@ public class Downloader extends NotifyingRunnable{
 			
 			while ((!remoteFileExists)&&(numTries<2)){
 				try {
-					conn = new URL(downloadItem.getURL()).openConnection();
+					conn = downloadItem.getURL().openConnection();
 					/* The following line gets the file size of the Download. had to do it this 
 					 * way cos URLConnection.getContentLength was an int and couldn't handle over
 					 * 2GB
@@ -149,12 +153,12 @@ public class Downloader extends NotifyingRunnable{
 				 */
 				if (!remoteFileExists){
 					String protocol;
-					if (downloadItem.getURL().substring(0, 3).equals("http")){
+					if (downloadItem.getURL().toString().substring(0, 3).equals("http")){
 						protocol = "ftp";
 					} else
 						protocol = "http";
 					try {
-						URL newDownload = new URL(downloadItem.getURL());
+						URL newDownload = downloadItem.getURL();
 						downloadItem.setURL(new URL(protocol,
 													newDownload.getHost(),
 													newDownload.getPort(),
@@ -185,7 +189,7 @@ public class Downloader extends NotifyingRunnable{
 						outStream = new RandomAccessFile(outputFile,"rw");
 						outStream.seek(saved);
 						
-						conn = new URL(downloadItem.getURL()).openConnection();
+						conn = downloadItem.getURL().openConnection();
 						/* Skip incoming connection ahead before we connect a stream to it,
 						 * otherwise it'll waste user bandwidth						
 						 */

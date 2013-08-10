@@ -29,6 +29,8 @@ package podsalinan;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Timer;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -49,9 +51,10 @@ public class Podsalinan {
 	private Vector<ProgSettings> progSettings;
 	private CommandPass commands;
 	private DownloadQueue downloaderList;
+	private DataStorage dataFiles;
 	
 	/**
-	 * Upon execution the program will create a new instance of bgdownloader, which is where
+	 * Upon execution the program will create a new instance of podsalinan, which is where
 	 * most of the work happens. Creating the new instance builds the main window.
 	 * 
 	 * @param args
@@ -61,16 +64,30 @@ public class Podsalinan {
 		Podsalinan mainProgram = new Podsalinan();
 		mainProgram.initialize();
 		mainProgram.backgroundProcess();
+		mainProgram.exit();
+	}
+
+	private void exit() {
+		dataFiles.saveSettings(podcasts, null, urlDownloads, progSettings);
 	}
 
 	private void backgroundProcess() {
+		int updateInterval=0;
+		
+		// Find update Interval for podcasts in program settings.
+		for (ProgSettings setting : progSettings)
+			if(setting.setting.equalsIgnoreCase("updateInterval"))
+				updateInterval=Integer.parseInt(setting.value);
+		if (updateInterval<60){
+			ProgSettings setting = new ProgSettings("updateInterval","60");
+			progSettings.add(setting);
+			updateInterval=60;
+		}
 		
 		// List the podcast titles.
-		for (Podcast podcast : podcasts)
-			System.out.println("Podcast Name: "+podcast.getName());
-		
-		for (ProgSettings setting : progSettings)
-			System.out.println(setting.setting+" - "+setting.value);
+		for (Podcast podcast : podcasts){
+			podcast.updateList(dataFiles.getSettingsDir());
+		}
 	}
 
 	public Podsalinan(){
@@ -88,7 +105,7 @@ public class Podsalinan {
 	}
 	
 	public void initialize(){
-		DataStorage dataFiles = new DataStorage();
+		dataFiles = new DataStorage();
 		
 		// load the program settings
 		dataFiles.loadSettings (podcasts, null, urlDownloads, progSettings);

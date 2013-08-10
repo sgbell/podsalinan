@@ -139,6 +139,7 @@ public class DataStorage {
 													  	 sql.columnString(3),
 													  	 sql.columnString(4),
 													  	 sql.columnString(2).replaceAll("&apos;", "\'"));
+						newPodcast.setAdded(true);
 						podcasts.add(newPodcast);
 					}
 				}
@@ -148,6 +149,13 @@ public class DataStorage {
 					if (sql.hasRow()){
 						ProgSettings newSetting = new ProgSettings(sql.columnString(1),
 															  sql.columnString(2));
+						// Updating old program settings to new ones.
+						if (newSetting.setting.equalsIgnoreCase("urlDirectory")){
+							newSetting.setting="defaultDirectory";
+						}
+						if (newSetting.setting.equalsIgnoreCase("maxPodcastDownloaders")){
+							newSetting.setting="maxDownloaders";
+						}
 						progSettings.add(newSetting);
 					}
 				}
@@ -229,9 +237,15 @@ public class DataStorage {
 					sql.dispose();
 				}
 			}
+			
 			sql = settingsDB.prepare("DELETE FROM settings;");
 			sql.stepThrough();
 			sql.dispose();
+			
+			sql = settingsDB.prepare("DELETE FROM sqlite_sequence WHERE name='settings';");
+			sql.stepThrough();
+			sql.dispose();
+			
 			for (int sc=0; sc<progSettings.size(); sc++){
 				sql = settingsDB.prepare("INSERT INTO settings(name,value) VALUES('"+progSettings.get(sc).setting+"'," +
 										 "'"+progSettings.get(sc).value+"');");
@@ -251,7 +265,32 @@ public class DataStorage {
 		
 		try {
 			feedDb.open();
-			SQLiteStatement sql = feedDb.prepare("SELECT * FROM shows;");
+			
+			/* The following 13 lines are used to see if the status field is found in the shows table
+			 * if it is not, it is added before reading the information from the podcast data file.
+			 */
+			SQLiteStatement sql = feedDb.prepare("PRAGMA table_info(shows);");
+			boolean statusFound=false;
+			
+			// While loop jumps through the table description
+			while (sql.step())
+				for (int columnCounter=0; columnCounter<sql.columnCount(); columnCounter++)
+					// does the column name equal status?
+					if ((sql.getColumnName(columnCounter).equalsIgnoreCase("name"))&&
+						(sql.columnString(columnCounter).equalsIgnoreCase("status")))
+						statusFound=true;
+					
+			sql.dispose();
+			
+			// If status is not found change the table to add it.
+			if (!statusFound){
+				sql = feedDb.prepare("ALTER TABLE shows ADD status INTEGER;");
+				sql.stepThrough();
+				sql.dispose();
+			}
+			
+			// Read the episodes from the podcast database.
+			sql = feedDb.prepare("SELECT * FROM shows;");
 			while (sql.step()){
 				Episode ep = new Episode(sql.columnString(1),
 										 sql.columnString(2).replaceAll("&apos;", "\'"),
@@ -262,6 +301,7 @@ public class DataStorage {
 				ep.setAdded(true);
 				podcast.getEpisodes().add(ep);
 			}
+			sql.dispose();
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}
@@ -296,7 +336,7 @@ public class DataStorage {
 					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description,status)" +
 							"						VALUES ('"+currentEpisode.getDate()+"'," +
 							 							   "'"+currentEpisode.getTitle().replaceAll("\'", "&apos;")+"'," +
-							 							   "'"+currentEpisode.getURL().replaceAll("\'", "&apos;")+"'," +
+							 							   "'"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"'," +
 							 							   "'"+currentEpisode.getSize()+"'," +
 							 							   "'"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"'," +
 							 							   	   currentEpisode.getStatus()+");");

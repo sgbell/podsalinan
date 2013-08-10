@@ -43,7 +43,7 @@ public class MenuBar extends JMenuBar{
 	}
 
 	public void createMenu(String filename) {
-		XmlReader menuXml = new XmlReader(filename);
+		XmlReader menuXml = new XmlReader();
 		/*
 		for (int menuCount=0; menuCount < menuXml.getMenuCount(); menuCount++){
 			JMenu menu = new JMenu(menuXml.getMenuName(menuCount));

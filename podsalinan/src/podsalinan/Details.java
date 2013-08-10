@@ -21,14 +21,17 @@
  */
 package podsalinan;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * @author bugman
  *
  */
 public class Details {
 
-	private String  url,
-				    size;
+	private URL     url;
+	private String 	size;
 	private boolean added,		  // Has this podcast been added to the database
 	   			    remove=false; // Does this podcast need to be deleted from the system
 	private int	    status;  	  // This is used to track if the system has already downloaded the file.
@@ -42,10 +45,21 @@ public class Details {
 			 		 		CURRENTLY_DOWNLOADING=2,
 			 		 		FINISHED=3;
 	
+	public Details (){
+		
+	}
+	
 	public Details (String url){
-		this.url=url;
+		try {
+			this.url= new URL(url);
+		} catch (MalformedURLException e) {
+		}
 		added=false;
 		size="0";
+	}
+	
+	public Details (URL url){
+		this.url = url;
 	}
 	
 	public Details(String url, String length){
@@ -53,17 +67,34 @@ public class Details {
 		this.size=length;
 	}
 	
+	public Details(URL url, String length){
+		this(url);
+		this.size=length;
+	}
+	
 	public Details(String url, boolean added){
-		this.url=url;
+		this(url);
 		this.added=added;
 	}
 	
-	public String getURL(){
+	public Details(URL url, boolean added){
+		this(url);
+		this.added=added;
+	}
+	
+	public URL getURL(){
 		return url;
 	}
 	
 	public void setURL(String url){
-		this.url=url;
+		try {
+			this.url= new URL(url);
+		} catch (MalformedURLException e) {
+		}
+	}
+	
+	public void setURL(URL url){
+		this.url = url;
 	}
 	
 	public String getSize(){

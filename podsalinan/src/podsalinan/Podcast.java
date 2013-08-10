@@ -22,16 +22,12 @@
 package podsalinan;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 /**
  * @author bugman
@@ -42,9 +38,9 @@ public class Podcast extends DownloadDetails{
 	private String  url,
 	   				directory,  // Directory that files will be downloaded to.
 					image;
-	private boolean changed,
-					remove,
-					added;
+	private boolean changed=false,
+					remove=false,
+					added=false;
 	
 	private Vector<Episode> episodeList = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
 	
@@ -146,5 +142,27 @@ public class Podcast extends DownloadDetails{
 	 */
 	public void setImage(String image) {
 		this.image = image;
+	}
+	
+	public void updateList(String tempDir){
+		File outputFile = new File(tempDir+"/temp.xml");
+		
+		try {
+			Downloader downloader = new Downloader(new URL(url), outputFile);
+			int result = downloader.getFile();
+			if (result==0){
+				XmlReader xmlfile = new XmlReader();
+				
+				Vector<Episode> episodeList = xmlfile.parseEpisodes(new FileInputStream(outputFile));
+				if (episodeList!=null){
+					System.out.println("XML list size: "+episodeList.size());
+				}
+			}
+			outputFile.delete();
+		} catch (MalformedURLException e) {
+		} catch (FileNotFoundException e) {
+		}
+
+		
 	}
 }

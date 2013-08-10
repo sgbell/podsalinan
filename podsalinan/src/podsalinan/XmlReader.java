@@ -21,48 +21,118 @@
  */
 package podsalinan;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 /**
  * @author bugman
  *
  */
 public class XmlReader {
-	private int dataFileType=-1;
+	private String title;
 	
-	public static final int PODCAST=1,
-							MENU=2;
-
-	public XmlReader(String filename){
-		File file = new File(filename);
-	}
-	
-	public int getDataFileType(){
-		return dataFileType;
-	}
-	
-	public void setDataFileType(int fileType){
-		dataFileType=fileType;
+	public XmlReader(){
 	}
 	
 	public Vector<Episode> parseEpisodes(InputStream file){
-		return null;
+		Vector<Episode> episodes = new Vector<Episode>();
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+		String itunes="",
+			   media="";
+		Episode newEpisode=null;
+		
+		factory.setProperty(XMLInputFactory.IS_COALESCING, true);
+		try {
+			XMLStreamReader r = factory.createXMLStreamReader(file);
+			int event = r.getEventType();
+			while (true){
+				switch (event){
+					case XMLStreamConstants.START_DOCUMENT:
+						
+						break;
+					case XMLStreamConstants.START_ELEMENT:
+						// If we hit the rss element we need to identify the namespace for itunes and media
+						if (r.getName().toString().equalsIgnoreCase("rss"))
+							for (int count=0; count < r.getNamespaceCount(); count++){
+								if (r.getNamespacePrefix(count).equalsIgnoreCase("itunes"))
+									itunes=r.getNamespaceURI(count);
+								else if (r.getNamespacePrefix(count).equalsIgnoreCase("media"))
+									media=r.getNamespaceURI(count);
+							}
+							
+						// On finding a new item create a new episode object
+						if (r.getName().toString().equalsIgnoreCase("item")){
+							newEpisode = new Episode();
+						}
+						// If we find title, but it is not the title inside of an item it will be the podcast
+						// title, and we will store this temporarily.
+						if (r.getName().toString().equalsIgnoreCase("title")){
+							if (newEpisode==null)
+								title=r.getElementText();
+							else
+								newEpisode.setTitle(r.getElementText());
+						}
+						// If we find the published date, inside of an item set the date for the episode object 
+						if (r.getName().toString().equalsIgnoreCase("pubDate")){
+							if (newEpisode!=null)
+								newEpisode.setDate(r.getElementText());
+						}
+						// If we find a enclosure tag grab the url and length then add the episode to the
+						// array of episodes to be sent to the calling method.
+						
+						
+						if (r.getName().toString().equalsIgnoreCase("enclosure")){
+							if (newEpisode!=null){
+								for (int count=0; count < r.getAttributeCount(); count++)
+									if (r.getAttributeName(count).toString().equalsIgnoreCase("url"))
+										newEpisode.setURL(r.getAttributeValue(count));
+									else if (r.getAttributeName(count).toString().equalsIgnoreCase("length"))
+										newEpisode.setSize(r.getAttributeValue(count));
+								episodes.add(newEpisode);
+							}
+						}
+						/*
+						 * We are not currently using the Author for individual episodes. We may decide to change
+						 * this later.
+						if (r.getName().toString().equalsIgnoreCase("{"+itunes+"}author")){
+							if (newEpisode!=null)
+								newEpisode.setAuthor(r.getElementText());
+						}*/
+						break;
+				}
+				
+				if (!r.hasNext())
+					break;
+				event = r.next();
+			}
+			r.close();
+		} catch (XMLStreamException e) {
+		}
+		
+		return episodes;
 	}
 	
 	public Vector<Menu> parseMenus(InputStream file){
+		
 		return null;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

@@ -61,7 +61,7 @@ public class URLDownloadList extends DownloadDetails {
 	public void checkDownloadSize(URLDownload newFile){
 		if (Long.parseLong(newFile.getSize())==0){
 			try {
-				URLConnection stream = new URL(newFile.getURL()).openConnection();
+				URLConnection stream = newFile.getURL().openConnection();
 				int fileSize=stream.getContentLength();
 				newFile.setSize(Long.toString(fileSize));
 				newFile.setStatus(Details.NOT_STARTED);
@@ -71,7 +71,7 @@ public class URLDownloadList extends DownloadDetails {
 				e.printStackTrace();
 			}
 		}
-		String filename=newFile.getDestination()+"/"+newFile.getURL().substring(newFile.getURL().lastIndexOf('/')+1);
+		String filename=newFile.getDestination()+"/"+newFile.getURL().toString().substring(newFile.getURL().toString().lastIndexOf('/')+1);
 		File localFile = new File(filename);
 		if (localFile.exists())
 			if (localFile.length() < Long.parseLong(newFile.getSize())){

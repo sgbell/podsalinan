@@ -46,6 +46,9 @@ public class Episode extends Details {
 		setStatus(status);
 	}
 	
+	public Episode() {
+	}
+
 	public String getDate(){
 		DateFormat df = new SimpleDateFormat("EEE, dd MMM yyy HH:mm:ss zzz");
 		try {

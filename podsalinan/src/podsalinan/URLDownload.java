@@ -3,16 +3,19 @@
  */
 package podsalinan;
 
+import java.io.File;
+import java.net.URL;
+
 /**
  * @author bugman
  *
  */
 public class URLDownload extends Details {
 	
-	private String destination;
+	private File destination;
 	
 	public URLDownload(){
-		super(null);
+		super();
 	}
 	
 	public URLDownload(String url) {
@@ -29,30 +32,34 @@ public class URLDownload extends Details {
 	
 	public URLDownload(String url, String length, String destination){
 		super(url, length);
-		this.destination = destination;
+		this.destination = new File(destination);
 	}
 	
 	public URLDownload(String url, boolean added, String destination){
 		super(url, added);
-		this.destination=destination;
+		this.destination= new File (destination);
 	}
 
 	public URLDownload(String url, String length, boolean added, String destination){
 		super(url, added);
 		setSize(length);
-		this.destination = destination;
+		this.destination = new File (destination);
 	}
 	/**
 	 * @return the destination
 	 */
 	public String getDestination() {
-		return destination;
+		return destination.toString();
 	}
 
 	/**
 	 * @param destination the destination to set
 	 */
 	public void setDestination(String destination) {
-		this.destination = destination;
+		this.destination = new File(destination);
+	}
+
+	public void setDestination(File outputFile) {
+		destination = outputFile;
 	}
 }
