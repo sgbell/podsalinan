@@ -87,6 +87,7 @@ public class Podsalinan {
 		// List the podcast titles.
 		for (Podcast podcast : podcasts){
 			podcast.updateList(dataFiles.getSettingsDir());
+			dataFiles.savePodcast(podcast);
 		}
 	}
 

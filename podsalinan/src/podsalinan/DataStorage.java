@@ -349,7 +349,6 @@ public class DataStorage {
 			}
 			feedDB.dispose();
 		} catch (SQLiteException e) {
-			e.printStackTrace();
 		}
 	}
 	

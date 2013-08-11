@@ -82,10 +82,15 @@ public class XmlReader {
 							if (newEpisode!=null)
 								newEpisode.setDate(r.getElementText());
 						}
+
+						// If we find the published date, inside of an item set the date for the episode object 
+						if (r.getName().toString().equalsIgnoreCase("description")){
+							if (newEpisode!=null)
+								// The replaceAll regExp is used to remove HTML from the description, as some 
+								newEpisode.setDescription(r.getElementText().replaceAll("\\<.*?>", ""));
+						}
 						// If we find a enclosure tag grab the url and length then add the episode to the
 						// array of episodes to be sent to the calling method.
-						
-						
 						if (r.getName().toString().equalsIgnoreCase("enclosure")){
 							if (newEpisode!=null){
 								for (int count=0; count < r.getAttributeCount(); count++)
