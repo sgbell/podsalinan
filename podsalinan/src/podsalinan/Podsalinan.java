@@ -27,23 +27,10 @@
  */
 package podsalinan;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Timer;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-@SuppressWarnings({ "serial", "unused" })
 public class Podsalinan {
 	
 	private URLDownloadList urlDownloads;
@@ -87,6 +74,7 @@ public class Podsalinan {
 		// List the podcast titles.
 		for (Podcast podcast : podcasts){
 			podcast.updateList(dataFiles.getSettingsDir());
+			
 			dataFiles.savePodcast(podcast);
 		}
 	}

@@ -153,11 +153,14 @@ public class Podcast extends DownloadDetails{
 			if (result==0){
 				XmlReader xmlfile = new XmlReader();
 				
+				// Read the episode list from the xml file.
 				Vector<Episode> newEpisodeList = xmlfile.parseEpisodes(new FileInputStream(outputFile));
 				if (episodeList!=null)
 					for (Episode newEpisode : newEpisodeList){
 						boolean foundEpisode=false;
 						int episodeCount=0;
+						// Using a while loop here, because we don't want to continue looking for an episode
+						// if it is already found
 						while ((!foundEpisode)&&(episodeCount<episodeList.size())){
 							Episode currentEpisode = episodeList.get(episodeCount);
 							if (newEpisode.getTitle().equalsIgnoreCase(currentEpisode.getTitle()))
@@ -170,11 +173,10 @@ public class Podcast extends DownloadDetails{
 						}
 					}
 			}
+			// Delete the temp file from the filesystem
 			outputFile.delete();
 		} catch (MalformedURLException e) {
 		} catch (FileNotFoundException e) {
 		}
-
-		
 	}
 }

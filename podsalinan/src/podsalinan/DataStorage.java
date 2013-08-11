@@ -330,8 +330,8 @@ public class DataStorage {
 				sql.stepThrough();
 				sql.dispose();
 			}
-			//for (int epc=0; epc < savedPodcast.getEpisodes().size(); epc++){
-			for (Episode currentEpisode : savedPodcast.getEpisodes()){
+			for (int epCount=0; epCount< savedPodcast.getEpisodes().size(); epCount++){
+				Episode currentEpisode = savedPodcast.getEpisodes().get(epCount);
 				if (!currentEpisode.isAdded()){
 					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description,status)" +
 							"						VALUES ('"+currentEpisode.getDate()+"'," +
@@ -343,12 +343,20 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 					currentEpisode.setAdded(true);
-				} else {
-					// Need to check the status and update it in the database.
+				} else if (currentEpisode.isUpdated()) {
+					// If the episode has been updated. it will up updated in the database.
+					sql = feedDB.prepare("UPDATE shows " +
+					 		   			 "SET status="+currentEpisode.getStatus()+", " +
+					 		   			     "description='"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"' " +
+					 		   			 "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
+					sql.stepThrough();
+					sql.dispose();
+					currentEpisode.setUpdated(false);
 				}
 			}
 			feedDB.dispose();
 		} catch (SQLiteException e) {
+			e.printStackTrace();
 		}
 	}
 	

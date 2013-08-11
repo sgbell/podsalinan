@@ -32,8 +32,9 @@ public class Details {
 
 	private URL     url;
 	private String 	size;
-	private boolean added,		  // Has this podcast been added to the database
-	   			    remove=false; // Does this podcast need to be deleted from the system
+	private boolean added=false,		  // Has this podcast been added to the database
+	   			    remove=false, // Does this podcast need to be deleted from the system
+					updated=false;
 	private int	    status;  	  // This is used to track if the system has already downloaded the file.
 								  // 0 - not started
 								  // 1 - was previously started, but not yet handled by a downloader
@@ -54,7 +55,6 @@ public class Details {
 			this.url= new URL(url);
 		} catch (MalformedURLException e) {
 		}
-		added=false;
 		size="0";
 	}
 	
@@ -127,5 +127,20 @@ public class Details {
 	
 	public void setStatus(int newStatus){
 		status=newStatus;
+		updated=true;
+	}
+
+	/**
+	 * @return the updated
+	 */
+	public boolean isUpdated() {
+		return updated;
+	}
+
+	/**
+	 * @param updated the updated to set
+	 */
+	public void setUpdated(boolean updated) {
+		this.updated = updated;
 	}
 }
