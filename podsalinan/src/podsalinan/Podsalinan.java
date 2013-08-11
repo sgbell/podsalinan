@@ -17,9 +17,10 @@
  *     Sam Bell - initial API and implementation
  ******************************************************************************/
 /**
- *   podsalinan is a project written to 1, get me familiar with java again. and 2, create a
- *   program that will download any url it is given, as well as podcasts from rss feeds that a user
- *   sources.
+ *   podsalinan is a project written to 
+ *   1, get me familiar with java again. 
+ *   2, create a program that will download any url it is given, as well as podcasts from
+ *   rss feeds that a user sources.
  *   Podsalinan - loosely translated pod copy
  *   
  *   Written By: Sam Bell
@@ -39,6 +40,7 @@ public class Podsalinan {
 	private CommandPass commands;
 	private DownloadQueue downloaderList;
 	private DataStorage dataFiles;
+	private boolean finished=false;
 	
 	/**
 	 * Upon execution the program will create a new instance of podsalinan, which is where
@@ -51,11 +53,6 @@ public class Podsalinan {
 		Podsalinan mainProgram = new Podsalinan();
 		mainProgram.initialize();
 		mainProgram.backgroundProcess();
-		mainProgram.exit();
-	}
-
-	private void exit() {
-		dataFiles.saveSettings(podcasts, null, urlDownloads, progSettings);
 	}
 
 	private void backgroundProcess() {
@@ -71,12 +68,19 @@ public class Podsalinan {
 			updateInterval=60;
 		}
 		
-		// List the podcast titles.
-		for (Podcast podcast : podcasts){
-			podcast.updateList(dataFiles.getSettingsDir());
+		while(!finished){
+			// List the podcast titles.
+			for (Podcast podcast : podcasts){
+				podcast.updateList(dataFiles.getSettingsDir());
+				dataFiles.savePodcast(podcast);
+			}
 			
-			dataFiles.savePodcast(podcast);
+			try {
+				Thread.sleep(updateInterval*1000);
+			} catch (InterruptedException e) {
+			}
 		}
+		dataFiles.saveSettings(podcasts, null, urlDownloads, progSettings);
 	}
 
 	public Podsalinan(){
@@ -101,5 +105,9 @@ public class Podsalinan {
 		// Load the podcast data
 		for (Podcast podcast : podcasts)
 			dataFiles.loadPodcast(podcast);
+
+		CLInterface cli = new CLInterface(finished);
+		Thread cliThread = new Thread(cli);
+		cliThread.start();
 	}
 }
