@@ -40,7 +40,7 @@ public class Podsalinan {
 	private CommandPass commands;
 	private DownloadQueue downloaderList;
 	private DataStorage dataFiles;
-	private boolean finished=false;
+	private CLInterface cli;
 	
 	/**
 	 * Upon execution the program will create a new instance of podsalinan, which is where
@@ -68,7 +68,7 @@ public class Podsalinan {
 			updateInterval=60;
 		}
 		
-		while(!finished){
+		while(!cli.isFinished()){
 			// List the podcast titles.
 			for (Podcast podcast : podcasts){
 				podcast.updateList(dataFiles.getSettingsDir());
@@ -81,6 +81,7 @@ public class Podsalinan {
 			}
 		}
 		dataFiles.saveSettings(podcasts, null, urlDownloads, progSettings);
+		System.out.println("Goodbye.");
 	}
 
 	public Podsalinan(){
@@ -106,7 +107,7 @@ public class Podsalinan {
 		for (Podcast podcast : podcasts)
 			dataFiles.loadPodcast(podcast);
 
-		CLInterface cli = new CLInterface(finished);
+		cli = new CLInterface(podcasts,urlDownloads,progSettings);
 		Thread cliThread = new Thread(cli);
 		cliThread.start();
 	}
