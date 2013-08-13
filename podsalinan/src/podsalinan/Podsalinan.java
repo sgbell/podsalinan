@@ -71,12 +71,18 @@ public class Podsalinan {
 		while(!cli.isFinished()){
 			// List the podcast titles.
 			for (Podcast podcast : podcasts){
-				podcast.updateList(dataFiles.getSettingsDir());
-				dataFiles.savePodcast(podcast);
+				if (!cli.isFinished()){
+					podcast.updateList(dataFiles.getSettingsDir());
+					dataFiles.savePodcast(podcast);
+				}
 			}
 			
 			try {
-				Thread.sleep(updateInterval*1000);
+				synchronized (cli.getWaitObject()){
+					if (!cli.isFinished())
+						// updateInterval will be a multiple of 1 minute
+						cli.getWaitObject().wait(updateInterval*60000);
+				}
 			} catch (InterruptedException e) {
 			}
 		}
