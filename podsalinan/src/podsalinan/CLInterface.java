@@ -24,6 +24,7 @@ package podsalinan;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -47,63 +48,90 @@ public class CLInterface implements Runnable{
 	public void run() {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		String input="";
-		int menuItem=0,
-		   	subMenu=0,
-		   	selectedPodcast=-1;
+		ArrayList<Integer> menuSelection = new ArrayList<Integer>();
 		
 		System.out.println("Welcome to podsalinan.");
 		System.out.println("----------------------");
 		while (!finished){
-			switch (menuItem){
-				case 0:
-				default:
-					printMainMenu();
-					subMenu=0;
-					break;
-				case 1:
-					switch (subMenu){
-						case 0:
-						default:
+			if (menuSelection.size()==0)
+				printMainMenu();
+			else {
+				switch (menuSelection.get(0)){
+					default:
+						break;
+					case 1:
+						if (menuSelection.size()==1)
 							printPodcastMenu();
-							subMenu=1;
-							break;
-						case 1:
-							break;
-					}
-					break;
-				case 2:
-					switch (subMenu){
-						case 0:
-						default:
+						else {
+							if (menuSelection.get(1)<0)
+								switch ((0-menuSelection.get(1))){
+									case 9:
+										menuSelection.clear();
+										printMainMenu();
+										break;
+								}
+							else {
+								if (menuSelection.size()==2)
+									printPodcastSubmenu(menuSelection.get(1));
+								else{
+									if (menuSelection.get(2)<0)
+										switch ((0-menuSelection.get(2))){
+											case 9:
+												// Need to remove two items, as the menuSelection will contain
+												// -9 for going up a menu, and the podcast number.
+												menuSelection.remove(2);
+												menuSelection.remove(1);
+												printPodcastMenu();
+												break;
+										}
+								}
+							}
+						}
+						break;
+					case 2:
+						if (menuSelection.size()==1)
 							printDownloadsMenu();
-							subMenu=2;
-							break;
-						case 1:
-							break;
-					}
-					break;
-				case 3:
-					switch (subMenu){
-						case 0:
-						default:
+						else {
+							switch (menuSelection.get(1)){
+								default:
+									break;
+								case 1:
+									break;
+							}
+						}
+						break;
+					case 3:
+						if (menuSelection.size()==1)
 							printPreferencesMenu();
-							subMenu=3;
-							break;
-						case 1:
-							break;
-					}
-					break;
-				case 4:
-					switch (subMenu){
-						case 0:
+						else {
+							switch (menuSelection.get(1)){
+								default:
+									break;
+								case 1:
+									break;
+							}
+						}
+						break;
+					case 4:
+						if (menuSelection.size()==1)
 							finished=true;
-							break;
-						case 1:
-							break;
-					}
-					break;
+						else {
+							switch (menuSelection.get(1)){
+								default:
+									break;
+								case 1:
+									break;
+							}
+						}
+						break;
+				}				
 			}
 			if (!finished){
+				System.out.print("Debug:");
+				for (Integer i : menuSelection)
+					System.out.print(i+"-");
+				System.out.println();
+				
 				System.out.print("->");
 				try {
 					input = bufferedReader.readLine(); 
@@ -112,7 +140,17 @@ public class CLInterface implements Runnable{
 				if (input.length()>0){
 					try {
 						int inputInt = Integer.parseInt(input);
-						menuItem=inputInt;
+						if (inputInt!=0)
+							if (((menuSelection.size()==1)&&
+								(menuSelection.get(0)==1))||
+								(menuSelection.size()==2))
+								// Because the podcasts are stored in menuSelection as integers too,
+								// the menu options will be stored as negative values
+								menuSelection.add((0-inputInt));
+							else
+								menuSelection.add(inputInt);
+						else
+							menuSelection.remove(menuSelection.size()-1);
 					} catch (NumberFormatException e){
 						// If the input is not a number This area will sort out that code
 						if ((input.equalsIgnoreCase("quit"))||
@@ -121,26 +159,27 @@ public class CLInterface implements Runnable{
 						} else if ((input.startsWith("http"))||
 								   (input.startsWith("ftp"))){
 							System.out.println("url detected");
-						} else if ((subMenu==1) &&
-								   (input.length()<3)){
-							int finalNumber=0;
-							if (input.length()>1){
-								finalNumber=1;
-								for (int charCount=0; charCount < input.length()-1; charCount++){
-									finalNumber=finalNumber*26*(int)(input.toUpperCase().charAt(charCount)-64);
-								}
-								finalNumber=finalNumber+(int)(input.toUpperCase().charAt(input.length()-1)-64);
-							} else if (input.length()==1){
-								finalNumber=(int)(input.toUpperCase().charAt(0)-64);
-							}
-							selectedPodcast = finalNumber-1;
-							if ((selectedPodcast<podcasts.size())&&
-								(selectedPodcast>=0)){
-								printPodcastSubmenu(selectedPodcast);
-							}  else
+						} else if (menuSelection.size()==1) 
+							if ((menuSelection.get(0)==1) &&
+								(input.length()<3)){
+								int podcastNumber=0;
+								if (input.length()>1){
+									podcastNumber=1;
+									for (int charCount=0; charCount < input.length()-1; charCount++)
+										podcastNumber=podcastNumber*26*(int)(input.toUpperCase().charAt(charCount)-64);
+									podcastNumber+=(int)(input.toUpperCase().charAt(input.length()-1)-64);
+								} else if (input.length()==1)
+									podcastNumber=(int)(input.toUpperCase().charAt(0)-64);
+								
+								podcastNumber--;
+								System.out.println(podcastNumber);
+								if ((podcastNumber>podcasts.size())&&
+									(podcastNumber<0))
+									System.out.println("Error: Invalid Podcast");
+								else
+									menuSelection.add(podcastNumber);
+							} else
 								System.out.println("Error: Command not recognised");
-						} else
-							System.out.println("Error: Command not recognised");
 					}
 				}
 			}
@@ -151,23 +190,15 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
-	private void printPodcastSubmenu(int selectedPodcast) {
-		System.out.println ("Podcast: "+podcasts.get(selectedPodcast).getName()+ " - Selected");
-		
-	}
-
-	private void printPreferencesMenu() {
+	public void printMainMenu(){
+		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.getDownloads().size()+" - Downloads Queued");
 		System.out.println();
-		System.out.println("1. List Preferences");
-		System.out.println("0. Return to Main Menu");
+		System.out.println("1. Podcasts Menu");
+		System.out.println("2. Downloads Menu");
+		System.out.println("3. Preferences");
+		System.out.println("4. Quit");
 	}
-
-	private void printDownloadsMenu() {
-		System.out.println();
-		System.out.println("1. List Downloads");
-		System.out.println("0. Return to Main Menu");
-	}
-
+	
 	private void printPodcastMenu() {
 		int podcastCount=1;
 		
@@ -186,21 +217,33 @@ public class CLInterface implements Runnable{
 		}
 		
 		System.out.println();
-		System.out.println("1. List Podcasts");
 		System.out.println("(A-Z) Enter Podcast letter to select Podcast.");
 		System.out.println();
+		System.out.println("9. Return to Main Menu");
+	}
+
+	private void printPodcastSubmenu(int selectedPodcast) {
+		System.out.println ("Podcast: "+podcasts.get(selectedPodcast).getName()+ " - Selected");
+		System.out.println ();
+		System.out.println ("1. List Episodes");
+		System.out.println ("2. Select Episode");
+		System.out.println ("3. Update List");
+		System.out.println ();
+		System.out.println ("9. Return to List of Podcasts");
+	}
+
+	private void printPreferencesMenu() {
+		System.out.println();
+		System.out.println("1. List Preferences");
 		System.out.println("0. Return to Main Menu");
 	}
 
-	public void printMainMenu(){
-		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.getDownloads().size()+" - Downloads Queued");
+	private void printDownloadsMenu() {
 		System.out.println();
-		System.out.println("1. Podcasts Menu");
-		System.out.println("2. Downloads Menu");
-		System.out.println("3. Preferences");
-		System.out.println("4. Quit");
+		System.out.println("1. List Downloads");
+		System.out.println("0. Return to Main Menu");
 	}
-	
+
 	public boolean isFinished(){
 		return finished;
 	}
