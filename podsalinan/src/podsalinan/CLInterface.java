@@ -53,79 +53,95 @@ public class CLInterface implements Runnable{
 		System.out.println("Welcome to podsalinan.");
 		System.out.println("----------------------");
 		while (!finished){
-			if (menuSelection.size()==0)
-				printMainMenu();
-			else {
-				switch (menuSelection.get(0)){
-					default:
-						break;
-					case 1:
-						if (menuSelection.size()==1)
+			switch (menuSelection.size()){
+				case 0:
+				default:
+					// No menu selection made
+					printMainMenu();
+					break;
+				case 1:
+					// First menu selection made
+					switch (menuSelection.get(0)){
+						case 0:
+							break;
+						case 1:
 							printPodcastMenu();
-						else {
-							if (menuSelection.get(1)<0)
+							break;
+						case 2:
+							printDownloadsMenu();
+							break;
+						case 3:
+							printPreferencesMenu();
+							break;
+						case 4:
+							finished=true;
+							break;
+					}
+					break;
+				case 2:
+					// Sub menu
+					switch (menuSelection.get(0)){
+						case 1:
+							if (menuSelection.get(1)<0){
 								switch ((0-menuSelection.get(1))){
 									case 9:
 										menuSelection.clear();
 										printMainMenu();
 										break;
 								}
-							else {
-								if (menuSelection.size()==2)
-									printPodcastSubmenu(menuSelection.get(1));
-								else{
-									if (menuSelection.get(2)<0)
-										switch ((0-menuSelection.get(2))){
-											case 9:
-												// Need to remove two items, as the menuSelection will contain
-												// -9 for going up a menu, and the podcast number.
-												menuSelection.remove(2);
-												menuSelection.remove(1);
-												printPodcastMenu();
-												break;
-										}
+							} else
+								printPodcastSubmenu(menuSelection.get(1));
+							break;
+						case 2:
+							
+							break;
+						case 3:
+							
+							break;
+						case 4:
+							
+							break;
+					}
+					break;
+				case 3:
+					switch (menuSelection.get(0)){
+						case 1:
+							if (menuSelection.get(2)<0){
+								switch ((0-menuSelection.get(2))){
+									case 1:
+										printPodcastEpisodeList(menuSelection.get(1));
+										menuSelection.remove(2);
+										printPodcastSubmenu(menuSelection.get(1));
+										break;
+									case 2:
+										
+										break;
+									case 3:
+										
+										break;
+									case 9:
+										// Need to remove two items, as the menuSelection will contain
+										// -9 for going up a menu, and the podcast number.
+										menuSelection.remove(2);
+										menuSelection.remove(1);
+										printPodcastMenu();
+										break;
 								}
 							}
-						}
-						break;
-					case 2:
-						if (menuSelection.size()==1)
-							printDownloadsMenu();
-						else {
-							switch (menuSelection.get(1)){
-								default:
-									break;
-								case 1:
-									break;
-							}
-						}
-						break;
-					case 3:
-						if (menuSelection.size()==1)
-							printPreferencesMenu();
-						else {
-							switch (menuSelection.get(1)){
-								default:
-									break;
-								case 1:
-									break;
-							}
-						}
-						break;
-					case 4:
-						if (menuSelection.size()==1)
-							finished=true;
-						else {
-							switch (menuSelection.get(1)){
-								default:
-									break;
-								case 1:
-									break;
-							}
-						}
-						break;
-				}				
+							break;
+						case 2:
+							
+							break;
+						case 3:
+							
+							break;
+						case 4:
+							
+							break;
+					}
+					break;
 			}
+			
 			if (!finished){
 				System.out.print("Debug:");
 				for (Integer i : menuSelection)
@@ -142,8 +158,9 @@ public class CLInterface implements Runnable{
 						int inputInt = Integer.parseInt(input);
 						if (inputInt!=0)
 							if (((menuSelection.size()==1)&&
-								(menuSelection.get(0)==1))||
-								(menuSelection.size()==2))
+								 (menuSelection.get(0)==1))||
+								((menuSelection.size()==2)&&
+								 (menuSelection.get(0)==1)))
 								// Because the podcasts are stored in menuSelection as integers too,
 								// the menu options will be stored as negative values
 								menuSelection.add((0-inputInt));
@@ -203,16 +220,7 @@ public class CLInterface implements Runnable{
 		int podcastCount=1;
 		
 		for (Podcast podcast : podcasts){
-			String podcastChar="";
-
-			if (podcastCount<27)
-				podcastChar = getCharForNumber(podcastCount);
-			else {
-				podcastChar.concat(getCharForNumber(podcastCount/26));
-				podcastChar.concat(getCharForNumber(podcastCount%26));
-			}
-			
-			System.out.println(podcastChar+". "+podcast.getName());
+			System.out.println(getEncodingFromNumber(podcastCount)+". "+podcast.getName());
 			podcastCount++;
 		}
 		
@@ -230,6 +238,35 @@ public class CLInterface implements Runnable{
 		System.out.println ("3. Update List");
 		System.out.println ();
 		System.out.println ("9. Return to List of Podcasts");
+	}
+
+	private void printPodcastEpisodeList(int selectedPodcast) {
+		System.out.println ();
+		int epCount=1;
+		Podcast podcast = podcasts.get(selectedPodcast);
+		for (Episode episode : podcast.getEpisodes()){
+			System.out.println (getEncodingFromNumber(epCount)+" - " +
+					episode.getTitle()+" : "+episode.getDate());
+			epCount++;
+			if ((epCount%20)==0){
+				System.out.println("-- Press any key to continue, q to quit --");
+				char charInput=pressAKey();
+				if (charInput=='q')
+					break;
+			}
+		}
+	}
+
+	private char pressAKey() {
+		char input=' ';
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			input = (char) bufferedReader.read();
+		} catch (IOException e){
+		}
+		
+		return input;
 	}
 
 	private void printPreferencesMenu() {
@@ -254,6 +291,22 @@ public class CLInterface implements Runnable{
 	
 	public String getCharForNumber(int i){
 		return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
+	}
+	
+	public String getEncodingFromNumber(int number){
+		String charOutput="";
+		if (number<27)
+			charOutput = getCharForNumber(number);
+		else {
+			if (number%26!=0){
+				charOutput+=getCharForNumber(number/26);
+				charOutput+=getCharForNumber(number%26);
+			} else {
+				charOutput=getCharForNumber((number/26)-1)+"Z";
+			}
+		}
+		
+		return charOutput;
 	}
 
 	/**
