@@ -91,7 +91,13 @@ public class CLInterface implements Runnable{
 										break;
 								}
 							} else
-								printPodcastSubmenu(menuSelection.get(1));
+								if ((menuSelection.get(1)<podcasts.size())&&
+									(menuSelection.get(1)>=0))
+									printPodcastSubmenu(menuSelection.get(1));
+								else{
+									printPodcastMenu();
+									menuSelection.remove(1);
+								}
 							break;
 						case 2:
 							
@@ -110,9 +116,11 @@ public class CLInterface implements Runnable{
 							if (menuSelection.get(2)<0){
 								switch ((0-menuSelection.get(2))){
 									case 1:
+										// List Episodes of a Podcast
 										printPodcastEpisodeList(menuSelection.get(1));
 										break;
 									case 2:
+										// Update episode List of Podcast
 										Podcast podcast = podcasts.get(menuSelection.get(1));
 										String tempDir="";
 										// This if Block checks to see if it's windows or linux, and sets the
@@ -123,6 +131,16 @@ public class CLInterface implements Runnable{
 											tempDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
 											
 										podcast.updateList(tempDir);
+										break;
+									case 3:
+										// Remove Podcast
+										if ((menuSelection.get(1)<podcasts.size())&&
+											(menuSelection.get(1)>=0)){
+											podcasts.get(menuSelection.get(1)).setRemove(true);
+											menuSelection.remove(2);
+											menuSelection.remove(1);
+											printPodcastMenu();
+										}
 										break;
 									case 9:
 										// Need to remove two items, as the menuSelection will contain
@@ -263,7 +281,8 @@ public class CLInterface implements Runnable{
 		int podcastCount=1;
 		
 		for (Podcast podcast : podcasts){
-			System.out.println(getEncodingFromNumber(podcastCount)+". "+podcast.getName());
+			if (!podcast.isRemoved())
+				System.out.println(getEncodingFromNumber(podcastCount)+". "+podcast.getName());
 			podcastCount++;
 		}
 		
@@ -278,7 +297,8 @@ public class CLInterface implements Runnable{
 		System.out.println ();
 		System.out.println ("1. List Episodes");
 		System.out.println ("2. Update List");
-		System.out.println ("<AA>. Select Podcast");
+		System.out.println ("3. Remove Podcast");
+		System.out.println ("<AA>. Select Episode");
 		System.out.println ();
 		System.out.println ("9. Return to List of Podcasts");
 	}
