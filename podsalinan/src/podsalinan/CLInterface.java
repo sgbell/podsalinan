@@ -325,35 +325,43 @@ public class CLInterface implements Runnable{
 
 	private void printEpisodeMenu(ArrayList<Integer> menuSelection) {
 		Podcast podcast = podcasts.get(menuSelection.get(1));
-		Episode episode = podcast.getEpisodes().get(menuSelection.get(2));
-		System.out.println ("Podcast: "+podcast.getName());
-		System.out.println ("Episode: "+episode.getTitle());
-		System.out.println ("Date: "+episode.getDate());
-		switch (episode.getStatus()){
-			case Episode.NOT_STARTED:
-				System.out.println ("Status: Not Downloaded");
-				break;
-			case Episode.CURRENTLY_DOWNLOADING:
-			case Episode.PREVIOUSLY_STARTED:
-				System.out.println ("Status: Queued to Download");
-				break;
-			case Episode.FINISHED:
-				System.out.println ("Status: Completed Download");
-				break;
+		Episode episode = null;
+		synchronized (podcast.getEpisodes()){
+			episode = podcast.getEpisodes().get(menuSelection.get(2));
 		}
-		System.out.println ();
-		System.out.println ("1. Download episode");
-		System.out.println ("2. Delete episode from Drive");
-		System.out.println ("3. Cancel download of episode");
-		System.out.println ();
-		System.out.println ("9. Return to Podcast menu");
+		if (episode!=null){
+			System.out.println ("Podcast: "+podcast.getName());
+			System.out.println ("Episode: "+episode.getTitle());
+			System.out.println ("Date: "+episode.getDate());
+			switch (episode.getStatus()){
+				case Episode.NOT_STARTED:
+					System.out.println ("Status: Not Downloaded");
+					break;
+				case Episode.CURRENTLY_DOWNLOADING:
+				case Episode.PREVIOUSLY_STARTED:
+					System.out.println ("Status: Queued to Download");
+					break;
+				case Episode.FINISHED:
+					System.out.println ("Status: Completed Download");
+					break;
+			}
+			System.out.println ();
+			System.out.println ("1. Download episode");
+			System.out.println ("2. Delete episode from Drive");
+			System.out.println ("3. Cancel download of episode");
+			System.out.println ();
+			System.out.println ("9. Return to Podcast menu");
+		}
+		System.out.println ("Error: Invalid Episode");
 	}
 
 	private void setEpisodeStatus(ArrayList<Integer> menuSelection,
 			int newStatus) {
 		Podcast podcast = podcasts.get(menuSelection.get(1));
-		Episode episode = podcast.getEpisodes().get(menuSelection.get(2));
-		episode.setStatus(newStatus);
+		synchronized (podcast.getEpisodes()){
+			Episode episode = podcast.getEpisodes().get(menuSelection.get(2));
+			episode.setStatus(newStatus);
+		}
 	}
 
 	private void deleteEpisode(ArrayList<Integer> menuSelection) {
