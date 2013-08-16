@@ -307,15 +307,18 @@ public class CLInterface implements Runnable{
 		System.out.println ();
 		int epCount=1;
 		Podcast podcast = podcasts.get(selectedPodcast);
-		for (Episode episode : podcast.getEpisodes()){
-			System.out.println (getEncodingFromNumber(epCount)+" - " +
-					episode.getTitle()+" : "+episode.getDate());
-			epCount++;
-			if ((epCount%20)==0){
-				System.out.println("-- Press any key to continue, q to quit --");
-				char charInput=pressAKey();
-				if (charInput=='q')
-					break;
+		
+		synchronized (podcast.getEpisodes()){
+			for (Episode episode : podcast.getEpisodes()){
+				System.out.println (getEncodingFromNumber(epCount)+" - " +
+						episode.getTitle()+" : "+episode.getDate());
+				epCount++;
+				if ((epCount%20)==0){
+					System.out.println("-- Press any key to continue, q to quit --");
+					char charInput=pressAKey();
+					if (charInput=='q')
+						break;
+				}
 			}
 		}
 	}

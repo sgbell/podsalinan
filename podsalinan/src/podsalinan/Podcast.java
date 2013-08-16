@@ -168,24 +168,26 @@ public class Podcast extends DownloadDetails{
 						
 						// Read the episode list from the xml file.
 						Vector<Episode> newEpisodeList = xmlfile.parseEpisodes(new FileInputStream(outputFile));
-						if (episodeList!=null)
-							for (Episode newEpisode : newEpisodeList){
-								boolean foundEpisode=false;
-								int episodeCount=0;
-								// Using a while loop here, because we don't want to continue looking for an episode
-								// if it is already found
-								while ((!foundEpisode)&&(episodeCount<episodeList.size())){
-									Episode currentEpisode = episodeList.get(episodeCount);
-									if (newEpisode.getTitle().equalsIgnoreCase(currentEpisode.getTitle()))
-										foundEpisode=true;
-									else
-										episodeCount++;
+						synchronized(episodeList){
+							if (episodeList!=null)
+								for (Episode newEpisode : newEpisodeList){
+									boolean foundEpisode=false;
+									int episodeCount=0;
+									// Using a while loop here, because we don't want to continue looking for an episode
+									// if it is already found
+									while ((!foundEpisode)&&(episodeCount<episodeList.size())){
+										Episode currentEpisode = episodeList.get(episodeCount);
+										if (newEpisode.getTitle().equalsIgnoreCase(currentEpisode.getTitle()))
+											foundEpisode=true;
+										else
+											episodeCount++;
+									}
+									if (!foundEpisode){
+										//episodeList.add(newEpisode);
+										addEpisode(newEpisode);
+									}
 								}
-								if (!foundEpisode){
-									//episodeList.add(newEpisode);
-									addEpisode(newEpisode);
-								}
-							}
+						}
 					}
 					// Delete the temp file from the filesystem
 					outputFile.delete();
@@ -202,22 +204,24 @@ public class Podcast extends DownloadDetails{
 	 * @return 0 if successfully deleted, -1 if error occurred
 	 */
 	public int deleteEpisodeFromDrive(int episodeCount) {
-		if (episodeList.size()>0)
-			if ((episodeCount<episodeList.size())&&
-				(episodeCount>=0)){
-				File destinationFile=null;
-				if (System.getProperty("os.name").equalsIgnoreCase("linux"))
-					destinationFile = new File(getDirectory()+"/"+episodeList.get(episodeCount).getURL().getFile());
-				else if (System.getProperty("os.name").startsWith("Windows"))
-					destinationFile = new File(getDirectory()+"\\"+episodeList.get(episodeCount).getURL().getFile());
-				if (destinationFile!=null){
-					if (destinationFile.exists()){
-						destinationFile.delete();
-						episodeList.get(episodeCount).setStatus(Episode.NOT_STARTED);
-						return 0;
+		synchronized(episodeList){
+			if (episodeList.size()>0)
+				if ((episodeCount<episodeList.size())&&
+					(episodeCount>=0)){
+					File destinationFile=null;
+					if (System.getProperty("os.name").equalsIgnoreCase("linux"))
+						destinationFile = new File(getDirectory()+"/"+episodeList.get(episodeCount).getURL().getFile());
+					else if (System.getProperty("os.name").startsWith("Windows"))
+						destinationFile = new File(getDirectory()+"\\"+episodeList.get(episodeCount).getURL().getFile());
+					if (destinationFile!=null){
+						if (destinationFile.exists()){
+							destinationFile.delete();
+							episodeList.get(episodeCount).setStatus(Episode.NOT_STARTED);
+							return 0;
+						}
 					}
 				}
-			}
+		}
 			
 		return -1;
 	}
@@ -228,30 +232,32 @@ public class Podcast extends DownloadDetails{
 	 * @return
 	 */
 	public int addEpisode(Episode newEpisode){
-		if (episodeList!=null)
-			if (episodeList.size()>0){
-				try {
-					Date newEpisodeDate = df.parse(newEpisode.getDate());
-					boolean found=false;
-					int epCount=0;
-					while ((!found)&&(epCount<episodeList.size())){
-						Date currentEpisodeDate = df.parse(episodeList.get(epCount).getDate());
-						if (newEpisodeDate.after(currentEpisodeDate))
-							found=true;
-						else
-							epCount++;
+		synchronized(episodeList){
+			if (episodeList!=null)
+				if (episodeList.size()>0){
+					try {
+						Date newEpisodeDate = df.parse(newEpisode.getDate());
+						boolean found=false;
+						int epCount=0;
+						while ((!found)&&(epCount<episodeList.size())){
+							Date currentEpisodeDate = df.parse(episodeList.get(epCount).getDate());
+							if (newEpisodeDate.after(currentEpisodeDate))
+								found=true;
+							else
+								epCount++;
+						}
+						if (found)
+							episodeList.add(epCount, newEpisode);
+						else 
+							episodeList.add(newEpisode);
+						
+					} catch (ParseException e) {
 					}
-					if (found)
-						episodeList.add(epCount, newEpisode);
-					else 
-						episodeList.add(newEpisode);
 					
-				} catch (ParseException e) {
+				} else {
+					episodeList.add(newEpisode);
 				}
-				
-			} else {
-				episodeList.add(newEpisode);
-			}
+		}
 		
 		return -1;
 	}
