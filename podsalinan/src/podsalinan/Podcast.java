@@ -145,38 +145,72 @@ public class Podcast extends DownloadDetails{
 	}
 	
 	public void updateList(String tempDir){
-		File outputFile = new File(tempDir+"/temp.xml");
-		
-		try {
-			Downloader downloader = new Downloader(new URL(url), outputFile);
-			int result = downloader.getFile();
-			if (result==0){
-				XmlReader xmlfile = new XmlReader();
-				
-				// Read the episode list from the xml file.
-				Vector<Episode> newEpisodeList = xmlfile.parseEpisodes(new FileInputStream(outputFile));
-				if (episodeList!=null)
-					for (Episode newEpisode : newEpisodeList){
-						boolean foundEpisode=false;
-						int episodeCount=0;
-						// Using a while loop here, because we don't want to continue looking for an episode
-						// if it is already found
-						while ((!foundEpisode)&&(episodeCount<episodeList.size())){
-							Episode currentEpisode = episodeList.get(episodeCount);
-							if (newEpisode.getTitle().equalsIgnoreCase(currentEpisode.getTitle()))
-								foundEpisode=true;
-							else
-								episodeCount++;
-						}
-						if (!foundEpisode){
-							episodeList.add(newEpisode);
-						}
+		if (tempDir!=null){
+			File outputFile = new File(tempDir+"/temp.xml");
+			/* Added this, so that if an update occurs while another update is already happening,
+			 * the requested update wont occur. If the system is already in the middle of a full
+			 * update of the podcasts, it wont matter if the user has requested for an update, as
+			 * one will either have already occurred, or will occur shortly. 
+			 */
+			if (!outputFile.exists()){
+				try {
+					Downloader downloader = new Downloader(new URL(url), outputFile);
+					int result = downloader.getFile();
+					if (result==0){
+						XmlReader xmlfile = new XmlReader();
+						
+						// Read the episode list from the xml file.
+						Vector<Episode> newEpisodeList = xmlfile.parseEpisodes(new FileInputStream(outputFile));
+						if (episodeList!=null)
+							for (Episode newEpisode : newEpisodeList){
+								boolean foundEpisode=false;
+								int episodeCount=0;
+								// Using a while loop here, because we don't want to continue looking for an episode
+								// if it is already found
+								while ((!foundEpisode)&&(episodeCount<episodeList.size())){
+									Episode currentEpisode = episodeList.get(episodeCount);
+									if (newEpisode.getTitle().equalsIgnoreCase(currentEpisode.getTitle()))
+										foundEpisode=true;
+									else
+										episodeCount++;
+								}
+								if (!foundEpisode){
+									episodeList.add(newEpisode);
+								}
+							}
 					}
+					// Delete the temp file from the filesystem
+					outputFile.delete();
+				} catch (MalformedURLException e) {
+				} catch (FileNotFoundException e) {
+				}
 			}
-			// Delete the temp file from the filesystem
-			outputFile.delete();
-		} catch (MalformedURLException e) {
-		} catch (FileNotFoundException e) {
 		}
+	}
+
+	/**
+	 * 
+	 * @param episodeCount
+	 * @return 0 if successfully deleted, -1 if error occurred
+	 */
+	public int deleteEpisodeFromDrive(int episodeCount) {
+		if (episodeList.size()>0)
+			if ((episodeCount<episodeList.size())&&
+				(episodeCount>=0)){
+				File destinationFile=null;
+				if (System.getProperty("os.name").equalsIgnoreCase("linux"))
+					destinationFile = new File(getDirectory()+"/"+episodeList.get(episodeCount).getURL().getFile());
+				else if (System.getProperty("os.name").startsWith("Windows"))
+					destinationFile = new File(getDirectory()+"\\"+episodeList.get(episodeCount).getURL().getFile());
+				if (destinationFile!=null){
+					if (destinationFile.exists()){
+						destinationFile.delete();
+						episodeList.get(episodeCount).setStatus(Episode.NOT_STARTED);
+						return 0;
+					}
+				}
+			}
+			
+		return -1;
 	}
 }

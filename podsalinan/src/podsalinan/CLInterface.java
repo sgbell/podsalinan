@@ -22,6 +22,7 @@
 package podsalinan;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -110,14 +111,18 @@ public class CLInterface implements Runnable{
 								switch ((0-menuSelection.get(2))){
 									case 1:
 										printPodcastEpisodeList(menuSelection.get(1));
-										menuSelection.remove(2);
-										printPodcastSubmenu(menuSelection.get(1));
 										break;
 									case 2:
-										
-										break;
-									case 3:
-										
+										Podcast podcast = podcasts.get(menuSelection.get(1));
+										String tempDir="";
+										// This if Block checks to see if it's windows or linux, and sets the
+										// settings directory appropriately.
+										if (System.getProperty("os.name").equalsIgnoreCase("linux"))
+											tempDir = System.getProperty("user.home").concat("/.podsalinan");
+										else if (System.getProperty("os.name").startsWith("Windows"))
+											tempDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
+											
+										podcast.updateList(tempDir);
 										break;
 									case 9:
 										// Need to remove two items, as the menuSelection will contain
@@ -127,7 +132,13 @@ public class CLInterface implements Runnable{
 										printPodcastMenu();
 										break;
 								}
-							}
+								if ((menuSelection.size()==3)&&
+									(menuSelection.get(2)<3)){
+									menuSelection.remove(2);
+									printPodcastSubmenu(menuSelection.get(1));
+								}
+							} else 
+								printEpisodeMenu(menuSelection);
 							break;
 						case 2:
 							
@@ -137,6 +148,34 @@ public class CLInterface implements Runnable{
 							break;
 						case 4:
 							
+							break;
+					}
+					break;
+				case 4:
+					switch (menuSelection.get(0)){
+						case 1:
+							switch (menuSelection.get(3)){
+								case 1:
+									setEpisodeStatus(menuSelection,Episode.CURRENTLY_DOWNLOADING);
+									break;
+								case 2:
+									deleteEpisode(menuSelection);
+									setEpisodeStatus(menuSelection,Episode.NOT_STARTED);
+									break;
+								case 3:
+									setEpisodeStatus(menuSelection,Episode.NOT_STARTED);
+									break;
+								case 9:
+									menuSelection.remove(3);
+									menuSelection.remove(2);
+									printPodcastSubmenu(menuSelection.get(1));
+									break;
+							}
+							if ((menuSelection.size()==4)&&
+								(menuSelection.get(3)<=3)){
+								menuSelection.remove(3);
+								printEpisodeMenu(menuSelection);
+							}
 							break;
 					}
 					break;
@@ -156,18 +195,13 @@ public class CLInterface implements Runnable{
 				if (input.length()>0){
 					try {
 						int inputInt = Integer.parseInt(input);
-						if (inputInt!=0)
-							if (((menuSelection.size()==1)&&
-								 (menuSelection.get(0)==1))||
-								((menuSelection.size()==2)&&
-								 (menuSelection.get(0)==1)))
-								// Because the podcasts are stored in menuSelection as integers too,
-								// the menu options will be stored as negative values
-								menuSelection.add((0-inputInt));
-							else
-								menuSelection.add(inputInt);
+						if (((menuSelection.size()==1)&&(menuSelection.get(0)==1))||
+							((menuSelection.size()==2)&&(menuSelection.get(0)==1)))
+							// Because the podcasts are stored in menuSelection as integers too,
+							// the menu options will be stored as negative values
+							menuSelection.add((0-inputInt));
 						else
-							menuSelection.remove(menuSelection.size()-1);
+							menuSelection.add(inputInt);
 					} catch (NumberFormatException e){
 						// If the input is not a number This area will sort out that code
 						if ((input.equalsIgnoreCase("quit"))||
@@ -176,27 +210,36 @@ public class CLInterface implements Runnable{
 						} else if ((input.startsWith("http"))||
 								   (input.startsWith("ftp"))){
 							System.out.println("url detected");
-						} else if (menuSelection.size()==1) 
-							if ((menuSelection.get(0)==1) &&
-								(input.length()<3)){
-								int podcastNumber=0;
-								if (input.length()>1){
-									podcastNumber=1;
-									for (int charCount=0; charCount < input.length()-1; charCount++)
-										podcastNumber=podcastNumber*26*(int)(input.toUpperCase().charAt(charCount)-64);
-									podcastNumber+=(int)(input.toUpperCase().charAt(input.length()-1)-64);
-								} else if (input.length()==1)
-									podcastNumber=(int)(input.toUpperCase().charAt(0)-64);
-								
-								podcastNumber--;
-								System.out.println(podcastNumber);
-								if ((podcastNumber>podcasts.size())&&
-									(podcastNumber<0))
-									System.out.println("Error: Invalid Podcast");
-								else
-									menuSelection.add(podcastNumber);
-							} else
-								System.out.println("Error: Command not recognised");
+						} else 
+							switch (menuSelection.size()){
+								case 1:
+									if ((menuSelection.get(0)==1)&&(input.length()<3)){
+										int podcastNumber=convertCharToNumber(input);
+																		
+										if ((podcastNumber>podcasts.size())&&
+											(podcastNumber<0))
+											System.out.println("Error: Invalid Podcast");
+										else
+											menuSelection.add(podcastNumber);
+									}
+									break;
+								case 2:
+									if ((menuSelection.get(0)==1)&&
+										(input.length()<3)){
+										Podcast podcast = podcasts.get(menuSelection.get(1));
+										int episodeNumber=convertCharToNumber(input);
+										
+										if ((episodeNumber>podcast.getEpisodes().size())&&
+											(episodeNumber<0))
+											System.out.println("Error: Invalid Episode");
+										else
+											menuSelection.add(episodeNumber);
+									}
+									break;
+								default:
+									System.out.println("Error: Invalid input");
+									break;
+							}
 					}
 				}
 			}
@@ -234,8 +277,8 @@ public class CLInterface implements Runnable{
 		System.out.println ("Podcast: "+podcasts.get(selectedPodcast).getName()+ " - Selected");
 		System.out.println ();
 		System.out.println ("1. List Episodes");
-		System.out.println ("2. Select Episode");
-		System.out.println ("3. Update List");
+		System.out.println ("2. Update List");
+		System.out.println ("<AA>. Select Podcast");
 		System.out.println ();
 		System.out.println ("9. Return to List of Podcasts");
 	}
@@ -255,6 +298,44 @@ public class CLInterface implements Runnable{
 					break;
 			}
 		}
+	}
+
+	private void printEpisodeMenu(ArrayList<Integer> menuSelection) {
+		Podcast podcast = podcasts.get(menuSelection.get(1));
+		Episode episode = podcast.getEpisodes().get(menuSelection.get(2));
+		System.out.println ("Podcast: "+podcast.getName());
+		System.out.println ("Episode: "+episode.getTitle());
+		System.out.println ("Date: "+episode.getDate());
+		switch (episode.getStatus()){
+			case Episode.NOT_STARTED:
+				System.out.println ("Status: Not Downloaded");
+				break;
+			case Episode.CURRENTLY_DOWNLOADING:
+			case Episode.PREVIOUSLY_STARTED:
+				System.out.println ("Status: Queued to Download");
+				break;
+			case Episode.FINISHED:
+				System.out.println ("Status: Completed Download");
+				break;
+		}
+		System.out.println ();
+		System.out.println ("1. Download episode");
+		System.out.println ("2. Delete episode from Drive");
+		System.out.println ("3. Cancel download of episode");
+		System.out.println ();
+		System.out.println ("9. Return to Podcast menu");
+	}
+
+	private void setEpisodeStatus(ArrayList<Integer> menuSelection,
+			int newStatus) {
+		Podcast podcast = podcasts.get(menuSelection.get(1));
+		Episode episode = podcast.getEpisodes().get(menuSelection.get(2));
+		episode.setStatus(newStatus);
+	}
+
+	private void deleteEpisode(ArrayList<Integer> menuSelection) {
+		Podcast podcast = podcasts.get(menuSelection.get(1));
+		podcast.deleteEpisodeFromDrive(menuSelection.get(2));
 	}
 
 	private char pressAKey() {
@@ -307,6 +388,19 @@ public class CLInterface implements Runnable{
 		}
 		
 		return charOutput;
+	}
+
+	private int convertCharToNumber(String input) {
+		int number=1;
+		if (input.length()>1){
+			for (int charCount=0; charCount < input.length()-1; charCount++)
+				number=number*26*(int)(input.toUpperCase().charAt(charCount)-64);
+			number+=(int)(input.toUpperCase().charAt(input.length()-1)-64);
+		} else if (input.length()==1)
+			number=(int)(input.toUpperCase().charAt(0)-64);
+		number--;
+		
+		return number;
 	}
 
 	/**
