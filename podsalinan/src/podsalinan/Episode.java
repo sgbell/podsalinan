@@ -35,7 +35,7 @@ public class Episode extends Details {
 				   title,
 				   description;
 	
-	private final String dateFormat="EEE, dd-MMM-yyy HH:mm:ss";
+	private static final String dateFormat="EEE, dd-MMM-yyy HH:mm:ss";
 
 	public Episode(String published, String title, String url, String length,
 			       String desc, int status) {
@@ -64,7 +64,7 @@ public class Episode extends Details {
 		date = newDate;
 	}
 	
-	public String getDateFormat(){
+	public static String getDateFormat(){
 		return dateFormat;
 	}
 	

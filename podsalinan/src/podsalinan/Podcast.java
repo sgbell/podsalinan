@@ -27,6 +27,10 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 /**
@@ -44,6 +48,8 @@ public class Podcast extends DownloadDetails{
 	
 	private Vector<Episode> episodeList = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
 	
+	private DateFormat df;
+	
 	/**This is used to create a new Podcast with only a url.
 	 * 
 	 * @param newURL
@@ -51,6 +57,7 @@ public class Podcast extends DownloadDetails{
 	public Podcast(String newURL){
 		super(null);
 		url = newURL;
+		df = new SimpleDateFormat(Episode.getDateFormat());
 	}
 	
 	/** Used to create a Podcast from the information in the systems database. 
@@ -175,7 +182,8 @@ public class Podcast extends DownloadDetails{
 										episodeCount++;
 								}
 								if (!foundEpisode){
-									episodeList.add(newEpisode);
+									//episodeList.add(newEpisode);
+									addEpisode(newEpisode);
 								}
 							}
 					}
@@ -211,6 +219,40 @@ public class Podcast extends DownloadDetails{
 				}
 			}
 			
+		return -1;
+	}
+	
+	/**
+	 * This Method is used to add the episodes to the array, sorted by date. Newest first.
+	 * @param newEpisode
+	 * @return
+	 */
+	public int addEpisode(Episode newEpisode){
+		if (episodeList!=null)
+			if (episodeList.size()>0){
+				try {
+					Date newEpisodeDate = df.parse(newEpisode.getDate());
+					boolean found=false;
+					int epCount=0;
+					while ((!found)&&(epCount<episodeList.size())){
+						Date currentEpisodeDate = df.parse(episodeList.get(epCount).getDate());
+						if (newEpisodeDate.after(currentEpisodeDate))
+							found=true;
+						else
+							epCount++;
+					}
+					if (found)
+						episodeList.add(epCount, newEpisode);
+					else 
+						episodeList.add(newEpisode);
+					
+				} catch (ParseException e) {
+				}
+				
+			} else {
+				episodeList.add(newEpisode);
+			}
+		
 		return -1;
 	}
 }

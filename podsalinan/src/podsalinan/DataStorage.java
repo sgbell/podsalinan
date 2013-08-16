@@ -299,7 +299,8 @@ public class DataStorage {
 										 sql.columnString(5).replaceAll("&apos;", "\'"),
 										 sql.columnInt(6));
 				ep.setAdded(true);
-				podcast.getEpisodes().add(ep);
+				//podcast.getEpisodes().add(ep);
+				podcast.addEpisode(ep);
 			}
 			sql.dispose();
 		} catch (SQLiteException e) {
