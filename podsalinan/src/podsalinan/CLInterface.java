@@ -45,6 +45,17 @@ public class CLInterface implements Runnable{
 		this.progSettings=progSettings;
 	}
 
+	private void printPodcastSubmenu(int selectedPodcast) {
+		System.out.println ("Podcast: "+podcasts.get(selectedPodcast).getName()+ " - Selected");
+		System.out.println ();
+		System.out.println ("1. List Episodes");
+		System.out.println ("2. Update List");
+		System.out.println ("3. Remove Podcast");
+		System.out.println ("<AA>. Select Episode");
+		System.out.println ();
+		System.out.println ("9. Return to List of Podcasts");
+	}
+
 	@Override
 	public void run() {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
@@ -103,7 +114,16 @@ public class CLInterface implements Runnable{
 							
 							break;
 						case 3:
-							
+							switch (menuSelection.get(1)){
+								case 1:
+									printPreferencesList();
+									menuSelection.remove(1);
+									break;
+								case 0:
+									printPreferencesMenu();
+									menuSelection.remove(1);
+									break;
+							}
 							break;
 						case 4:
 							
@@ -292,17 +312,6 @@ public class CLInterface implements Runnable{
 		System.out.println("9. Return to Main Menu");
 	}
 
-	private void printPodcastSubmenu(int selectedPodcast) {
-		System.out.println ("Podcast: "+podcasts.get(selectedPodcast).getName()+ " - Selected");
-		System.out.println ();
-		System.out.println ("1. List Episodes");
-		System.out.println ("2. Update List");
-		System.out.println ("3. Remove Podcast");
-		System.out.println ("<AA>. Select Episode");
-		System.out.println ();
-		System.out.println ("9. Return to List of Podcasts");
-	}
-
 	private void printPodcastEpisodeList(int selectedPodcast) {
 		System.out.println ();
 		int epCount=1;
@@ -385,6 +394,16 @@ public class CLInterface implements Runnable{
 		System.out.println();
 		System.out.println("1. List Preferences");
 		System.out.println("0. Return to Main Menu");
+	}
+	
+	private void printPreferencesList(){
+		for (ProgSettings setting : progSettings){
+			System.out.println("1. "+setting.setting);
+		}
+		System.out.println ();
+		System.out.println ("1. Change Podcast Update Rate");
+		System.out.println ("2. Number of Downloaders");
+		System.out.println ("3. Default Download Directory");
 	}
 
 	private void printDownloadsMenu() {
