@@ -117,11 +117,10 @@ public class CLInterface implements Runnable{
 							switch (menuSelection.get(1)){
 								case 1:
 									printPreferencesList();
-									menuSelection.remove(1);
 									break;
 								case 0:
-									printPreferencesMenu();
-									menuSelection.remove(1);
+									menuSelection.clear();
+									printMainMenu();
 									break;
 							}
 							break;
@@ -179,10 +178,22 @@ public class CLInterface implements Runnable{
 								printEpisodeMenu(menuSelection);
 							break;
 						case 2:
-							
 							break;
 						case 3:
-							
+							switch (menuSelection.get(2)){
+								case 1:
+									changePodcastRate();
+									break;
+								case 2:
+									changeNumDownloaders();
+									break;
+								case 3:
+									changeDefaultDirectory();
+									break;
+								case 4:
+									
+									break;
+							}
 							break;
 						case 4:
 							
@@ -397,13 +408,47 @@ public class CLInterface implements Runnable{
 	}
 	
 	private void printPreferencesList(){
-		for (ProgSettings setting : progSettings){
-			System.out.println("1. "+setting.setting);
-		}
 		System.out.println ();
 		System.out.println ("1. Change Podcast Update Rate");
 		System.out.println ("2. Number of Downloaders");
 		System.out.println ("3. Default Download Directory");
+		System.out.println ();
+		System.out.println ("0. Return to Preferences Menu");
+	}
+
+	private void changeDefaultDirectory() {
+		System.out.println ();
+		System.out.print ("Enter Default Directory: ");
+		/* Take user input.
+		 * Create File object to test if directory exists.
+		 * If directory exists set defaultDirectory to file Input
+		 * If not show and error and leave defaultDirectory as is
+		 */
+	}
+
+	private void changeNumDownloaders() {
+		System.out.println ();
+		System.out.print ("Enter Number of Simultaneous Downloads: ");
+		/* Take user input.
+		 * Make sure it is between 1 and 30
+		 * If not, get the user to enter it again.
+		 */
+	}
+
+	private void changePodcastRate() {
+		System.out.println ();
+		System.out.println ("How often to update the podcast feeds?");
+		System.out.println ("1. Hourly");
+		System.out.println ("2. Every 2 Hours");
+		System.out.println ("3. Every 3 Hours");
+		System.out.println ("4. Every 6 Hours");
+		System.out.println ("5. Every 12 Hours");
+		System.out.println ("6. Daily");
+		System.out.print ("Choice: ");
+		/* Take user input.
+		 * Make sure it is between 1 & 6
+		 * If not leave PodcastRate as it's current value.
+		 */
 	}
 
 	private void printDownloadsMenu() {
