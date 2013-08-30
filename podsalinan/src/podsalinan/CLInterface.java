@@ -191,6 +191,9 @@ public class CLInterface implements Runnable{
 									changeDefaultDirectory();
 									break;
 								case 4:
+									changeAutoQueueNewEpisodes();
+									break;
+								case 9:
 									
 									break;
 							}
@@ -299,6 +302,11 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
+	private void changeAutoQueueNewEpisodes() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void printMainMenu(){
 		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.getDownloads().size()+" - Downloads Queued");
 		System.out.println();
@@ -412,11 +420,13 @@ public class CLInterface implements Runnable{
 		System.out.println ("1. Change Podcast Update Rate");
 		System.out.println ("2. Number of Downloaders");
 		System.out.println ("3. Default Download Directory");
+		System.out.println ("4. Automatically Download New Podcast Episodes");
 		System.out.println ();
 		System.out.println ("0. Return to Preferences Menu");
 	}
 
 	private void changeDefaultDirectory() {
+		File newPath;
 		System.out.println ();
 		System.out.print ("Enter Default Directory: ");
 		/* Take user input.
@@ -424,8 +434,53 @@ public class CLInterface implements Runnable{
 		 * If directory exists set defaultDirectory to file Input
 		 * If not show and error and leave defaultDirectory as is
 		 */
+		String userInput=getStringInput();
+		if ((userInput.length()>0)&&(userInput!=null)){
+			newPath=new File(userInput);
+			if ((newPath.exists())&&(newPath.isDirectory())){
+				updateProgSettings("defaultDirectory",userInput);
+			} else {
+				System.out.println ("Error: User Input invalid");
+			}
+		}
 	}
 
+	private String getStringInput(){
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		String userInput="";
+		try {
+			userInput = bufferedReader.readLine();
+		} catch (IOException e) {
+		}
+
+		return userInput;
+	}
+
+	/**
+	 * @param minNumber
+	 * @param maxNumber
+	 * @return
+	 */
+	private String getValidNumber (long minNumber, long maxNumber){
+		Boolean isValid=true;
+		String inputValue = getStringInput();
+		if ((inputValue.length()>0)&&(inputValue!=null)){
+			try {
+				// Tests to see if the string input is a number
+				Integer.parseInt(inputValue);
+			} catch (NumberFormatException e){
+				isValid=false;
+			}
+			if ((isValid)&&
+				(Integer.parseInt(inputValue)>=minNumber)&&
+				(Integer.parseInt(inputValue)<=maxNumber))
+				return inputValue;
+		}
+		System.out.println ("Error: User Input Invalid. Valid values between "+minNumber
+				+"-"+maxNumber);
+		return null;
+	}
+	
 	private void changeNumDownloaders() {
 		System.out.println ();
 		System.out.print ("Enter Number of Simultaneous Downloads: ");
@@ -433,8 +488,29 @@ public class CLInterface implements Runnable{
 		 * Make sure it is between 1 and 30
 		 * If not, get the user to enter it again.
 		 */
+		String numDownloaders = getValidNumber(1,30);
+		if (numDownloaders!=null)
+			updateProgSettings("maxDownloaders",numDownloaders);
 	}
 
+	/**
+	 * 
+	 * @param setting
+	 * @param value
+	 */
+	private void updateProgSettings(String setting, String value){
+		boolean found=false;
+		int count=0;
+		while ((count<progSettings.size())&&
+			   (!found)){
+			if (progSettings.get(count).setting.equalsIgnoreCase(setting)){
+				progSettings.get(count).value=value;
+				found=true;
+			}
+			count++;
+		}
+	}
+	
 	private void changePodcastRate() {
 		System.out.println ();
 		System.out.println ("How often to update the podcast feeds?");
@@ -449,6 +525,37 @@ public class CLInterface implements Runnable{
 		 * Make sure it is between 1 & 6
 		 * If not leave PodcastRate as it's current value.
 		 */
+		
+		String updateValue = getValidNumber(1,6);
+		if (updateValue!=null){
+			switch (Integer.parseInt(updateValue)){
+				case 1:
+					// 1 Hour
+					updateValue="60";
+					break;
+				case 2:
+					// 2 Hours
+					updateValue="120";
+					break;
+				case 3:
+					// 3 Hours
+					updateValue="180";
+					break;
+				case 4:
+					// 6 Hours
+					updateValue="360";
+					break;
+				case 5:
+					// 12 Hours
+					updateValue="720";
+					break;
+				case 6:
+					// 24 Hours
+					updateValue="1440";
+					break;
+			}
+			updateProgSettings("updateInterval",updateValue);
+		}
 	}
 
 	private void printDownloadsMenu() {
