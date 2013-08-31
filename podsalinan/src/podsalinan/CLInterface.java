@@ -38,11 +38,13 @@ public class CLInterface implements Runnable{
 	private URLDownloadList urlDownloads;
 	private Vector<ProgSettings> progSettings;
 	private Object waitObject = new Object();
+	private CLInput input;
 
 	public CLInterface(Vector<Podcast> podcasts, URLDownloadList urlDownloads, Vector<ProgSettings> progSettings){
 		this.podcasts=podcasts;
 		this.urlDownloads=urlDownloads;
 		this.progSettings=progSettings;
+		input = new CLInput();
 	}
 
 	private void printPodcastSubmenu(int selectedPodcast) {
@@ -58,8 +60,6 @@ public class CLInterface implements Runnable{
 
 	@Override
 	public void run() {
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		String input="";
 		ArrayList<Integer> menuSelection = new ArrayList<Integer>();
 		
 		System.out.println("Welcome to podsalinan.");
@@ -240,13 +240,10 @@ public class CLInterface implements Runnable{
 				System.out.println();
 				
 				System.out.print("->");
-				try {
-					input = bufferedReader.readLine(); 
-				} catch (IOException e) {
-				}
-				if (input.length()>0){
+				String menuInput=input.getStringInput();
+				if (menuInput.length()>0){
 					try {
-						int inputInt = Integer.parseInt(input);
+						int inputInt = Integer.parseInt(menuInput);
 						if (((menuSelection.size()==1)&&(menuSelection.get(0)==1))||
 							((menuSelection.size()==2)&&(menuSelection.get(0)==1)))
 							// Because the podcasts are stored in menuSelection as integers too,
@@ -256,17 +253,17 @@ public class CLInterface implements Runnable{
 							menuSelection.add(inputInt);
 					} catch (NumberFormatException e){
 						// If the input is not a number This area will sort out that code
-						if ((input.equalsIgnoreCase("quit"))||
-							(input.equalsIgnoreCase("exit"))){
+						if ((menuInput.equalsIgnoreCase("quit"))||
+							(menuInput.equalsIgnoreCase("exit"))){
 							finished=true;
-						} else if ((input.startsWith("http"))||
-								   (input.startsWith("ftp"))){
+						} else if ((menuInput.startsWith("http"))||
+								   (menuInput.startsWith("ftp"))){
 							System.out.println("url detected");
 						} else 
 							switch (menuSelection.size()){
 								case 1:
-									if ((menuSelection.get(0)==1)&&(input.length()<3)){
-										int podcastNumber=convertCharToNumber(input);
+									if ((menuSelection.get(0)==1)&&(menuInput.length()<3)){
+										int podcastNumber=convertCharToNumber(menuInput);
 																		
 										if ((podcastNumber>podcasts.size())&&
 											(podcastNumber<0))
@@ -277,9 +274,9 @@ public class CLInterface implements Runnable{
 									break;
 								case 2:
 									if ((menuSelection.get(0)==1)&&
-										(input.length()<3)){
+										(menuInput.length()<3)){
 										Podcast podcast = podcasts.get(menuSelection.get(1));
-										int episodeNumber=convertCharToNumber(input);
+										int episodeNumber=convertCharToNumber(menuInput);
 										
 										if ((episodeNumber>podcast.getEpisodes().size())&&
 											(episodeNumber<0))
@@ -343,7 +340,7 @@ public class CLInterface implements Runnable{
 				epCount++;
 				if ((epCount%20)==0){
 					System.out.println("-- Press any key to continue, q to quit --");
-					char charInput=pressAKey();
+					char charInput=input.getSingleCharInput();
 					if (charInput=='q')
 						break;
 				}
@@ -397,18 +394,6 @@ public class CLInterface implements Runnable{
 		podcast.deleteEpisodeFromDrive(menuSelection.get(2));
 	}
 
-	private char pressAKey() {
-		char input=' ';
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		
-		try {
-			input = (char) bufferedReader.read();
-		} catch (IOException e){
-		}
-		
-		return input;
-	}
-
 	private void printPreferencesMenu() {
 		System.out.println();
 		System.out.println("1. List Preferences");
@@ -434,7 +419,7 @@ public class CLInterface implements Runnable{
 		 * If directory exists set defaultDirectory to file Input
 		 * If not show and error and leave defaultDirectory as is
 		 */
-		String userInput=getStringInput();
+		String userInput=input.getStringInput();
 		if ((userInput.length()>0)&&(userInput!=null)){
 			newPath=new File(userInput);
 			if ((newPath.exists())&&(newPath.isDirectory())){
@@ -445,42 +430,6 @@ public class CLInterface implements Runnable{
 		}
 	}
 
-	private String getStringInput(){
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		String userInput="";
-		try {
-			userInput = bufferedReader.readLine();
-		} catch (IOException e) {
-		}
-
-		return userInput;
-	}
-
-	/**
-	 * @param minNumber
-	 * @param maxNumber
-	 * @return
-	 */
-	private String getValidNumber (long minNumber, long maxNumber){
-		Boolean isValid=true;
-		String inputValue = getStringInput();
-		if ((inputValue.length()>0)&&(inputValue!=null)){
-			try {
-				// Tests to see if the string input is a number
-				Integer.parseInt(inputValue);
-			} catch (NumberFormatException e){
-				isValid=false;
-			}
-			if ((isValid)&&
-				(Integer.parseInt(inputValue)>=minNumber)&&
-				(Integer.parseInt(inputValue)<=maxNumber))
-				return inputValue;
-		}
-		System.out.println ("Error: User Input Invalid. Valid values between "+minNumber
-				+"-"+maxNumber);
-		return null;
-	}
-	
 	private void changeNumDownloaders() {
 		System.out.println ();
 		System.out.print ("Enter Number of Simultaneous Downloads: ");
@@ -488,7 +437,7 @@ public class CLInterface implements Runnable{
 		 * Make sure it is between 1 and 30
 		 * If not, get the user to enter it again.
 		 */
-		String numDownloaders = getValidNumber(1,30);
+		String numDownloaders = input.getValidNumber(1,30);
 		if (numDownloaders!=null)
 			updateProgSettings("maxDownloaders",numDownloaders);
 	}
@@ -526,7 +475,7 @@ public class CLInterface implements Runnable{
 		 * If not leave PodcastRate as it's current value.
 		 */
 		
-		String updateValue = getValidNumber(1,6);
+		String updateValue = input.getValidNumber(1,6);
 		if (updateValue!=null){
 			switch (Integer.parseInt(updateValue)){
 				case 1:
