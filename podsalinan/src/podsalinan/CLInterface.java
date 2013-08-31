@@ -194,6 +194,7 @@ public class CLInterface implements Runnable{
 									
 									break;
 							}
+							menuSelection.remove(2);
 							break;
 						case 4:
 							
@@ -500,6 +501,7 @@ public class CLInterface implements Runnable{
 					break;
 			}
 			updateProgSettings("updateInterval",updateValue);
+			waitObject.notify();
 		}
 	}
 
