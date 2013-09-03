@@ -76,7 +76,7 @@ public class CLInput {
 				(Integer.parseInt(inputValue)<=maxNumber))
 				return inputValue;
 		}
-		System.out.println ("Error: User Input Invalid. Valid values between "+minNumber
+		System.err.println ("Error: User Input Invalid. Valid values between "+minNumber
 				+"-"+maxNumber);
 		return null;
 	}

@@ -291,10 +291,6 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
-	private void changeAutoQueueNewEpisodes() {
-		
-	}
-
 	public void printMainMenu(){
 		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.getDownloads().size()+" - Downloads Queued");
 		System.out.println();
@@ -425,6 +421,34 @@ public class CLInterface implements Runnable{
 		String numDownloaders = input.getValidNumber(1,30);
 		if (numDownloaders!=null)
 			updateProgSettings("maxDownloaders",numDownloaders);
+	}
+
+	private void changeAutoQueueNewEpisodes() {
+		System.out.println ();
+		System.out.print ("Do you want new episodes Automatically Queued to Download? (Y/N): ");
+		String autoDownloadResponse = input.getStringInput();
+		if (autoDownloadResponse.length()==1){
+			switch (autoDownloadResponse.charAt(0)){
+				case 'Y':
+				case 'y':
+					updateProgSettings("autoQueue","true");
+					break;
+				case 'N':
+				case 'n':
+					updateProgSettings("autoQueue","false");
+					break;
+				default:
+					System.err.println ("Error: User entered Value is invalid. No change made");
+					break;
+			}
+		} else if (autoDownloadResponse.length()>1) {
+			if (autoDownloadResponse.equalsIgnoreCase("yes"))
+				updateProgSettings("autoQueue","true");
+			else if (autoDownloadResponse.equalsIgnoreCase("no"))
+				updateProgSettings("autoQueue","false");
+			else if (autoDownloadResponse.equalsIgnoreCase("no"))
+				System.err.println ("Error: User entered Value is invalid. No change made");
+		}
 	}
 
 	/**
