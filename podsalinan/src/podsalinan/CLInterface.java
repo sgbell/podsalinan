@@ -113,12 +113,24 @@ public class CLInterface implements Runnable{
 						case 3:
 							switch (menuSelection.get(1)){
 								case 1:
-									printPreferencesList();
+									changePodcastRate();
 									break;
-								case 0:
-									menuSelection.clear();
-									printMainMenu();
+								case 2:
+									changeNumDownloaders();
 									break;
+								case 3:
+									changeDefaultDirectory();
+									break;
+								case 4:
+									changeAutoQueueNewEpisodes();
+									break;
+							}
+							if (menuSelection.get(1)>0){
+								menuSelection.remove(1);
+								printPreferencesMenu();
+							} else {
+								menuSelection.clear();
+								printMainMenu();
 							}
 							break;
 						case 4:
@@ -177,24 +189,6 @@ public class CLInterface implements Runnable{
 						case 2:
 							break;
 						case 3:
-							switch (menuSelection.get(2)){
-								case 1:
-									changePodcastRate();
-									break;
-								case 2:
-									changeNumDownloaders();
-									break;
-								case 3:
-									changeDefaultDirectory();
-									break;
-								case 4:
-									changeAutoQueueNewEpisodes();
-									break;
-								case 9:
-									
-									break;
-							}
-							menuSelection.remove(2);
 							break;
 						case 4:
 							
@@ -392,12 +386,6 @@ public class CLInterface implements Runnable{
 	}
 
 	private void printPreferencesMenu() {
-		System.out.println();
-		System.out.println("1. List Preferences");
-		System.out.println("0. Return to Main Menu");
-	}
-	
-	private void printPreferencesList(){
 		System.out.println ();
 		System.out.println ("1. Change Podcast Update Rate");
 		System.out.println ("2. Number of Downloaders");
@@ -501,7 +489,9 @@ public class CLInterface implements Runnable{
 					break;
 			}
 			updateProgSettings("updateInterval",updateValue);
-			waitObject.notify();
+			synchronized (waitObject){
+				waitObject.notify();
+			}
 		}
 	}
 
