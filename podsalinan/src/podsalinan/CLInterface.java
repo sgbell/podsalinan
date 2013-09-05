@@ -44,17 +44,6 @@ public class CLInterface implements Runnable{
 		input = new CLInput();
 	}
 
-	private void printPodcastSubmenu(int selectedPodcast) {
-		System.out.println ("Podcast: "+podcasts.get(selectedPodcast).getName()+ " - Selected");
-		System.out.println ();
-		System.out.println ("1. List Episodes");
-		System.out.println ("2. Update List");
-		System.out.println ("3. Remove Podcast");
-		System.out.println ("<AA>. Select Episode");
-		System.out.println ();
-		System.out.println ("9. Return to List of Podcasts");
-	}
-
 	@Override
 	public void run() {
 		ArrayList<Integer> menuSelection = new ArrayList<Integer>();
@@ -123,6 +112,9 @@ public class CLInterface implements Runnable{
 									break;
 								case 4:
 									changeAutoQueueNewEpisodes();
+									break;
+								case 5:
+									setDownloadSpeed();
 									break;
 							}
 							if (menuSelection.get(1)>0){
@@ -315,6 +307,17 @@ public class CLInterface implements Runnable{
 		System.out.println("9. Return to Main Menu");
 	}
 
+	private void printPodcastSubmenu(int selectedPodcast) {
+		System.out.println ("Podcast: "+podcasts.get(selectedPodcast).getName()+ " - Selected");
+		System.out.println ();
+		System.out.println ("1. List Episodes");
+		System.out.println ("2. Update List");
+		System.out.println ("3. Remove Podcast");
+		System.out.println ("<AA>. Select Episode");
+		System.out.println ();
+		System.out.println ("9. Return to List of Podcasts");
+	}
+
 	private void printPodcastEpisodeList(int selectedPodcast) {
 		System.out.println ();
 		int epCount=1;
@@ -387,6 +390,7 @@ public class CLInterface implements Runnable{
 		System.out.println ("2. Number of Downloaders");
 		System.out.println ("3. Default Download Directory");
 		System.out.println ("4. Automatically Download New Podcast Episodes");
+		System.out.println ("5. Set Download Speed Limit");
 		System.out.println ();
 		System.out.println ("0. Return to Preferences Menu");
 	}
@@ -467,6 +471,10 @@ public class CLInterface implements Runnable{
 			}
 			count++;
 		}
+		if ((!found)&&(count>=progSettings.size())){
+			ProgSettings newSetting = new ProgSettings(setting, value);
+			progSettings.add(newSetting);
+		}
 	}
 	
 	private void changePodcastRate() {
@@ -515,6 +523,40 @@ public class CLInterface implements Runnable{
 			updateProgSettings("updateInterval",updateValue);
 			synchronized (waitObject){
 				waitObject.notify();
+			}
+		}
+	}
+
+	private void setDownloadSpeed() {
+		System.out.println();
+		System.out.println("Valid values: 0 (Means no limit); 25 (Means 25Kbps); 1M (Means 1 Mbps)");
+		System.out.println("The value you set here is the total limit, which is shared evenly across downloaders");
+		System.out.print ("Please enter the Download Speed Limit:");
+		String userInput = input.getStringInput();
+		int speed=-1;
+		if (userInput.length()>0){
+			try {
+				speed = Integer.parseInt(userInput);
+			} catch (NumberFormatException e){
+				speed= -1;
+			}
+			if (speed<0){
+				if ((userInput.toUpperCase().endsWith("M"))||
+					(userInput.toUpperCase().endsWith("MBPS"))||
+					(userInput.toUpperCase().endsWith("MB"))){
+					String speedString=userInput.split("M")[0];
+					try{
+						speed = (Integer.parseInt(speedString)*1024);
+					} catch (NumberFormatException e){
+						speed = -1;
+					}
+				}
+			}
+			if (speed<0){
+				System.err.println("Invalid Speed. Download Speed Limit unchanged");
+			} else {
+				ProgSettings newSetting = new ProgSettings("downloadLimit",Integer.toString(speed));
+				progSettings.add(newSetting);
 			}
 		}
 	}
