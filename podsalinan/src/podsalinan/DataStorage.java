@@ -53,9 +53,12 @@ public class DataStorage {
 				  								"id INTEGER PRIMARY KEY AUTOINCREMENT," +
 				  								"url TEXT," +
 				  								"size TEXT," +
-				  								"destination TEXT);",
+				  								"destination TEXT," +
+				  								"priority INTGEGER," +
+				  								"podcastSource INTEGER);",
 						SELECT_ALL_PODCASTS = "SELECT * from podcasts;",
-						SELECT_ALL_SETTINGS = "SELECT * from settings;";
+						SELECT_ALL_SETTINGS = "SELECT * from settings;",
+						SELECT_ALL_DOWNLOADS = "SELECT * from downloads;";
 	
 	/**
 	 * 
@@ -87,84 +90,106 @@ public class DataStorage {
 		boolean firstRun = true;
 		SQLiteStatement sql;
 		
-		// Path to the downloads database
-		File downloadsDBFile = new File(settingsDir.concat("/downloads.db"));
-		// does the download file exist
-		if (downloadsDBFile.exists()){
-			SQLiteConnection downloadDB = new SQLiteConnection(downloadsDBFile);
+		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
+		if (podsalinanDBFile.exists()){
+			SQLiteConnection podsalinanDB = new SQLiteConnection(podsalinanDBFile);
 			
 			try {
-				downloadDB.open(true);
-				sql = downloadDB.prepare("SELECT * FROM downloads;");
-				
+				podsalinanDB.open(true);
+				sql = podsalinanDB.prepare(SELECT_ALL_DOWNLOADS);
 				while (sql.step()){
 					if (sql.hasRow()){
-						downloads.addDownload(sql.columnString(1),
-											  sql.columnString(2),
-											  true);
+						
 					}
 				}
 			} catch (SQLiteException e) {
+				
+			}
+		} else {
+			/* This area is for the older version of the data files, so we can easily migrate to
+			 * the updated version. For instance, the downloads will now be held in a table
+			 * in the main data file. Where as in this code, the downloads we seperate.
+			 */
+			
+			// Path to the downloads database
+			File downloadsDBFile = new File(settingsDir.concat("/downloads.db"));
+			// does the download file exist
+			if (downloadsDBFile.exists()){
+				SQLiteConnection downloadDB = new SQLiteConnection(downloadsDBFile);
+				
+				try {
+					downloadDB.open(true);
+					sql = downloadDB.prepare("SELECT * FROM downloads;");
+					
+					while (sql.step()){
+						if (sql.hasRow()){
+							downloads.addDownload(sql.columnString(1),
+												  sql.columnString(2),
+												  true);
+						}
+					}
+				} catch (SQLiteException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			
+			String configFile = settingsDir.concat("/podcast.db");
+			
+			if (new File(configFile).exists()){
+				firstRun = false;
+			}
+			
+			SQLiteConnection settingsDB = new SQLiteConnection(new File(configFile));
+			
+			try {
+				settingsDB.open(true);
+				
+				if (firstRun){
+					sql = settingsDB.prepare(CREATE_PODCAST);
+					sql.stepThrough();
+					sql.dispose();
+					sql = settingsDB.prepare(CREATE_SETTINGS);
+					sql.stepThrough();
+					String newDirectory = System.getProperty("user.home").concat("/Downloads");
+					ProgSettings newSetting = new ProgSettings("defaultDirectory",newDirectory);
+					progSettings.add(newSetting);
+				} else {
+					// Do a search in the podcasts table for podcasts stored in the system
+					sql = settingsDB.prepare(SELECT_ALL_PODCASTS);
+					while (sql.step()){
+						if (sql.hasRow()){
+							Podcast newPodcast = new Podcast(sql.columnString(1),
+														  	 sql.columnString(3),
+														  	 sql.columnString(4),
+														  	 sql.columnString(2).replaceAll("&apos;", "\'"));
+							newPodcast.setAdded(true);
+							podcasts.add(newPodcast);
+						}
+					}
+					sql.dispose();
+					sql = settingsDB.prepare(SELECT_ALL_SETTINGS);
+					while (sql.step()){
+						if (sql.hasRow()){
+							ProgSettings newSetting = new ProgSettings(sql.columnString(1),
+																  sql.columnString(2));
+							// Updating old program settings to new ones.
+							if (newSetting.setting.equalsIgnoreCase("urlDirectory")){
+								newSetting.setting="defaultDirectory";
+							}
+							if (newSetting.setting.equalsIgnoreCase("maxPodcastDownloaders")){
+								newSetting.setting="maxDownloaders";
+							}
+							progSettings.add(newSetting);
+						}
+					}
+				}
+				sql.dispose();
+				settingsDB.dispose();
+			} catch (SQLiteException e) {
 				e.printStackTrace();
+				return 1;
 			}
-			
-		}
-		
-		String configFile = settingsDir.concat("/podcast.db");
-		
-		if (new File(configFile).exists()){
-			firstRun = false;
-		}
-		
-		SQLiteConnection settingsDB = new SQLiteConnection(new File(configFile));
-		
-		try {
-			settingsDB.open(true);
-			
-			if (firstRun){
-				sql = settingsDB.prepare(CREATE_PODCAST);
-				sql.stepThrough();
-				sql.dispose();
-				sql = settingsDB.prepare(CREATE_SETTINGS);
-				sql.stepThrough();
-				String newDirectory = System.getProperty("user.home").concat("/Downloads");
-				ProgSettings newSetting = new ProgSettings("defaultDirectory",newDirectory);
-				progSettings.add(newSetting);
-			} else {
-				// Do a search in the podcasts table for podcasts stored in the system
-				sql = settingsDB.prepare(SELECT_ALL_PODCASTS);
-				while (sql.step()){
-					if (sql.hasRow()){
-						Podcast newPodcast = new Podcast(sql.columnString(1),
-													  	 sql.columnString(3),
-													  	 sql.columnString(4),
-													  	 sql.columnString(2).replaceAll("&apos;", "\'"));
-						newPodcast.setAdded(true);
-						podcasts.add(newPodcast);
-					}
-				}
-				sql.dispose();
-				sql = settingsDB.prepare(SELECT_ALL_SETTINGS);
-				while (sql.step()){
-					if (sql.hasRow()){
-						ProgSettings newSetting = new ProgSettings(sql.columnString(1),
-															  sql.columnString(2));
-						// Updating old program settings to new ones.
-						if (newSetting.setting.equalsIgnoreCase("urlDirectory")){
-							newSetting.setting="defaultDirectory";
-						}
-						if (newSetting.setting.equalsIgnoreCase("maxPodcastDownloaders")){
-							newSetting.setting="maxDownloaders";
-						}
-						progSettings.add(newSetting);
-					}
-				}
-			}
-			sql.dispose();
-			settingsDB.dispose();
-		} catch (SQLiteException e) {
-			e.printStackTrace();
-			return 1;
 		}
 		return 0;
 	}
