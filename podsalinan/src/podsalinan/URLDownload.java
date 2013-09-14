@@ -13,6 +13,8 @@ import java.net.URL;
 public class URLDownload extends Details {
 	
 	private File destination;
+	private int priority;
+	private String podcastId;
 	
 	public URLDownload(){
 		super();
@@ -45,6 +47,12 @@ public class URLDownload extends Details {
 		setSize(length);
 		this.destination = new File (destination);
 	}
+	
+	public URLDownload(String url, String length, String destination, int priority,
+			           String podcast, int status){
+		
+	}
+	
 	/**
 	 * @return the destination
 	 */
@@ -61,5 +69,33 @@ public class URLDownload extends Details {
 
 	public void setDestination(File outputFile) {
 		destination = outputFile;
+	}
+
+	/**
+	 * @return the priority
+	 */
+	public int getPriority() {
+		return priority;
+	}
+
+	/**
+	 * @param priority the priority to set
+	 */
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
+	/**
+	 * @return the podcastId
+	 */
+	public String getPodcastId() {
+		return podcastId;
+	}
+
+	/**
+	 * @param podcastId the podcastId to set
+	 */
+	public void setPodcastId(String podcastId) {
+		this.podcastId = podcastId;
 	}
 }

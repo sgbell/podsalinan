@@ -55,7 +55,8 @@ public class DataStorage {
 				  								"size TEXT," +
 				  								"destination TEXT," +
 				  								"priority INTGEGER," +
-				  								"podcastSource INTEGER);",
+				  								"podcastSource INTEGER," +
+				  								"status INTEGER);",
 						SELECT_ALL_PODCASTS = "SELECT * from podcasts;",
 						SELECT_ALL_SETTINGS = "SELECT * from settings;",
 						SELECT_ALL_DOWNLOADS = "SELECT * from downloads;";
@@ -99,9 +100,46 @@ public class DataStorage {
 				sql = podsalinanDB.prepare(SELECT_ALL_DOWNLOADS);
 				while (sql.step()){
 					if (sql.hasRow()){
+						URLDownload newDownload = new URLDownload(sql.columnString(1),
+																  sql.columnString(2),
+																  sql.columnString(3),
+																  sql.columnInt(4),
+																  sql.columnString(5),
+																  sql.columnInt(6));
+						downloads.getDownloads().add(newDownload);
+					}
+				}
+				sql.dispose();
+				sql = podsalinanDB.prepare(SELECT_ALL_SETTINGS);
+				while (sql.step()){
+					if (sql.hasRow()){
+						ProgSettings newSetting = new ProgSettings(sql.columnString(1),
+								  sql.columnString(2));
+						// Updating old program settings to new ones.
+						if (newSetting.setting.equalsIgnoreCase("urlDirectory"))
+							newSetting.setting="defaultDirectory";
+						
+						if (newSetting.setting.equalsIgnoreCase("maxPodcastDownloaders"))
+							newSetting.setting="maxDownloaders";
+						
+						progSettings.add(newSetting);
 						
 					}
 				}
+				sql.dispose();
+				sql = podsalinanDB.prepare(SELECT_ALL_PODCASTS);
+				while (sql.step()){
+					if (sql.hasRow()){
+						Podcast newPodcast = new Podcast(sql.columnString(1),
+													  	 sql.columnString(3),
+													  	 sql.columnString(4),
+													  	 sql.columnString(2).replaceAll("&apos;", "\'"));
+						newPodcast.setAdded(true);
+						podcasts.add(newPodcast);
+					}
+				}
+				sql.dispose();
+				podsalinanDB.dispose();
 			} catch (SQLiteException e) {
 				
 			}
@@ -145,16 +183,8 @@ public class DataStorage {
 			try {
 				settingsDB.open(true);
 				
-				if (firstRun){
-					sql = settingsDB.prepare(CREATE_PODCAST);
-					sql.stepThrough();
-					sql.dispose();
-					sql = settingsDB.prepare(CREATE_SETTINGS);
-					sql.stepThrough();
-					String newDirectory = System.getProperty("user.home").concat("/Downloads");
-					ProgSettings newSetting = new ProgSettings("defaultDirectory",newDirectory);
-					progSettings.add(newSetting);
-				} else {
+				
+				if (!firstRun){
 					// Do a search in the podcasts table for podcasts stored in the system
 					sql = settingsDB.prepare(SELECT_ALL_PODCASTS);
 					while (sql.step()){
@@ -183,11 +213,10 @@ public class DataStorage {
 							progSettings.add(newSetting);
 						}
 					}
+					sql.dispose();
+					settingsDB.dispose();
 				}
-				sql.dispose();
-				settingsDB.dispose();
 			} catch (SQLiteException e) {
-				e.printStackTrace();
 				return 1;
 			}
 		}
@@ -203,84 +232,33 @@ public class DataStorage {
 							 URLDownloadList downloads,
 							 Vector<ProgSettings> progSettings) {
 		SQLiteStatement sql;
-		boolean dbExists;
 		
-		File downloadsDBFile = new File(settingsDir.concat("/downloads.db"));
-		dbExists = downloadsDBFile.exists();
-		SQLiteConnection downloadsDB = new SQLiteConnection(downloadsDBFile);
-
-		try {
-			downloadsDB.open(true);
-			if (!dbExists){
-				sql = downloadsDB.prepare(CREATE_DOWNLOADS);
+		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
+		boolean dataFileExists = podsalinanDBFile.exists(); 
+		SQLiteConnection podsalinanDB = new SQLiteConnection(podsalinanDBFile);
+		if (!dataFileExists){
+			try {
+				podsalinanDB.open(true);
+				sql = podsalinanDB.prepare(CREATE_DOWNLOADS);
 				sql.stepThrough();
 				sql.dispose();
+			} catch (SQLiteException e) {
 			}
-			for (int dlc=0; dlc < downloads.getDownloads().size(); dlc++){
-				if (!downloads.getDownloads().get(dlc).isAdded()){
-					sql = downloadsDB.prepare("INSERT INTO downloads(url,size) " +
-											  "VALUES ('"+downloads.getDownloads().get(dlc).getURL()+"'," +
-											  		  "'"+downloads.getDownloads().get(dlc).getSize()+"');");
-					sql.stepThrough();
-					sql.dispose();
-				}
-				if (downloads.getDownloads().get(dlc).isRemoved()){
-					sql = downloadsDB.prepare("DELETE FROM downloads WHERE url='"+downloads.getDownloads().get(dlc).getURL()+"';");
-					sql.stepThrough();
-					sql.dispose();
-				}
+			try {
+				sql = podsalinanDB.prepare(CREATE_PODCAST);
+				sql.stepThrough();
+				sql.dispose();
+			} catch (SQLiteException e) {
 			}
-			downloadsDB.dispose();
-		} catch (SQLiteException e) {
-			e.printStackTrace();
+			try {
+				sql = podsalinanDB.prepare(CREATE_SETTINGS);
+				sql.stepThrough();
+				sql.dispose();
+			} catch (SQLiteException e) {
+			}
 		}
-		
-		String configFile = settingsDir.concat("/podcast.db");
-		SQLiteConnection settingsDB = new SQLiteConnection(new File(configFile));
-
-		try {
-			settingsDB.open(true);
-			for (int pcc=0; pcc < podcasts.size(); pcc++){
-				Podcast currentPodcast=podcasts.get(pcc);
-				if ((!currentPodcast.isAdded())&&(!currentPodcast.isRemoved())){
-					sql = settingsDB.prepare("INSERT INTO podcasts(name, localfile, url, directory) VALUES('"+
-												    currentPodcast.getName()+"'," +
-												"'"+currentPodcast.getDatafile()+"'," +
-												"'"+currentPodcast.getURL()+"'," +
-												"'"+currentPodcast.getDirectory()+"');");
-					sql.stepThrough();
-					sql.dispose();
-					currentPodcast.setAdded(true);
-				} else if (currentPodcast.isRemoved()){
-					sql = settingsDB.prepare("DELETE FROM podcasts WHERE localfile='"+currentPodcast.getDatafile()+"';");
-					sql.stepThrough();
-					sql.dispose();
-				} else if (currentPodcast.isChanged()){
-					sql = settingsDB.prepare("UPDATE podcasts SET directory='"+currentPodcast.getDirectory()+
-											 "' WHERE localfile='"+currentPodcast.getDatafile()+"';");
-					sql.stepThrough();
-					sql.dispose();
-				}
-			}
+		for (URLDownload download : downloadQueue){
 			
-			sql = settingsDB.prepare("DELETE FROM settings;");
-			sql.stepThrough();
-			sql.dispose();
-			
-			sql = settingsDB.prepare("DELETE FROM sqlite_sequence WHERE name='settings';");
-			sql.stepThrough();
-			sql.dispose();
-			
-			for (int sc=0; sc<progSettings.size(); sc++){
-				sql = settingsDB.prepare("INSERT INTO settings(name,value) VALUES('"+progSettings.get(sc).setting+"'," +
-										 "'"+progSettings.get(sc).value+"');");
-				sql.stepThrough();
-				sql.dispose();
-			}
-			
-			settingsDB.dispose();
-		} catch (SQLiteException e) {
-			e.printStackTrace();
 		}
 	}
 
