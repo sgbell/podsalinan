@@ -258,6 +258,31 @@ public class DataStorage {
 			}
 		}
 		for (URLDownload download : downloadQueue){
+			try {
+				if (!download.isAdded()){
+					sql = podsalinanDB.prepare("INSERT INTO downloads(url,size,destination,priority,podcastSource,status) " +
+											   "VALUES ('"+download.getURL().toString()+"',"+
+											           "'"+download.getSize()+"',"+ 
+											   		   "'"+download.getDestination()+"',"+
+											           "'"+download.getPriority()+"',"+
+											   		   "'"+download.getPodcastId()+"',"+
+											           "'"+download.getStatus()+");");
+					sql.stepThrough();
+					sql.dispose();
+				} else if (download.isRemoved()){
+					sql = podsalinanDB.prepare("DELETE FROM downloads" +
+											   "WHERE url='"+download.getURL().toString()+"'"+
+											   "AND destination='"+download.getDestination()+"';");
+					sql.stepThrough();
+					sql.dispose();
+				}
+			} catch (SQLiteException e) {
+			}
+		}
+		// for loop for podcast list
+		// for ()
+		
+		for (ProgSettings progSetting : progSettings){
 			
 		}
 	}
