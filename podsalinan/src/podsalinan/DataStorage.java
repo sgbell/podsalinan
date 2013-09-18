@@ -59,7 +59,9 @@ public class DataStorage {
 				  								"status INTEGER);",
 						SELECT_ALL_PODCASTS = "SELECT * from podcasts;",
 						SELECT_ALL_SETTINGS = "SELECT * from settings;",
-						SELECT_ALL_DOWNLOADS = "SELECT * from downloads;";
+						SELECT_ALL_DOWNLOADS = "SELECT * from downloads;",
+						CLEAR_ALL_SETTINGS = "DELETE from settings;" +
+								 			 "DELETE from sqlite_sequence WHERE name='settings';";
 	
 	/**
 	 * 
@@ -279,11 +281,23 @@ public class DataStorage {
 			} catch (SQLiteException e) {
 			}
 		}
-		// for loop for podcast list
-		// for ()
-		
+		// clear the settings
+		try {
+			sql = podsalinanDB.prepare(CLEAR_ALL_SETTINGS);
+			sql.stepThrough();
+			sql.dispose();
+		} catch (SQLiteException e){
+		}
+		// add settings back into the database
 		for (ProgSettings progSetting : progSettings){
-			
+			try {
+				sql = podsalinanDB.prepare("INSERT INTO settings(name,value)" +
+						 				   "VALUES ('"+progSetting.setting+"'," +
+						 				   "'"+progSetting.value+"');");
+				sql.stepThrough();
+				sql.dispose();
+			} catch (SQLiteException e) {
+			} 
 		}
 	}
 
