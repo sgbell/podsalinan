@@ -299,6 +299,25 @@ public class DataStorage {
 			} catch (SQLiteException e) {
 			} 
 		}
+		
+		// update the podcast list in the database
+		for (Podcast podcast : podcasts){
+			sql = null;
+			try {
+				if ((!podcast.isAdded())&&(!podcast.isRemoved())){
+					sql = podsalinanDB.prepare("");
+				} else if (podcast.isRemoved()){
+					sql = podsalinanDB.prepare("");
+				} else if (podcast.isChanged()){
+					sql = podsalinanDB.prepare("");
+				}
+				if (sql!=null){
+					sql.stepThrough();
+					sql.dispose();
+				}
+			} catch (SQLiteException e) {
+			}
+		}
 	}
 
 	public void loadPodcast(Podcast podcast){
