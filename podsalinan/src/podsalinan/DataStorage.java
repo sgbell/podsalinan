@@ -261,6 +261,8 @@ public class DataStorage {
 		}
 		for (URLDownload download : downloadQueue){
 			try {
+				sql = null;
+				int sqlType=0;
 				if (!download.isAdded()){
 					sql = podsalinanDB.prepare("INSERT INTO downloads(url,size,destination,priority,podcastSource,status) " +
 											   "VALUES ('"+download.getURL().toString()+"',"+
@@ -269,14 +271,33 @@ public class DataStorage {
 											           "'"+download.getPriority()+"',"+
 											   		   "'"+download.getPodcastId()+"',"+
 											           "'"+download.getStatus()+");");
-					sql.stepThrough();
-					sql.dispose();
+					sqlType=1;
 				} else if (download.isRemoved()){
 					sql = podsalinanDB.prepare("DELETE FROM downloads" +
 											   "WHERE url='"+download.getURL().toString()+"'"+
 											   "AND destination='"+download.getDestination()+"';");
+				} else if (download.isUpdated()){
+					sql = podsalinanDB.prepare("UPDATE downloads" +
+											   "SET destination='"+download.getDestination()+"',"+
+											   	   "size='"+download.getSize()+"',"+
+											       "priority='"+download.getPriority()+"',"+
+											       "podcastSource='"+download.getPodcastId()+"',"+
+											       "status='"+download.getStatus()+"'"+
+											   "WHERE url='"+download.getURL()+"';");
+					sqlType=3;
+				}
+				if (sql!=null){
 					sql.stepThrough();
 					sql.dispose();
+					switch (sqlType){
+					case 1:
+						download.setAdded(true);
+						break;
+					case 3:
+						download.setUpdated(false);
+						break;
+				}
+
 				}
 			} catch (SQLiteException e) {
 			}
@@ -303,17 +324,37 @@ public class DataStorage {
 		// update the podcast list in the database
 		for (Podcast podcast : podcasts){
 			sql = null;
+			int sqlMethod=0;
 			try {
 				if ((!podcast.isAdded())&&(!podcast.isRemoved())){
-					sql = podsalinanDB.prepare("");
+					sql = podsalinanDB.prepare("INSERT INTO podcasts(name, localFile, url, directory)" +
+							 				   "VALUES ('"+podcast.getName()+"',"+
+							 				   "'"+podcast.getDatafile()+"'," +
+							 				   "'"+podcast.getURL()+"'," +
+							 				   "'"+podcast.getDirectory()+"');");
+					sqlMethod=1;
 				} else if (podcast.isRemoved()){
-					sql = podsalinanDB.prepare("");
+					sql = podsalinanDB.prepare("DELETE FROM podcasts" +
+											   "WHERE localfile='"+podcast.getDatafile()+"',");
 				} else if (podcast.isChanged()){
-					sql = podsalinanDB.prepare("");
+					sql = podsalinanDB.prepare("UPDATE podcasts" +
+											   "SET name='"+podcast.getName()+"',"+
+											       "directory='"+podcast.getDirectory()+"',"+
+											       "url='"+podcast.getURL()+"'"+
+											   "WHERE localFile='"+podcast.getDatafile()+"';");
+					sqlMethod=3;
 				}
 				if (sql!=null){
 					sql.stepThrough();
 					sql.dispose();
+					switch (sqlMethod){
+						case 1:
+							podcast.setAdded(true);
+							break;
+						case 3:
+							podcast.setChanged(false);
+							break;
+					}
 				}
 			} catch (SQLiteException e) {
 			}
