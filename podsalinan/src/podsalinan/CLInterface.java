@@ -563,8 +563,17 @@ public class CLInterface implements Runnable{
 
 	private void printDownloadsMenu() {
 		System.out.println();
-		System.out.println("1. List Downloads");
-		System.out.println("0. Return to Main Menu");
+		int downloadCount=1;
+		for (URLDownload download : urlDownloads.getDownloads()){
+			if (!download.isRemoved()){
+				System.out.println(getEncodingFromNumber(downloadCount)+". "+download.getURL().getFile());
+			}
+		}
+		System.out.println();
+		System.out.println("(A-ZZ) Enter Download letter to select Download.");
+		System.out.println();
+		System.out.println("1. Add New Download");
+		System.out.println("9. Return to Main Menu");
 	}
 
 	public boolean isFinished(){
