@@ -230,7 +230,6 @@ public class DataStorage {
 	 * 
 	 */
 	public void saveSettings(Vector<Podcast> podcasts,
-							 Vector<URLDownload> downloadQueue,
 							 URLDownloadList downloads,
 							 Vector<ProgSettings> progSettings) {
 		SQLiteStatement sql;
@@ -259,7 +258,7 @@ public class DataStorage {
 			} catch (SQLiteException e) {
 			}
 		}
-		for (URLDownload download : downloadQueue){
+		for (URLDownload download : downloads.getDownloads()){
 			try {
 				sql = null;
 				int sqlType=0;

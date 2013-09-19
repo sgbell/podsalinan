@@ -97,7 +97,24 @@ public class CLInterface implements Runnable{
 								}
 							break;
 						case 2:
-							
+							if (menuSelection.get(1)<0){
+								switch ((0-menuSelection.get(1))){
+									case 1:
+										
+										break;
+									case 9:
+										menuSelection.clear();
+										printMainMenu();
+										break;
+								}
+							} else if (urlDownloads!=null)
+								if ((menuSelection.get(1)<urlDownloads.getDownloads().size())&&
+									(menuSelection.get(1)>=0))
+									printDownloadSubmenu(menuSelection.get(1));
+								else {
+									printDownloadsMenu();
+									menuSelection.remove(1);
+								}
 							break;
 						case 3:
 							switch (menuSelection.get(1)){
@@ -574,6 +591,15 @@ public class CLInterface implements Runnable{
 		System.out.println();
 		System.out.println("1. Add New Download");
 		System.out.println("9. Return to Main Menu");
+	}
+
+	private void printDownloadSubmenu(int selectedDownload) {
+		URLDownload download = urlDownloads.getDownloads().get(selectedDownload);
+		if (download!=null){
+			System.out.println("Download Url: "+download.getURL());
+			System.out.println("Destination: "+download.getDestination());
+			System.out.println("Priority: "+selectedDownload);
+		}
 	}
 
 	public boolean isFinished(){

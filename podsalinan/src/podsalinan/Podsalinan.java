@@ -86,7 +86,7 @@ public class Podsalinan {
 			} catch (InterruptedException e) {
 			}
 		}
-		dataFiles.saveSettings(podcasts, null, urlDownloads, progSettings);
+		dataFiles.saveSettings(podcasts, urlDownloads, progSettings);
 		System.out.println("Goodbye.");
 	}
 
