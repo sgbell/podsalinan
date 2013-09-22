@@ -271,6 +271,8 @@ public class CLInterface implements Runnable{
 											System.out.println("Error: Invalid Podcast");
 										else
 											menuSelection.add(podcastNumber);
+									} else if ((menuSelection.get(0)==2)&&(menuInput.length()<3)){
+										menuSelection.add((int)convertCharToNumber(menuInput));
 									}
 									break;
 								case 2:
@@ -588,8 +590,8 @@ public class CLInterface implements Runnable{
 		}
 		System.out.println();
 		System.out.println("(A-ZZ) Enter Download letter to select Download.");
+		System.out.println("To add a new download to the queue just enter the the url to be downloaded.");
 		System.out.println();
-		System.out.println("1. Add New Download");
 		System.out.println("9. Return to Main Menu");
 	}
 

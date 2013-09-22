@@ -258,6 +258,7 @@ public class DataStorage {
 			} catch (SQLiteException e) {
 			}
 		}
+		int downloadCount=0;
 		for (URLDownload download : downloads.getDownloads()){
 			try {
 				sql = null;
@@ -267,7 +268,7 @@ public class DataStorage {
 											   "VALUES ('"+download.getURL().toString()+"',"+
 											           "'"+download.getSize()+"',"+ 
 											   		   "'"+download.getDestination()+"',"+
-											           "'"+download.getPriority()+"',"+
+											           "'"+downloadCount+"',"+
 											   		   "'"+download.getPodcastId()+"',"+
 											           "'"+download.getStatus()+");");
 					sqlType=1;
@@ -279,7 +280,7 @@ public class DataStorage {
 					sql = podsalinanDB.prepare("UPDATE downloads" +
 											   "SET destination='"+download.getDestination()+"',"+
 											   	   "size='"+download.getSize()+"',"+
-											       "priority='"+download.getPriority()+"',"+
+											       "priority='"+downloadCount+"',"+
 											       "podcastSource='"+download.getPodcastId()+"',"+
 											       "status='"+download.getStatus()+"'"+
 											   "WHERE url='"+download.getURL()+"';");
@@ -300,6 +301,7 @@ public class DataStorage {
 				}
 			} catch (SQLiteException e) {
 			}
+			downloadCount++;
 		}
 		// clear the settings
 		try {

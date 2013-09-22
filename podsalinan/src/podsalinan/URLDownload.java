@@ -13,7 +13,6 @@ import java.net.URL;
 public class URLDownload extends Details {
 	
 	private File destination;
-	private int priority;
 	private String podcastId;
 	
 	public URLDownload(){
@@ -69,20 +68,6 @@ public class URLDownload extends Details {
 
 	public void setDestination(File outputFile) {
 		destination = outputFile;
-	}
-
-	/**
-	 * @return the priority
-	 */
-	public int getPriority() {
-		return priority;
-	}
-
-	/**
-	 * @param priority the priority to set
-	 */
-	public void setPriority(int priority) {
-		this.priority = priority;
 	}
 
 	/**
