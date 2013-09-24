@@ -87,7 +87,6 @@ public class DataStorage {
 	 * @return
 	 */
 	public int loadSettings(Vector<Podcast> podcasts,
-							Vector<URLDownload> downloadQueue,
 							URLDownloadList downloads,
 							Vector<ProgSettings> progSettings){
 		boolean firstRun = true;
@@ -195,7 +194,7 @@ public class DataStorage {
 														  	 sql.columnString(3),
 														  	 sql.columnString(4),
 														  	 sql.columnString(2).replaceAll("&apos;", "\'"));
-							newPodcast.setAdded(true);
+							newPodcast.setAdded(false);
 							podcasts.add(newPodcast);
 						}
 					}

@@ -245,8 +245,11 @@ public class CLInterface implements Runnable{
 				if (menuInput.length()>0){
 					try {
 						int inputInt = Integer.parseInt(menuInput);
-						if (((menuSelection.size()==1)&&(menuSelection.get(0)==1))||
-							((menuSelection.size()==2)&&(menuSelection.get(0)==1)))
+						if (((menuSelection.size()==1)&&
+							 ((menuSelection.get(0)==1)||
+							  (menuSelection.get(0)==2)))||
+							((menuSelection.size()==2)&&
+							 (menuSelection.get(0)==1)))
 							// Because the podcasts are stored in menuSelection as integers too,
 							// the menu options will be stored as negative values
 							menuSelection.add((0-inputInt));
@@ -259,7 +262,13 @@ public class CLInterface implements Runnable{
 							finished=true;
 						} else if ((menuInput.startsWith("http"))||
 								   (menuInput.startsWith("ftp"))){
-							System.out.println("url detected");
+							// User has entered a url to download.
+							urlDownloads.addDownload(menuInput);
+							/* What to do next:
+							 * Need to make URLDownload set Destination on object creation.
+							 * 2 Things, If destination is unknown, set a default folder
+							 * If it is specified on creation set it there.
+							 */
 						} else 
 							switch (menuSelection.size()){
 								case 1:

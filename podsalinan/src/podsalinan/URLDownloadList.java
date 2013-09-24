@@ -46,8 +46,10 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public void addDownload(String url) {
 		URLDownload newFile= new URLDownload(url);
-		downloads.add(newFile);
-		checkDownloadSize(newFile);
+		if (newFile.getURL()!=null){
+			downloads.add(newFile);
+			checkDownloadSize(newFile);
+		}
 	}
 	
 	public void addDownload(String url, String size, boolean added) {

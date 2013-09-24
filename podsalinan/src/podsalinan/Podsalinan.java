@@ -108,7 +108,7 @@ public class Podsalinan {
 		dataFiles = new DataStorage();
 		
 		// load the program settings
-		dataFiles.loadSettings (podcasts, null, urlDownloads, progSettings);
+		dataFiles.loadSettings (podcasts, urlDownloads, progSettings);
 		// Load the podcast data
 		for (Podcast podcast : podcasts)
 			dataFiles.loadPodcast(podcast);
