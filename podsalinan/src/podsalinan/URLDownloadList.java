@@ -44,15 +44,16 @@ public class URLDownloadList extends DownloadDetails {
 		return downloads;
 	}
 	
-	public void addDownload(String url) {
+	public void addDownload(String url, String destination) {
 		URLDownload newFile= new URLDownload(url);
+		newFile.setDestination(destination);
 		if (newFile.getURL()!=null){
 			downloads.add(newFile);
 			checkDownloadSize(newFile);
 		}
 	}
 	
-	public void addDownload(String url, String size, boolean added) {
+	public void addDownload(String url, String destination, String size, boolean added) {
 		URLDownload newFile= new URLDownload(url, added);
 		newFile.setSize(size);
 		downloads.add(newFile);

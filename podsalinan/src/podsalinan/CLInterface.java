@@ -263,7 +263,7 @@ public class CLInterface implements Runnable{
 						} else if ((menuInput.startsWith("http"))||
 								   (menuInput.startsWith("ftp"))){
 							// User has entered a url to download.
-							urlDownloads.addDownload(menuInput);
+							urlDownloads.addDownload(menuInput,"");
 							/* What to do next:
 							 * Need to make URLDownload set Destination on object creation.
 							 * 2 Things, If destination is unknown, set a default folder

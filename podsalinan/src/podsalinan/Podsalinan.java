@@ -36,7 +36,7 @@ public class Podsalinan {
 	
 	private URLDownloadList urlDownloads;
 	private Vector<Podcast> podcasts;
-	private Vector<ProgSettings> progSettings;
+	private ProgSettings settings;
 	private CommandPass commands;
 	private DownloadQueue downloaderList;
 	private DataStorage dataFiles;
@@ -59,12 +59,13 @@ public class Podsalinan {
 		int updateInterval=0;
 		
 		// Find update Interval for podcasts in program settings.
-		for (ProgSettings setting : progSettings)
-			if(setting.setting.equalsIgnoreCase("updateInterval"))
-				updateInterval=Integer.parseInt(setting.value);
+		try {
+			updateInterval=Integer.parseInt(settings.getSettingValue("updateInterval"));
+		} catch (NumberFormatException e){
+			updateInterval=0;
+		}
 		if (updateInterval<60){
-			ProgSettings setting = new ProgSettings("updateInterval","60");
-			progSettings.add(setting);
+			settings.updateSetting("updateInterval", "60");
 			updateInterval=60;
 		}
 		
@@ -86,7 +87,7 @@ public class Podsalinan {
 			} catch (InterruptedException e) {
 			}
 		}
-		dataFiles.saveSettings(podcasts, urlDownloads, progSettings);
+		dataFiles.saveSettings(podcasts, urlDownloads, settings);
 		System.out.println("Goodbye.");
 	}
 
@@ -95,10 +96,10 @@ public class Podsalinan {
 		// URL Downloads
 		urlDownloads = new URLDownloadList();
 		// Program Settings
-		progSettings = new Vector<ProgSettings>();
+		settings = new ProgSettings();
 		
 		// Action Listener for the main window
-		CommandPass aListener = new CommandPass(progSettings);
+		CommandPass aListener = new CommandPass(settings);
 
 		// disables sqlite4java's logging
 		Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);
@@ -108,12 +109,12 @@ public class Podsalinan {
 		dataFiles = new DataStorage();
 		
 		// load the program settings
-		dataFiles.loadSettings (podcasts, urlDownloads, progSettings);
+		dataFiles.loadSettings (podcasts, urlDownloads, settings);
 		// Load the podcast data
 		for (Podcast podcast : podcasts)
 			dataFiles.loadPodcast(podcast);
 
-		cli = new CLInterface(podcasts,urlDownloads,progSettings);
+		cli = new CLInterface(podcasts,urlDownloads, settings);
 		Thread cliThread = new Thread(cli);
 		cliThread.start();
 	}
