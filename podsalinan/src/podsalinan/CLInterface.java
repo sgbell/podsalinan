@@ -33,14 +33,14 @@ public class CLInterface implements Runnable{
 	private boolean finished=false;
 	private Vector<Podcast> podcasts;
 	private URLDownloadList urlDownloads;
-	private Vector<ProgSettings> progSettings;
+	private ProgSettings settings;
 	private Object waitObject = new Object();
 	private CLInput input;
 
-	public CLInterface(Vector<Podcast> podcasts, URLDownloadList urlDownloads, Vector<ProgSettings> progSettings){
+	public CLInterface(Vector<Podcast> podcasts, URLDownloadList urlDownloads, ProgSettings settings){
 		this.podcasts=podcasts;
 		this.urlDownloads=urlDownloads;
-		this.progSettings=progSettings;
+		this.settings=settings;
 		input = new CLInput();
 	}
 
@@ -436,7 +436,7 @@ public class CLInterface implements Runnable{
 		if ((userInput.length()>0)&&(userInput!=null)){
 			newPath=new File(userInput);
 			if ((newPath.exists())&&(newPath.isDirectory())){
-				updateProgSettings("defaultDirectory",userInput);
+				settings.updateSetting("defaultDirectory",userInput);
 			} else {
 				System.out.println ("Error: User Input invalid");
 			}
@@ -452,7 +452,7 @@ public class CLInterface implements Runnable{
 		 */
 		String numDownloaders = input.getValidNumber(1,30);
 		if (numDownloaders!=null)
-			updateProgSettings("maxDownloaders",numDownloaders);
+			settings.updateSetting("maxDownloaders",numDownloaders);
 	}
 
 	private void changeAutoQueueNewEpisodes() {
@@ -463,11 +463,11 @@ public class CLInterface implements Runnable{
 			switch (autoDownloadResponse.charAt(0)){
 				case 'Y':
 				case 'y':
-					updateProgSettings("autoQueue","true");
+					settings.updateSetting("autoQueue","true");
 					break;
 				case 'N':
 				case 'n':
-					updateProgSettings("autoQueue","false");
+					settings.updateSetting("autoQueue","false");
 					break;
 				default:
 					System.err.println ("Error: User entered Value is invalid. No change made");
@@ -475,36 +475,14 @@ public class CLInterface implements Runnable{
 			}
 		} else if (autoDownloadResponse.length()>1) {
 			if (autoDownloadResponse.equalsIgnoreCase("yes"))
-				updateProgSettings("autoQueue","true");
+				settings.updateSetting("autoQueue","true");
 			else if (autoDownloadResponse.equalsIgnoreCase("no"))
-				updateProgSettings("autoQueue","false");
+				settings.updateSetting("autoQueue","false");
 			else if (autoDownloadResponse.equalsIgnoreCase("no"))
 				System.err.println ("Error: User entered Value is invalid. No change made");
 		}
 	}
 
-	/**
-	 * 
-	 * @param setting
-	 * @param value
-	 */
-	private void updateProgSettings(String setting, String value){
-		boolean found=false;
-		int count=0;
-		while ((count<progSettings.size())&&
-			   (!found)){
-			if (progSettings.get(count).setting.equalsIgnoreCase(setting)){
-				progSettings.get(count).value=value;
-				found=true;
-			}
-			count++;
-		}
-		if ((!found)&&(count>=progSettings.size())){
-			ProgSettings newSetting = new ProgSettings(setting, value);
-			progSettings.add(newSetting);
-		}
-	}
-	
 	private void changePodcastRate() {
 		System.out.println ();
 		System.out.println ("How often to update the podcast feeds?");
@@ -548,7 +526,7 @@ public class CLInterface implements Runnable{
 					updateValue="1440";
 					break;
 			}
-			updateProgSettings("updateInterval",updateValue);
+			settings.updateSetting("updateInterval",updateValue);
 			synchronized (waitObject){
 				waitObject.notify();
 			}
@@ -583,8 +561,7 @@ public class CLInterface implements Runnable{
 			if (speed<0){
 				System.err.println("Invalid Speed. Download Speed Limit unchanged");
 			} else {
-				ProgSettings newSetting = new ProgSettings("downloadLimit",Integer.toString(speed));
-				progSettings.add(newSetting);
+				settings.addSetting("downloadLimit",Integer.toString(speed));
 			}
 		}
 	}

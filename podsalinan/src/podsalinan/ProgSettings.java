@@ -61,6 +61,13 @@ public class ProgSettings {
 	public boolean addSetting(String name, String value){
 		if (!isValidSetting(name)){
 			Setting newSetting = new Setting (name,value);
+			// Updating old program settings to new ones.
+			if (newSetting.name.equalsIgnoreCase("urlDirectory"))
+				newSetting.name="defaultDirectory";
+			
+			if (newSetting.name.equalsIgnoreCase("maxPodcastDownloaders"))
+				newSetting.name="maxDownloaders";
+
 			settings.add(newSetting);
 			return true;
 		}
@@ -89,5 +96,9 @@ public class ProgSettings {
 				return currentSetting;
 		}
 		return null;
+	}
+	
+	public Vector<Setting> getArray(){
+		return settings;
 	}
 }

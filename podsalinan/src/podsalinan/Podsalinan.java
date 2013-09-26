@@ -99,7 +99,7 @@ public class Podsalinan {
 		settings = new ProgSettings();
 		
 		// Action Listener for the main window
-		CommandPass aListener = new CommandPass(settings);
+		//CommandPass aListener = new CommandPass(settings);
 
 		// disables sqlite4java's logging
 		Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);

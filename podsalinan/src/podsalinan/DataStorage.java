@@ -88,7 +88,7 @@ public class DataStorage {
 	 */
 	public int loadSettings(Vector<Podcast> podcasts,
 							URLDownloadList downloads,
-							Vector<ProgSettings> progSettings){
+							ProgSettings settings){
 		boolean firstRun = true;
 		SQLiteStatement sql;
 		
@@ -114,17 +114,8 @@ public class DataStorage {
 				sql = podsalinanDB.prepare(SELECT_ALL_SETTINGS);
 				while (sql.step()){
 					if (sql.hasRow()){
-						ProgSettings newSetting = new ProgSettings(sql.columnString(1),
-								  sql.columnString(2));
-						// Updating old program settings to new ones.
-						if (newSetting.setting.equalsIgnoreCase("urlDirectory"))
-							newSetting.setting="defaultDirectory";
-						
-						if (newSetting.setting.equalsIgnoreCase("maxPodcastDownloaders"))
-							newSetting.setting="maxDownloaders";
-						
-						progSettings.add(newSetting);
-						
+						settings.addSetting(sql.columnString(1),
+								            sql.columnString(2));
 					}
 				}
 				sql.dispose();
@@ -163,6 +154,7 @@ public class DataStorage {
 					while (sql.step()){
 						if (sql.hasRow()){
 							downloads.addDownload(sql.columnString(1),
+												  sql.columnString(3),
 												  sql.columnString(2),
 												  true);
 						}
@@ -202,16 +194,8 @@ public class DataStorage {
 					sql = settingsDB.prepare(SELECT_ALL_SETTINGS);
 					while (sql.step()){
 						if (sql.hasRow()){
-							ProgSettings newSetting = new ProgSettings(sql.columnString(1),
-																  sql.columnString(2));
-							// Updating old program settings to new ones.
-							if (newSetting.setting.equalsIgnoreCase("urlDirectory")){
-								newSetting.setting="defaultDirectory";
-							}
-							if (newSetting.setting.equalsIgnoreCase("maxPodcastDownloaders")){
-								newSetting.setting="maxDownloaders";
-							}
-							progSettings.add(newSetting);
+							settings.addSetting(sql.columnString(1),
+												sql.columnString(2));
 						}
 					}
 					sql.dispose();
@@ -230,7 +214,7 @@ public class DataStorage {
 	 */
 	public void saveSettings(Vector<Podcast> podcasts,
 							 URLDownloadList downloads,
-							 Vector<ProgSettings> progSettings) {
+							 ProgSettings settings) {
 		SQLiteStatement sql;
 		
 		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
@@ -310,11 +294,11 @@ public class DataStorage {
 		} catch (SQLiteException e){
 		}
 		// add settings back into the database
-		for (ProgSettings progSetting : progSettings){
+		for (Setting setting : settings.getArray()){
 			try {
 				sql = podsalinanDB.prepare("INSERT INTO settings(name,value)" +
-						 				   "VALUES ('"+progSetting.setting+"'," +
-						 				   "'"+progSetting.value+"');");
+						 				   "VALUES ('"+setting.name+"'," +
+						 				           "'"+setting.value+"');");
 				sql.stepThrough();
 				sql.dispose();
 			} catch (SQLiteException e) {
