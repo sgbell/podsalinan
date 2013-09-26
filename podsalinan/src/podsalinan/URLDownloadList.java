@@ -55,9 +55,13 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public void addDownload(String url, String destination, String size, boolean added) {
 		URLDownload newFile= new URLDownload(url, added);
-		newFile.setSize(size);
-		downloads.add(newFile);
-		checkDownloadSize(newFile);
+		if (newFile.getURL()!=null){
+			newFile.setDestination(destination);
+			if (size!="-1")
+				newFile.setSize(size);
+			downloads.add(newFile);
+			checkDownloadSize(newFile);
+		}
 	}
 	
 	/**
@@ -100,4 +104,5 @@ public class URLDownloadList extends DownloadDetails {
 				newFile.setStatus(Details.FINISHED);					
 			}
 	}
+
 }

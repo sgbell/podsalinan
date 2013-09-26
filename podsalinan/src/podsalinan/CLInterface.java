@@ -263,12 +263,8 @@ public class CLInterface implements Runnable{
 						} else if ((menuInput.startsWith("http"))||
 								   (menuInput.startsWith("ftp"))){
 							// User has entered a url to download.
-							urlDownloads.addDownload(menuInput,"");
-							/* What to do next:
-							 * Need to make URLDownload set Destination on object creation.
-							 * 2 Things, If destination is unknown, set a default folder
-							 * If it is specified on creation set it there.
-							 */
+							urlDownloads.addDownload(menuInput,settings.getSettingValue("defaultDirectory"),"-1",false);
+							
 						} else 
 							switch (menuSelection.size()){
 								case 1:
@@ -571,7 +567,7 @@ public class CLInterface implements Runnable{
 		int downloadCount=1;
 		for (URLDownload download : urlDownloads.getDownloads()){
 			if (!download.isRemoved()){
-				System.out.println(getEncodingFromNumber(downloadCount)+". "+download.getURL().getFile());
+				System.out.println(getEncodingFromNumber(downloadCount)+". "+download.getURL().toString());
 			}
 		}
 		System.out.println();
@@ -584,10 +580,11 @@ public class CLInterface implements Runnable{
 	private void printDownloadSubmenu(int selectedDownload) {
 		URLDownload download = urlDownloads.getDownloads().get(selectedDownload);
 		if (download!=null){
-			System.out.println("Download Url: "+download.getURL());
+			System.out.println("Download Url: "+download.getURL().toString());
 			System.out.println("Destination: "+download.getDestination());
 			System.out.println("Priority: "+selectedDownload);
 		}
+		System.out.println();
 	}
 
 	public boolean isFinished(){
