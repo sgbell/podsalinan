@@ -23,6 +23,8 @@ import java.util.Vector;
 
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
+import com.almworks.sqlite4java.SQLiteJob;
+import com.almworks.sqlite4java.SQLiteQueue;
 import com.almworks.sqlite4java.SQLiteStatement;
 
 /**
@@ -95,7 +97,6 @@ public class DataStorage {
 		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
 		if (podsalinanDBFile.exists()){
 			SQLiteConnection podsalinanDB = new SQLiteConnection(podsalinanDBFile);
-			
 			try {
 				podsalinanDB.open(true);
 				sql = podsalinanDB.prepare(SELECT_ALL_DOWNLOADS);
@@ -104,10 +105,10 @@ public class DataStorage {
 						URLDownload newDownload = new URLDownload(sql.columnString(1),
 																  sql.columnString(2),
 																  sql.columnString(3),
-																  sql.columnInt(4),
 																  sql.columnString(5),
 																  sql.columnInt(6));
-						downloads.getDownloads().add(newDownload);
+						newDownload.setAdded(true);
+						downloads.addDownload(newDownload, sql.columnInt(4));
 					}
 				}
 				sql.dispose();
@@ -240,25 +241,34 @@ public class DataStorage {
 				sql.dispose();
 			} catch (SQLiteException e) {
 			}
+		} else {
+			try {
+				podsalinanDB.open();
+			} catch (SQLiteException e) {
+			}
 		}
+		//podsalinanDB.dispose();
 		int downloadCount=0;
 		for (URLDownload download : downloads.getDownloads()){
+			//System.out.println("download: "+download.getURL());
 			try {
 				sql = null;
 				int sqlType=0;
 				if (!download.isAdded()){
+					//System.out.println("New download being added to database");
 					sql = podsalinanDB.prepare("INSERT INTO downloads(url,size,destination,priority,podcastSource,status) " +
 											   "VALUES ('"+download.getURL().toString()+"',"+
 											           "'"+download.getSize()+"',"+ 
 											   		   "'"+download.getDestination()+"',"+
 											           "'"+downloadCount+"',"+
 											   		   "'"+download.getPodcastId()+"',"+
-											           "'"+download.getStatus()+");");
+											           "'"+download.getStatus()+"');");
 					sqlType=1;
 				} else if (download.isRemoved()){
 					sql = podsalinanDB.prepare("DELETE FROM downloads" +
 											   "WHERE url='"+download.getURL().toString()+"'"+
 											   "AND destination='"+download.getDestination()+"';");
+					//System.out.println("download being removed to database");
 				} else if (download.isUpdated()){
 					sql = podsalinanDB.prepare("UPDATE downloads" +
 											   "SET destination='"+download.getDestination()+"',"+
@@ -268,8 +278,11 @@ public class DataStorage {
 											       "status='"+download.getStatus()+"'"+
 											   "WHERE url='"+download.getURL()+"';");
 					sqlType=3;
+					//System.out.println("download being updated to database");
 				}
 				if (sql!=null){
+					//System.out.println(sql.toString());
+					//podDBQueue.execute(new SQLiteJob());
 					sql.stepThrough();
 					sql.dispose();
 					switch (sqlType){
@@ -283,6 +296,7 @@ public class DataStorage {
 
 				}
 			} catch (SQLiteException e) {
+				e.printStackTrace();
 			}
 			downloadCount++;
 		}

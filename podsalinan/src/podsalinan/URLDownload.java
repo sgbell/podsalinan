@@ -47,8 +47,10 @@ public class URLDownload extends Details {
 		this.destination = new File (destination);
 	}
 	
-	public URLDownload(String url, String length, String destination, int priority,
-			           String podcast, int status){
+	public URLDownload(String url, String length, String destination, String podcast, 
+			           int status){
+		super(url, length);
+		this.destination = new File (destination);
 		
 	}
 	

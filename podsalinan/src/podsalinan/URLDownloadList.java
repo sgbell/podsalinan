@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
+import java.util.Collections;
 import java.util.Vector;
 
 /**
@@ -64,13 +65,23 @@ public class URLDownloadList extends DownloadDetails {
 		}
 	}
 	
+	public void addDownload(URLDownload newDownload, int priority) {
+		if ((downloads.size()==0)||
+			(priority>downloads.size()))
+			downloads.add(newDownload);
+		else if (priority<downloads.size()){
+			downloads.insertElementAt(newDownload, priority);
+		}
+	}
 	/**
 	 * This will move the selected download up the queue
 	 * @param downloadId
 	 */
 	public void increasePriority(int downloadId){
-
-		downloads.get(downloadId).setUpdated(true);
+		if (downloadId>0){
+			Collections.swap(downloads, downloadId, downloadId-1);
+			downloads.get(downloadId).setUpdated(true);
+		}
 	}
 	
 	/**
@@ -78,8 +89,10 @@ public class URLDownloadList extends DownloadDetails {
 	 * @param downloadId
 	 */
 	public void decreasePriority(int downloadId){
-
-		downloads.get(downloadId).setUpdated(true);
+		if (downloadId<downloads.size()-2){
+			Collections.swap(downloads, downloadId, downloadId+1);
+			downloads.get(downloadId).setUpdated(true);
+		}
 	}
 	
 	public void checkDownloadSize(URLDownload newFile){
@@ -104,5 +117,4 @@ public class URLDownloadList extends DownloadDetails {
 				newFile.setStatus(Details.FINISHED);					
 			}
 	}
-
 }

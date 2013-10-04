@@ -582,7 +582,8 @@ public class CLInterface implements Runnable{
 		if (download!=null){
 			System.out.println("Download Url: "+download.getURL().toString());
 			System.out.println("Destination: "+download.getDestination());
-			System.out.println("Priority: "+selectedDownload);
+			System.out.println("Priority: "+(selectedDownload+1));
+			
 		}
 		System.out.println();
 	}
