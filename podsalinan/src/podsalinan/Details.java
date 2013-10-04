@@ -44,7 +44,8 @@ public class Details {
 	public static final int NOT_STARTED=0,
 			 		 		PREVIOUSLY_STARTED=1,
 			 		 		CURRENTLY_DOWNLOADING=2,
-			 		 		FINISHED=3;
+			 		 		FINISHED=3,
+			 		 		DO_NOT_DOWNLOAD=4;
 	
 	public Details (){
 		

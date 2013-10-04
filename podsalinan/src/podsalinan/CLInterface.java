@@ -148,6 +148,7 @@ public class CLInterface implements Runnable{
 					}
 					break;
 				case 3:
+					// menu-submenu-option
 					switch (menuSelection.get(0)){
 						case 1:
 							if (menuSelection.get(2)<0){
@@ -196,6 +197,31 @@ public class CLInterface implements Runnable{
 								printEpisodeMenu(menuSelection);
 							break;
 						case 2:
+							switch (menuSelection.get(2)){
+								case 1:
+									// Increase Priority
+									break;
+								case 2:
+									// Decrease Priority
+									break;
+								case 3:
+									// Cancel Download
+									break;
+								case 4:
+									// Restart Download
+									break;
+								case 5:
+									// Delete Download
+									break;
+								case 6:
+									// Change Destination
+									break;
+								case 9:
+									menuSelection.remove(2);
+									menuSelection.remove(1);
+									printDownloadsMenu();
+									break;
+							}
 							break;
 						case 3:
 							break;
@@ -205,6 +231,7 @@ public class CLInterface implements Runnable{
 					}
 					break;
 				case 4:
+					// menu - submenu - submenu - option
 					switch (menuSelection.get(0)){
 						case 1:
 							switch (menuSelection.get(3)){
@@ -579,13 +606,34 @@ public class CLInterface implements Runnable{
 
 	private void printDownloadSubmenu(int selectedDownload) {
 		URLDownload download = urlDownloads.getDownloads().get(selectedDownload);
-		if (download!=null){
+		if ((download!=null)&&(!download.isRemoved())){
 			System.out.println("Download Url: "+download.getURL().toString());
 			System.out.println("Destination: "+download.getDestination());
 			System.out.println("Priority: "+(selectedDownload+1));
-			
+			switch (download.getStatus()){
+				case Details.NOT_STARTED:
+					System.out.println ("Status: Not Downloaded");
+					break;
+				case Details.CURRENTLY_DOWNLOADING:
+				case Details.PREVIOUSLY_STARTED:
+					System.out.println ("Status: Downloading");
+					break;
+				case Details.FINISHED:
+					System.out.println ("Status: Completed Download");
+					break;
+				case Details.DO_NOT_DOWNLOAD:
+					System.out.println ("Status: Cancelled Download");
+					break;
+		    }
+			System.out.println();
+			System.out.println("1. Increase Priority");
+			System.out.println("2. Decrease Priority");
+			System.out.println("3. Cancel Download");
+			System.out.println("4. Restart Download");
+			System.out.println("5. Delete Download");
+			System.out.println("6. Change Destination");
+			System.out.println("9. Return to Download menu");
 		}
-		System.out.println();
 	}
 
 	public boolean isFinished(){
