@@ -108,7 +108,7 @@ public class URLDownloadList extends DownloadDetails {
 				e.printStackTrace();
 			}
 		}
-		String filename=newFile.getDestination()+"/"+newFile.getURL().toString().substring(newFile.getURL().toString().lastIndexOf('/')+1);
+		String filename=newFile.getDestination();
 		File localFile = new File(filename);
 		if (localFile.exists())
 			if (localFile.length() < Long.parseLong(newFile.getSize())){
@@ -116,5 +116,38 @@ public class URLDownloadList extends DownloadDetails {
 			} else if (localFile.length() >= Long.parseLong(newFile.getSize())){
 				newFile.setStatus(Details.FINISHED);					
 			}
+	}
+
+	public void cancelDownload(int download) {
+		if ((download >=0)&&(download<downloads.size())){
+			downloads.get(download).setStatus(Details.DO_NOT_DOWNLOAD);
+		}
+	}
+
+	public void deleteDownload(int download) {
+		if ((download >=0)&&(download<downloads.size())){
+			downloads.get(download).isRemoved();
+			restartDownload(download);
+		}
+	}
+
+	public boolean restartDownload(int download) {
+		if ((download >=0)&&(download<downloads.size())){
+			if (deleteFile(downloads.get(download))){
+				downloads.get(download).setStatus(Details.NOT_STARTED);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean deleteFile(URLDownload download){
+		File localFile = new File(download.getDestination());
+		if (localFile.exists()){
+			// delete the file
+			localFile.delete();
+			return true;
+		}
+		return false;
 	}
 }
