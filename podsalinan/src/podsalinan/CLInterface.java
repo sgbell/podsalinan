@@ -36,7 +36,7 @@ public class CLInterface implements Runnable{
 	private ProgSettings settings;
 	private Object waitObject = new Object();
 	private CLInput input;
-	private ArrayList<String> menulist = new ArrayList<String>();
+	private ArrayList<Setting> menuList = new ArrayList<Setting>();
 
 	public CLInterface(Vector<Podcast> podcasts, URLDownloadList urlDownloads, ProgSettings settings){
 		this.podcasts=podcasts;
@@ -45,90 +45,72 @@ public class CLInterface implements Runnable{
 		input = new CLInput();
 	}
 
+
+	public void userInput(){
+		System.out.print("->");
+		String menuInput=input.getStringInput();
+		if (menuInput.length()>0){
+			try {
+				int inputInt = Integer.parseInt(menuInput);
+				// process number input
+				mainMenuSelection(inputInt);
+			} catch (NumberFormatException e){
+				// If the input is not a number This area will sort out that code
+				if ((menuInput.equalsIgnoreCase("quit"))||
+					(menuInput.equalsIgnoreCase("exit"))){
+					finished=true;
+				} else if ((menuInput.startsWith("http"))||
+						   (menuInput.startsWith("ftp"))){
+					// User has entered a url to download.
+					urlDownloads.addDownload(menuInput,settings.getSettingValue("defaultDirectory"),"-1",false);
+				} else if (menuInput.startsWith("help")){
+					helpList(menuInput);
+				} else if (menuInput.startsWith("select")){
+					cliSelection(menuInput);
+				} else if (menuInput.startsWith("set")){
+					setCommand(menuInput);
+				} else if (menuInput.startsWith("list")){
+					listCommand(menuInput);
+				}
+			}
+		}
+	}
+	
+	private void mainMenuSelection(int inputInt) {
+		Setting newSetting = null;
+		switch (inputInt){
+			case 1:
+				if (menuList.size()==0)
+					newSetting = new Setting("mainMenu","podcast");
+				break;
+			case 2:
+				if (menuList.size()==0)
+					newSetting = new Setting("mainMenu","download");
+				break;
+			case 3:
+				if (menuList.size()==0)
+					newSetting = new Setting("mainMenu","preferences");
+				break;
+			case 4:
+				finished=true;
+				break;
+			default:
+		}
+		if (newSetting!=null)
+			menuList.add(newSetting);
+	}
+
+
 	@Override
 	public void run() {
-		ArrayList<Integer> menuSelection = new ArrayList<Integer>();
-		
 		System.out.println("Welcome to podsalinan.");
 		System.out.println("----------------------");
 		while (!finished){
-			if (menulist.size()<1)
+			if (menuList.size()<1)
 				printMainMenu();
-			else {
-				/* Working here. Going to completely rewrite the command code, 
-				 * so it travels through the menu and uses the same functions as
-				 * the cli commands
-				 */
-			}
 			
-			if (!finished){
-				System.out.print("->");
-				String menuInput=input.getStringInput();
-				if (menuInput.length()>0){
-					try {
-						int inputInt = Integer.parseInt(menuInput);
-						if (((menuSelection.size()==1)&&
-							 ((menuSelection.get(0)==1)||
-							  (menuSelection.get(0)==2)))||
-							((menuSelection.size()==2)&&
-							 (menuSelection.get(0)==1)))
-							// Because the podcasts are stored in menuSelection as integers too,
-							// the menu options will be stored as negative values
-							menuSelection.add((0-inputInt));
-						else
-							menuSelection.add(inputInt);
-					} catch (NumberFormatException e){
-						// If the input is not a number This area will sort out that code
-						if ((menuInput.equalsIgnoreCase("quit"))||
-							(menuInput.equalsIgnoreCase("exit"))){
-							finished=true;
-						} else if ((menuInput.startsWith("http"))||
-								   (menuInput.startsWith("ftp"))){
-							// User has entered a url to download.
-							urlDownloads.addDownload(menuInput,settings.getSettingValue("defaultDirectory"),"-1",false);
-						} else if (menuInput.startsWith("help")){
-							helpList(menuInput);
-						} else if (menuInput.startsWith("select")){
-							cliSelection(menuInput);
-						} else if (menuInput.startsWith("set")){
-							setCommand(menuInput);
-						} else if (menuInput.startsWith("list")){
-							listCommand(menuInput);
-						} else
-							switch (menuSelection.size()){
-								case 1:
-									if ((menuSelection.get(0)==1)&&(menuInput.length()<3)){
-										int podcastNumber=convertCharToNumber(menuInput);
-																		
-										if ((podcastNumber>podcasts.size())&&
-											(podcastNumber<0))
-											System.out.println("Error: Invalid Podcast");
-										else
-											menuSelection.add(podcastNumber);
-									} else if ((menuSelection.get(0)==2)&&(menuInput.length()<3)){
-										menuSelection.add((int)convertCharToNumber(menuInput));
-									}
-									break;
-								case 2:
-									if ((menuSelection.get(0)==1)&&
-										(menuInput.length()<3)){
-										Podcast podcast = podcasts.get(menuSelection.get(1));
-										int episodeNumber=convertCharToNumber(menuInput);
-										
-										if ((episodeNumber>podcast.getEpisodes().size())&&
-											(episodeNumber<0))
-											System.out.println("Error: Invalid Episode");
-										else
-											menuSelection.add(episodeNumber);
-									}
-									break;
-								default:
-									System.out.println("Error: Invalid input");
-									break;
-							}
-					}
-				}
-			}
+			if (!finished)
+				userInput();
 		}
 		System.out.println("Please Standby for system Shutdown.");
 		synchronized (waitObject){
