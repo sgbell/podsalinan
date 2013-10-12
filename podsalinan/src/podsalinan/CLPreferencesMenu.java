@@ -7,12 +7,12 @@ package podsalinan;
  * @author bugman
  *
  */
-public class PodcastMenu implements CLMenu {
+public class CLPreferencesMenu implements CLMenu {
 
 	/**
 	 * 
 	 */
-	public PodcastMenu() {
+	public CLPreferencesMenu() {
 	}
 
 	@Override
@@ -22,6 +22,7 @@ public class PodcastMenu implements CLMenu {
 
 	@Override
 	public void printSubMenu() {
+
 	}
 
 }

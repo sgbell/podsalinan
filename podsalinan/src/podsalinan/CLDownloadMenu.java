@@ -7,21 +7,23 @@ package podsalinan;
  * @author bugman
  *
  */
-public class PreferencesMenu implements CLMenu {
+public class CLDownloadMenu implements CLMenu {
 
 	/**
 	 * 
 	 */
-	public PreferencesMenu() {
+	public CLDownloadMenu() {
 	}
 
 	@Override
 	public void printMainMenu() {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void printSubMenu() {
+		// TODO Auto-generated method stub
 
 	}
 

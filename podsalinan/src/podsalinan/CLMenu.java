@@ -18,7 +18,11 @@ public class CLMenu {
 	}
 	
 	public void printMainMenu(){
-		
+		System.out.println();
+		for (String line : mainMenuList){
+			System.out.println(line);
+		}
+		System.out.println();
 	}
 	
 	public void printSubMenu(){
@@ -50,5 +54,25 @@ public class CLMenu {
 	 */
 	public void setMainMenuList(String[] mainMenuList) {
 		this.mainMenuList = mainMenuList;
+	}
+
+	public String getCharForNumber(int i){
+		return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
+	}
+	
+	public String getEncodingFromNumber(int number){
+		String charOutput="";
+		if (number<27)
+			charOutput = getCharForNumber(number);
+		else {
+			if (number%26!=0){
+				charOutput+=getCharForNumber(number/26);
+				charOutput+=getCharForNumber(number%26);
+			} else {
+				charOutput=getCharForNumber((number/26)-1)+"Z";
+			}
+		}
+		
+		return charOutput;
 	}
 }

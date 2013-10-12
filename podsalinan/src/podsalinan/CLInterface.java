@@ -107,7 +107,6 @@ public class CLInterface implements Runnable{
 		System.out.println("----------------------");
 		while (!finished){
 			if (menuList.size()<1)
-				printMainMenu();
 			
 			if (!finished)
 				userInput();
@@ -161,7 +160,6 @@ public class CLInterface implements Runnable{
 			printPreferencesMenu();
 		} else {
 			menuSelection.clear();
-			printMainMenu();
 		}
 	}
 
@@ -173,7 +171,6 @@ public class CLInterface implements Runnable{
 					break;
 				case 9:
 					menuSelection.clear();
-					printMainMenu();
 					break;
 			}
 		} else if (urlDownloads!=null)
@@ -191,28 +188,9 @@ public class CLInterface implements Runnable{
 		
 	}
 
-	public void printMainMenu(){
-		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.getDownloads().size()+" - Downloads Queued");
-		System.out.println();
-		System.out.println("1. Podcasts Menu");
-		System.out.println("2. Downloads Menu");
-		System.out.println("3. Preferences");
-		System.out.println("4. Quit");
-	}
-
 	private void printPodcastMenu() {
-		int podcastCount=1;
-		
-		for (Podcast podcast : podcasts){
-			if (!podcast.isRemoved())
-				System.out.println(getEncodingFromNumber(podcastCount)+". "+podcast.getName());
-			podcastCount++;
-		}
 		
 		System.out.println();
-		System.out.println("(A-Z) Enter Podcast letter to select Podcast.");
-		System.out.println();
-		System.out.println("9. Return to Main Menu");
 	}
 
 	private void printPodcastSubmenu(int selectedPodcast) {
