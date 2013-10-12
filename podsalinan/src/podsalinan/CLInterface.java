@@ -36,6 +36,7 @@ public class CLInterface implements Runnable{
 	private ProgSettings settings;
 	private Object waitObject = new Object();
 	private CLInput input;
+	private ArrayList<String> menulist = new ArrayList<String>();
 
 	public CLInterface(Vector<Podcast> podcasts, URLDownloadList urlDownloads, ProgSettings settings){
 		this.podcasts=podcasts;
@@ -51,222 +52,16 @@ public class CLInterface implements Runnable{
 		System.out.println("Welcome to podsalinan.");
 		System.out.println("----------------------");
 		while (!finished){
-			switch (menuSelection.size()){
-				case 0:
-				default:
-					// No menu selection made
-					printMainMenu();
-					break;
-				case 1:
-					// First menu selection made
-					switch (menuSelection.get(0)){
-						case 0:
-							break;
-						case 1:
-							printPodcastMenu();
-							break;
-						case 2:
-							printDownloadsMenu();
-							break;
-						case 3:
-							printPreferencesMenu();
-							break;
-						case 4:
-							finished=true;
-							break;
-					}
-					break;
-				case 2:
-					// Sub menu
-					switch (menuSelection.get(0)){
-						case 1:
-							if (menuSelection.get(1)<0){
-								switch ((0-menuSelection.get(1))){
-									case 9:
-										menuSelection.clear();
-										printMainMenu();
-										break;
-								}
-							} else
-								if ((menuSelection.get(1)<podcasts.size())&&
-									(menuSelection.get(1)>=0))
-									printPodcastSubmenu(menuSelection.get(1));
-								else{
-									printPodcastMenu();
-									menuSelection.remove(1);
-								}
-							break;
-						case 2:
-							if (menuSelection.get(1)<0){
-								switch ((0-menuSelection.get(1))){
-									case 1:
-										
-										break;
-									case 9:
-										menuSelection.clear();
-										printMainMenu();
-										break;
-								}
-							} else if (urlDownloads!=null)
-								if ((menuSelection.get(1)<urlDownloads.getDownloads().size())&&
-									(menuSelection.get(1)>=0))
-									printDownloadSubmenu(menuSelection.get(1));
-								else {
-									printDownloadsMenu();
-									menuSelection.remove(1);
-								}
-							break;
-						case 3:
-							switch (menuSelection.get(1)){
-								case 1:
-									changePodcastRate();
-									break;
-								case 2:
-									changeNumDownloaders();
-									break;
-								case 3:
-									changeDefaultDirectory();
-									break;
-								case 4:
-									changeAutoQueueNewEpisodes();
-									break;
-								case 5:
-									setDownloadSpeed();
-									break;
-							}
-							if (menuSelection.get(1)>0){
-								menuSelection.remove(1);
-								printPreferencesMenu();
-							} else {
-								menuSelection.clear();
-								printMainMenu();
-							}
-							break;
-						case 4:
-							
-							break;
-					}
-					break;
-				case 3:
-					// menu-submenu-option
-					switch (menuSelection.get(0)){
-						case 1:
-							if (menuSelection.get(2)<0){
-								switch ((0-menuSelection.get(2))){
-									case 1:
-										// List Episodes of a Podcast
-										printPodcastEpisodeList(menuSelection.get(1));
-										break;
-									case 2:
-										// Update episode List of Podcast
-										Podcast podcast = podcasts.get(menuSelection.get(1));
-										String tempDir="";
-										// This if Block checks to see if it's windows or linux, and sets the
-										// settings directory appropriately.
-										if (System.getProperty("os.name").equalsIgnoreCase("linux"))
-											tempDir = System.getProperty("user.home").concat("/.podsalinan");
-										else if (System.getProperty("os.name").startsWith("Windows"))
-											tempDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
-											
-										podcast.updateList(tempDir);
-										break;
-									case 3:
-										// Remove Podcast
-										if ((menuSelection.get(1)<podcasts.size())&&
-											(menuSelection.get(1)>=0)){
-											podcasts.get(menuSelection.get(1)).setRemove(true);
-											menuSelection.remove(2);
-											menuSelection.remove(1);
-											printPodcastMenu();
-										}
-										break;
-									case 9:
-										// Need to remove two items, as the menuSelection will contain
-										// -9 for going up a menu, and the podcast number.
-										menuSelection.remove(2);
-										menuSelection.remove(1);
-										printPodcastMenu();
-										break;
-								}
-								if ((menuSelection.size()==3)&&
-									(menuSelection.get(2)<3)){
-									menuSelection.remove(2);
-									printPodcastSubmenu(menuSelection.get(1));
-								}
-							} else 
-								printEpisodeMenu(menuSelection);
-							break;
-						case 2:
-							switch (menuSelection.get(2)){
-								case 1:
-									// Increase Priority
-									break;
-								case 2:
-									// Decrease Priority
-									break;
-								case 3:
-									// Cancel Download
-									break;
-								case 4:
-									// Restart Download
-									break;
-								case 5:
-									// Delete Download
-									break;
-								case 6:
-									// Change Destination
-									break;
-								case 9:
-									menuSelection.remove(2);
-									menuSelection.remove(1);
-									printDownloadsMenu();
-									break;
-							}
-							break;
-						case 3:
-							break;
-						case 4:
-							
-							break;
-					}
-					break;
-				case 4:
-					// menu - submenu - submenu - option
-					switch (menuSelection.get(0)){
-						case 1:
-							switch (menuSelection.get(3)){
-								case 1:
-									setEpisodeStatus(menuSelection,Episode.CURRENTLY_DOWNLOADING);
-									break;
-								case 2:
-									deleteEpisode(menuSelection);
-									setEpisodeStatus(menuSelection,Episode.NOT_STARTED);
-									break;
-								case 3:
-									setEpisodeStatus(menuSelection,Episode.NOT_STARTED);
-									break;
-								case 9:
-									menuSelection.remove(3);
-									menuSelection.remove(2);
-									printPodcastSubmenu(menuSelection.get(1));
-									break;
-							}
-							if ((menuSelection.size()==4)&&
-								(menuSelection.get(3)<=3)){
-								menuSelection.remove(3);
-								printEpisodeMenu(menuSelection);
-							}
-							break;
-					}
-					break;
+			if (menulist.size()<1)
+				printMainMenu();
+			else {
+				/* Working here. Going to completely rewrite the command code, 
+				 * so it travels through the menu and uses the same functions as
+				 * the cli commands
+				 */
 			}
 			
 			if (!finished){
-				System.out.print("Debug:");
-				for (Integer i : menuSelection)
-					System.out.print(i+"-");
-				System.out.println();
-				
 				System.out.print("->");
 				String menuInput=input.getStringInput();
 				if (menuInput.length()>0){
@@ -291,8 +86,15 @@ public class CLInterface implements Runnable{
 								   (menuInput.startsWith("ftp"))){
 							// User has entered a url to download.
 							urlDownloads.addDownload(menuInput,settings.getSettingValue("defaultDirectory"),"-1",false);
-							
-						} else 
+						} else if (menuInput.startsWith("help")){
+							helpList(menuInput);
+						} else if (menuInput.startsWith("select")){
+							cliSelection(menuInput);
+						} else if (menuInput.startsWith("set")){
+							setCommand(menuInput);
+						} else if (menuInput.startsWith("list")){
+							listCommand(menuInput);
+						} else
 							switch (menuSelection.size()){
 								case 1:
 									if ((menuSelection.get(0)==1)&&(menuInput.length()<3)){
@@ -334,6 +136,79 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
+	private void listCommand(String menuInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void setCommand(String menuInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void cliSelection(String menuInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void helpList(String menuInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void preferencesMenuSelection(ArrayList<Integer> menuSelection) {
+		switch (menuSelection.get(1)){
+			case 1:
+				changePodcastRate();
+				break;
+			case 2:
+				changeNumDownloaders();
+				break;
+			case 3:
+				changeDefaultDirectory();
+				break;
+			case 4:
+				changeAutoQueueNewEpisodes();
+				break;
+			case 5:
+				setDownloadSpeed();
+				break;
+		}
+		if (menuSelection.get(1)>0){
+			menuSelection.remove(1);
+			printPreferencesMenu();
+		} else {
+			menuSelection.clear();
+			printMainMenu();
+		}
+	}
+
+	private void downloadsMainMenuSelection(ArrayList<Integer> menuSelection) {
+		if (menuSelection.get(1)<0){
+			switch ((0-menuSelection.get(1))){
+				case 1:
+					
+					break;
+				case 9:
+					menuSelection.clear();
+					printMainMenu();
+					break;
+			}
+		} else if (urlDownloads!=null)
+			if ((menuSelection.get(1)<urlDownloads.getDownloads().size())&&
+				(menuSelection.get(1)>=0))
+				printDownloadSubmenu(menuSelection.get(1));
+			else {
+				printDownloadsMenu();
+				menuSelection.remove(1);
+			}
+	}
+
+	private void changeDownloadDirectory(Integer integer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void printMainMenu(){
 		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.getDownloads().size()+" - Downloads Queued");
 		System.out.println();
@@ -342,7 +217,7 @@ public class CLInterface implements Runnable{
 		System.out.println("3. Preferences");
 		System.out.println("4. Quit");
 	}
-	
+
 	private void printPodcastMenu() {
 		int podcastCount=1;
 		
@@ -417,8 +292,8 @@ public class CLInterface implements Runnable{
 			System.out.println ("3. Cancel download of episode");
 			System.out.println ();
 			System.out.println ("9. Return to Podcast menu");
-		}
-		System.out.println ("Error: Invalid Episode");
+		} else
+			System.out.println ("Error: Invalid Episode");
 	}
 
 	private void setEpisodeStatus(ArrayList<Integer> menuSelection,

@@ -32,13 +32,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private Vector<Downloader> downloaders;	// Collection of running downloaders
 	private Vector<URLDownload> downloadList;
-	private Vector<ProgSettings> progSettings;
+	private ProgSettings progSettings;
 
 	public DownloadQueue(){
 		
 	}
 	
-	public DownloadQueue(Vector<ProgSettings> progSettings){
+	public DownloadQueue(ProgSettings progSettings){
 		this.progSettings=progSettings;
 		
 	}
@@ -86,7 +86,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		
 	}
 	
-	public void setProgSettings(Vector<ProgSettings> globalSettings){
+	public void setProgSettings(ProgSettings globalSettings){
 		progSettings = globalSettings;
 	}
 	
