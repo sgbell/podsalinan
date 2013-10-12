@@ -33,24 +33,24 @@ public class URLDownload extends Details {
 	
 	public URLDownload(String url, String length, String destination){
 		super(url, length);
-		this.destination = new File(destination);
+		setDestination(destination);
 	}
 	
 	public URLDownload(String url, boolean added, String destination){
 		super(url, added);
-		this.destination= new File (destination);
+		setDestination(destination);
 	}
 
 	public URLDownload(String url, String length, boolean added, String destination){
 		super(url, added);
 		setSize(length);
-		this.destination = new File (destination);
+		setDestination(destination);
 	}
 	
 	public URLDownload(String url, String length, String destination, String podcast, 
 			           int status){
 		super(url, length);
-		this.destination = new File (destination);
+		setDestination(destination);
 		
 	}
 	
@@ -65,7 +65,7 @@ public class URLDownload extends Details {
 	 * @param destination the destination to set
 	 */
 	public void setDestination(String destination) {
-		this.destination = new File(destination);
+		this.destination = new File(destination+"/"+getURL().getFile());
 	}
 
 	public void setDestination(File outputFile) {
