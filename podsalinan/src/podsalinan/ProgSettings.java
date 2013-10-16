@@ -40,7 +40,10 @@ public class ProgSettings {
 	 * @return
 	 */
 	public String getSettingValue(String name){
-		return findSetting(name).value; 
+		if (settings.size()>0)
+			return findSetting(name).value;
+		else
+			return null;
 	}
 	
 	/**

@@ -12,9 +12,11 @@ import java.util.ArrayList;
 public class CLMenu {
 	private ArrayList<Setting> menuList;
 	private String[] mainMenuList; 
+	private String menuName;
 
-	public CLMenu(ArrayList<Setting> newMenuList){
+	public CLMenu(ArrayList<Setting> newMenuList, String newMenuName){
 		menuList = newMenuList;
+		setMenuName(newMenuName);
 	}
 	
 	public void printMainMenu(){
@@ -74,5 +76,13 @@ public class CLMenu {
 		}
 		
 		return charOutput;
+	}
+
+	public String getMenuName() {
+		return menuName;
+	}
+
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
 	}
 }

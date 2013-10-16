@@ -170,41 +170,41 @@ public class DataStorage {
 			
 			if (new File(configFile).exists()){
 				firstRun = false;
-			}
+				SQLiteConnection settingsDB = new SQLiteConnection(new File(configFile));
 			
-			SQLiteConnection settingsDB = new SQLiteConnection(new File(configFile));
-			
-			try {
-				settingsDB.open(true);
-				
-				
-				if (!firstRun){
-					// Do a search in the podcasts table for podcasts stored in the system
-					sql = settingsDB.prepare(SELECT_ALL_PODCASTS);
-					while (sql.step()){
-						if (sql.hasRow()){
-							Podcast newPodcast = new Podcast(sql.columnString(1),
-														  	 sql.columnString(3),
-														  	 sql.columnString(4),
-														  	 sql.columnString(2).replaceAll("&apos;", "\'"));
-							newPodcast.setAdded(false);
-							podcasts.add(newPodcast);
+				try {
+					settingsDB.open(true);
+					
+					
+					if (!firstRun){
+						// Do a search in the podcasts table for podcasts stored in the system
+						sql = settingsDB.prepare(SELECT_ALL_PODCASTS);
+						while (sql.step()){
+							if (sql.hasRow()){
+								Podcast newPodcast = new Podcast(sql.columnString(1),
+															  	 sql.columnString(3),
+															  	 sql.columnString(4),
+															  	 sql.columnString(2).replaceAll("&apos;", "\'"));
+								newPodcast.setAdded(false);
+								podcasts.add(newPodcast);
+							}
 						}
-					}
-					sql.dispose();
-					sql = settingsDB.prepare(SELECT_ALL_SETTINGS);
-					while (sql.step()){
-						if (sql.hasRow()){
-							settings.addSetting(sql.columnString(1),
-												sql.columnString(2));
+						sql.dispose();
+						sql = settingsDB.prepare(SELECT_ALL_SETTINGS);
+						while (sql.step()){
+							if (sql.hasRow()){
+								settings.addSetting(sql.columnString(1),
+													sql.columnString(2));
+							}
 						}
+						sql.dispose();
+						settingsDB.dispose();
 					}
-					sql.dispose();
-					settingsDB.dispose();
+				} catch (SQLiteException e) {
+					return 1;
 				}
-			} catch (SQLiteException e) {
-				return 1;
 			}
+
 		}
 		return 0;
 	}

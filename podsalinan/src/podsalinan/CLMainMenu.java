@@ -15,7 +15,7 @@ public class CLMainMenu extends CLMenu {
 	private URLDownloadList urlDownloads;
 	
 	public CLMainMenu(ArrayList<Setting> parentMenuList, Vector<Podcast> podcasts, URLDownloadList urlDownloads) {
-		super(parentMenuList);
+		super(parentMenuList,"Main Menu");
 		this.podcasts = podcasts;
 		this.urlDownloads = urlDownloads;
 		

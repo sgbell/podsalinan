@@ -37,12 +37,25 @@ public class CLInterface implements Runnable{
 	private Object waitObject = new Object();
 	private CLInput input;
 	private ArrayList<Setting> menuList = new ArrayList<Setting>();
+	private CLMainMenu mainMenu;
+	private CLPodcastMenu podcastMenu;
+	private CLPreferencesMenu preferencesMenu;
+	private CLDownloadMenu downloadsMenu;
 
 	public CLInterface(Vector<Podcast> podcasts, URLDownloadList urlDownloads, ProgSettings settings){
 		this.podcasts=podcasts;
 		this.urlDownloads=urlDownloads;
 		this.settings=settings;
 		input = new CLInput();
+		initializeMenus();
+	}
+
+
+	private void initializeMenus() {
+		mainMenu = new CLMainMenu(menuList, podcasts, urlDownloads);
+		podcastMenu = new CLPodcastMenu(menuList,podcasts);
+		preferencesMenu = new CLPreferencesMenu(menuList);
+		downloadsMenu = new CLDownloadMenu(menuList);
 	}
 
 
@@ -53,7 +66,7 @@ public class CLInterface implements Runnable{
 			try {
 				int inputInt = Integer.parseInt(menuInput);
 				// process number input
-				mainMenuSelection(inputInt);
+				
 			} catch (NumberFormatException e){
 				// If the input is not a number This area will sort out that code
 				if ((menuInput.equalsIgnoreCase("quit"))||
@@ -76,38 +89,13 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
-	private void mainMenuSelection(int inputInt) {
-		Setting newSetting = null;
-		switch (inputInt){
-			case 1:
-				if (menuList.size()==0)
-					newSetting = new Setting("mainMenu","podcast");
-				break;
-			case 2:
-				if (menuList.size()==0)
-					newSetting = new Setting("mainMenu","download");
-				break;
-			case 3:
-				if (menuList.size()==0)
-					newSetting = new Setting("mainMenu","preferences");
-				break;
-			case 4:
-				finished=true;
-				break;
-			default:
-		}
-		if (newSetting!=null)
-			menuList.add(newSetting);
-	}
-
-
 	@Override
 	public void run() {
 		System.out.println("Welcome to podsalinan.");
 		System.out.println("----------------------");
 		while (!finished){
-			if (menuList.size()<1)
-			
+			if (menuList.size()==0)
+				mainMenu.printMainMenu();
 			if (!finished)
 				userInput();
 		}

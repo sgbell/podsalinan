@@ -63,6 +63,8 @@ public class Podsalinan {
 			updateInterval=Integer.parseInt(settings.getSettingValue("updateInterval"));
 		} catch (NumberFormatException e){
 			updateInterval=0;
+		} catch (NullPointerException e){
+			updateInterval=0;
 		}
 		if (updateInterval<60){
 			settings.updateSetting("updateInterval", "60");

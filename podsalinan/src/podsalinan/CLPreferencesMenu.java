@@ -3,16 +3,16 @@
  */
 package podsalinan;
 
+import java.util.ArrayList;
+
 /**
  * @author bugman
  *
  */
-public class CLPreferencesMenu implements CLMenu {
+public class CLPreferencesMenu extends CLMenu {
 
-	/**
-	 * 
-	 */
-	public CLPreferencesMenu() {
+	public CLPreferencesMenu(ArrayList<Setting> newMenuList) {
+		super(newMenuList,"Preferences Menu");
 	}
 
 	@Override

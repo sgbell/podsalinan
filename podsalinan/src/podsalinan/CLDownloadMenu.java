@@ -3,16 +3,16 @@
  */
 package podsalinan;
 
+import java.util.ArrayList;
+
 /**
  * @author bugman
  *
  */
-public class CLDownloadMenu implements CLMenu {
+public class CLDownloadMenu extends CLMenu {
 
-	/**
-	 * 
-	 */
-	public CLDownloadMenu() {
+	public CLDownloadMenu(ArrayList<Setting> newMenuList) {
+		super(newMenuList,"Download Menu");
 	}
 
 	@Override
