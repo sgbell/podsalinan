@@ -65,14 +65,12 @@ public class CLInterface implements Runnable{
 	 *  ===================
 	 *  accept user_input
 	 *  if user_input is a number then
-	 *  	if menuList.size = 0
-	 *  		if (user_input>0 && user_input<4)
-	 *  			new menuList item = mainMenuSelection, value = user_input
-	 *  		else if (user_input=4)
-	 *  			quit
-	 *     
+	 *  	if ((menuList.size = 0) && (user_input==4))
+	 * 			quit
+	 * 		else
+	 * 			mainMenu.process(user_input);
 	 *  else
-	 *  	see below
+	 *  	process user command
 	 */
 	
 	public void userInput(){
@@ -82,7 +80,10 @@ public class CLInterface implements Runnable{
 			try {
 				int inputInt = Integer.parseInt(menuInput);
 				// process number input
-				
+				if ((menuList.size()==0)&&(inputInt==4))
+					finished=true;
+				else
+					mainMenu.process(inputInt);
 			} catch (NumberFormatException e){
 				// If the input is not a number This area will sort out that code
 				if ((menuInput.equalsIgnoreCase("quit"))||

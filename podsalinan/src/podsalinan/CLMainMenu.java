@@ -26,4 +26,33 @@ public class CLMainMenu extends CLMenu {
 	public void printMainMenu(){
 		super.printMainMenu();
 	}
+
+	/** process will take the user menu input and will pass it through the menus to the correct menu level and
+	 * do as requested.
+	 * 
+	 * @param inputInt
+	 */
+	public void process(int inputInt) {
+	   /**  
+		 *  mainMenu.process(user_input){
+		 *  	if (menuList.size = 0){
+		 *  		switch (user_input){
+		 *  			case 1:
+		 *  				new MenuList item: name = mainMenu; value = "pocast"
+		 *  			case 2:
+		 *  				new MenuList item: name = mainMenu; value = "downloads"
+		 *  			case 3:
+		 *  				new MenuList item: name = mainMenu; value = "preferences"
+		 *  		}
+		 *  		user_input="";
+		 * 		}
+		 *  	if (menuList.getByName("mainMenu")=="podcast")
+		 *  		podcastMenu(userInput);
+		 *  	else if (menuList.getByName("mainMenu")=="downloads")
+		 *  		downloadsMenu(userInput);
+		 *  	else if (menuList.getByName("mainMenu")=="preferences")
+		 *  		preferencesMenu(userInput);
+		 *  }
+		 */
+	}
 }
