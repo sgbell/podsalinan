@@ -11,12 +11,10 @@ import java.util.Vector;
  *
  */
 public class CLPodcastMenu extends CLMenu {
-	private Vector<Podcast> podcasts;
-	
 	/**
 	 * 
 	 */
-	public CLPodcastMenu(ArrayList<Setting> parentMenuList, Vector<Podcast> podcasts) {
+	public CLPodcastMenu(ArrayList<Setting> parentMenuList) {
 		super(parentMenuList, "Podcast Menu");
 		this.podcasts = podcasts;
 		String[] mainMenuList = {
@@ -27,13 +25,6 @@ public class CLPodcastMenu extends CLMenu {
 	}
 	
 	public void printMainMenu(){
-		int podcastCount=1;
-		
-		for (Podcast podcast : podcasts){
-			if (!podcast.isRemoved())
-				System.out.println(getEncodingFromNumber(podcastCount)+". "+podcast.getName());
-			podcastCount++;
-		}
 
 		super.printMainMenu();
 	}

@@ -52,13 +52,29 @@ public class CLInterface implements Runnable{
 
 
 	private void initializeMenus() {
-		mainMenu = new CLMainMenu(menuList, podcasts, urlDownloads);
-		podcastMenu = new CLPodcastMenu(menuList,podcasts);
+		mainMenu = new CLMainMenu(menuList);
+		podcastMenu = new CLPodcastMenu(menuList);
 		preferencesMenu = new CLPreferencesMenu(menuList);
 		downloadsMenu = new CLDownloadMenu(menuList);
 	}
 
 
+	/** Brain Storming how to deal with user input, as it works on 2 different levels.
+	 *  
+	 *  Process
+	 *  ===================
+	 *  accept user_input
+	 *  if user_input is a number then
+	 *  	if menuList.size = 0
+	 *  		if (user_input>0 && user_input<4)
+	 *  			new menuList item = mainMenuSelection, value = user_input
+	 *  		else if (user_input=4)
+	 *  			quit
+	 *     
+	 *  else
+	 *  	see below
+	 */
+	
 	public void userInput(){
 		System.out.print("->");
 		String menuInput=input.getStringInput();

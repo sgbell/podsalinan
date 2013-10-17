@@ -11,13 +11,9 @@ import java.util.Vector;
  *
  */
 public class CLMainMenu extends CLMenu {
-	private Vector<Podcast> podcasts;
-	private URLDownloadList urlDownloads;
 	
-	public CLMainMenu(ArrayList<Setting> parentMenuList, Vector<Podcast> podcasts, URLDownloadList urlDownloads) {
+	public CLMainMenu(ArrayList<Setting> parentMenuList) {
 		super(parentMenuList,"Main Menu");
-		this.podcasts = podcasts;
-		this.urlDownloads = urlDownloads;
 		
 		String[] mainMenuList = {
 				"1. Podcasts Menu",
@@ -28,7 +24,6 @@ public class CLMainMenu extends CLMenu {
 	}
 	
 	public void printMainMenu(){
-		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.getDownloads().size()+" - Downloads Queued");
 		super.printMainMenu();
 	}
 }
