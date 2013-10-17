@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  */
 public class CLMenu {
-	private ArrayList<Setting> menuList;
+	protected ArrayList<Setting> menuList;
 	private String[] mainMenuList; 
 	private String menuName;
 

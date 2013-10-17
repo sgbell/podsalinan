@@ -32,7 +32,7 @@ public class CLMainMenu extends CLMenu {
 	 * 
 	 * @param inputInt
 	 */
-	public void process(int inputInt) {
+	public void process(int userInputInt) {
 	   /**  
 		 *  mainMenu.process(user_input){
 		 *  	if (menuList.size = 0){
@@ -54,5 +54,19 @@ public class CLMainMenu extends CLMenu {
 		 *  		preferencesMenu(userInput);
 		 *  }
 		 */
+		if (menuList.size()==0){
+			switch (userInputInt){
+				case 1:
+					
+					break;
+				case 2:
+					
+					break;
+				case 3:
+					
+					break;
+			}
+			
+		}
 	}
 }
