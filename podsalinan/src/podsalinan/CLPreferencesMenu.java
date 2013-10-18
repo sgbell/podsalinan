@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class CLPreferencesMenu extends CLMenu {
 
-	public CLPreferencesMenu(ArrayList<Setting> newMenuList) {
+	public CLPreferencesMenu(ProgSettings newMenuList) {
 		super(newMenuList,"Preferences Menu");
 	}
 

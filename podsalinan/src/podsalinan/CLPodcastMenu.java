@@ -14,9 +14,8 @@ public class CLPodcastMenu extends CLMenu {
 	/**
 	 * 
 	 */
-	public CLPodcastMenu(ArrayList<Setting> parentMenuList) {
+	public CLPodcastMenu(ProgSettings parentMenuList) {
 		super(parentMenuList, "Podcast Menu");
-		this.podcasts = podcasts;
 		String[] mainMenuList = {
 				"(A-Z) Enter Podcast letter to select Podcast.",
 				"",

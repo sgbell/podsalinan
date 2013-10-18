@@ -36,7 +36,7 @@ public class CLInterface implements Runnable{
 	private ProgSettings settings;
 	private Object waitObject = new Object();
 	private CLInput input;
-	private ArrayList<Setting> menuList = new ArrayList<Setting>();
+	private ProgSettings menuList;
 	private CLMainMenu mainMenu;
 	private CLPodcastMenu podcastMenu;
 	private CLPreferencesMenu preferencesMenu;
@@ -46,6 +46,7 @@ public class CLInterface implements Runnable{
 		this.podcasts=podcasts;
 		this.urlDownloads=urlDownloads;
 		this.settings=settings;
+		menuList = new ProgSettings();
 		input = new CLInput();
 		initializeMenus();
 	}

@@ -12,7 +12,7 @@ import java.util.Vector;
  */
 public class CLMainMenu extends CLMenu {
 	
-	public CLMainMenu(ArrayList<Setting> parentMenuList) {
+	public CLMainMenu(ProgSettings parentMenuList) {
 		super(parentMenuList,"Main Menu");
 		
 		String[] mainMenuList = {
@@ -57,16 +57,17 @@ public class CLMainMenu extends CLMenu {
 		if (menuList.size()==0){
 			switch (userInputInt){
 				case 1:
-					
+					menuList.addSetting("mainMenu","podcast");
 					break;
 				case 2:
-					
+					menuList.addSetting("mainMenu","podcast");
 					break;
 				case 3:
-					
+					menuList.addSetting("mainMenu","podcast");
 					break;
 			}
-			
+			userInputInt=-1000;
 		}
+						
 	}
 }

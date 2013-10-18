@@ -10,11 +10,11 @@ import java.util.ArrayList;
  *
  */
 public class CLMenu {
-	protected ArrayList<Setting> menuList;
+	protected ProgSettings menuList;
 	private String[] mainMenuList; 
 	private String menuName;
 
-	public CLMenu(ArrayList<Setting> newMenuList, String newMenuName){
+	public CLMenu(ProgSettings newMenuList, String newMenuName){
 		menuList = newMenuList;
 		setMenuName(newMenuName);
 	}
@@ -34,13 +34,13 @@ public class CLMenu {
 	/**
 	 * @return the menuList
 	 */
-	public ArrayList<Setting> getMenuList() {
+	public ProgSettings getMenuList() {
 		return menuList;
 	}
 	/**
 	 * @param menuList the menuList to set
 	 */
-	public void setMenuList(ArrayList<Setting> menuList) {
+	public void setMenuList(ProgSettings menuList) {
 		this.menuList = menuList;
 	}
 

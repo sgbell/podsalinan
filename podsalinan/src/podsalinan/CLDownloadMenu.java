@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class CLDownloadMenu extends CLMenu {
 
-	public CLDownloadMenu(ArrayList<Setting> newMenuList) {
+	public CLDownloadMenu(ProgSettings newMenuList) {
 		super(newMenuList,"Download Menu");
 	}
 
