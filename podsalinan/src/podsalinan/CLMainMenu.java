@@ -68,6 +68,10 @@ public class CLMainMenu extends CLMenu {
 			}
 			userInputInt=-1000;
 		}
-						
+		if (menuList.size()>0){
+			if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast")){
+				((CLPodcastMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process();
+			}
+		}
 	}
 }

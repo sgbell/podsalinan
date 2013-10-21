@@ -27,4 +27,8 @@ public class CLPodcastMenu extends CLMenu {
 
 		super.printMainMenu();
 	}
+
+	public void process() {
+		
+	}
 }

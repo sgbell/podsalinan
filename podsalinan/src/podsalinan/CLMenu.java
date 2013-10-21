@@ -13,10 +13,12 @@ public class CLMenu {
 	protected ProgSettings menuList;
 	private String[] mainMenuList; 
 	private String menuName;
+	private ArrayList<CLMenu> submenus;
 
 	public CLMenu(ProgSettings newMenuList, String newMenuName){
 		menuList = newMenuList;
 		setMenuName(newMenuName);
+		submenus = new ArrayList<CLMenu>();
 	}
 	
 	public void printMainMenu(){
@@ -84,5 +86,37 @@ public class CLMenu {
 
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
+	}
+
+	public ArrayList<CLMenu> getSubmenus() {
+		return submenus;
+	}
+
+	public void setSubmenus(ArrayList<CLMenu> submenus) {
+		this.submenus = submenus;
+	}
+	
+	public void addSubmenu(CLMenu newSubmenu){
+		submenus.add(newSubmenu);
+	}
+	
+	public void removeSubmenu(String name){
+		boolean found = false;
+		int count=0;
+		while ((!found)&&(count<submenus.size())){
+			if (submenus.get(count).getMenuName().equalsIgnoreCase(name))
+				found=true;
+		}
+		if ((true)&&(count<submenus.size()))
+			submenus.remove(count);
+	}
+	
+	public CLMenu findSubmenu(String name){
+		for (CLMenu submenu : submenus){
+			if (submenu.getMenuName().equalsIgnoreCase(name)){
+				return submenu; 
+			}
+		}
+		return null;
 	}
 }
