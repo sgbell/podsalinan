@@ -9,14 +9,14 @@ import java.util.Vector;
  * @author bugman
  *
  */
-public class CLPodcastMenu extends CLMenu implements CLMenuInterface {
+public class CLPodcastMenu extends CLMenu{
 	private Vector<Podcast> podcasts;
 	
 	/**
 	 * 
 	 */
 	public CLPodcastMenu(ProgSettings parentMenuList, Vector<Podcast> newPodcasts) {
-		super(parentMenuList, "Podcast Menu");
+		super(parentMenuList, "podcast");
 		String[] mainMenuList = {
 				"(A-Z) Enter Podcast letter to select Podcast.",
 				"",
@@ -26,14 +26,23 @@ public class CLPodcastMenu extends CLMenu implements CLMenuInterface {
 	}
 	
 	public void printMainMenu(){
-		System.out.println("Printing list of Podcasts here ----");
+		int podcastCount=1;
+		
+		for (Podcast podcast : podcasts){
+			if (!podcast.isRemoved())
+				System.out.println(getEncodingFromNumber(podcastCount)+". "+podcast.getName());
+			podcastCount++;
+		}
 		super.printMainMenu();
 	}
 
-	@Override
 	public void process(int userInputInt) {
-		// TODO Auto-generated method stub
-		
+		switch (userInputInt){
+			case 9:
+				menuList.clear();
+				break;
+		}
+		super.process(userInputInt);
 	}
 
 	public Vector<Podcast> getPodcasts() {

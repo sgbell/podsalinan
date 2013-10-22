@@ -49,7 +49,7 @@ public class CLInterface implements Runnable{
 	}
 
 	private void initializeMenus() {
-		mainMenu = new CLMainMenu(menuList);
+		mainMenu = new CLMainMenu(menuList,podcasts,urlDownloads);
 		mainMenu.addSubmenu(new CLPodcastMenu(menuList,podcasts));
 		mainMenu.addSubmenu(new CLPreferencesMenu(menuList,settings));
 		mainMenu.addSubmenu(new CLDownloadMenu(menuList,urlDownloads));
@@ -179,10 +179,6 @@ public class CLInterface implements Runnable{
 			if ((menuSelection.get(1)<urlDownloads.getDownloads().size())&&
 				(menuSelection.get(1)>=0))
 				printDownloadSubmenu(menuSelection.get(1));
-			else {
-				printDownloadsMenu();
-				menuSelection.remove(1);
-			}
 	}
 
 	private void changeDownloadDirectory(Integer integer) {
@@ -419,21 +415,6 @@ public class CLInterface implements Runnable{
 				settings.addSetting("downloadLimit",Integer.toString(speed));
 			}
 		}
-	}
-
-	private void printDownloadsMenu() {
-		System.out.println();
-		int downloadCount=1;
-		for (URLDownload download : urlDownloads.getDownloads()){
-			if (!download.isRemoved()){
-				System.out.println(getEncodingFromNumber(downloadCount)+". "+download.getURL().toString());
-			}
-		}
-		System.out.println();
-		System.out.println("(A-ZZ) Enter Download letter to select Download.");
-		System.out.println("To add a new download to the queue just enter the the url to be downloaded.");
-		System.out.println();
-		System.out.println("9. Return to Main Menu");
 	}
 
 	private void printDownloadSubmenu(int selectedDownload) {

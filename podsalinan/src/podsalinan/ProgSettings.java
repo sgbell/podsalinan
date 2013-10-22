@@ -65,6 +65,10 @@ public class ProgSettings {
 		return settings.size();
 	}
 	
+	public void clear(){
+		settings.clear();
+	}
+	
 	public boolean addSetting(String name, String value){
 		if (!isValidSetting(name)){
 			Setting newSetting = new Setting (name,value);

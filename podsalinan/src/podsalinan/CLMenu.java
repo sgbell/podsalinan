@@ -115,4 +115,9 @@ public class CLMenu {
 		}
 		return null;
 	}
+	
+	public void process(int userInputInt){
+		if (userInputInt== -1000)
+			printMainMenu();
+	}
 }
