@@ -38,9 +38,6 @@ public class CLInterface implements Runnable{
 	private CLInput input;
 	private ProgSettings menuList;
 	private CLMainMenu mainMenu;
-	private CLPodcastMenu podcastMenu;
-	private CLPreferencesMenu preferencesMenu;
-	private CLDownloadMenu downloadsMenu;
 
 	public CLInterface(Vector<Podcast> podcasts, URLDownloadList urlDownloads, ProgSettings settings){
 		this.podcasts=podcasts;
@@ -51,12 +48,11 @@ public class CLInterface implements Runnable{
 		initializeMenus();
 	}
 
-
 	private void initializeMenus() {
 		mainMenu = new CLMainMenu(menuList);
-		podcastMenu = new CLPodcastMenu(menuList);
-		preferencesMenu = new CLPreferencesMenu(menuList);
-		downloadsMenu = new CLDownloadMenu(menuList);
+		mainMenu.addSubmenu(new CLPodcastMenu(menuList,podcasts));
+		mainMenu.addSubmenu(new CLPreferencesMenu(menuList,settings));
+		mainMenu.addSubmenu(new CLDownloadMenu(menuList,urlDownloads));
 	}
 
 
@@ -192,11 +188,6 @@ public class CLInterface implements Runnable{
 	private void changeDownloadDirectory(Integer integer) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	private void printPodcastMenu() {
-		
-		System.out.println();
 	}
 
 	private void printPodcastSubmenu(int selectedPodcast) {

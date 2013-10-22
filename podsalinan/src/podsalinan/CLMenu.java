@@ -29,10 +29,6 @@ public class CLMenu {
 		System.out.println();
 	}
 	
-	public void printSubMenu(){
-		
-	}
-	
 	/**
 	 * @return the menuList
 	 */

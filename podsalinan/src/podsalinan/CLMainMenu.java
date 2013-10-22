@@ -3,14 +3,11 @@
  */
 package podsalinan;
 
-import java.util.ArrayList;
-import java.util.Vector;
-
 /**
  * @author bugman
  *
  */
-public class CLMainMenu extends CLMenu {
+public class CLMainMenu extends CLMenu implements CLMenuInterface{
 	
 	public CLMainMenu(ProgSettings parentMenuList) {
 		super(parentMenuList,"Main Menu");
@@ -33,44 +30,29 @@ public class CLMainMenu extends CLMenu {
 	 * @param inputInt
 	 */
 	public void process(int userInputInt) {
-	   /**  
-		 *  mainMenu.process(user_input){
-		 *  	if (menuList.size = 0){
-		 *  		switch (user_input){
-		 *  			case 1:
-		 *  				new MenuList item: name = mainMenu; value = "pocast"
-		 *  			case 2:
-		 *  				new MenuList item: name = mainMenu; value = "downloads"
-		 *  			case 3:
-		 *  				new MenuList item: name = mainMenu; value = "preferences"
-		 *  		}
-		 *  		user_input="";
-		 * 		}
-		 *  	if (menuList.getByName("mainMenu")=="podcast")
-		 *  		podcastMenu(userInput);
-		 *  	else if (menuList.getByName("mainMenu")=="downloads")
-		 *  		downloadsMenu(userInput);
-		 *  	else if (menuList.getByName("mainMenu")=="preferences")
-		 *  		preferencesMenu(userInput);
-		 *  }
-		 */
 		if (menuList.size()==0){
 			switch (userInputInt){
 				case 1:
 					menuList.addSetting("mainMenu","podcast");
 					break;
 				case 2:
-					menuList.addSetting("mainMenu","podcast");
+					menuList.addSetting("mainMenu","downloads");
 					break;
 				case 3:
-					menuList.addSetting("mainMenu","podcast");
+					menuList.addSetting("mainMenu","preferences");
 					break;
 			}
 			userInputInt=-1000;
 		}
 		if (menuList.size()>0){
 			if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast")){
-				((CLPodcastMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process();
+				((CLPodcastMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInputInt);
+			}
+			if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("downloads")){
+				((CLDownloadMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInputInt);
+			}
+			if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("preferences")){
+				((CLPreferencesMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInputInt);
 			}
 		}
 	}
