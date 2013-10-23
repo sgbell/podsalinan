@@ -117,11 +117,13 @@ public class CLMenu {
 	}
 	
 	public void process(int userInputInt){
+		System.out.println("Debug: CLMenu.process(int)");
 		if (userInputInt== -1000)
 			printMainMenu();
 	}
 	
 	public void process(String userInput){
+		System.out.println("Debug: CLMenu.process(String)");
 		if (userInput==null)
 			printMainMenu();
 	}

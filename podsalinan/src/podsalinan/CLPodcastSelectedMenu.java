@@ -42,13 +42,8 @@ public class CLPodcastSelectedMenu extends CLMenu {
 		this.selectedPodcast = selectedPodcast;
 	}
 	
-	public void process(String userInput){
-		super.process(userInput);
-	}
-
-	
-	
 	public void process(int userInputInt){
+		System.out.println("Debug: CLPodcastSelectedMenu.process(int)");
 		System.out.println("menuList.size: "+menuList.size());
 		if (menuList.size()==2){
 			switch (userInputInt){
@@ -59,9 +54,15 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			    case 3:
 			    	break;
 				case 9:
+					
 					break;
 			}
 		}
 		super.process(userInputInt);
+	}
+
+	public void process(String userInput){
+		System.out.println("Debug: CLPodcastSelectedMenu.process(int)");
+		super.process(userInput);
 	}
 }
