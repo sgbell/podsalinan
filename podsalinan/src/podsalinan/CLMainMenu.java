@@ -64,4 +64,17 @@ public class CLMainMenu extends CLMenu{
 		} else
 			System.out.println("Error: Invalid user entry.");
 	}
+	
+	public void process(String userInput){
+		if (menuList.size()>0){
+			if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast")){
+				((CLPodcastMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInput);
+			} else if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("downloads")){
+				((CLDownloadMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInput);
+			} else if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("preferences")){
+				((CLPreferencesMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInput);
+			}
+		} else
+			System.out.println("Error: Invalid user entry.");
+	}
 }

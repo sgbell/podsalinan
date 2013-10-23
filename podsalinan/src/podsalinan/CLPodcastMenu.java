@@ -23,6 +23,7 @@ public class CLPodcastMenu extends CLMenu{
 				"9. Return to Main Menu"};
 		setMainMenuList(mainMenuList);
 		setPodcasts(newPodcasts);
+		addSubmenu(new CLPodcastSelectedMenu(menuList,podcasts));
 	}
 	
 	public void printMainMenu(){
@@ -37,10 +38,14 @@ public class CLPodcastMenu extends CLMenu{
 	}
 
 	public void process(int userInputInt) {
-		switch (userInputInt){
-			case 9:
-				menuList.clear();
-				break;
+		if (menuList.size()==1)
+			switch (userInputInt){
+				case 9:
+					menuList.clear();
+					break;
+			}
+		else {
+			// go through the submenus
 		}
 		super.process(userInputInt);
 	}
@@ -51,5 +56,21 @@ public class CLPodcastMenu extends CLMenu{
 
 	public void setPodcasts(Vector<Podcast> podcasts) {
 		this.podcasts = podcasts;
+	}
+	
+	public void process(String userInput){
+		if (menuList.size()==1){
+			if (userInput.length()<3){
+				int podcastNumber=convertCharToNumber(userInput);
+				
+				if ((podcastNumber>podcasts.size())&&
+					(podcastNumber<0))
+					System.out.println("Error: Invalid Podcast");
+				else{
+					menuList.addSetting("podcast", Integer.toString(podcastNumber));
+					
+				}
+			}
+		}
 	}
 }
