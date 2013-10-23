@@ -23,7 +23,7 @@ public class CLPodcastMenu extends CLMenu{
 				"9. Return to Main Menu"};
 		setMainMenuList(mainMenuList);
 		setPodcasts(newPodcasts);
-		addSubmenu(new CLPodcastSelectedMenu(menuList,podcasts));
+		addSubmenu(new CLPodcastSelectedMenu(menuList));
 	}
 	
 	public void printMainMenu(){
@@ -37,6 +37,14 @@ public class CLPodcastMenu extends CLMenu{
 		super.printMainMenu();
 	}
 
+	public Vector<Podcast> getPodcasts() {
+		return podcasts;
+	}
+
+	public void setPodcasts(Vector<Podcast> podcasts) {
+		this.podcasts = podcasts;
+	}
+	
 	public void process(int userInputInt) {
 		if (menuList.size()==1)
 			switch (userInputInt){
@@ -50,14 +58,6 @@ public class CLPodcastMenu extends CLMenu{
 		super.process(userInputInt);
 	}
 
-	public Vector<Podcast> getPodcasts() {
-		return podcasts;
-	}
-
-	public void setPodcasts(Vector<Podcast> podcasts) {
-		this.podcasts = podcasts;
-	}
-	
 	public void process(String userInput){
 		if (menuList.size()==1){
 			if (userInput.length()<3){
@@ -67,9 +67,17 @@ public class CLPodcastMenu extends CLMenu{
 					(podcastNumber<0))
 					System.out.println("Error: Invalid Podcast");
 				else{
-					menuList.addSetting("podcast", Integer.toString(podcastNumber));
-					
+					menuList.addSetting("selectedPodcast", podcasts.get(podcastNumber).getDatafile());
+					((CLPodcastSelectedMenu)findSubmenu("podcast_selected")).setSelectedPodcast(podcasts.get(podcastNumber));
+					System.out.println("Selected Podcast: "+podcasts.get(podcastNumber).getName());
 				}
+				userInput=null;
+			}
+		}
+		System.out.println("menuList.size: "+menuList.size());
+		if (menuList.size()>1){
+			if (menuList.findSetting("selectedPodcast")!=null){
+				((CLPodcastSelectedMenu)findSubmenu("podcast_selected")).process(userInput);
 			}
 		}
 	}

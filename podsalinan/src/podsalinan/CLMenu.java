@@ -122,7 +122,8 @@ public class CLMenu {
 	}
 	
 	public void process(String userInput){
-		
+		if (userInput==null)
+			printMainMenu();
 	}
 	
 	public int convertCharToNumber(String input) {
