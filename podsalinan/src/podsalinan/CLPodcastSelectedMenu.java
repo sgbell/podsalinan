@@ -16,9 +16,10 @@ public class CLPodcastSelectedMenu extends CLMenu {
 	/**
 	 * @param newMenuList
 	 * @param progSettings 
+	 * @param urlDownloads 
 	 * @param "podcast"
 	 */
-	public CLPodcastSelectedMenu(ProgSettings newMenuList, ProgSettings progSettings) {
+	public CLPodcastSelectedMenu(ProgSettings newMenuList, ProgSettings progSettings, URLDownloadList urlDownloads) {
 		super(newMenuList, "podcast_selected");
 		String[] mainMenuList = {"1. List Episodes",
 								 "2. Update List",
@@ -28,7 +29,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 								 "9. Return to List of Podcasts"};
 		setMainMenuList(mainMenuList);
 		input = new CLInput();
-		addSubmenu(new CLEpisodeMenu(menuList));
+		addSubmenu(new CLEpisodeMenu(menuList,urlDownloads));
 	}
 
 	public void printMainMenu(){
@@ -75,8 +76,16 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			    	printMainMenu();
 			    	break;
 			    case 2:
-			    	if (selectedPodcast!=null)
-			    		selectedPodcast.updateList(settings.getSettingValue("defaultDirectory"),true);
+			    	if (selectedPodcast!=null){
+			    		String tempDir=null;
+						if (System.getProperty("os.name").startsWith("Windows"))
+							tempDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
+						else
+							tempDir = System.getProperty("user.home").concat("/.podsalinan");
+
+						if (tempDir!=null)
+			    			selectedPodcast.updateList(tempDir,true);
+			    	}
 			    	break;
 			    case 3:
 			    	// Delete Podcast

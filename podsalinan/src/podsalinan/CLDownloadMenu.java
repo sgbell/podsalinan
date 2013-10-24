@@ -41,6 +41,24 @@ public class CLDownloadMenu extends CLMenu{
 		}
 		super.process(userInputInt);
 	}
+	
+	public void process(String userInput){
+		if (menuList.size()==1){
+			if (userInput.length()<3){
+				int downloadNumber = convertCharToNumber(userInput);
+				
+				if ((downloadNumber>urlDownloads.size())&&
+					(downloadNumber<0))
+					System.out.println("Error: Invalid Download Selected");
+				else {
+					menuList.addSetting("selectedDownload", urlDownloads.getDownloads().get(downloadNumber).getURL().toString());
+					
+				}
+					
+			}
+		}
+		super.process(userInput);
+	}
 
 	public URLDownloadList getUrlDownloads() {
 		return urlDownloads;

@@ -150,4 +150,8 @@ public class URLDownloadList extends DownloadDetails {
 		}
 		return false;
 	}
+
+	public int size() {
+		return downloads.size();
+	}
 }
