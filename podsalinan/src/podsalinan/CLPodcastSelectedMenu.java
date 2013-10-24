@@ -84,6 +84,21 @@ public class CLPodcastSelectedMenu extends CLMenu {
 	}
 
 	public void process(String userInput){
+		// If user enters code for an episode
+		if (menuList.size()==2){
+			if (userInput.length()<3){
+				int episodeNumber=convertCharToNumber(userInput);
+					
+				if ((episodeNumber>selectedPodcast.getEpisodes().size())&&
+					(episodeNumber<0))
+					System.out.println("Error: Invalid Episode");
+				else {
+					menuList.addSetting("selectedEpisode", Integer.toString(episodeNumber));
+					((CLEpisodeMenu)findSubmenu("episode_selected")).setSelectedEpisode(selectedPodcast.getEpisodes().get(episodeNumber));
+				}
+			}
+		}
+		
 		super.process(userInput);
 	}
 }

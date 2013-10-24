@@ -84,5 +84,7 @@ public class CLPodcastMenu extends CLMenu{
 				((CLPodcastSelectedMenu)findSubmenu("podcast_selected")).process(userInput);
 			}
 		}
+		
+		super.process(userInput);
 	}
 }
