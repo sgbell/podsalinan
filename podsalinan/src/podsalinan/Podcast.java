@@ -151,9 +151,31 @@ public class Podcast extends DownloadDetails{
 		this.image = image;
 	}
 	
+	/**
+	 * This method calls updateList(String,boolean), but automatically sets manualUpdate to false so
+	 * that the autoUpdater in the program will not have to be rewritten.
+	 * @param tempDir
+	 */
 	public void updateList(String tempDir){
+		updateList(tempDir,false);
+	}
+	
+	/**
+	 * This method is used when the user manually prompts to update the podcast
+	 * @param tempDir
+	 * @param manualUpdate
+	 */
+	public void updateList(String tempDir, boolean manualUpdate){
 		if (tempDir!=null){
-			File outputFile = new File(tempDir+"/temp.xml");
+			File outputFile;
+			if (!manualUpdate)
+				outputFile = new File(tempDir+"/temp.xml");
+			else
+				outputFile = new File(tempDir+"/manualtemp.xml");
+			
+			if ((manualUpdate)&&(outputFile.exists()))
+				outputFile.delete();
+			
 			/* Added this, so that if an update occurs while another update is already happening,
 			 * the requested update wont occur. If the system is already in the middle of a full
 			 * update of the podcasts, it wont matter if the user has requested for an update, as
