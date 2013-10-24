@@ -13,9 +13,10 @@ public class CLPodcastMenu extends CLMenu{
 	private Vector<Podcast> podcasts;
 	
 	/**
+	 * @param settings 
 	 * 
 	 */
-	public CLPodcastMenu(ProgSettings parentMenuList, Vector<Podcast> newPodcasts) {
+	public CLPodcastMenu(ProgSettings parentMenuList, Vector<Podcast> newPodcasts, ProgSettings settings) {
 		super(parentMenuList, "podcast");
 		String[] mainMenuList = {
 				"(A-Z) Enter Podcast letter to select Podcast.",
@@ -23,7 +24,7 @@ public class CLPodcastMenu extends CLMenu{
 				"9. Return to Main Menu"};
 		setMainMenuList(mainMenuList);
 		setPodcasts(newPodcasts);
-		addSubmenu(new CLPodcastSelectedMenu(menuList));
+		addSubmenu(new CLPodcastSelectedMenu(menuList, settings));
 	}
 	
 	public void printMainMenu(){
@@ -78,13 +79,11 @@ public class CLPodcastMenu extends CLMenu{
 				userInput=null;
 			}
 		}
-		System.out.println("menuList.size: "+menuList.size());
 		if (menuList.size()>1){
 			if (menuList.findSetting("selectedPodcast")!=null){
 				((CLPodcastSelectedMenu)findSubmenu("podcast_selected")).process(userInput);
 			}
-		}
-		
-		super.process(userInput);
+		} else
+		    super.process(userInput);
 	}
 }

@@ -11,12 +11,14 @@ package podsalinan;
 public class CLPodcastSelectedMenu extends CLMenu {
     private Podcast selectedPodcast;
     private CLInput input;
+    private ProgSettings settings;
 	
 	/**
 	 * @param newMenuList
+	 * @param progSettings 
 	 * @param "podcast"
 	 */
-	public CLPodcastSelectedMenu(ProgSettings newMenuList) {
+	public CLPodcastSelectedMenu(ProgSettings newMenuList, ProgSettings progSettings) {
 		super(newMenuList, "podcast_selected");
 		String[] mainMenuList = {"1. List Episodes",
 								 "2. Update List",
@@ -26,6 +28,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 								 "9. Return to List of Podcasts"};
 		setMainMenuList(mainMenuList);
 		input = new CLInput();
+		addSubmenu(new CLEpisodeMenu(menuList));
 	}
 
 	public void printMainMenu(){
@@ -47,16 +50,18 @@ public class CLPodcastSelectedMenu extends CLMenu {
 		System.out.println ();
 		int epCount=1;
 		
-		synchronized (selectedPodcast.getEpisodes()){
-			for (Episode episode : selectedPodcast.getEpisodes()){
-				System.out.println (getEncodingFromNumber(epCount)+" - " +
-						episode.getTitle()+" : "+episode.getDate());
-				epCount++;
-				if ((epCount%20)==0){
-					System.out.println("-- Press any key to continue, q to quit --");
-					char charInput=input.getSingleCharInput();
-					if (charInput=='q')
-						break;
+		if (selectedPodcast!=null){
+			synchronized (selectedPodcast.getEpisodes()){
+				for (Episode episode : selectedPodcast.getEpisodes()){
+					System.out.println (getEncodingFromNumber(epCount)+" - " +
+							episode.getTitle()+" : "+episode.getDate());
+					epCount++;
+					if ((epCount%20)==0){
+						System.out.println("-- Press any key to continue, q to quit --");
+						char charInput=input.getSingleCharInput();
+						if (charInput=='q')
+							break;
+					}
 				}
 			}
 		}
@@ -70,12 +75,14 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			    	printMainMenu();
 			    	break;
 			    case 2:
-			    	// Update Podcast
+			    	if (selectedPodcast!=null)
+			    		selectedPodcast.updateList(settings.getSettingValue("defaultDirectory"),true);
 			    	break;
 			    case 3:
 			    	// Delete Podcast
 			    	break;
 				case 9:
+					setSelectedPodcast(null);
 					menuList.removeSetting("selectedPodcast");
 					break;
 			}
@@ -85,7 +92,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 
 	public void process(String userInput){
 		// If user enters code for an episode
-		if (menuList.size()==2){
+		if ((menuList.size()==2)&&(userInput!=null)){
 			if (userInput.length()<3){
 				int episodeNumber=convertCharToNumber(userInput);
 					
@@ -94,11 +101,16 @@ public class CLPodcastSelectedMenu extends CLMenu {
 					System.out.println("Error: Invalid Episode");
 				else {
 					menuList.addSetting("selectedEpisode", Integer.toString(episodeNumber));
-					((CLEpisodeMenu)findSubmenu("episode_selected")).setSelectedEpisode(selectedPodcast.getEpisodes().get(episodeNumber));
+					((CLEpisodeMenu)findSubmenu("episode_selected")).setEpisode(selectedPodcast.getEpisodes().get(episodeNumber),selectedPodcast.getName());
 				}
+				userInput=null;
 			}
 		}
-		
-		super.process(userInput);
+		if (menuList.size()>2){
+			if (menuList.findSetting("selectedEpisode")!=null){
+				((CLEpisodeMenu)findSubmenu("episode_selected")).process(userInput);
+			}
+		} else 
+			super.process(userInput);
 	}
 }

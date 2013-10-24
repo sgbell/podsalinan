@@ -50,7 +50,7 @@ public class CLInterface implements Runnable{
 
 	private void initializeMenus() {
 		mainMenu = new CLMainMenu(menuList,podcasts,urlDownloads);
-		mainMenu.addSubmenu(new CLPodcastMenu(menuList,podcasts));
+		mainMenu.addSubmenu(new CLPodcastMenu(menuList,podcasts,settings));
 		mainMenu.addSubmenu(new CLPreferencesMenu(menuList,settings));
 		mainMenu.addSubmenu(new CLDownloadMenu(menuList,urlDownloads));
 	}
