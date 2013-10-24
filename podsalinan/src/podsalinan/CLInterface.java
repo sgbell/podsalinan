@@ -187,37 +187,6 @@ public class CLInterface implements Runnable{
 		
 	}
 
-	private void printPodcastSubmenu(int selectedPodcast) {
-		System.out.println ("Podcast: "+podcasts.get(selectedPodcast).getName()+ " - Selected");
-		System.out.println ();
-		System.out.println ("1. List Episodes");
-		System.out.println ("2. Update List");
-		System.out.println ("3. Remove Podcast");
-		System.out.println ("<AA>. Select Episode");
-		System.out.println ();
-		System.out.println ("9. Return to List of Podcasts");
-	}
-
-	private void printPodcastEpisodeList(int selectedPodcast) {
-		System.out.println ();
-		int epCount=1;
-		Podcast podcast = podcasts.get(selectedPodcast);
-		
-		synchronized (podcast.getEpisodes()){
-			for (Episode episode : podcast.getEpisodes()){
-				System.out.println (getEncodingFromNumber(epCount)+" - " +
-						episode.getTitle()+" : "+episode.getDate());
-				epCount++;
-				if ((epCount%20)==0){
-					System.out.println("-- Press any key to continue, q to quit --");
-					char charInput=input.getSingleCharInput();
-					if (charInput=='q')
-						break;
-				}
-			}
-		}
-	}
-
 	private void printEpisodeMenu(ArrayList<Integer> menuSelection) {
 		Podcast podcast = podcasts.get(menuSelection.get(1));
 		Episode episode = null;

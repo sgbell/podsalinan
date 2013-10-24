@@ -3,7 +3,6 @@
  */
 package podsalinan;
 
-import java.util.Vector;
 
 /**
  * @author sbell
@@ -11,6 +10,7 @@ import java.util.Vector;
  */
 public class CLPodcastSelectedMenu extends CLMenu {
     private Podcast selectedPodcast;
+    private CLInput input;
 	
 	/**
 	 * @param newMenuList
@@ -25,6 +25,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 								 "",
 								 "9. Return to List of Podcasts"};
 		setMainMenuList(mainMenuList);
+		input = new CLInput();
 	}
 
 	public void printMainMenu(){
@@ -42,19 +43,40 @@ public class CLPodcastSelectedMenu extends CLMenu {
 		this.selectedPodcast = selectedPodcast;
 	}
 	
+	private void printEpisodeList() {
+		System.out.println ();
+		int epCount=1;
+		
+		synchronized (selectedPodcast.getEpisodes()){
+			for (Episode episode : selectedPodcast.getEpisodes()){
+				System.out.println (getEncodingFromNumber(epCount)+" - " +
+						episode.getTitle()+" : "+episode.getDate());
+				epCount++;
+				if ((epCount%20)==0){
+					System.out.println("-- Press any key to continue, q to quit --");
+					char charInput=input.getSingleCharInput();
+					if (charInput=='q')
+						break;
+				}
+			}
+		}
+	}
+
 	public void process(int userInputInt){
-		System.out.println("Debug: CLPodcastSelectedMenu.process(int)");
-		System.out.println("menuList.size: "+menuList.size());
 		if (menuList.size()==2){
 			switch (userInputInt){
 			    case 1:
+			    	printEpisodeList();
+			    	printMainMenu();
 			    	break;
 			    case 2:
+			    	// Update Podcast
 			    	break;
 			    case 3:
+			    	// Delete Podcast
 			    	break;
 				case 9:
-					
+					menuList.removeSetting("selectedPodcast");
 					break;
 			}
 		}
@@ -62,7 +84,6 @@ public class CLPodcastSelectedMenu extends CLMenu {
 	}
 
 	public void process(String userInput){
-		System.out.println("Debug: CLPodcastSelectedMenu.process(int)");
 		super.process(userInput);
 	}
 }

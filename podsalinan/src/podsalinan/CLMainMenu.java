@@ -38,7 +38,7 @@ public class CLMainMenu extends CLMenu{
 	 * @param inputInt
 	 */
 	public void process(int userInputInt) {
-		System.out.println("Debug: CLMainMenu.process("+userInputInt+")");
+		//System.out.println("Debug: CLMainMenu.process("+userInputInt+")");
 		// If there are no entries in the menuList, handle the 
 		if (menuList.size()==0){
 			switch (userInputInt){
@@ -67,7 +67,7 @@ public class CLMainMenu extends CLMenu{
 	}
 	
 	public void process(String userInput){
-		System.out.println("Debug: CLMainMenu.process(String)");
+		//System.out.println("Debug: CLMainMenu.process(String)");
 		if (menuList.size()>0){
 			if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast")){
 				((CLPodcastMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInput);

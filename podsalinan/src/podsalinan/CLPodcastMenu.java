@@ -46,7 +46,7 @@ public class CLPodcastMenu extends CLMenu{
 	}
 	
 	public void process(int userInputInt) {
-		System.out.println("Debug: CLPodcastMenu.process("+userInputInt+")");
+		//System.out.println("Debug: CLPodcastMenu.process("+userInputInt+")");
 		if (menuList.size()==1)
 			switch (userInputInt){
 				case 9:
@@ -55,12 +55,14 @@ public class CLPodcastMenu extends CLMenu{
 			}
 		if (menuList.size()>1)
 			((CLPodcastSelectedMenu)findSubmenu("podcast_selected")).process(userInputInt);
-		else
+		if (menuList.size()==1){
+			userInputInt=-1000;
 			super.process(userInputInt);
+		}
 	}
 
 	public void process(String userInput){
-		System.out.println("Debug: CLPodcastMenu.process(String)");
+		//System.out.println("Debug: CLPodcastMenu.process(String)");
 		if (menuList.size()==1){
 			if (userInput.length()<3){
 				int podcastNumber=convertCharToNumber(userInput);
