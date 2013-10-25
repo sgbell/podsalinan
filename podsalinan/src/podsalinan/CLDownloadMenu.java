@@ -20,6 +20,7 @@ public class CLDownloadMenu extends CLMenu{
 		};
 		setMainMenuList(mainMenuList);
 		setUrlDownloads(downloadList);
+		addSubmenu(new CLDownloadSelectedMenu(menuList));
 	}
 
 	public void printMainMenu() {
@@ -51,13 +52,19 @@ public class CLDownloadMenu extends CLMenu{
 					(downloadNumber<0))
 					System.out.println("Error: Invalid Download Selected");
 				else {
-					menuList.addSetting("selectedDownload", urlDownloads.getDownloads().get(downloadNumber).getURL().toString());
-					
+					synchronized (urlDownloads.getDownloads()){
+						menuList.addSetting("selectedDownload", urlDownloads.getDownloads().get(downloadNumber).getURL().toString());
+						((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).setDownload(urlDownloads.getDownloads().get(downloadNumber));
+					}
 				}
-					
+				userInput=null;
 			}
 		}
-		super.process(userInput);
+		if (menuList.size()>1){
+			if (menuList.findSetting("downloadSelected_menu")!=null)
+				((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).process(userInput);
+		} else
+			super.process(userInput);
 	}
 
 	public URLDownloadList getUrlDownloads() {
@@ -67,5 +74,4 @@ public class CLDownloadMenu extends CLMenu{
 	public void setUrlDownloads(URLDownloadList urlDownloads) {
 		this.urlDownloads = urlDownloads;
 	}
-
 }
