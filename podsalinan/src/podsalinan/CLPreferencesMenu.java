@@ -52,7 +52,7 @@ public class CLPreferencesMenu extends CLMenu{
 		System.out.println ("4. Every 6 Hours");
 		System.out.println ("5. Every 12 Hours");
 		System.out.println ("6. Daily");
-		System.out.print ("Choice: ");
+		System.out.print ("Choice ["+settings.findSetting("updateInterval").value+"]: ");
 		/* Take user input.
 		 * Make sure it is between 1 & 6
 		 * If not leave PodcastRate as it's current value.
@@ -97,7 +97,7 @@ public class CLPreferencesMenu extends CLMenu{
 	private void changeDefaultDirectory() {
 		File newPath;
 		System.out.println ();
-		System.out.print ("Enter Default Directory: ");
+		System.out.print ("Enter Default Directory["+settings.findSetting("defaultDirectory").value+"]: ");
 		/* Take user input.
 		 * Create File object to test if directory exists.
 		 * If directory exists set defaultDirectory to file Input
@@ -116,7 +116,7 @@ public class CLPreferencesMenu extends CLMenu{
 
 	private void changeNumDownloaders() {
 		System.out.println ();
-		System.out.print ("Enter Number of Simultaneous Downloads: ");
+		System.out.print ("Enter Number of Simultaneous Downloads["+settings.findSetting("maxDownloaders").value+"]: ");
 		/* Take user input.
 		 * Make sure it is between 1 and 30
 		 * If not, get the user to enter it again.
@@ -128,7 +128,8 @@ public class CLPreferencesMenu extends CLMenu{
 	
 	private void changeAutoQueueNewEpisodes() {
 		System.out.println ();
-		System.out.print ("Do you want new episodes Automatically Queued to Download? (Y/N): ");
+		System.out.print ("Do you want new episodes Automatically Queued to Download? (Y/N) ["+
+						  settings.findSetting("autoQueue").value+"]: ");
 		String autoDownloadResponse = input.getStringInput();
 		if (autoDownloadResponse.length()==1){
 			switch (autoDownloadResponse.charAt(0)){
@@ -158,7 +159,7 @@ public class CLPreferencesMenu extends CLMenu{
 		System.out.println();
 		System.out.println("Valid values: 0 (Means no limit); 25 (Means 25Kbps); 1M (Means 1 Mbps)");
 		System.out.println("The value you set here is the total limit, which is shared evenly across downloaders");
-		System.out.print ("Please enter the Download Speed Limit:");
+		System.out.print ("Please enter the Download Speed Limit["+settings.findSetting("downloadLimit").value+"]:");
 		String userInput = input.getStringInput();
 		int speed=-1;
 		if (userInput.length()>0){
@@ -188,7 +189,7 @@ public class CLPreferencesMenu extends CLMenu{
 	}
 
 	public void process(String userInput){
-		
+		super.process(userInput);
 	}
 	
 	public void process(int userInputInt) {
@@ -212,6 +213,7 @@ public class CLPreferencesMenu extends CLMenu{
 				menuList.clear();
 				break;
 		}
+		userInputInt=-1000;
 		super.process(userInputInt);
 	}
 }
