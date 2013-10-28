@@ -54,6 +54,10 @@ public class URLDownload extends Details {
 		
 	}
 	
+	public URLDownload(URL url, boolean added){
+		super(url,added);
+	}
+	
 	/**
 	 * @return the destination
 	 */

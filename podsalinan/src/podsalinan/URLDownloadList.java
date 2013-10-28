@@ -24,6 +24,7 @@ package podsalinan;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Vector;
@@ -72,6 +73,15 @@ public class URLDownloadList extends DownloadDetails {
 		else if (priority<downloads.size()){
 			downloads.insertElementAt(newDownload, priority);
 		}
+	}
+	
+	public void addDownload(URL url, String destination, String size){
+		URLDownload newFile = new URLDownload(url,false);
+		newFile.setDestination(destination);
+		if (size!="-1")
+			newFile.setSize(size);
+		downloads.add(newFile);
+		checkDownloadSize(newFile);
 	}
 	/**
 	 * This will move the selected download up the queue
