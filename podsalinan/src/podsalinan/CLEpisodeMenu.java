@@ -10,7 +10,7 @@ package podsalinan;
 public class CLEpisodeMenu extends CLMenu {
 
 	private Episode episode;
-	private String podcastName;
+	private Podcast podcast;
 	private URLDownloadList urlDownloads;
 	
 	/**
@@ -31,7 +31,7 @@ public class CLEpisodeMenu extends CLMenu {
 	
 	public void printMainMenu(){
 		if (episode!=null){
-			System.out.println ("Podcast: "+getPodcastName());
+			System.out.println ("Podcast: "+podcast.getName());
 			System.out.println ("Episode: "+episode.getTitle());
 			System.out.println ("Date: "+episode.getDate());
 			switch (episode.getStatus()){
@@ -57,19 +57,11 @@ public class CLEpisodeMenu extends CLMenu {
 		return episode;
 	}
 
-	public void setEpisode(Episode episode, String podcastName) {
+	public void setEpisode(Episode episode, Podcast selectedPodcast) {
+		setPodcast(selectedPodcast);
 		this.episode = episode;
-		setPodcastName(podcastName);
 	}
 
-	public String getPodcastName() {
-		return podcastName;
-	}
-
-	public void setPodcastName(String podcastName) {
-		this.podcastName = podcastName;
-	}
-	
 	/**
 	 * @return the urlDownloads
 	 */
@@ -120,8 +112,22 @@ public class CLEpisodeMenu extends CLMenu {
 	}
 
 	private void downloadEpisode() {
-		// TODO Auto-generated method stub
-		
+		episode.setStatus(Details.CURRENTLY_DOWNLOADING);
+		//urlDownloads.addDownload(episode.getURL(), , size, added);
+	}
+
+	/**
+	 * @return the podcast
+	 */
+	public Podcast getPodcast() {
+		return podcast;
+	}
+
+	/**
+	 * @param podcast the podcast to set
+	 */
+	public void setPodcast(Podcast podcast) {
+		this.podcast = podcast;
 	}
 
 	public void process(String userInput){

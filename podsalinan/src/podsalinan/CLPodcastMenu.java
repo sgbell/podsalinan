@@ -17,7 +17,7 @@ public class CLPodcastMenu extends CLMenu{
 	 * @param urlDownloads 
 	 * 
 	 */
-	public CLPodcastMenu(ProgSettings parentMenuList, Vector<Podcast> newPodcasts, ProgSettings settings, URLDownloadList urlDownloads) {
+	public CLPodcastMenu(ProgSettings parentMenuList, Vector<Podcast> newPodcasts, URLDownloadList urlDownloads) {
 		super(parentMenuList, "podcast");
 		String[] mainMenuList = {
 				"(A-Z) Enter Podcast letter to select Podcast.",
@@ -25,7 +25,7 @@ public class CLPodcastMenu extends CLMenu{
 				"9. Return to Main Menu"};
 		setMainMenuList(mainMenuList);
 		setPodcasts(newPodcasts);
-		addSubmenu(new CLPodcastSelectedMenu(menuList, settings, urlDownloads));
+		addSubmenu(new CLPodcastSelectedMenu(menuList, urlDownloads));
 	}
 	
 	public void printMainMenu(){

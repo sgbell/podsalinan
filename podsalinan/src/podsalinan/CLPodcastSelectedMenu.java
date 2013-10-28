@@ -11,7 +11,6 @@ package podsalinan;
 public class CLPodcastSelectedMenu extends CLMenu {
     private Podcast selectedPodcast;
     private CLInput input;
-    private ProgSettings settings;
 	
 	/**
 	 * @param newMenuList
@@ -19,7 +18,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 	 * @param urlDownloads 
 	 * @param "podcast"
 	 */
-	public CLPodcastSelectedMenu(ProgSettings newMenuList, ProgSettings progSettings, URLDownloadList urlDownloads) {
+	public CLPodcastSelectedMenu(ProgSettings newMenuList, URLDownloadList urlDownloads) {
 		super(newMenuList, "podcast_selected");
 		String[] mainMenuList = {"1. List Episodes",
 								 "2. Update List",
@@ -110,7 +109,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 					System.out.println("Error: Invalid Episode");
 				else {
 					menuList.addSetting("selectedEpisode", Integer.toString(episodeNumber));
-					((CLEpisodeMenu)findSubmenu("episode_selected")).setEpisode(selectedPodcast.getEpisodes().get(episodeNumber),selectedPodcast.getName());
+					((CLEpisodeMenu)findSubmenu("episode_selected")).setEpisode(selectedPodcast.getEpisodes().get(episodeNumber),selectedPodcast);
 				}
 				userInput=null;
 			}

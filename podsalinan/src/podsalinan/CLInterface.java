@@ -51,7 +51,7 @@ public class CLInterface implements Runnable{
 		mainMenu = new CLMainMenu(menuList,podcasts,urlDownloads);
 		// When creating the Podcast Menus, we need settings to grab the default directory to do a manual update,
 		// and urlDownloads so we can queue episodes up for downloading manually.
-		mainMenu.addSubmenu(new CLPodcastMenu(menuList,podcasts,settings,urlDownloads));
+		mainMenu.addSubmenu(new CLPodcastMenu(menuList,podcasts,urlDownloads));
 		mainMenu.addSubmenu(new CLPreferencesMenu(menuList,settings,waitObject));
 		mainMenu.addSubmenu(new CLDownloadMenu(menuList,urlDownloads));
 	}
