@@ -224,7 +224,7 @@ public class CLPreferencesMenu extends CLMenu{
 			if (speed<0){
 				System.err.println("Invalid Speed. Download Speed Limit unchanged");
 			} else {
-				settings.addSetting("downloadLimit",Integer.toString(speed));
+				settings.updateSetting("downloadLimit",Integer.toString(speed));
 			}
 		}
 		System.out.println("Max Download Speed: "+settings.findSetting("downloadLimit").value);
