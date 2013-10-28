@@ -33,6 +33,9 @@ public class CLPreferencesMenu extends CLMenu{
 	@Override
 	public void printMainMenu() {
 		super.printMainMenu();
+		
+		for (Setting newSetting: settings.getArray())
+			System.out.println("Setting: "+newSetting.name+" = "+newSetting.value);
 	}
 
 	public ProgSettings getSettings() {
@@ -52,7 +55,32 @@ public class CLPreferencesMenu extends CLMenu{
 		System.out.println ("4. Every 6 Hours");
 		System.out.println ("5. Every 12 Hours");
 		System.out.println ("6. Daily");
-		System.out.print ("Choice ["+settings.findSetting("updateInterval").value+"]: ");
+		Setting podcastRateSetting = settings.findSetting("updateInterval"); 
+        if (podcastRateSetting==null)
+        	settings.addSetting("updateInterval", "1440");
+        
+        System.out.print ("Choice [");
+    	switch (Integer.parseInt(settings.findSetting("updateInterval").value)){
+    		case 60:
+    			System.out.print("Hourly");
+    			break;
+    		case 120:
+    			System.out.print("2 Hours");
+    			break;
+    		case 180:
+    			System.out.print("3 Hours");
+    			break;
+    		case 360:
+    			System.out.print("6 Hours");
+    			break;
+    		case 720:
+    			System.out.print("12 Hours");
+    			break;
+    		case 1440:
+    			System.out.print("Daily");
+    			break;
+    	}
+        System.out.print ("]: ");
 		/* Take user input.
 		 * Make sure it is between 1 & 6
 		 * If not leave PodcastRate as it's current value.
@@ -60,36 +88,40 @@ public class CLPreferencesMenu extends CLMenu{
 		
 		String updateValue = input.getValidNumber(1,6);
 		if (updateValue!=null){
-			switch (Integer.parseInt(updateValue)){
-				case 1:
-					// 1 Hour
-					updateValue="60";
-					break;
-				case 2:
-					// 2 Hours
-					updateValue="120";
-					break;
-				case 3:
-					// 3 Hours
-					updateValue="180";
-					break;
-				case 4:
-					// 6 Hours
-					updateValue="360";
-					break;
-				case 5:
-					// 12 Hours
-					updateValue="720";
-					break;
-				case 6:
-					// 24 Hours
-					updateValue="1440";
-					break;
-			}
-			// Wake up the main thread in Podsalinan to update the wait value
-			settings.updateSetting("updateInterval",updateValue);
-			synchronized (waitObject){
-				waitObject.notify();
+			if (updateValue.length()>0){
+				switch (Integer.parseInt(updateValue)){
+					case 1:
+						// 1 Hour
+						updateValue="60";
+						break;
+					case 2:
+						//2 Hours
+						updateValue="120";
+						break;
+					case 3:
+						// 3 Hours
+						updateValue="180";
+						break;
+					case 4:
+						// 6 Hours
+						updateValue="360";
+						break;
+					case 5:
+						// 12 Hours
+						updateValue="720";
+						break;
+					case 6:
+						// 24 Hours
+						updateValue="1440";
+						break;
+				}
+				settings.updateSetting("updateInterval",updateValue);
+				System.out.println("Update Interval now set to:"+settings.findSetting("updateInterval").value);
+				// Wake up the main thread in Podsalinan to update the wait value
+				
+				synchronized (waitObject){
+					waitObject.notify();
+				}
 			}
 		}
 	}
@@ -112,6 +144,7 @@ public class CLPreferencesMenu extends CLMenu{
 				System.out.println ("Error: User Input invalid");
 			}
 		}
+		System.out.println("Default Directory: "+settings.findSetting("defaultDirectory").value);
 	}
 
 	private void changeNumDownloaders() {
@@ -124,12 +157,16 @@ public class CLPreferencesMenu extends CLMenu{
 		String numDownloaders = input.getValidNumber(1,30);
 		if (numDownloaders!=null)
 			settings.updateSetting("maxDownloaders",numDownloaders);
+		System.out.println("Simultaneous Downloads: "+settings.findSetting("maxDownloaders").value);
 	}
 	
 	private void changeAutoQueueNewEpisodes() {
 		System.out.println ();
+		Setting autoQueueSetting = settings.findSetting("autoQueue");
+		if (autoQueueSetting==null)
+			settings.addSetting("autoQueue", "false");
 		System.out.print ("Do you want new episodes Automatically Queued to Download? (Y/N) ["+
-						  settings.findSetting("autoQueue").value+"]: ");
+				          settings.findSetting("autoQueue").value+"]: ");
 		String autoDownloadResponse = input.getStringInput();
 		if (autoDownloadResponse.length()==1){
 			switch (autoDownloadResponse.charAt(0)){
@@ -153,12 +190,16 @@ public class CLPreferencesMenu extends CLMenu{
 			else if (autoDownloadResponse.equalsIgnoreCase("no"))
 				System.err.println ("Error: User entered Value is invalid. No change made");
 		}
+		System.out.println("Auto Queue Downloads: "+settings.findSetting("autoQueue").value);
+
 	}
 
 	private void setDownloadSpeed() {
 		System.out.println();
 		System.out.println("Valid values: 0 (Means no limit); 25 (Means 25Kbps); 1M (Means 1 Mbps)");
 		System.out.println("The value you set here is the total limit, which is shared evenly across downloaders");
+		if (settings.findSetting("downloadLimit")==null)
+			settings.addSetting("downloadLimit", "0");
 		System.out.print ("Please enter the Download Speed Limit["+settings.findSetting("downloadLimit").value+"]:");
 		String userInput = input.getStringInput();
 		int speed=-1;
@@ -186,6 +227,7 @@ public class CLPreferencesMenu extends CLMenu{
 				settings.addSetting("downloadLimit",Integer.toString(speed));
 			}
 		}
+		System.out.println("Max Download Speed: "+settings.findSetting("downloadLimit").value);
 	}
 
 	public void process(String userInput){
