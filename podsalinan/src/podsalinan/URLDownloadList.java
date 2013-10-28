@@ -75,9 +75,10 @@ public class URLDownloadList extends DownloadDetails {
 		}
 	}
 	
-	public void addDownload(URL url, String destination, String size){
+	public void addDownload(URL url, Podcast podcast, String size){
 		URLDownload newFile = new URLDownload(url,false);
-		newFile.setDestination(destination);
+		newFile.setDestination(podcast.getDirectory());
+		newFile.setPodcastId(podcast.getDatafile());
 		if (size!="-1")
 			newFile.setSize(size);
 		downloads.add(newFile);

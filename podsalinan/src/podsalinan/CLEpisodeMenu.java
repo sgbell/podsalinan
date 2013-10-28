@@ -113,7 +113,7 @@ public class CLEpisodeMenu extends CLMenu {
 
 	private void downloadEpisode() {
 		episode.setStatus(Details.CURRENTLY_DOWNLOADING);
-		urlDownloads.addDownload(episode.getURL(), podcast.getDirectory(), episode.getSize());
+		urlDownloads.addDownload(episode.getURL(), podcast, episode.getSize());
 	}
 
 	/**
