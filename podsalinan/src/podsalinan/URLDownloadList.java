@@ -134,6 +134,12 @@ public class URLDownloadList extends DownloadDetails {
 			downloads.get(download).setStatus(Details.DO_NOT_DOWNLOAD);
 		}
 	}
+	
+	public void removeDownload(int download) {
+		if ((download >= 0)&&(download<downloads.size())){
+			// TODO finish code here
+		}
+	}
 
 	public void deleteDownload(int download) {
 		if ((download >=0)&&(download<downloads.size())){
@@ -164,5 +170,15 @@ public class URLDownloadList extends DownloadDetails {
 
 	public int size() {
 		return downloads.size();
+	}
+
+	public int findDownload(URL url) {
+		int count=0;
+		for (URLDownload download : downloads){
+			if (download.getURL().toString().equalsIgnoreCase(url.toString()))
+				return count;
+			count++;
+		}
+		return -1;
 	}
 }

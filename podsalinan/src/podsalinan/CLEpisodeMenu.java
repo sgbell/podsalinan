@@ -102,8 +102,9 @@ public class CLEpisodeMenu extends CLMenu {
 	}
 	
 	private void cancelDownloadEpisode() {
-		// TODO Auto-generated method stub
-		
+		urlDownloads.cancelDownload(urlDownloads.findDownload(episode.getURL()));
+		episode.setStatus(Details.NOT_STARTED);
+		// TODO finish code here
 	}
 
 	private void deleteEpisode() {
