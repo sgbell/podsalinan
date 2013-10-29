@@ -36,10 +36,16 @@ import java.util.Vector;
 public class URLDownloadList extends DownloadDetails {
 
 	private Vector<URLDownload> downloads;
+	private Vector<Podcast> podcasts;
 	
 	public URLDownloadList(){
 		super("Downloads");
 		downloads = new Vector<URLDownload>();
+	}
+	
+	public URLDownloadList(Vector<Podcast> podcastList){
+		this();
+		podcasts = podcastList;
 	}
 	
 	public Vector<URLDownload> getDownloads(){
@@ -131,19 +137,23 @@ public class URLDownloadList extends DownloadDetails {
 
 	public void cancelDownload(int download) {
 		if ((download >=0)&&(download<downloads.size())){
-			downloads.get(download).setStatus(Details.DO_NOT_DOWNLOAD);
+			// if download is an episode from a podcast we need to set the status on the episode and remove it from the list
+			if (downloads.get(download).getPodcastId()!=""){
+				for (Podcast currentPodcast : podcasts)
+					if (currentPodcast.getDatafile().equalsIgnoreCase(downloads.get(download).getPodcastId())){
+						downloads.get(download).setRemoved(true);
+						Episode selectedEpisode=currentPodcast.getEpisodeByURL(downloads.get(download).getURL().toString());
+						if (selectedEpisode!=null)
+							selectedEpisode.setStatus(Details.NOT_STARTED);
+					}
+			} else
+				downloads.get(download).setStatus(Details.DO_NOT_DOWNLOAD);
 		}
 	}
 	
-	public void removeDownload(int download) {
-		if ((download >= 0)&&(download<downloads.size())){
-			// TODO finish code here
-		}
-	}
-
 	public void deleteDownload(int download) {
 		if ((download >=0)&&(download<downloads.size())){
-			downloads.get(download).isRemoved();
+			downloads.get(download).setRemoved(true);
 			restartDownload(download);
 		}
 	}

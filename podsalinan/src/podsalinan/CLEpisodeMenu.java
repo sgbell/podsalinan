@@ -103,8 +103,8 @@ public class CLEpisodeMenu extends CLMenu {
 	
 	private void cancelDownloadEpisode() {
 		urlDownloads.cancelDownload(urlDownloads.findDownload(episode.getURL()));
-		episode.setStatus(Details.NOT_STARTED);
-		// TODO finish code here
+		// urlDownload.removeDownload will do all of the podcast status alterations, so that it is uniform and
+		// in the 1 place.
 	}
 
 	private void deleteEpisode() {

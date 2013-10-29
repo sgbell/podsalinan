@@ -96,7 +96,7 @@ public class Podsalinan {
 	public Podsalinan(){
 		podcasts = new Vector<Podcast>();
 		// URL Downloads
-		urlDownloads = new URLDownloadList();
+		urlDownloads = new URLDownloadList(podcasts);
 		// Program Settings
 		settings = new ProgSettings();
 		

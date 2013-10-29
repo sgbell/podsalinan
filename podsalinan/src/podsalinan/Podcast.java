@@ -283,4 +283,12 @@ public class Podcast extends DownloadDetails{
 		
 		return -1;
 	}
+
+	public Episode getEpisodeByURL(String string) {
+		for (Episode currentEpisode : episodeList)
+			if (currentEpisode.getURL().toString().equalsIgnoreCase(string))
+				return currentEpisode;
+		
+		return null;
+	}
 }
