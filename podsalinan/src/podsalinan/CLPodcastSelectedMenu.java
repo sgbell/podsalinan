@@ -68,6 +68,8 @@ public class CLPodcastSelectedMenu extends CLMenu {
 	}
 
 	public void process(int userInputInt){
+		//System.out.println("CLPodcastSelectedMenu.process(int)");
+		//System.out.println("menuList.size(): "+menuList.size());
 		if (menuList.size()==2){
 			switch (userInputInt){
 			    case 1:
@@ -95,10 +97,16 @@ public class CLPodcastSelectedMenu extends CLMenu {
 					break;
 			}
 		}
+		if (menuList.size()>2){
+			if (menuList.findSetting("selectedEpisode")!=null){
+				((CLEpisodeMenu)findSubmenu("episode_selected")).process(userInputInt);
+			}
+		}
 		super.process(userInputInt);
 	}
 
 	public void process(String userInput){
+		//System.out.println("CLPodcastSelectedMenu.process(String)");
 		// If user enters code for an episode
 		if ((menuList.size()==2)&&(userInput!=null)){
 			if (userInput.length()<3){

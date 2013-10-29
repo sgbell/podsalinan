@@ -3,6 +3,8 @@
  */
 package podsalinan;
 
+import java.io.File;
+
 /**
  * @author sbell
  *
@@ -76,40 +78,15 @@ public class CLEpisodeMenu extends CLMenu {
 		this.urlDownloads = urlDownloads;
 	}
 
-	public void process(int userInput){
-		if (menuList.size()==3){
-			switch (userInput){
-				case 1:
-					// Download the episode
-					downloadEpisode();
-					break;
-				case 2:
-					// Delete the episode from the drive
-					deleteEpisode();
-					break;
-				case 3:
-					// Cancel download of the episode
-					cancelDownloadEpisode();
-					break;
-				case 9:
-					// Exit episode menu, clearing the selected episode information
-					setEpisode(null,null);
-					menuList.removeSetting("selectedEpisode");
-					break;
-			}
-		}
-		super.process(userInput);
-	}
-	
 	private void cancelDownloadEpisode() {
 		urlDownloads.cancelDownload(urlDownloads.findDownload(episode.getURL()));
 		// urlDownload.removeDownload will do all of the podcast status alterations, so that it is uniform and
 		// in the 1 place.
 	}
 
-	private void deleteEpisode() {
-		// TODO Auto-generated method stub
-		
+	private void deleteEpisodeFromDrive() {
+		System.out.println("Local File: "+podcast.getDirectory()+episode.getURL().getFile());
+		//File localFile = new File(podcast.getDirectory()+);
 	}
 
 	private void downloadEpisode() {
@@ -131,7 +108,35 @@ public class CLEpisodeMenu extends CLMenu {
 		this.podcast = podcast;
 	}
 
+	public void process(int userInput){
+		//System.out.println("CLEpisodeMenu.process(int)");
+		if (menuList.size()==3){
+			switch (userInput){
+				case 1:
+					// Download the episode
+					downloadEpisode();
+					break;
+				case 2:
+					// Delete the episode from the drive
+					deleteEpisodeFromDrive();
+					break;
+				case 3:
+					// Cancel download of the episode
+					cancelDownloadEpisode();
+					break;
+				case 9:
+					// Exit episode menu, clearing the selected episode information
+					setEpisode(null,null);
+					menuList.removeSetting("selectedEpisode");
+					break;
+			}
+			userInput=-1000;
+		}
+		super.process(userInput);
+	}
+	
 	public void process(String userInput){
+		//System.out.println("CLEpisodeMenu.process(String)");
 		super.process(userInput);
 	}
 }
