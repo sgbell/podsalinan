@@ -265,12 +265,12 @@ public class DataStorage {
 											           "'"+download.getStatus()+"');");
 					sqlType=1;
 				} else if (download.isRemoved()){
-					sql = podsalinanDB.prepare("DELETE FROM downloads" +
+					sql = podsalinanDB.prepare("DELETE FROM downloads " +
 											   "WHERE url='"+download.getURL().toString()+"'"+
 											   "AND destination='"+download.getDestination()+"';");
 					//System.out.println("download being removed to database");
 				} else if (download.isUpdated()){
-					sql = podsalinanDB.prepare("UPDATE downloads" +
+					sql = podsalinanDB.prepare("UPDATE downloads " +
 											   "SET destination='"+download.getDestination()+"',"+
 											   	   "size='"+download.getSize()+"',"+
 											       "priority='"+downloadCount+"',"+
@@ -332,10 +332,10 @@ public class DataStorage {
 							 				   "'"+podcast.getDirectory()+"');");
 					sqlMethod=1;
 				} else if (podcast.isRemoved()){
-					sql = podsalinanDB.prepare("DELETE FROM podcasts" +
+					sql = podsalinanDB.prepare("DELETE FROM podcasts " +
 											   "WHERE localfile='"+podcast.getDatafile()+"',");
 				} else if (podcast.isChanged()){
-					sql = podsalinanDB.prepare("UPDATE podcasts" +
+					sql = podsalinanDB.prepare("UPDATE podcasts " +
 											   "SET name='"+podcast.getName()+"',"+
 											       "directory='"+podcast.getDirectory()+"',"+
 											       "url='"+podcast.getURL()+"'"+

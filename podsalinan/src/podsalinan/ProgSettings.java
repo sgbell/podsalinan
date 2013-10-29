@@ -88,9 +88,9 @@ public class ProgSettings {
 	public boolean removeSetting(String name){
 		Setting currentSetting=findSetting(name);
 		if (currentSetting!=null){
-			System.out.println("Debug: Found setting");
+			//System.out.println("Debug: Found setting");
 			settings.remove(currentSetting);
-			System.out.println("Size: "+settings.size());
+			//System.out.println("Size: "+settings.size());
 			return true;
 		}
 		return false;

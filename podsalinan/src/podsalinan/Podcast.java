@@ -230,21 +230,39 @@ public class Podcast extends DownloadDetails{
 			if (episodeList.size()>0)
 				if ((episodeCount<episodeList.size())&&
 					(episodeCount>=0)){
-					File destinationFile=null;
-					if (System.getProperty("os.name").equalsIgnoreCase("linux"))
-						destinationFile = new File(getDirectory()+"/"+episodeList.get(episodeCount).getURL().getFile());
-					else if (System.getProperty("os.name").startsWith("Windows"))
-						destinationFile = new File(getDirectory()+"\\"+episodeList.get(episodeCount).getURL().getFile());
-					if (destinationFile!=null){
-						if (destinationFile.exists()){
-							destinationFile.delete();
-							episodeList.get(episodeCount).setStatus(Episode.NOT_STARTED);
-							return 0;
-						}
-					}
+					return deleteEpisodeFromDrive(episodeList.get(episodeCount));
 				}
 		}
-			
+		
+		return -1;
+	}
+	
+	/**
+	 * 
+	 * @param selectedEpisode
+	 * @return
+	 */
+	public int deleteEpisodeFromDrive(Episode selectedEpisode){
+		/* 
+		 * The reason this method is not in episode is because the destination directory is stored this class
+		 */
+		if (selectedEpisode!=null)
+			synchronized(selectedEpisode){
+				File destinationFile=null;
+				if (System.getProperty("os.name").equalsIgnoreCase("linux"))
+					destinationFile = new File(getDirectory()+"/"+selectedEpisode.getURL().getFile());
+				else if (System.getProperty("os.name").startsWith("Windows"))
+					destinationFile = new File(getDirectory()+"\\"+selectedEpisode.getURL().getFile());
+				if (destinationFile!=null){
+					if (destinationFile.exists()){
+						destinationFile.delete();
+						selectedEpisode.setStatus(Episode.NOT_STARTED);
+						return 0;
+					}
+				}
+				
+			}
+		
 		return -1;
 	}
 	

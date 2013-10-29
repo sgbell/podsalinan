@@ -68,7 +68,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 	}
 
 	public void process(int userInputInt){
-		//System.out.println("CLPodcastSelectedMenu.process(int)");
+		System.out.println("CLPodcastSelectedMenu.process(int)");
 		//System.out.println("menuList.size(): "+menuList.size());
 		if (menuList.size()==2){
 			switch (userInputInt){
@@ -102,7 +102,11 @@ public class CLPodcastSelectedMenu extends CLMenu {
 				((CLEpisodeMenu)findSubmenu("episode_selected")).process(userInputInt);
 			}
 		}
-		super.process(userInputInt);
+		if (menuList.size()==2){
+			userInputInt=-1000;
+			System.out.println("CLPodcastSelectedMenu.process(int) calling super.process(int)");
+			super.process(userInputInt);
+		}
 	}
 
 	public void process(String userInput){
@@ -126,7 +130,10 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			if (menuList.findSetting("selectedEpisode")!=null){
 				((CLEpisodeMenu)findSubmenu("episode_selected")).process(userInput);
 			}
-		} else 
+		}
+		if (menuList.size()==2){
+			userInput=null;
 			super.process(userInput);
+		}
 	}
 }

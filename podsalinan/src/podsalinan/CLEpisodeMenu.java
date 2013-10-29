@@ -49,10 +49,11 @@ public class CLEpisodeMenu extends CLMenu {
 					break;
 			}
 			super.printMainMenu();
-		} else {
+		}/* else {
+			
 			System.out.println("Error: Invalid Episode");
 			menuList.removeSetting("selectedEpisode");
-		}
+		}*/
 	}
 
 	public Episode getEpisode() {
@@ -85,13 +86,13 @@ public class CLEpisodeMenu extends CLMenu {
 	}
 
 	private void deleteEpisodeFromDrive() {
-		System.out.println("Local File: "+podcast.getDirectory()+episode.getURL().getFile());
-		//File localFile = new File(podcast.getDirectory()+);
+		// Added a new method to podcast, if we already have the episode instance
+		podcast.deleteEpisodeFromDrive(episode);
 	}
 
 	private void downloadEpisode() {
 		episode.setStatus(Details.CURRENTLY_DOWNLOADING);
-		urlDownloads.addDownload(episode.getURL(), podcast, episode.getSize());
+		urlDownloads.addDownload(episode, podcast);
 	}
 
 	/**
@@ -109,7 +110,7 @@ public class CLEpisodeMenu extends CLMenu {
 	}
 
 	public void process(int userInput){
-		//System.out.println("CLEpisodeMenu.process(int)");
+		System.out.println("CLEpisodeMenu.process(int)");
 		if (menuList.size()==3){
 			switch (userInput){
 				case 1:
@@ -132,11 +133,12 @@ public class CLEpisodeMenu extends CLMenu {
 			}
 			userInput=-1000;
 		}
+		System.out.println("CLEpisodeMenu.process(int) calling super.process(int)");
 		super.process(userInput);
 	}
 	
 	public void process(String userInput){
-		//System.out.println("CLEpisodeMenu.process(String)");
+		System.out.println("CLEpisodeMenu.process(String)");
 		super.process(userInput);
 	}
 }

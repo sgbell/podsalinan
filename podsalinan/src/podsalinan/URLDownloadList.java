@@ -81,14 +81,25 @@ public class URLDownloadList extends DownloadDetails {
 		}
 	}
 	
-	public void addDownload(URL url, Podcast podcast, String size){
-		URLDownload newFile = new URLDownload(url,false);
-		newFile.setDestination(podcast.getDirectory());
-		newFile.setPodcastId(podcast.getDatafile());
-		if (size!="-1")
-			newFile.setSize(size);
-		downloads.add(newFile);
-		checkDownloadSize(newFile);
+	public void addDownload(Episode episode, Podcast podcast){
+		int count = findDownload(episode.getURL());
+		if (count<0){
+			URLDownload newFile = new URLDownload(episode.getURL(),false);
+			newFile.setDestination(podcast.getDirectory());
+			newFile.setPodcastId(podcast.getDatafile());
+			System.out.println("Debug: URLDownloadList.addDownload(Episode, Podcast) - podcastID="+podcast.getDatafile());
+			if (episode.getSize()!="-1")
+				newFile.setSize(episode.getSize());
+			downloads.add(newFile);
+			checkDownloadSize(newFile);
+		} else {
+			URLDownload download = getDownloads().get(count);
+			if ((download!=null)&&
+				(download.getPodcastId()==null)){
+				episode.setStatus(Details.CURRENTLY_DOWNLOADING);
+				download.setPodcastId(podcast.getDatafile());
+			}
+		}
 	}
 	/**
 	 * This will move the selected download up the queue
@@ -136,8 +147,10 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public void cancelDownload(int download) {
+		System.out.println("URLDownloadList.cancelDownload() - downloads.size()="+downloads.size());
 		if ((download >=0)&&(download<downloads.size())){
 			// if download is an episode from a podcast we need to set the status on the episode and remove it from the list
+			System.out.println("Debug: URLDownloadList.cancelDownload(int) - podcastID: "+downloads.get(download).getPodcastId());
 			if (downloads.get(download).getPodcastId()!=""){
 				for (Podcast currentPodcast : podcasts)
 					if (currentPodcast.getDatafile().equalsIgnoreCase(downloads.get(download).getPodcastId())){
@@ -185,8 +198,14 @@ public class URLDownloadList extends DownloadDetails {
 	public int findDownload(URL url) {
 		int count=0;
 		for (URLDownload download : downloads){
-			if (download.getURL().toString().equalsIgnoreCase(url.toString()))
+			if (download.getURL().toString().equalsIgnoreCase(url.toString())){
+				System.out.println("Debug: URLDownloadList.findDownload(URL) - download(");
+				System.out.println("Debug:     Destination="+download.getDestination());
+				System.out.println("Debug:     PodcastId="+download.getPodcastId());
+				System.out.println("Debug:     Size="+download.getSize());
+				System.out.println("Debug:     URL="+download.getURL()+")");
 				return count;
+			}
 			count++;
 		}
 		return -1;
