@@ -28,6 +28,7 @@ public class CLDownloadMenu extends CLMenu{
 		for (URLDownload download : urlDownloads.getDownloads()){
 			if (!download.isRemoved()){
 				System.out.println(getEncodingFromNumber(downloadCount)+". "+download.getURL().toString());
+				downloadCount++;
 			}
 		}
 		

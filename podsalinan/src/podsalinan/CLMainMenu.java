@@ -20,6 +20,7 @@ public class CLMainMenu extends CLMenu{
 				"1. Podcasts Menu",
 				"2. Downloads Menu",
 				"3. Preferences",
+				"",
 				"4. Quit"};
 		setMainMenuList(mainMenuList);
 		podcasts = podcastList;

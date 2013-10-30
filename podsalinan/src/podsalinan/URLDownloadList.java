@@ -98,6 +98,7 @@ public class URLDownloadList extends DownloadDetails {
 				(download.getPodcastId()==null)){
 				episode.setStatus(Details.CURRENTLY_DOWNLOADING);
 				download.setPodcastId(podcast.getDatafile());
+				download.setUpdated(true);
 			}
 		}
 	}
@@ -196,7 +197,19 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public int findDownload(URL url) {
+		System.out.println("Debug: findDownload(URL)"+url.toString());
 		int count=0;
+		URL lastURL=null;
+		
+		for (URLDownload download : downloads){
+			System.out.println("Debug: findDownload(URL) download="+download.getURL().toString());
+			if ((lastURL!=null)&&(download.getURL().toString().equalsIgnoreCase(lastURL.toString()))){
+				download.setRemoved(true);
+			} else {
+				lastURL = download.getURL();
+			}
+		}
+
 		for (URLDownload download : downloads){
 			if (download.getURL().toString().equalsIgnoreCase(url.toString())){
 				System.out.println("Debug: URLDownloadList.findDownload(URL) - download(");

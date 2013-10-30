@@ -265,6 +265,8 @@ public class DataStorage {
 											           "'"+download.getStatus()+"');");
 					sqlType=1;
 				} else if (download.isRemoved()){
+					System.out.println("URL= "+download.getURL().toString());
+					System.out.println("Destination= "+download.getDestination());
 					sql = podsalinanDB.prepare("DELETE FROM downloads " +
 											   "WHERE url='"+download.getURL().toString()+"'"+
 											   "AND destination='"+download.getDestination()+"';");
