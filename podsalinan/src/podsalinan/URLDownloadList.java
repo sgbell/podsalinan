@@ -82,8 +82,9 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	public void addDownload(Episode episode, Podcast podcast){
-		int count = findDownload(episode.getURL());
-		if (count<0){
+		System.out.println("Debug: URLDownloadList.addDownload(Episode,Podcast)");
+		int position = findDownload(episode.getURL());
+		if (position<0){
 			URLDownload newFile = new URLDownload(episode.getURL(),false);
 			newFile.setDestination(podcast.getDirectory());
 			newFile.setPodcastId(podcast.getDatafile());
@@ -91,14 +92,14 @@ public class URLDownloadList extends DownloadDetails {
 			if (episode.getSize()!="-1")
 				newFile.setSize(episode.getSize());
 			downloads.add(newFile);
+			System.out.println("Debug: download List size="+downloads.size());
 			checkDownloadSize(newFile);
 		} else {
-			URLDownload download = getDownloads().get(count);
+			URLDownload download = getDownloads().get(position);
 			if ((download!=null)&&
 				(download.getPodcastId()==null)){
 				episode.setStatus(Details.CURRENTLY_DOWNLOADING);
 				download.setPodcastId(podcast.getDatafile());
-				download.setUpdated(true);
 			}
 		}
 	}

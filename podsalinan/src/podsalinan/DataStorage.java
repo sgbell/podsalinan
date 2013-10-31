@@ -255,7 +255,9 @@ public class DataStorage {
 				sql = null;
 				int sqlType=0;
 				if (!download.isAdded()){
-					//System.out.println("New download being added to database");
+					System.out.println("Adding Download");
+					System.out.println("URL= "+download.getURL().toString());
+					System.out.println("Destination= "+download.getDestination());
 					sql = podsalinanDB.prepare("INSERT INTO downloads(url,size,destination,priority,podcastSource,status) " +
 											   "VALUES ('"+download.getURL().toString()+"',"+
 											           "'"+download.getSize()+"',"+ 
@@ -265,6 +267,7 @@ public class DataStorage {
 											           "'"+download.getStatus()+"');");
 					sqlType=1;
 				} else if (download.isRemoved()){
+					System.out.println("Deleting Download");
 					System.out.println("URL= "+download.getURL().toString());
 					System.out.println("Destination= "+download.getDestination());
 					sql = podsalinanDB.prepare("DELETE FROM downloads " +
@@ -358,6 +361,8 @@ public class DataStorage {
 				}
 			} catch (SQLiteException e) {
 			}
+			
+			savePodcast(podcast);
 		}
 	}
 
@@ -401,6 +406,7 @@ public class DataStorage {
 										 sql.columnString(5).replaceAll("&apos;", "\'"),
 										 sql.columnInt(6));
 				ep.setAdded(true);
+				ep.setUpdated(false);
 				//podcast.getEpisodes().add(ep);
 				podcast.addEpisode(ep);
 			}
@@ -448,9 +454,11 @@ public class DataStorage {
 					currentEpisode.setAdded(true);
 				} else if (currentEpisode.isUpdated()) {
 					// If the episode has been updated. it will up updated in the database.
+					System.out.println("Updating DB: "+currentEpisode.getURL().toString());
 					sql = feedDB.prepare("UPDATE shows " +
 					 		   			 "SET status="+currentEpisode.getStatus()+", " +
-					 		   			     "description='"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"' " +
+					 		   			 "description='"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"', " +
+					 		   			 "size='"+currentEpisode.getSize()+"' " +
 					 		   			 "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
 					sql.stepThrough();
 					sql.dispose();

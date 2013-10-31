@@ -88,5 +88,6 @@ public class URLDownload extends Details {
 	 */
 	public void setPodcastId(String podcastId) {
 		this.podcastId = podcastId;
+		this.setUpdated(true);
 	}
 }
