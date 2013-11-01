@@ -191,7 +191,7 @@ public class Podcast extends DownloadDetails{
 						// Read the episode list from the xml file.
 						Vector<Episode> newEpisodeList = xmlfile.parseEpisodes(new FileInputStream(outputFile));
 						synchronized(episodeList){
-							if (episodeList!=null)
+							if (episodeList!=null){
 								for (Episode newEpisode : newEpisodeList){
 									boolean foundEpisode=false;
 									int episodeCount=0;
@@ -199,7 +199,7 @@ public class Podcast extends DownloadDetails{
 									// if it is already found
 									while ((!foundEpisode)&&(episodeCount<episodeList.size())){
 										Episode currentEpisode = episodeList.get(episodeCount);
-										if (newEpisode.getTitle().equalsIgnoreCase(currentEpisode.getTitle()))
+										if (newEpisode.getURL().toString().equalsIgnoreCase(currentEpisode.getURL().toString()))
 											foundEpisode=true;
 										else
 											episodeCount++;
@@ -209,6 +209,7 @@ public class Podcast extends DownloadDetails{
 										addEpisode(newEpisode);
 									}
 								}
+							}
 						}
 					}
 					// Delete the temp file from the filesystem

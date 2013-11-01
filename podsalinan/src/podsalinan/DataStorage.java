@@ -398,6 +398,7 @@ public class DataStorage {
 			
 			// Read the episodes from the podcast database.
 			sql = feedDb.prepare("SELECT * FROM shows;");
+			//System.out.println("Number of episode in file: "+sql.);
 			while (sql.step()){
 				Episode ep = new Episode(sql.columnString(1),
 										 sql.columnString(2).replaceAll("&apos;", "\'"),
@@ -414,6 +415,7 @@ public class DataStorage {
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Number of Episodes: "+podcast.getEpisodes().size());
 	}
 	
 	/**
@@ -442,6 +444,7 @@ public class DataStorage {
 			for (int epCount=0; epCount< savedPodcast.getEpisodes().size(); epCount++){
 				Episode currentEpisode = savedPodcast.getEpisodes().get(epCount);
 				if (!currentEpisode.isAdded()){
+					//System.out.println("Adding URL to database: "+currentEpisode.getURL().toString());
 					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description,status)" +
 							"						VALUES ('"+currentEpisode.getDate()+"'," +
 							 							   "'"+currentEpisode.getTitle().replaceAll("\'", "&apos;")+"'," +

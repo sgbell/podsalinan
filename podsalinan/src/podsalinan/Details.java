@@ -129,10 +129,12 @@ public class Details {
 	public void setStatus(int newStatus){
 		status=newStatus;
 		updated=true;
+		/*
 		if (updated){
 			System.out.println("Updated URL: "+getURL().toString());
 		    System.out.println("Status: "+getStatus());
 		}
+		*/
 	}
 
 	/**
