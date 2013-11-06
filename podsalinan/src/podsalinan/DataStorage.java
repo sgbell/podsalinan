@@ -369,7 +369,7 @@ public class DataStorage {
 	public void loadPodcast(Podcast podcast){
 		String feedFilename=settingsDir.concat("/"+podcast.getDatafile()+".pod");
 		SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
-		
+
 		try {
 			feedDb.open();
 			
@@ -396,7 +396,6 @@ public class DataStorage {
 				sql.dispose();
 			}
 			
-			// Read the episodes from the podcast database.
 			sql = feedDb.prepare("SELECT * FROM shows;");
 			//System.out.println("Number of episode in file: "+sql.);
 			while (sql.step()){
@@ -415,7 +414,6 @@ public class DataStorage {
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Number of Episodes: "+podcast.getEpisodes().size());
 	}
 	
 	/**
@@ -441,6 +439,18 @@ public class DataStorage {
 				sql.stepThrough();
 				sql.dispose();
 			}
+			
+			/* You need to do a quick count of the database and see if the record count is equal to the array count
+			 * If it is not equal. backup the database file and create a new one. Then if the records have not been marked deleted,
+			 * add them all to the database file.
+			 * 
+			 * Write this here!!!!!
+			 */
+			
+			
+			
+			
+			
 			for (int epCount=0; epCount< savedPodcast.getEpisodes().size(); epCount++){
 				Episode currentEpisode = savedPodcast.getEpisodes().get(epCount);
 				if (!currentEpisode.isAdded()){
