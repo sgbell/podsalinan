@@ -411,6 +411,7 @@ public class DataStorage {
 				podcast.addEpisode(ep);
 			}
 			sql.dispose();
+			System.out.println("Podcast: "+podcast.getName()+" - "+podcast.getEpisodes().size());
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}
@@ -440,17 +441,6 @@ public class DataStorage {
 				sql.dispose();
 			}
 			
-			/* You need to do a quick count of the database and see if the record count is equal to the array count
-			 * If it is not equal. backup the database file and create a new one. Then if the records have not been marked deleted,
-			 * add them all to the database file.
-			 * 
-			 * Write this here!!!!!
-			 */
-			
-			
-			
-			
-			
 			for (int epCount=0; epCount< savedPodcast.getEpisodes().size(); epCount++){
 				Episode currentEpisode = savedPodcast.getEpisodes().get(epCount);
 				if (!currentEpisode.isAdded()){
@@ -476,6 +466,28 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 					currentEpisode.setUpdated(false);
+				}
+				
+				// Looking for multiple copies of the 1 episode
+				String urlID=null;
+                // The following will search through the database for the current episode's minimum id
+				sql = feedDB.prepare("SELECT min(id) "
+						           + "FROM   shows "
+						           + "WHERE  url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
+				while (sql.step()){
+					urlID=sql.columnString(0);
+				}
+				sql.dispose();
+				// Using the current episode's db minimum id, it will remove all matching episodes except for the minimum id
+				
+				if (urlID!=null){
+					System.out.println (savedPodcast.getName()+" - Minimum Episode id:"+urlID);
+					sql = feedDB.prepare("DELETE "
+							           + "FROM  shows "
+							           + "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"' "
+							           + "AND   id!="+urlID+";");
+					sql.stepThrough();
+					sql.dispose();
 				}
 			}
 			feedDB.dispose();
