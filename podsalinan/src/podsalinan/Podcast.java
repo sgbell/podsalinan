@@ -198,6 +198,7 @@ public class Podcast extends DownloadDetails{
 									// Using a while loop here, because we don't want to continue looking for an episode
 									// if it is already found
 									while ((!foundEpisode)&&(episodeCount<episodeList.size())){
+										// This code does not seem to be working, as it should be finding the url :(
 										Episode currentEpisode = episodeList.get(episodeCount);
 										if (newEpisode.getURL().toString().equalsIgnoreCase(currentEpisode.getURL().toString()))
 											foundEpisode=true;
@@ -205,9 +206,10 @@ public class Podcast extends DownloadDetails{
 											episodeCount++;
 									}
 									if (!foundEpisode){
-										//episodeList.add(newEpisode);
 										addEpisode(newEpisode);
-									}
+										System.out.println("Not Found Episode: "+newEpisode.getURL().toString());
+									} else
+										System.out.println("Found Episode: "+newEpisode.getURL().toString());
 								}
 							}
 						}
@@ -273,8 +275,8 @@ public class Podcast extends DownloadDetails{
 	 * @return
 	 */
 	public int addEpisode(Episode newEpisode){
-		synchronized(episodeList){
-			if (episodeList!=null)
+		if (episodeList!=null)
+			synchronized(episodeList){
 				if (episodeList.size()>0){
 					try {
 						Date newEpisodeDate = df.parse(newEpisode.getDate());
@@ -291,14 +293,15 @@ public class Podcast extends DownloadDetails{
 							episodeList.add(epCount, newEpisode);
 						else 
 							episodeList.add(newEpisode);
-						
+						return 0;
 					} catch (ParseException e) {
 					}
 					
 				} else {
 					episodeList.add(newEpisode);
+					return 0;
 				}
-		}
+			}
 		
 		return -1;
 	}

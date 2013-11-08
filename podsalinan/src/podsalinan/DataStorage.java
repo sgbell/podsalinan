@@ -396,8 +396,8 @@ public class DataStorage {
 				sql.dispose();
 			}
 			
+			int sqlCount=0;
 			sql = feedDb.prepare("SELECT * FROM shows;");
-			//System.out.println("Number of episode in file: "+sql.);
 			while (sql.step()){
 				Episode ep = new Episode(sql.columnString(1),
 										 sql.columnString(2).replaceAll("&apos;", "\'"),
@@ -409,9 +409,11 @@ public class DataStorage {
 				ep.setUpdated(false);
 				//podcast.getEpisodes().add(ep);
 				podcast.addEpisode(ep);
+				sqlCount++;
 			}
 			sql.dispose();
 			System.out.println("Podcast: "+podcast.getName()+" - "+podcast.getEpisodes().size());
+			System.out.println("DB count: "+sqlCount);
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}
@@ -481,7 +483,25 @@ public class DataStorage {
 				// Using the current episode's db minimum id, it will remove all matching episodes except for the minimum id
 				
 				if (urlID!=null){
-					System.out.println (savedPodcast.getName()+" - Minimum Episode id:"+urlID);
+					int urlCount=0;
+					sql = feedDB.prepare("SELECT count(*) "
+									   + "FROM shows "
+									   + "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
+					while(sql.step()){
+						urlCount=Integer.parseInt(sql.columnString(0));
+					}
+					sql.dispose();
+					if (urlCount>1){
+						sql = feedDB.prepare("SELECT id "
+						           + "FROM shows "
+						           + "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
+						while(sql.step()){
+							System.out.println("URL='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"' - "+
+											   sql.columnString(0));
+						}
+						
+					}
+					//System.out.println (savedPodcast.getName()+" - Minimum Episode id:"+urlID);
 					sql = feedDB.prepare("DELETE "
 							           + "FROM  shows "
 							           + "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"' "
