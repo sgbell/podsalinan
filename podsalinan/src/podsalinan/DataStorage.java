@@ -405,6 +405,11 @@ public class DataStorage {
 										 sql.columnString(4),
 										 sql.columnString(5).replaceAll("&apos;", "\'"),
 										 sql.columnInt(6));
+				if ((ep.getURL().toString().contains("1413"))&&(podcast.getName().contains("ak5"))){
+					System.out.println("Episode 1413 Found");
+					System.out.println("Episode Date: "+ep.getDate());
+					System.out.println("SQL Date: "+sql.columnString(1));
+				}
 				ep.setAdded(true);
 				ep.setUpdated(false);
 				//podcast.getEpisodes().add(ep);

@@ -56,6 +56,8 @@ public class Episode extends Details {
 			DateFormat newFormat = new SimpleDateFormat(dateFormat);
 			return newFormat.format(newDate);
 		} catch (ParseException e) {
+			if (getURL().toString().contains("1413"))
+				e.printStackTrace();
 		}
 		return "";
 	}

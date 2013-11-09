@@ -291,14 +291,20 @@ public class Podcast extends DownloadDetails{
 						}
 						if (found)
 							episodeList.add(epCount, newEpisode);
-						else 
+						else
 							episodeList.add(newEpisode);
+						if (newEpisode.getURL().toString().contains("1413"))
+							System.out.println("Episode Added To Vector");
 						return 0;
 					} catch (ParseException e) {
+						if ((newEpisode.getURL().toString().contains("1413"))&&(getName().contains("ak5")))
+							e.printStackTrace();
 					}
 					
 				} else {
 					episodeList.add(newEpisode);
+					if (newEpisode.getURL().toString().contains("1413"))
+						System.out.println("Episode 1413 Added");
 					return 0;
 				}
 			}
