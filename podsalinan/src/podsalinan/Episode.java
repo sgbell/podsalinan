@@ -36,6 +36,7 @@ public class Episode extends Details {
 				   description;
 	
 	private static final String dateFormat="EEE, dd-MMM-yyy HH:mm:ss";
+	private static final String originalDateFormat="EEE, dd MMM yyy HH:mm:ss zzz";
 
 	public Episode(String published, String title, String url, String length,
 			       String desc, int status) {
@@ -50,14 +51,34 @@ public class Episode extends Details {
 	}
 
 	public String getDate(){
-		DateFormat df = new SimpleDateFormat("EEE, dd MMM yyy HH:mm:ss zzz");
+		// Original Timestamp in xml file
+		DateFormat df = new SimpleDateFormat(originalDateFormat);
 		try {
 			Date newDate = df.parse(date);
 			DateFormat newFormat = new SimpleDateFormat(dateFormat);
 			return newFormat.format(newDate);
 		} catch (ParseException e) {
+			// If date in data file is now set to the user readable format
+			setUpdated(true);
+			return date;
 		}
-		return "";
+	}
+	
+	/**
+	 * This method is used to ensure that all the dates are stored in their original format
+	 * @return
+	 */
+	public String getOriginalDate(){
+		DateFormat df = new SimpleDateFormat(dateFormat);
+		try {
+			Date newDate = df.parse(date);
+			DateFormat newFormat = new SimpleDateFormat(originalDateFormat);
+			// If date is in the user readable format, reformat it.
+			return newFormat.format(newDate);
+		} catch (ParseException e) {
+			// If date is in original format return it
+			return date;
+		}
 	}
 	
 	public void setDate(String newDate){

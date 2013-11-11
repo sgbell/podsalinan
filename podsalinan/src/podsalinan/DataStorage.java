@@ -448,7 +448,7 @@ public class DataStorage {
 				if (!currentEpisode.isAdded()){
 					//System.out.println("Adding URL to database: "+currentEpisode.getURL().toString());
 					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description,status)" +
-							"						VALUES ('"+currentEpisode.getDate()+"'," +
+							"						VALUES ('"+currentEpisode.getOriginalDate()+"'," +
 							 							   "'"+currentEpisode.getTitle().replaceAll("\'", "&apos;")+"'," +
 							 							   "'"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"'," +
 							 							   "'"+currentEpisode.getSize()+"'," +
@@ -463,25 +463,48 @@ public class DataStorage {
 					sql = feedDB.prepare("UPDATE shows " +
 					 		   			 "SET status="+currentEpisode.getStatus()+", " +
 					 		   			 "description='"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"', " +
-					 		   			 "size='"+currentEpisode.getSize()+"' " +
+					 		   			 "size='"+currentEpisode.getSize()+"', " +
+					 		   			 "published='"+currentEpisode.getOriginalDate()+"' " +
 					 		   			 "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
 					sql.stepThrough();
 					sql.dispose();
 					currentEpisode.setUpdated(false);
 				}
 				
+				cleanEpisodesinDB(feedDB, currentEpisode);
+			}
+			feedDB.dispose();
+		} catch (SQLiteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * This method is used to clean duplicate episodes out of the database. I created this, because in changing the output of the
+	 * episode string, I forgot to make the original format available. This caused every episode to be written to the database
+	 * every time the program was executed :(
+	 * 
+	 * @param feedDB
+	 * @param currentEpisode
+	 */
+	private void cleanEpisodesinDB(SQLiteConnection feedDB,
+			                       Episode currentEpisode) {
+		
+		SQLiteStatement sql;
+		
+		try {
+			if ((feedDB!=null)&& (currentEpisode!=null)){
 				// Looking for multiple copies of the 1 episode
 				String urlID=null;
-                // The following will search through the database for the current episode's minimum id
-				sql = feedDB.prepare("SELECT min(id) "
-						           + "FROM   shows "
-						           + "WHERE  url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
+	            // The following will search through the database for the current episode's minimum id
+					sql = feedDB.prepare("SELECT min(id) "
+							           + "FROM   shows "
+							           + "WHERE  url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
 				while (sql.step()){
 					urlID=sql.columnString(0);
 				}
 				sql.dispose();
-				// Using the current episode's db minimum id, it will remove all matching episodes except for the minimum id
-				
+
 				if (urlID!=null){
 					int urlCount=0;
 					sql = feedDB.prepare("SELECT count(*) "
@@ -501,7 +524,6 @@ public class DataStorage {
 						}
 						
 					}
-					//System.out.println (savedPodcast.getName()+" - Minimum Episode id:"+urlID);
 					sql = feedDB.prepare("DELETE "
 							           + "FROM  shows "
 							           + "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"' "
@@ -510,12 +532,11 @@ public class DataStorage {
 					sql.dispose();
 				}
 			}
-			feedDB.dispose();
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @return
