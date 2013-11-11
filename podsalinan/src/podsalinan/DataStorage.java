@@ -412,8 +412,8 @@ public class DataStorage {
 				sqlCount++;
 			}
 			sql.dispose();
-			System.out.println("Podcast: "+podcast.getName()+" - "+podcast.getEpisodes().size());
-			System.out.println("DB count: "+sqlCount);
+			//System.out.println("Podcast: "+podcast.getName()+" - "+podcast.getEpisodes().size());
+			//System.out.println("DB count: "+sqlCount);
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}

@@ -207,9 +207,9 @@ public class Podcast extends DownloadDetails{
 									}
 									if (!foundEpisode){
 										addEpisode(newEpisode);
-										System.out.println("Not Found Episode: "+newEpisode.getURL().toString());
-									} else
-										System.out.println("Found Episode: "+newEpisode.getURL().toString());
+										//System.out.println("Not Found Episode: "+newEpisode.getURL().toString());
+									}// else
+									//	System.out.println("Found Episode: "+newEpisode.getURL().toString());
 								}
 							}
 						}
