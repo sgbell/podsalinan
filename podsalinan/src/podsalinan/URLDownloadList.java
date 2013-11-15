@@ -73,9 +73,11 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	public void addDownload(URLDownload newDownload, int priority) {
+		// If nothing in the download list, or if priority is equal to the size
 		if ((downloads.size()==0)||
-			(priority>downloads.size()))
+			(priority>=downloads.size()))
 			downloads.add(newDownload);
+		// if the priority is less then the download size add it to the queue at the position of priority
 		else if (priority<downloads.size()){
 			downloads.insertElementAt(newDownload, priority);
 		}

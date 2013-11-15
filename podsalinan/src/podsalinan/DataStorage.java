@@ -459,7 +459,7 @@ public class DataStorage {
 					currentEpisode.setAdded(true);
 				} else if (currentEpisode.isUpdated()) {
 					// If the episode has been updated. it will up updated in the database.
-					System.out.println("Updating DB: "+currentEpisode.getURL().toString());
+					//System.out.println("Updating DB: "+currentEpisode.getURL().toString());
 					sql = feedDB.prepare("UPDATE shows " +
 					 		   			 "SET status="+currentEpisode.getStatus()+", " +
 					 		   			 "description='"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"', " +
