@@ -504,7 +504,8 @@ public class DataStorage {
 					urlID=sql.columnString(0);
 				}
 				sql.dispose();
-
+				// Using the current episode's db minimum id, it will remove all matching episodes except for the minimum id
+				
 				if (urlID!=null){
 					int urlCount=0;
 					sql = feedDB.prepare("SELECT count(*) "
