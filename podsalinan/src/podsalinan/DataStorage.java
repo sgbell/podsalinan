@@ -107,8 +107,10 @@ public class DataStorage {
 																  sql.columnString(3),
 																  sql.columnString(5),
 																  sql.columnInt(6));
+						System.out.println("Download url: "+newDownload.getURL());
 						newDownload.setAdded(true);
 						downloads.addDownload(newDownload, sql.columnInt(4));
+						System.out.println("Debug: Downloads size = "+downloads.size());
 					}
 				}
 				sql.dispose();
@@ -459,7 +461,7 @@ public class DataStorage {
 					currentEpisode.setAdded(true);
 				} else if (currentEpisode.isUpdated()) {
 					// If the episode has been updated. it will up updated in the database.
-					System.out.println("Updating DB: "+currentEpisode.getURL().toString());
+					//System.out.println("Updating DB: "+currentEpisode.getURL().toString());
 					sql = feedDB.prepare("UPDATE shows " +
 					 		   			 "SET status="+currentEpisode.getStatus()+", " +
 					 		   			 "description='"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"', " +
