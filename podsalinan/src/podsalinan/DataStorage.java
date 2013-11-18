@@ -19,6 +19,7 @@
 package podsalinan;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Vector;
 
 import com.almworks.sqlite4java.SQLiteConnection;
@@ -107,10 +108,10 @@ public class DataStorage {
 																  sql.columnString(3),
 																  sql.columnString(5),
 																  sql.columnInt(6));
-						System.out.println("Download url: "+newDownload.getURL());
+						//System.out.println("Download url: "+newDownload.getURL());
 						newDownload.setAdded(true);
 						downloads.addDownload(newDownload, sql.columnInt(4));
-						System.out.println("Debug: Downloads size = "+downloads.size());
+						//System.out.println("Debug: Downloads size = "+downloads.size());
 					}
 				}
 				sql.dispose();
@@ -293,20 +294,23 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 					switch (sqlType){
-					case 1:
-						download.setAdded(true);
-						break;
-					case 3:
-						download.setUpdated(false);
-						break;
-				}
+					    case 1:
+						    download.setAdded(true);
+						    break;
+					    case 3:
+						    download.setUpdated(false);
+						    break;
+				    }
 
 				}
+				cleanDownloadsinDB(podsalinanDB,download.getURL(),"downloads");
+				
 			} catch (SQLiteException e) {
 				e.printStackTrace();
 			}
 			downloadCount++;
 		}
+		
 		// clear the settings
 		try {
 			sql = podsalinanDB.prepare(CLEAR_ALL_SETTINGS);
@@ -473,7 +477,7 @@ public class DataStorage {
 					currentEpisode.setUpdated(false);
 				}
 				
-				cleanEpisodesinDB(feedDB, currentEpisode);
+				cleanDownloadsinDB(feedDB, currentEpisode.getURL(),"shows");
 			}
 			feedDB.dispose();
 		} catch (SQLiteException e) {
@@ -482,26 +486,27 @@ public class DataStorage {
 	}
 	
 	/**
-	 * This method is used to clean duplicate episodes out of the database. I created this, because in changing the output of the
+	 * This method is used to clean duplicate episodes/downloads out of the database. I created this, because in changing the output of the
 	 * episode string, I forgot to make the original format available. This caused every episode to be written to the database
 	 * every time the program was executed :(
 	 * 
 	 * @param feedDB
+	 * @param currentUrl 
 	 * @param currentEpisode
 	 */
-	private void cleanEpisodesinDB(SQLiteConnection feedDB,
-			                       Episode currentEpisode) {
+	private void cleanDownloadsinDB(SQLiteConnection podsalinanDB, URL currentUrl, String tableName) {
 		
 		SQLiteStatement sql;
 		
 		try {
-			if ((feedDB!=null)&& (currentEpisode!=null)){
+			if ((podsalinanDB!=null) && (currentUrl!=null) && 
+				((tableName.equalsIgnoreCase("shows"))||(tableName.equalsIgnoreCase("downloads")))){
 				// Looking for multiple copies of the 1 episode
 				String urlID=null;
 	            // The following will search through the database for the current episode's minimum id
-					sql = feedDB.prepare("SELECT min(id) "
-							           + "FROM   shows "
-							           + "WHERE  url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
+					sql = podsalinanDB.prepare("SELECT min(id) "
+							           + "FROM   "+tableName+" "
+							           + "WHERE  url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"';");
 				while (sql.step()){
 					urlID=sql.columnString(0);
 				}
@@ -510,26 +515,26 @@ public class DataStorage {
 				
 				if (urlID!=null){
 					int urlCount=0;
-					sql = feedDB.prepare("SELECT count(*) "
-									   + "FROM shows "
-									   + "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
+					sql = podsalinanDB.prepare("SELECT count(*) "
+									   + "FROM "+tableName+" "
+									   + "WHERE url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"';");
 					while(sql.step()){
 						urlCount=Integer.parseInt(sql.columnString(0));
 					}
 					sql.dispose();
 					if (urlCount>1){
-						sql = feedDB.prepare("SELECT id "
-						           + "FROM shows "
-						           + "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"';");
+						sql = podsalinanDB.prepare("SELECT id "
+						           + "FROM "+tableName+" "
+						           + "WHERE url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"';");
 						while(sql.step()){
-							System.out.println("URL='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"' - "+
+							System.out.println("URL='"+currentUrl.toString().replaceAll("\'", "&apos;")+"' - "+
 											   sql.columnString(0));
 						}
 						
 					}
-					sql = feedDB.prepare("DELETE "
-							           + "FROM  shows "
-							           + "WHERE url='"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"' "
+					sql = podsalinanDB.prepare("DELETE "
+							           + "FROM  "+tableName+" "
+							           + "WHERE url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"' "
 							           + "AND   id!="+urlID+";");
 					sql.stepThrough();
 					sql.dispose();
