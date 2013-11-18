@@ -26,4 +26,18 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	public URLDownload getDownload(){
 		return download;
 	}
+	
+	public void process(int inputInt){
+		switch (inputInt){
+			case 9:
+				menuList.clear();
+				break;
+		}
+		super.process(inputInt);
+	}
+	
+	public void process(String userInput){
+
+		super.process(userInput);
+	}
 }

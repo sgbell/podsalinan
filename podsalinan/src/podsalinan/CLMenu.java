@@ -19,6 +19,7 @@ public class CLMenu {
 		menuList = newMenuList;
 		setMenuName(newMenuName);
 		submenus = new ArrayList<CLMenu>();
+		mainMenuList = new String[]{ "I'm sorry there are currently no entries for this menu module."};
 	}
 	
 	public void printMainMenu(){
