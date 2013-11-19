@@ -36,6 +36,7 @@ public class CLDownloadMenu extends CLMenu{
 	}
 
 	public void process(int userInputInt) {
+		System.out.println("CLDownloadMenu.process(int);");
 		switch (userInputInt){
 			case 9:
 				menuList.clear();
@@ -45,6 +46,8 @@ public class CLDownloadMenu extends CLMenu{
 	}
 	
 	public void process(String userInput){
+		System.out.println("CLDownloadMenu.process(String);");
+		System.out.println("menuList.size()="+menuList.size());
 		if (menuList.size()==1){
 			if (userInput.length()<3){
 				int downloadNumber = convertCharToNumber(userInput);
@@ -53,16 +56,15 @@ public class CLDownloadMenu extends CLMenu{
 					(downloadNumber<0))
 					System.out.println("Error: Invalid Download Selected");
 				else {
-					synchronized (urlDownloads.getDownloads()){
-						menuList.addSetting("selectedDownload", urlDownloads.getDownloads().get(downloadNumber).getURL().toString());
-						((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).setDownload(urlDownloads.getDownloads().get(downloadNumber));
-					}
+					menuList.addSetting("selectedDownload", urlDownloads.getDownloads().get(downloadNumber).getURL().toString());
+					((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).setDownload(urlDownloads.getDownloads().get(downloadNumber));
 				}
 				userInput=null;
 			}
 		}
+		System.out.println("menuList.size()="+menuList.size());
 		if (menuList.size()>1){
-			if (menuList.findSetting("downloadSelected_menu")!=null)
+			if (menuList.findSetting("selectedDownload")!=null)
 				((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).process(userInput);
 		} else
 			super.process(userInput);

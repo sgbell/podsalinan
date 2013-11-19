@@ -204,12 +204,12 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public int findDownload(URL url) {
-		System.out.println("Debug: findDownload(URL)"+url.toString());
+		//System.out.println("Debug: findDownload(URL)"+url.toString());
 		int count=0;
 		URL lastURL=null;
 		
 		for (URLDownload download : downloads){
-			System.out.println("Debug: findDownload(URL) download="+download.getURL().toString());
+			//System.out.println("Debug: findDownload(URL) download="+download.getURL().toString());
 			if ((lastURL!=null)&&(download.getURL().toString().equalsIgnoreCase(lastURL.toString()))){
 				download.setRemoved(true);
 			} else {
@@ -219,11 +219,11 @@ public class URLDownloadList extends DownloadDetails {
 
 		for (URLDownload download : downloads){
 			if (download.getURL().toString().equalsIgnoreCase(url.toString())){
-				System.out.println("Debug: URLDownloadList.findDownload(URL) - download(");
+			/*	System.out.println("Debug: URLDownloadList.findDownload(URL) - download(");
 				System.out.println("Debug:     Destination="+download.getDestination());
 				System.out.println("Debug:     PodcastId="+download.getPodcastId());
 				System.out.println("Debug:     Size="+download.getSize());
-				System.out.println("Debug:     URL="+download.getURL()+")");
+				System.out.println("Debug:     URL="+download.getURL()+")");*/
 				return count;
 			}
 			count++;

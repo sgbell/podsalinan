@@ -16,7 +16,12 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	 */
 	public CLDownloadSelectedMenu(ProgSettings newMenuList) {
 		super(newMenuList, "downloadSelected_menu");
-		// TODO Auto-generated constructor stub
+		String[] menuList = {"1. Delete Download",
+				             "2. Restart Download",
+				             "3. Increase Priority",
+				             "4. Decrease Priority",
+				             "",
+				             "9. Quit"};
 	}
 
 	public void setDownload(URLDownload urlDownload) {
@@ -28,15 +33,23 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	}
 	
 	public void process(int inputInt){
-		switch (inputInt){
-			case 9:
-				menuList.clear();
-				break;
+		System.out.println("CLDownloadSelectedMenu.process(int)");
+		if (menuList.size()==2){
+			switch (inputInt){
+				case 9:
+					setDownload(null);
+					menuList.removeSetting("selectedDownload");
+					break;
+			}
 		}
-		super.process(inputInt);
+		if (menuList.size()==2){
+			inputInt=-1000;
+			super.process(inputInt);
+		}
 	}
 	
 	public void process(String userInput){
+		System.out.println("CLDownloadSelectedMenu.process(String)");
 
 		super.process(userInput);
 	}
