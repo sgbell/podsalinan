@@ -59,7 +59,7 @@ public class URLDownload extends Details {
 	}
 	
 	/**
-	 * @return the destination
+	 * @return the destination, including the filename
 	 */
 	public String getDestination() {
 		return destination.toString();

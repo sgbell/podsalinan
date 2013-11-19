@@ -37,17 +37,22 @@ public class CLDownloadMenu extends CLMenu{
 
 	public void process(int userInputInt) {
 		System.out.println("CLDownloadMenu.process(int);");
-		switch (userInputInt){
-			case 9:
-				menuList.clear();
-				break;
+		if (menuList.size()==1){
+			switch (userInputInt){
+			    case 9:
+				    menuList.clear();
+				    break;
+		    }
 		}
-		super.process(userInputInt);
+		if (menuList.size()>1){
+			if (menuList.findSetting("selectedDownload")!=null)
+				((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).process(userInputInt);
+		} else
+		    super.process(userInputInt);
 	}
 	
 	public void process(String userInput){
 		System.out.println("CLDownloadMenu.process(String);");
-		System.out.println("menuList.size()="+menuList.size());
 		if (menuList.size()==1){
 			if (userInput.length()<3){
 				int downloadNumber = convertCharToNumber(userInput);
