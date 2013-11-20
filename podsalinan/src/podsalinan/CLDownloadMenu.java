@@ -20,7 +20,7 @@ public class CLDownloadMenu extends CLMenu{
 		};
 		setMainMenuList(mainMenuList);
 		setUrlDownloads(downloadList);
-		addSubmenu(new CLDownloadSelectedMenu(menuList));
+		addSubmenu(new CLDownloadSelectedMenu(menuList, downloadList));
 	}
 
 	public void printMainMenu() {
@@ -44,11 +44,15 @@ public class CLDownloadMenu extends CLMenu{
 				    break;
 		    }
 		}
+		System.out.println("CLDownloadMenu.process(int) - menuList.size()="+menuList.size());
 		if (menuList.size()>1){
 			if (menuList.findSetting("selectedDownload")!=null)
 				((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).process(userInputInt);
-		} else
+		}
+		if (menuList.size()==1)
 		    super.process(userInputInt);
+		System.out.println("CLDownloadMenu.process(int) - menuList.size()="+menuList.size());
+
 	}
 	
 	public void process(String userInput){
@@ -67,12 +71,14 @@ public class CLDownloadMenu extends CLMenu{
 				userInput=null;
 			}
 		}
-		System.out.println("menuList.size()="+menuList.size());
+		System.out.println("CLDownloadMenu.process(int) -menuList.size()="+menuList.size());
 		if (menuList.size()>1){
 			if (menuList.findSetting("selectedDownload")!=null)
 				((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).process(userInput);
-		} else
+		}
+		if (menuList.size()==1)
 			super.process(userInput);
+		System.out.println("CLDownloadMenu.process(int) -menuList.size()="+menuList.size());
 	}
 
 	public URLDownloadList getUrlDownloads() {

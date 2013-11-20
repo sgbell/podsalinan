@@ -11,12 +11,14 @@ import java.io.File;
  */
 public class CLDownloadSelectedMenu extends CLMenu {
 	private URLDownload download;
+	private URLDownloadList downloadList;
 	
 	/**
 	 * @param newMenuList
+	 * @param downloadList2 
 	 * @param newMenuName
 	 */
-	public CLDownloadSelectedMenu(ProgSettings newMenuList) {
+	public CLDownloadSelectedMenu(ProgSettings newMenuList, URLDownloadList downloads) {
 		super(newMenuList, "downloadSelected_menu");
 		String[] menuList = {"1. Delete Download",
 				             "2. Restart Download",
@@ -26,6 +28,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 				             "",
 				             "9. Quit"};
 		setMainMenuList(menuList);
+		setDownloadList(downloads);
 	}
 
 	public void setDownload(URLDownload urlDownload) {
@@ -34,6 +37,20 @@ public class CLDownloadSelectedMenu extends CLMenu {
 
 	public URLDownload getDownload(){
 		return download;
+	}
+
+	/**
+	 * @return the downloadList
+	 */
+	public URLDownloadList getDownloadList() {
+		return downloadList;
+	}
+
+	/**
+	 * @param downloadList the downloadList to set
+	 */
+	public void setDownloadList(URLDownloadList downloadList) {
+		this.downloadList = downloadList;
 	}
 
 	public void printMainMenu() {
@@ -70,19 +87,39 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		if (menuList.size()==2){
 			switch (inputInt){
 		        case 1:
- 		    	    System.out.println("Delete download from Queue.");
+		        	// Delete the download from the queue.
+		        	
+ 		    	    // search downloaders array to see if it is currently downloading.
+ 		    	    // stop downloader if active
+		        	
+ 		    	    downloadList.deleteDownload(downloadList.findDownload(download.getURL()));
+ 		    	    // because the download is being deleted, remove the selected download from the
+ 		    	    // menuList
+ 		    	    setDownload(null);
+ 		    	    menuList.removeSetting("selectedDownload");
 		    	    break;
 		        case 2:
-		    	    System.out.println("Restart download. (Stop download, delete local copy, and restart it in the queue).");
+		        	// Restart the download in the queue
+		        	
+ 		    	    // search downloaders array to see if it is currently downloading.
+ 		    	    // stop downloader if active
+		        	
+		        	downloadList.restartDownload(downloadList.findDownload(download.getURL()));
 		    	    break;
 		        case 3:
-		    	    System.out.println("Stop Download. (Basically Pause the download, start downloading the next file in the queue).");
+		        	// Stop Download
+
+		        	// search downloaders array to see if it is currently downloading.
+ 		    	    // stop downloader if active
+		        	downloadList.cancelDownload(downloadList.findDownload(download.getURL()));
 		    	    break;
 		        case 4:
-		        	System.out.println("Move the download up in the queue.");
+		        	// Increase Download priority
+		        	downloadList.increasePriority(downloadList.findDownload(download.getURL()));
 		        	break;
 		        case 5:
-		        	System.out.println("Move the download down in the queue.");
+		        	// Decrease download priority
+		        	downloadList.decreasePriority(downloadList.findDownload(download.getURL()));
 		        	break;
 				case 9:
 					setDownload(null);
@@ -90,6 +127,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 					break;
 			}
 		}
+		System.out.println("menuList.size()="+menuList.size());
 		if (menuList.size()==2){
 			inputInt=-1000;
 			super.process(inputInt);
