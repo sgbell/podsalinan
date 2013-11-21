@@ -110,7 +110,7 @@ public class CLEpisodeMenu extends CLMenu {
 	}
 
 	public void process(int userInput){
-		System.out.println("CLEpisodeMenu.process(int)");
+		//System.out.println("CLEpisodeMenu.process(int)");
 		if (menuList.size()==3){
 			switch (userInput){
 				case 1:
@@ -133,12 +133,12 @@ public class CLEpisodeMenu extends CLMenu {
 			}
 			userInput=-1000;
 		}
-		System.out.println("CLEpisodeMenu.process(int) calling super.process(int)");
+		//System.out.println("CLEpisodeMenu.process(int) calling super.process(int)");
 		super.process(userInput);
 	}
 	
 	public void process(String userInput){
-		System.out.println("CLEpisodeMenu.process(String)");
+		//System.out.println("CLEpisodeMenu.process(String)");
 		super.process(userInput);
 	}
 }

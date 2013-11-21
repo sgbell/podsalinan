@@ -36,7 +36,7 @@ public class CLDownloadMenu extends CLMenu{
 	}
 
 	public void process(int userInputInt) {
-		System.out.println("CLDownloadMenu.process(int);");
+		//System.out.println("CLDownloadMenu.process(int);");
 		if (menuList.size()==1){
 			switch (userInputInt){
 			    case 9:
@@ -44,7 +44,7 @@ public class CLDownloadMenu extends CLMenu{
 				    break;
 		    }
 		}
-		System.out.println("CLDownloadMenu.process(int) - menuList.size()="+menuList.size());
+		//System.out.println("CLDownloadMenu.process(int) - menuList.size()="+menuList.size());
 		if (menuList.size()>1){
 			if (menuList.findSetting("selectedDownload")!=null)
 				((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).process(userInputInt);
@@ -52,12 +52,12 @@ public class CLDownloadMenu extends CLMenu{
 		if (menuList.size()==1)
 			userInputInt=-1000;
 		    super.process(userInputInt);
-		System.out.println("CLDownloadMenu.process(int) - menuList.size()="+menuList.size());
+		//System.out.println("CLDownloadMenu.process(int) - menuList.size()="+menuList.size());
 
 	}
 	
 	public void process(String userInput){
-		System.out.println("CLDownloadMenu.process(String);");
+		//System.out.println("CLDownloadMenu.process(String);");
 		if (menuList.size()==1){
 			if (userInput.length()<3){
 				int downloadNumber = convertCharToNumber(userInput);
@@ -72,14 +72,14 @@ public class CLDownloadMenu extends CLMenu{
 				userInput=null;
 			}
 		}
-		System.out.println("CLDownloadMenu.process(int) -menuList.size()="+menuList.size());
+		//System.out.println("CLDownloadMenu.process(int) -menuList.size()="+menuList.size());
 		if (menuList.size()>1){
 			if (menuList.findSetting("selectedDownload")!=null)
 				((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).process(userInput);
 		}
 		if (menuList.size()==1)
 			super.process(userInput);
-		System.out.println("CLDownloadMenu.process(int) -menuList.size()="+menuList.size());
+		//System.out.println("CLDownloadMenu.process(int) -menuList.size()="+menuList.size());
 	}
 
 	public URLDownloadList getUrlDownloads() {

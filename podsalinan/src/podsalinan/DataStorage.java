@@ -258,9 +258,9 @@ public class DataStorage {
 				sql = null;
 				int sqlType=0;
 				if (!download.isAdded()){
-					System.out.println("Adding Download");
-					System.out.println("URL= "+download.getURL().toString());
-					System.out.println("Destination= "+download.getDestination());
+					//System.out.println("Adding Download");
+					//System.out.println("URL= "+download.getURL().toString());
+					//System.out.println("Destination= "+download.getDestination());
 					sql = podsalinanDB.prepare("INSERT INTO downloads(url,size,destination,priority,podcastSource,status) " +
 											   "VALUES ('"+download.getURL().toString()+"',"+
 											           "'"+download.getSize()+"',"+ 
@@ -270,8 +270,8 @@ public class DataStorage {
 											           "'"+download.getStatus()+"');");
 					sqlType=1;
 				} else if (download.isRemoved()){
-					System.out.println("Deleting Download");
-					System.out.println("URL= "+download.getURL().toString());
+					//System.out.println("Deleting Download");
+					//System.out.println("URL= "+download.getURL().toString());
 					sql = podsalinanDB.prepare("DELETE FROM downloads " +
 											   "WHERE url='"+download.getURL().toString()+"';");
 					//System.out.println("download being removed to database");
@@ -520,6 +520,7 @@ public class DataStorage {
 						urlCount=Integer.parseInt(sql.columnString(0));
 					}
 					sql.dispose();
+					/*
 					if (urlCount>1){
 						sql = podsalinanDB.prepare("SELECT id "
 						           + "FROM "+tableName+" "
@@ -529,7 +530,7 @@ public class DataStorage {
 											   sql.columnString(0));
 						}
 						
-					}
+					}*/
 					sql = podsalinanDB.prepare("DELETE "
 							           + "FROM  "+tableName+" "
 							           + "WHERE url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"' "

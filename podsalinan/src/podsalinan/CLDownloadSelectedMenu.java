@@ -83,7 +83,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	}
 	
 	public void process(int inputInt){
-		System.out.println("CLDownloadSelectedMenu.process(int)");
+		//System.out.println("CLDownloadSelectedMenu.process(int)");
 		if (menuList.size()==2){
 			switch (inputInt){
 		        case 1:
@@ -127,7 +127,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 					break;
 			}
 		}
-		System.out.println("menuList.size()="+menuList.size());
+		//System.out.println("menuList.size()="+menuList.size());
 		if (menuList.size()==2){
 			inputInt=-1000;
 			super.process(inputInt);
@@ -135,7 +135,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	}
 	
 	public void process(String userInput){
-		System.out.println("CLDownloadSelectedMenu.process(String)");
+		//System.out.println("CLDownloadSelectedMenu.process(String)");
 
 		super.process(userInput);
 	}

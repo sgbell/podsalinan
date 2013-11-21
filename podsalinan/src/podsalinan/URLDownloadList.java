@@ -88,17 +88,17 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	public void addDownload(Episode episode, Podcast podcast){
-		System.out.println("Debug: URLDownloadList.addDownload(Episode,Podcast)");
+		//System.out.println("Debug: URLDownloadList.addDownload(Episode,Podcast)");
 		int position = findDownload(episode.getURL());
 		if (position<0){
 			URLDownload newFile = new URLDownload(episode.getURL(),false);
 			newFile.setDestination(podcast.getDirectory());
 			newFile.setPodcastId(podcast.getDatafile());
-			System.out.println("Debug: URLDownloadList.addDownload(Episode, Podcast) - podcastID="+podcast.getDatafile());
+			//System.out.println("Debug: URLDownloadList.addDownload(Episode, Podcast) - podcastID="+podcast.getDatafile());
 			if (episode.getSize()!="-1")
 				newFile.setSize(episode.getSize());
 			downloads.add(newFile);
-			System.out.println("Debug: download List size="+downloads.size());
+			//System.out.println("Debug: download List size="+downloads.size());
 			checkDownloadSize(newFile);
 		} else {
 			URLDownload download = getDownloads().get(position);
@@ -157,10 +157,10 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public void cancelDownload(int download) {
-		System.out.println("URLDownloadList.cancelDownload() - downloads.size()="+downloads.size());
+		//System.out.println("URLDownloadList.cancelDownload() - downloads.size()="+downloads.size());
 		if ((download >=0)&&(download<downloads.size())){
 			// if download is an episode from a podcast we need to set the status on the episode and remove it from the list
-			System.out.println("Debug: URLDownloadList.cancelDownload(int) - podcastID: "+downloads.get(download).getPodcastId());
+			//System.out.println("Debug: URLDownloadList.cancelDownload(int) - podcastID: "+downloads.get(download).getPodcastId());
 			if (downloads.get(download).getPodcastId()!=""){
 				for (Podcast currentPodcast : podcasts)
 					if (currentPodcast.getDatafile().equalsIgnoreCase(downloads.get(download).getPodcastId())){
