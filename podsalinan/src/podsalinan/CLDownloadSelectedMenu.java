@@ -4,6 +4,7 @@
 package podsalinan;
 
 import java.io.File;
+import java.text.DecimalFormat;
 
 /**
  * @author sbell
@@ -75,13 +76,38 @@ public class CLDownloadSelectedMenu extends CLMenu {
 			fileSize = destination.length();
 		else
 			fileSize = 0;
+
 		
 		// Need to make these sizes human readable
-		System.out.println ("Downloaded: "+fileSize+"/"+download.getSize());
+		System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(new Long(download.getSize()).longValue()));
 		
 		super.printMainMenu();
 	}
 	
+	private String humanReadableSize(long fileSize) {
+		String fileSizeModifier="";
+		double newOutputSize;
+		
+		if (fileSize>1073741824){
+			fileSizeModifier=" Gb";
+			newOutputSize = (double)fileSize/1073741824;
+		} else if (fileSize>1048576){
+			fileSizeModifier=" Mb";
+			newOutputSize = (double)fileSize/1048576;
+		} else if (fileSize>1024){
+			fileSizeModifier=" Kb";
+			newOutputSize = (double)fileSize/1024;
+		} else
+			newOutputSize = (double)fileSize;
+
+		newOutputSize=new Double(new DecimalFormat("#.##").format(newOutputSize)).doubleValue();
+		
+        if (newOutputSize==0)
+        	return "0";
+        else
+        	return Double.toString(newOutputSize)+fileSizeModifier;
+	}
+
 	public void process(int inputInt){
 		//System.out.println("CLDownloadSelectedMenu.process(int)");
 		if (menuList.size()==2){
