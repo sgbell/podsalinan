@@ -28,7 +28,7 @@ public class CLMainMenu extends CLMenu{
 	}
 	
 	public void printMainMenu(){
-		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.getDownloads().size()+" - Downloads Queued");
+		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.visibleSize()+" - Downloads Queued");
 
 		super.printMainMenu();
 	}

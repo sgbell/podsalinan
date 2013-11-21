@@ -50,6 +50,7 @@ public class CLDownloadMenu extends CLMenu{
 				((CLDownloadSelectedMenu)findSubmenu("downloadSelected_menu")).process(userInputInt);
 		}
 		if (menuList.size()==1)
+			userInputInt=-1000;
 		    super.process(userInputInt);
 		System.out.println("CLDownloadMenu.process(int) - menuList.size()="+menuList.size());
 

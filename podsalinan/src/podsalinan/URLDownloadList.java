@@ -117,6 +117,7 @@ public class URLDownloadList extends DownloadDetails {
 		if (downloadId>0){
 			Collections.swap(downloads, downloadId, downloadId-1);
 			downloads.get(downloadId).setUpdated(true);
+			downloads.get(downloadId-1).setUpdated(true);
 		}
 	}
 	
@@ -128,6 +129,7 @@ public class URLDownloadList extends DownloadDetails {
 		if (downloadId<downloads.size()-2){
 			Collections.swap(downloads, downloadId, downloadId+1);
 			downloads.get(downloadId).setUpdated(true);
+			downloads.get(downloadId+1).setUpdated(true);
 		}
 	}
 	
@@ -175,6 +177,12 @@ public class URLDownloadList extends DownloadDetails {
 	public void deleteDownload(int download) {
 		if ((download >=0)&&(download<downloads.size())){
 			downloads.get(download).setRemoved(true);
+			// Grab the download item
+			URLDownload downloadItem = downloads.get(download);
+			// remove it from the list
+			downloads.remove(downloadItem);
+			// add it to the end of the list
+			downloads.add(downloadItem);
 			restartDownload(download);
 		}
 	}
@@ -201,6 +209,17 @@ public class URLDownloadList extends DownloadDetails {
 
 	public int size() {
 		return downloads.size();
+	}
+	
+	public int visibleSize() {
+		int count=0;
+		
+		for (URLDownload download : downloads){
+			if (!download.isRemoved())
+				count++;
+		}
+		
+		return count;
 	}
 
 	public int findDownload(URL url) {

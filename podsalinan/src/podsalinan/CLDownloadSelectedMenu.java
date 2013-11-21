@@ -26,7 +26,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 				             "4. Increase Priority",
 				             "5. Decrease Priority",
 				             "",
-				             "9. Quit"};
+				             "9. Return to Download List"};
 		setMainMenuList(menuList);
 		setDownloadList(downloads);
 	}
