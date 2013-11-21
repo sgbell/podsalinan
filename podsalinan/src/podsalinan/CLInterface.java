@@ -87,17 +87,17 @@ public class CLInterface implements Runnable{
 				if ((menuInput.equalsIgnoreCase("quit"))||
 					(menuInput.equalsIgnoreCase("exit"))){
 					finished=true;
-				} else if ((menuInput.startsWith("http"))||
-						   (menuInput.startsWith("ftp"))){
+				} else if ((menuInput.toUpperCase().startsWith("HTTP"))||
+						   (menuInput.toUpperCase().startsWith("FTP"))){
 					// User has entered a url to download.
 					urlDownloads.addDownload(menuInput,settings.getSettingValue("defaultDirectory"),"-1",false);
-				} else if (menuInput.startsWith("help")){
+				} else if (menuInput.toUpperCase().startsWith("HELP")){
 					helpList(menuInput);
-				} else if (menuInput.startsWith("select")){
+				} else if (menuInput.toUpperCase().startsWith("SELECT")){
 					cliSelection(menuInput);
-				} else if (menuInput.startsWith("set")){
+				} else if (menuInput.toUpperCase().startsWith("SET")){
 					setCommand(menuInput);
-				} else if (menuInput.startsWith("list")){
+				} else if (menuInput.toUpperCase().startsWith("LIST")){
 					listCommand(menuInput);
 				} else
 					mainMenu.process(menuInput);
@@ -137,8 +137,42 @@ public class CLInterface implements Runnable{
 	}
 
 	private void helpList(String menuInput) {
-		// TODO Auto-generated method stub
-		
+		if (menuInput.equalsIgnoreCase("help")){
+			// Main help text
+			System.out.println("");
+			System.out.println("A url is accepted at almost any time to add it to the download queue.");
+			System.out.println("It will have to start with (http/https/ftp):// for the system to download it.");
+			System.out.println("");
+			System.out.println("4 main root commands");
+			System.out.println("");
+			System.out.println("   help <command>        will show this screen");
+			System.out.println("   select                used to select podcast/episode/queued download");
+			System.out.println("   set                   used for changing system preferences");
+			System.out.println("   list                  used for listing podcasts/episodes/queued downloads/preferences");
+			System.out.println("");
+			System.out.println("");
+			System.out.println("Commands to exit the program");
+			System.out.println("   quit");
+			System.out.println("   exit");
+			System.out.println("");
+			System.out.println("");
+		} else if (menuInput.toLowerCase().contains("select")){
+			// If user enters "help select"
+		} else if (menuInput.toLowerCase().contains("list")){
+			// If user enters "help list"
+		    // Show sub commands for list command
+			System.out.println("");
+			System.out.println("list can have the following parameters");
+			System.out.println("");
+			System.out.println("    list podcast           show list of podcasts to the screen");
+			System.out.println("    list episodes          show list of episodes to the screen, if a podcast has been selected");
+			System.out.println("    list downloads         show list of queued downloads to the screen");
+			System.out.println("    list preferences       show list of preferences to the screen");
+			System.out.println("");
+			System.out.println("");
+		} else if (menuInput.toLowerCase().contains("set")){
+			// If the user enters "help set"
+		}
 	}
 
 	public boolean isFinished(){
