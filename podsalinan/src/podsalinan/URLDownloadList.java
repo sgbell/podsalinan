@@ -126,7 +126,7 @@ public class URLDownloadList extends DownloadDetails {
 	 * @param downloadId
 	 */
 	public void decreasePriority(int downloadId){
-		if (downloadId<downloads.size()-2){
+		if (downloadId<downloads.size()-1){
 			Collections.swap(downloads, downloadId, downloadId+1);
 			downloads.get(downloadId).setUpdated(true);
 			downloads.get(downloadId+1).setUpdated(true);
