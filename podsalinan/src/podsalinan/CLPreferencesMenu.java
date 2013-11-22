@@ -34,8 +34,6 @@ public class CLPreferencesMenu extends CLMenu{
 	public void printMainMenu() {
 		super.printMainMenu();
 		
-		for (Setting newSetting: settings.getArray())
-			System.out.println("Setting: "+newSetting.name+" = "+newSetting.value);
 	}
 
 	public ProgSettings getSettings() {
