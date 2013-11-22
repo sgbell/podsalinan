@@ -114,7 +114,8 @@ public class URLDownloadList extends DownloadDetails {
 	 * @param downloadId
 	 */
 	public void increasePriority(int downloadId){
-		if (downloadId>0){
+		if ((downloadId>0)&&
+		    (!downloads.get(downloadId).isRemoved())){
 			Collections.swap(downloads, downloadId, downloadId-1);
 			downloads.get(downloadId).setUpdated(true);
 			downloads.get(downloadId-1).setUpdated(true);
@@ -126,7 +127,8 @@ public class URLDownloadList extends DownloadDetails {
 	 * @param downloadId
 	 */
 	public void decreasePriority(int downloadId){
-		if (downloadId<downloads.size()-1){
+		if ((downloadId<downloads.size()-1)&&
+			(!downloads.get(downloadId+1).isRemoved())){
 			Collections.swap(downloads, downloadId, downloadId+1);
 			downloads.get(downloadId).setUpdated(true);
 			downloads.get(downloadId+1).setUpdated(true);
