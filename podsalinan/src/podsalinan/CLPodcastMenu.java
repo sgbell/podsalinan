@@ -89,4 +89,11 @@ public class CLPodcastMenu extends CLMenu{
 		    super.process(userInput);
 		}
 	}
+
+	public void listPodcasts() {
+		for (Podcast podcast : podcasts){
+			if (!podcast.isRemoved())
+				System.out.println("("+podcast.getDatafile()+") "+podcast.getName());
+		}
+	}
 }

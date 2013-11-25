@@ -142,8 +142,19 @@ public class CLInterface implements Runnable{
 	}
 	
 	private void listCommand(String menuInput) {
-		// TODO Auto-generated method stub
-		
+		if (menuInput.toLowerCase().contains("podcast")){
+			menuList.clear();
+			menuList.addSetting("mainMenu", "podcast");
+			((CLPodcastMenu)(mainMenu.findSubmenu("podcast"))).listPodcasts();
+		} else if (menuInput.toLowerCase().contains("episode")){
+			if ((menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast"))&&
+				(menuList.findSetting("selectedPodcast")!=null)){
+				CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
+				((CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"))).printEpisodeList();
+			} else {
+				System.out.println("Error: No podcast selected.");
+			}
+		}
 	}
 
 	private void setCommand(String menuInput) {

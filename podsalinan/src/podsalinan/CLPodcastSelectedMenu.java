@@ -46,7 +46,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 		this.selectedPodcast = selectedPodcast;
 	}
 	
-	private void printEpisodeList() {
+	public void printEpisodeList() {
 		System.out.println ();
 		int epCount=1;
 		
