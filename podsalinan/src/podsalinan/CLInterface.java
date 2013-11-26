@@ -142,11 +142,12 @@ public class CLInterface implements Runnable{
 	}
 	
 	private void listCommand(String menuInput) {
-		if (menuInput.toLowerCase().contains("podcast")){
+		menuInput = menuInput.replaceAll("(?i)list ", "");
+		if (menuInput.toLowerCase().startsWith("podcast")){
 			menuList.clear();
 			menuList.addSetting("mainMenu", "podcast");
 			((CLPodcastMenu)(mainMenu.findSubmenu("podcast"))).listPodcasts();
-		} else if (menuInput.toLowerCase().contains("episode")){
+		} else if (menuInput.toLowerCase().startsWith("episode")){
 			if ((menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast"))&&
 				(menuList.findSetting("selectedPodcast")!=null)){
 				CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
@@ -163,8 +164,38 @@ public class CLInterface implements Runnable{
 	}
 
 	private void cliSelection(String menuInput) {
-		// TODO Auto-generated method stub
-		
+		menuInput = menuInput.replaceAll("(?i)select ", "");
+		if (menuInput.toLowerCase().startsWith("podcast")){
+			menuInput= menuInput.split(" ")[1];
+			boolean podcastFound=false;
+			for (Podcast podcast : podcasts)
+				// If the user enters the podcast name or the podcast id, it will be selected
+				if ((podcast.getName().equalsIgnoreCase(menuInput))||
+					(podcast.getDatafile().equalsIgnoreCase(menuInput))){
+					menuList.clear();
+					menuList.addSetting("mainMenu", "podcast");
+					menuList.addSetting("selectedPodcast", podcast.getDatafile());
+					System.out.println("Selected Podcast: "+podcast.getName());
+					podcastFound=true;
+				}
+			if (!podcastFound){
+				// If the user only entered part of the name we need to give suggestions to the user
+				for (Podcast podcast : podcasts){
+					/* Working here right now
+					 * Need to search for similar podcast names and list them for the user
+					 * maybe ask the user which one they wanted.
+					 */
+				}
+			}
+		} else if (menuInput.toLowerCase().startsWith("episode")){
+			menuInput = menuInput.split(" ")[1];
+			System.out.println("Episode: "+menuInput);
+		} else if (menuInput.toLowerCase().startsWith("download")){
+			menuInput = menuInput.split(" ")[1];
+			System.out.println("Download: "+menuInput);
+		} else {
+			System.out.println("Error: Invalid User entry.");
+		}
 	}
 
 	private void helpList(String menuInput) {
