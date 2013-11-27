@@ -166,25 +166,37 @@ public class CLInterface implements Runnable{
 	private void cliSelection(String menuInput) {
 		menuInput = menuInput.replaceAll("(?i)select ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
-			menuInput= menuInput.split(" ")[1];
+			// remove podcast text at the start (and the space)
+			menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
 			boolean podcastFound=false;
-			for (Podcast podcast : podcasts)
-				// If the user enters the podcast name or the podcast id, it will be selected
+            int podcastCount=0;
+            Podcast podcast=null;
+            
+            // First while loop for exact matches
+            while ((podcastCount<podcasts.size())&&(!podcastFound)){
+            	podcast=podcasts.get(podcastCount);
 				if ((podcast.getName().equalsIgnoreCase(menuInput))||
 					(podcast.getDatafile().equalsIgnoreCase(menuInput))){
+					// Add information to menuList
 					menuList.clear();
 					menuList.addSetting("mainMenu", "podcast");
 					menuList.addSetting("selectedPodcast", podcast.getDatafile());
+						
+					// Set selected podcast
+					CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
+					((CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"))).setSelectedPodcast(podcast);
 					System.out.println("Selected Podcast: "+podcast.getName());
+						
 					podcastFound=true;
 				}
+            	podcastCount++;
+            }
+            podcastCount=0;
 			if (!podcastFound){
 				// If the user only entered part of the name we need to give suggestions to the user
-				for (Podcast podcast : podcasts){
-					/* Working here right now
-					 * Need to search for similar podcast names and list them for the user
-					 * maybe ask the user which one they wanted.
-					 */
+				Vector<Podcast> foundPodcasts = new Vector<Podcast>();
+				for (Podcast podcastSearch : podcasts){
+					
 				}
 			}
 		} else if (menuInput.toLowerCase().startsWith("episode")){
