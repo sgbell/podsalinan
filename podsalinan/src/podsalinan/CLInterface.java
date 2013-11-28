@@ -175,28 +175,44 @@ public class CLInterface implements Runnable{
             // First while loop for exact matches
             while ((podcastCount<podcasts.size())&&(!podcastFound)){
             	podcast=podcasts.get(podcastCount);
-				if ((podcast.getName().equalsIgnoreCase(menuInput))||
-					(podcast.getDatafile().equalsIgnoreCase(menuInput))){
-					// Add information to menuList
-					menuList.clear();
-					menuList.addSetting("mainMenu", "podcast");
-					menuList.addSetting("selectedPodcast", podcast.getDatafile());
-						
-					// Set selected podcast
-					CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
-					((CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"))).setSelectedPodcast(podcast);
-					System.out.println("Selected Podcast: "+podcast.getName());
-						
+				if (((podcast.getName().equalsIgnoreCase(menuInput))||
+					(podcast.getDatafile().equalsIgnoreCase(menuInput)))&&
+					(!podcast.isRemoved())){
+					selectPodcast(podcast);
 					podcastFound=true;
 				}
             	podcastCount++;
             }
-            podcastCount=0;
 			if (!podcastFound){
 				// If the user only entered part of the name we need to give suggestions to the user
 				Vector<Podcast> foundPodcasts = new Vector<Podcast>();
-				for (Podcast podcastSearch : podcasts){
-					
+				for (Podcast podcastSearch : podcasts)
+					if ((podcastSearch.getName().toLowerCase().contains(menuInput.toLowerCase()))&&
+						(!podcastSearch.isRemoved()))
+						foundPodcasts.add(podcastSearch);
+				if (foundPodcasts.size()==1)
+					// if only 1 matching podcast found
+					selectPodcast(foundPodcasts.firstElement());					
+				else if (foundPodcasts.size()>1){
+		            podcastCount=1;
+					// If too many podcasts with text found
+					System.out.println ("Matches Found: "+foundPodcasts.size());
+					for (Podcast foundPodcast : foundPodcasts){
+						System.out.println(getEncodingFromNumber(podcastCount)+". "+foundPodcast.getName());
+					    podcastCount++;
+					}
+					// Ask user to select podcast
+					String userInput = input.getStringInput();
+					if ((userInput.length()>0)&&(userInput!=null)){
+						int selection = mainMenu.convertCharToNumber(userInput);
+						if ((selection>=0)&&(selection<foundPodcasts.size()))
+							selectPodcast(foundPodcasts.get(selection));
+						else
+							System.out.println("Error: Invalid user input");
+					} else 
+						System.out.println("Error: Invalid user input");
+				} else if (foundPodcasts.size()==0){
+					System.out.println("Error: No podcast found matching text("+menuInput+")");
 				}
 			}
 		} else if (menuInput.toLowerCase().startsWith("episode")){
@@ -208,6 +224,18 @@ public class CLInterface implements Runnable{
 		} else {
 			System.out.println("Error: Invalid User entry.");
 		}
+	}
+	
+	private void selectPodcast(Podcast podcast){
+		// Add information to menuList
+		menuList.clear();
+		menuList.addSetting("mainMenu", "podcast");
+		menuList.addSetting("selectedPodcast", podcast.getDatafile());
+			
+		// Set selected podcast
+		CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
+		((CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"))).setSelectedPodcast(podcast);
+		System.out.println("Selected Podcast: "+podcast.getName());
 	}
 
 	private void helpList(String menuInput) {
