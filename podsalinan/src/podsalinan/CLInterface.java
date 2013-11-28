@@ -148,8 +148,9 @@ public class CLInterface implements Runnable{
 			menuList.addSetting("mainMenu", "podcast");
 			((CLPodcastMenu)(mainMenu.findSubmenu("podcast"))).listPodcasts();
 		} else if (menuInput.toLowerCase().startsWith("episode")){
-			if ((menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast"))&&
-				(menuList.findSetting("selectedPodcast")!=null)){
+			if ((menuList.isValidSetting("mainMenu"))&&
+				((menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast"))&&
+				 (menuList.findSetting("selectedPodcast")!=null))){
 				CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
 				((CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"))).printEpisodeList();
 			} else {
@@ -216,8 +217,12 @@ public class CLInterface implements Runnable{
 				}
 			}
 		} else if (menuInput.toLowerCase().startsWith("episode")){
-			menuInput = menuInput.split(" ")[1];
-			System.out.println("Episode: "+menuInput);
+			if ((menuList.isValidSetting("mainMenu"))&&
+				((menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast"))&&
+				 (menuList.findSetting("selectedPodcast")!=null))){
+				menuInput = menuInput.split(" ")[1];
+				System.out.println("Episode: "+menuInput);
+			}
 		} else if (menuInput.toLowerCase().startsWith("download")){
 			menuInput = menuInput.split(" ")[1];
 			System.out.println("Download: "+menuInput);
