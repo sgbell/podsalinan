@@ -231,7 +231,8 @@ public class CLInterface implements Runnable{
 				((menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast"))&&
 				 (menuList.findSetting("selectedPodcast")!=null))){
 				menuInput = menuInput.split(" ")[1];
-				System.out.println("Episode: "+menuInput);
+				// Working here next. handling user input to select an episode. my thoughts are,
+				// user input will either be the letter assigned in list episodes, or the date
 			}
 		} else if (menuInput.toLowerCase().startsWith("download")){
 			menuInput = menuInput.split(" ")[1];
