@@ -63,8 +63,10 @@ public class CLMainMenu extends CLMenu{
 			} else if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("preferences")){
 				((CLPreferencesMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInputInt);
 			}
-		} else
-			System.out.println("Error: Invalid user entry.");
+		} else {
+			userInputInt=-1000;
+			super.process(userInputInt);
+		}
 	}
 	
 	public void process(String userInput){
@@ -78,6 +80,6 @@ public class CLMainMenu extends CLMenu{
 				((CLPreferencesMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInput);
 			}
 		} else
-			System.out.println("Error: Invalid user entry.");
+			super.process(userInput);
 	}
 }

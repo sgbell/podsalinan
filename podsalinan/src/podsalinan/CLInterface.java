@@ -191,10 +191,11 @@ public class CLInterface implements Runnable{
 					if ((podcastSearch.getName().toLowerCase().contains(menuInput.toLowerCase()))&&
 						(!podcastSearch.isRemoved()))
 						foundPodcasts.add(podcastSearch);
-				if (foundPodcasts.size()==1)
+				if (foundPodcasts.size()==1){
 					// if only 1 matching podcast found
-					selectPodcast(foundPodcasts.firstElement());					
-				else if (foundPodcasts.size()>1){
+					selectPodcast(foundPodcasts.firstElement());
+					podcastFound=true;
+				} else if (foundPodcasts.size()>1){
 		            podcastCount=1;
 					// If too many podcasts with text found
 					System.out.println ("Matches Found: "+foundPodcasts.size());
@@ -206,15 +207,24 @@ public class CLInterface implements Runnable{
 					String userInput = input.getStringInput();
 					if ((userInput.length()>0)&&(userInput!=null)){
 						int selection = mainMenu.convertCharToNumber(userInput);
-						if ((selection>=0)&&(selection<foundPodcasts.size()))
+						if ((selection>=0)&&(selection<foundPodcasts.size())){
 							selectPodcast(foundPodcasts.get(selection));
-						else
+							podcastFound=true;
+						} else
 							System.out.println("Error: Invalid user input");
 					} else 
 						System.out.println("Error: Invalid user input");
 				} else if (foundPodcasts.size()==0){
 					System.out.println("Error: No podcast found matching text("+menuInput+")");
 				}
+			}
+			if ((podcastFound)&&
+				(settings.isValidSetting("menuVisible"))&&
+				(settings.findSetting("menuVisible").value.equalsIgnoreCase("true"))){
+				// not going to go through the menuList array, because we had just set it in selectPodcast(Podcast)
+				CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
+				CLPodcastSelectedMenu podcastSelectedMenu = (CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"));
+				podcastSelectedMenu.printMainMenu();
 			}
 		} else if (menuInput.toLowerCase().startsWith("episode")){
 			if ((menuList.isValidSetting("mainMenu"))&&
@@ -240,7 +250,10 @@ public class CLInterface implements Runnable{
 		// Set selected podcast
 		CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
 		((CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"))).setSelectedPodcast(podcast);
-		System.out.println("Selected Podcast: "+podcast.getName());
+
+		if ((settings.isValidSetting("menuVisible"))&&
+			(settings.findSetting("menuVisible").value.equalsIgnoreCase("false")))
+  		    System.out.println("Selected Podcast: "+podcast.getName());
 	}
 
 	private void helpList(String menuInput) {
