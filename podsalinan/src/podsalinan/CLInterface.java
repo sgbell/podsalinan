@@ -230,12 +230,29 @@ public class CLInterface implements Runnable{
 			if ((menuList.isValidSetting("mainMenu"))&&
 				((menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast"))&&
 				 (menuList.findSetting("selectedPodcast")!=null))){
-				menuInput = menuInput.split(" ")[1];
+				menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
 				// Working here next. handling user input to select an episode. my thoughts are,
 				// user input will either be the letter assigned in list episodes, or the date
+				CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
+				CLPodcastSelectedMenu podcastSelectedMenu = (CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"));
+				Podcast selectedPodcast = podcastSelectedMenu.getSelectedPodcast();
+				boolean episodeSelected=false;
+				if ((menuInput.length()>0) &&(menuInput!=null)){
+					int select = mainMenu.convertCharToNumber(menuInput);
+					if ((select>=0)&&(select<podcastSelectedMenu.getSelectedPodcast().getEpisodes().size())){
+						menuList.addSetting("selectedEpisode", Integer.toString(select));
+						((CLEpisodeMenu)podcastSelectedMenu.findSubmenu("episode_selected")).setEpisode(selectedPodcast.getEpisodes().get(select),selectedPodcast);
+						episodeSelected = true;
+					}
+					if (!episodeSelected){
+						/* Create a vector of matching dates on episodes. and then let the user select from the list
+						 * similar to how selecting a podcast works.
+						 */
+					}
+				}
 			}
 		} else if (menuInput.toLowerCase().startsWith("download")){
-			menuInput = menuInput.split(" ")[1];
+			menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
 			System.out.println("Download: "+menuInput);
 		} else {
 			System.out.println("Error: Invalid User entry.");
