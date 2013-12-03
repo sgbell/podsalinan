@@ -21,6 +21,10 @@
  */
 package podsalinan;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 /**
@@ -245,6 +249,8 @@ public class CLInterface implements Runnable{
 						episodeSelected = true;
 					}
 					if (!episodeSelected){
+						System.out.println("Date: "+convertDate(menuInput).toString());
+						
 						/* Create a vector of matching dates on episodes. and then let the user select from the list
 						 * similar to how selecting a podcast works.
 						 */
@@ -259,6 +265,31 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
+    /** This method is used to try to find a date from the user entry
+     * 
+     * @param menuInput
+     * @return
+     */
+	private Date convertDate(String menuInput) {
+		Date date=null;
+		String[] dateFormat = {"dd-MMM-yy",
+				               "dd-mm-yy",
+				               "dd-MMM-yyy",
+				               "dd-mm-yyy"};
+		int dateCounter=0;
+		
+		while ((date==null)&&(dateCounter<dateFormat.length)){
+			try {
+				date = new SimpleDateFormat("dd-MMM-yy").parse(menuInput);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			dateCounter++;
+		}
+		
+		return date;
+	}
+
 	private void selectPodcast(Podcast podcast){
 		// Add information to menuList
 		menuList.clear();
