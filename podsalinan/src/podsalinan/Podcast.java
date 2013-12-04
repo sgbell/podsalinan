@@ -314,4 +314,15 @@ public class Podcast extends DownloadDetails{
 		
 		return null;
 	}
+	
+	public Vector<Episode> getEpisodesByDate(Date searchDate){
+		Vector<Episode> searchResults = new Vector<Episode>();
+		
+		for (Episode currentEpisode : episodeList){
+			if (currentEpisode.dateEquals(searchDate))
+				searchResults.add(currentEpisode);
+		}
+		
+		return searchResults;
+	}
 }

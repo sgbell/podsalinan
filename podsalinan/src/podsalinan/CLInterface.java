@@ -249,11 +249,20 @@ public class CLInterface implements Runnable{
 						episodeSelected = true;
 					}
 					if (!episodeSelected){
-						System.out.println("Date: "+convertDate(menuInput).toString());
-						
 						/* Create a vector of matching dates on episodes. and then let the user select from the list
 						 * similar to how selecting a podcast works.
 						 */
+						Date menuInputDate = convertDate(menuInput);
+						System.out.println("Date: "+menuInputDate.toString());
+						Vector<Episode> matchingEpisodes = selectedPodcast.getEpisodesByDate(menuInputDate);
+						if (matchingEpisodes.size()==1){
+							// Working below. need to find the episode number to add it to selectedEpisode
+							//menuList.addSetting("selectedEpisode", Integer.toString(select));
+							((CLEpisodeMenu)podcastSelectedMenu.findSubmenu("episode_selected")).setEpisode(matchingEpisodes.firstElement(),selectedPodcast);
+							episodeSelected = true;
+						} else
+							// Need to deal with more than 1 episode being found, and no episodes found.
+							System.out.println("Number of results: "+matchingEpisodes.size());
 					}
 				}
 			}
@@ -273,16 +282,16 @@ public class CLInterface implements Runnable{
 	private Date convertDate(String menuInput) {
 		Date date=null;
 		String[] dateFormat = {"dd-MMM-yy",
-				               "dd-mm-yy",
+				               "dd-MM-yy",
 				               "dd-MMM-yyy",
-				               "dd-mm-yyy"};
+				               "dd-MM-yyy"};
 		int dateCounter=0;
 		
 		while ((date==null)&&(dateCounter<dateFormat.length)){
 			try {
-				date = new SimpleDateFormat("dd-MMM-yy").parse(menuInput);
+				date = new SimpleDateFormat(dateFormat[dateCounter]).parse(menuInput);
 			} catch (ParseException e) {
-				e.printStackTrace();
+				// date not found
 			}
 			dateCounter++;
 		}

@@ -24,6 +24,7 @@ package podsalinan;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -103,5 +104,25 @@ public class Episode extends Details {
 	
 	public void setTitle(String newTitle){
 		title=newTitle;
+	}
+
+	public boolean dateEquals(Date searchDate) {
+		DateFormat df = new SimpleDateFormat(originalDateFormat);
+		try {
+			Date episodeDate = df.parse(date);
+			Calendar episodeCalendar = Calendar.getInstance();
+			Calendar searchCalendar = Calendar.getInstance();
+			episodeCalendar.setTime(episodeDate);
+			searchCalendar.setTime(searchDate);
+			
+			if ((episodeCalendar.get(Calendar.DAY_OF_MONTH)==searchCalendar.get(Calendar.DAY_OF_MONTH))&&
+				(episodeCalendar.get(Calendar.MONTH)==searchCalendar.get(Calendar.MONTH))&&
+				(episodeCalendar.get(Calendar.YEAR)==searchCalendar.get(Calendar.YEAR)))
+			   return true;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 }
