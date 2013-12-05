@@ -325,4 +325,12 @@ public class Podcast extends DownloadDetails{
 		
 		return searchResults;
 	}
+
+	public int getEpisodeId(Episode episode) {
+		for (int episodeCount=0; episodeCount< episodeList.size(); episodeCount++)
+			if (episodeList.get(episodeCount).equals(episode))
+				return episodeCount;
+		
+		return -1;
+	}
 }

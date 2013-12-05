@@ -160,6 +160,8 @@ public class CLInterface implements Runnable{
 			} else {
 				System.out.println("Error: No podcast selected.");
 			}
+		} else if (menuInput.toLowerCase().startsWith("select")){
+			
 		}
 	}
 
@@ -169,6 +171,9 @@ public class CLInterface implements Runnable{
 	}
 
 	private void cliSelection(String menuInput) {
+		CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
+		CLPodcastSelectedMenu podcastSelectedMenu = (CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"));
+		
 		menuInput = menuInput.replaceAll("(?i)select ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
 			// remove podcast text at the start (and the space)
@@ -207,6 +212,7 @@ public class CLInterface implements Runnable{
 						System.out.println(getEncodingFromNumber(podcastCount)+". "+foundPodcast.getName());
 					    podcastCount++;
 					}
+					System.out.print("Please select a podcast: ");
 					// Ask user to select podcast
 					String userInput = input.getStringInput();
 					if ((userInput.length()>0)&&(userInput!=null)){
@@ -226,8 +232,6 @@ public class CLInterface implements Runnable{
 				(settings.isValidSetting("menuVisible"))&&
 				(settings.findSetting("menuVisible").value.equalsIgnoreCase("true"))){
 				// not going to go through the menuList array, because we had just set it in selectPodcast(Podcast)
-				CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
-				CLPodcastSelectedMenu podcastSelectedMenu = (CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"));
 				podcastSelectedMenu.printMainMenu();
 			}
 		} else if (menuInput.toLowerCase().startsWith("episode")){
@@ -237,8 +241,6 @@ public class CLInterface implements Runnable{
 				menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
 				// Working here next. handling user input to select an episode. my thoughts are,
 				// user input will either be the letter assigned in list episodes, or the date
-				CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
-				CLPodcastSelectedMenu podcastSelectedMenu = (CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"));
 				Podcast selectedPodcast = podcastSelectedMenu.getSelectedPodcast();
 				boolean episodeSelected=false;
 				if ((menuInput.length()>0) &&(menuInput!=null)){
@@ -253,7 +255,7 @@ public class CLInterface implements Runnable{
 						 * similar to how selecting a podcast works.
 						 */
 						Date menuInputDate = convertDate(menuInput);
-						System.out.println("Date: "+menuInputDate.toString());
+						//System.out.println("Date: "+menuInputDate.toString());
 						Vector<Episode> matchingEpisodes = selectedPodcast.getEpisodesByDate(menuInputDate);
 						if (matchingEpisodes.size()==1){
 							// Working below. need to find the episode number to add it to selectedEpisode
@@ -262,9 +264,40 @@ public class CLInterface implements Runnable{
 							episodeSelected = true;
 						} else
 							// Need to deal with more than 1 episode being found, and no episodes found.
-							System.out.println("Number of results: "+matchingEpisodes.size());
+							// 14-1-12 = 8 in hak5
+							if (matchingEpisodes.size()>1){
+					            int episodeCount=1;
+								// If too many podcasts with text found
+								System.out.println ("Matches Found: "+matchingEpisodes.size());
+								for (Episode currentEpisode : matchingEpisodes){
+									System.out.println(getEncodingFromNumber(episodeCount)+". "+currentEpisode.getTitle());
+								    episodeCount++;
+								}
+								System.out.print("Please select an episode: ");
+								// Ask user to select the episode
+								String userInput = input.getStringInput();
+								if ((userInput.length()>0)&&(userInput!=null)){
+									int selection = mainMenu.convertCharToNumber(userInput);
+									if ((selection>=0)&&(selection<matchingEpisodes.size())){
+										menuList.addSetting("selectedEpisode", Integer.toString(selectedPodcast.getEpisodeId(matchingEpisodes.get(selection))));
+										((CLEpisodeMenu)podcastSelectedMenu.findSubmenu("episode_selected")).setEpisode(matchingEpisodes.get(selection),selectedPodcast);
+										episodeSelected=true;
+									} else
+										System.out.println("Error: Invalid user input");
+								} else 
+									System.out.println("Error: Invalid user input");
+							} else {
+								System.out.println("No match found.");
+							}
 					}
 				}
+				if ((episodeSelected)&&
+						(settings.isValidSetting("menuVisible"))&&
+						(settings.findSetting("menuVisible").value.equalsIgnoreCase("true"))){
+						// not going to go through the menuList array, because we had just set it in selectPodcast(Podcast)
+						CLEpisodeMenu episodeMenu = (CLEpisodeMenu)podcastSelectedMenu.findSubmenu("episode_selected");
+						episodeMenu.printMainMenu();
+					}
 			}
 		} else if (menuInput.toLowerCase().startsWith("download")){
 			menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
@@ -363,6 +396,7 @@ public class CLInterface implements Runnable{
 			System.out.println("   list episodes          show list of episodes to the screen, if a podcast has been selected");
 			System.out.println("   list downloads         show list of queued downloads to the screen");
 			System.out.println("   list preferences       show list of preferences to the screen");
+			System.out.println("   list select            show list of current selection made to the screen");
 		} else if (menuInput.toLowerCase().contains("set")){
 			// If the user enters "help set"
 			System.out.println("set is used to change settings");
