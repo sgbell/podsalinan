@@ -161,7 +161,36 @@ public class CLInterface implements Runnable{
 				System.out.println("Error: No podcast selected.");
 			}
 		} else if (menuInput.toLowerCase().startsWith("select")){
-			
+			Podcast selectedPodcast=null;
+			System.out.println("Current selection");
+			for (Setting currentItem : menuList.getArray()){
+				if (currentItem.name.equalsIgnoreCase("selectedPodcast")){
+					for (Podcast podcast : podcasts)
+						if (podcast.getDatafile().equalsIgnoreCase(currentItem.value)){
+							selectedPodcast=podcast;
+							System.out.println(currentItem.name+": "+podcast.getName());
+						}
+				} else if (currentItem.name.equalsIgnoreCase("selectedEpisode")){
+					if (selectedPodcast!=null){
+						Episode currentEpisode = selectedPodcast.getEpisodes().get(Integer.parseInt(currentItem.value));
+						System.out.println(currentItem.name+": "+currentEpisode.getTitle()+" : "+currentEpisode.getDate());
+					}
+			    }else
+					System.out.println(currentItem.name+": "+currentItem.value);
+			}
+		} else if (menuInput.toLowerCase().startsWith("details")){
+			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast")){
+				for (Podcast podcast : podcasts)
+					if (podcast.getDatafile().equalsIgnoreCase(menuList.getArray().lastElement().value)){
+						System.out.println("Name: "+podcast.getName());
+						System.out.println("Directory: "+podcast.getDirectory());
+						System.out.println("URL: "+podcast.getURL());
+					}
+			} else if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode")){
+				// Need to add the code here.
+			} else {
+				System.out.println(menuList.getArray().lastElement().name+": "+menuList.getArray().lastElement().value);
+			}
 		}
 	}
 
@@ -397,6 +426,7 @@ public class CLInterface implements Runnable{
 			System.out.println("   list downloads         show list of queued downloads to the screen");
 			System.out.println("   list preferences       show list of preferences to the screen");
 			System.out.println("   list select            show list of current selection made to the screen");
+			System.out.println("   list details           show details about currently selected item to the screen");
 		} else if (menuInput.toLowerCase().contains("set")){
 			// If the user enters "help set"
 			System.out.println("set is used to change settings");
