@@ -125,21 +125,33 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
+	/** clearCommand - used to clear menuList selection
+	 * @param menuInput
+	 */
 	private void clearCommand(String menuInput) {
-		// TODO Auto-generated method stub
-		
+		menuList.clear();
 	}
 
+	/** cancelCommand - if it is used on an episode, it will remove the episode from the download list.
+	 *  If it used on a download, it will stop download of file. 
+	 * @param menuInput
+	 */
 	private void cancelCommand(String menuInput) {
-		// TODO Auto-generated method stub
 		
 	}
 
+	/** deleteCommand - if it is used on an episode, it will remove the datafile for the episode.
+	 * If it is used on a download, it will remove the data file for the download.
+	 * from the drive.
+	 * @param menuInput
+	 */
 	private void deleteCommand(String menuInput) {
-		// TODO Auto-generated method stub
 		
 	}
 
+	/** downloadCommand is used to 1 - download an episode, 2 - download a url
+	 * @param menuInput - is the user input in the system
+	 */
 	private void downloadCommand(String menuInput) {
 		boolean downloading=false;
 		menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
@@ -168,12 +180,18 @@ public class CLInterface implements Runnable{
 		}
 	}
 
+	/** turn off the command line menu
+	 * @param menuInput
+	 */
 	private void hideCommand(String menuInput) {
 		if (menuInput.equalsIgnoreCase("hide menu"))
 			if (!settings.addSetting("menuVisible", "false"))
 				settings.updateSetting("menuVisible", "false");
 	}
 
+	/** turn on the command line menu
+	 * @param menuInput
+	 */
 	private void showCommand(String menuInput) {
 		if (menuInput.equalsIgnoreCase("show menu"))
 			if (!settings.addSetting("menuVisible", "true"))
@@ -198,6 +216,10 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
+    /** listCommand(String) - the command starting with list, handling all
+     *  parameters
+     * @param menuInput
+     */
 	private void listCommand(String menuInput) {
 		menuInput = menuInput.replaceAll("(?i)list ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
@@ -251,11 +273,16 @@ public class CLInterface implements Runnable{
 		}
 	}
 
+	/** setCommand(String) - used to set preferences
+	 * @param menuInput
+	 */
 	private void setCommand(String menuInput) {
-		// TODO Auto-generated method stub
 		
 	}
 
+	/** cliSelection(String) - used for processing select commands. for everything
+	 * @param menuInput
+	 */
 	private void cliSelection(String menuInput) {
 		menuInput = menuInput.replaceAll("(?i)select ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
@@ -393,7 +420,6 @@ public class CLInterface implements Runnable{
 	}
 	
     /** This method is used to try to find a date from the user entry
-     * 
      * @param menuInput
      * @return
      */
