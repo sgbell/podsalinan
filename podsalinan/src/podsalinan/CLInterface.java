@@ -146,7 +146,19 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void deleteCommand(String menuInput) {
-		
+		menuInput = menuInput.replaceFirst(menuInput.split(" ")+" ", "");
+		if (((menuInput.equalsIgnoreCase("delete"))||(menuInput.equalsIgnoreCase("episode")))&&
+			(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode"))){
+			CLEpisodeMenu episodeMenu = (CLEpisodeMenu)mainMenu.findSubmenu("episode_selected");
+			episodeMenu.deleteEpisodeFromDrive();
+			System.out.println("Deleting file for episode: "+episodeMenu.getEpisode().getTitle());
+		} else if (menuList.getArray().lastElement().name.equalsIgnoreCase("downloads")){
+			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload")){
+				URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
+				urlDownloads.deleteDownload(urlDownloads.findDownload(download.getURL()));
+				System.out.println("Deleting file for download: "+download.getURL().toString());
+			}
+		}
 	}
 
 	/** downloadCommand is used to 1 - download an episode, 2 - download a url
