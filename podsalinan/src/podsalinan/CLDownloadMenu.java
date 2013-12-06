@@ -24,17 +24,21 @@ public class CLDownloadMenu extends CLMenu{
 	}
 
 	public void printMainMenu() {
+		listDownloads();
+		super.printMainMenu();
+	}
+
+	public void listDownloads(){
 		int downloadCount=1;
+		
 		for (URLDownload download : urlDownloads.getDownloads()){
 			if (!download.isRemoved()){
 				System.out.println(getEncodingFromNumber(downloadCount)+". "+download.getURL().toString());
 				downloadCount++;
 			}
 		}
-		
-		super.printMainMenu();
 	}
-
+	
 	public void process(int userInputInt) {
 		//System.out.println("CLDownloadMenu.process(int);");
 		if (menuList.size()==1){

@@ -116,6 +116,8 @@ public class CLInterface implements Runnable{
 					deleteCommand(menuInput);
 				} else if (menuInput.toUpperCase().startsWith("CANCEL")){
 					cancelCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("CLEAR")){
+					clearCommand(menuInput);
 				} else if ((settings.findSetting("menuVisible")==null)||
 						   (settings.findSetting("menuVisible").value.equalsIgnoreCase("true")))
 					mainMenu.process(menuInput);
@@ -123,6 +125,11 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
+	private void clearCommand(String menuInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void cancelCommand(String menuInput) {
 		// TODO Auto-generated method stub
 		
@@ -239,6 +246,8 @@ public class CLInterface implements Runnable{
 			} else {
 				System.out.println(menuList.getArray().lastElement().name+": "+menuList.getArray().lastElement().value);
 			}
+		} else if (menuInput.toLowerCase().startsWith("downloads")){
+			((CLDownloadMenu)mainMenu.findSubmenu("downloads")).listDownloads();
 		}
 	}
 
@@ -248,9 +257,6 @@ public class CLInterface implements Runnable{
 	}
 
 	private void cliSelection(String menuInput) {
-		/*CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
-		CLPodcastSelectedMenu podcastSelectedMenu = (CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"));*/
-		
 		menuInput = menuInput.replaceAll("(?i)select ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
 			// remove podcast text at the start (and the space)
@@ -380,7 +386,7 @@ public class CLInterface implements Runnable{
 			}
 		} else if (menuInput.toLowerCase().startsWith("download")){
 			menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
-			System.out.println("Download: "+menuInput);
+			// Select download
 		} else {
 			System.out.println("Error: Invalid User entry.");
 		}
