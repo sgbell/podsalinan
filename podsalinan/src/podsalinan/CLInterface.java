@@ -152,6 +152,8 @@ public class CLInterface implements Runnable{
 				// newURL is only used to confirm that the user input is a url
 				URL newURL = new URL(menuInput);
 				urlDownloads.addDownload(menuInput, settings.getSettingValue("defaultDirectory"),"-1",false);
+				System.out.println("Downloading URL: "+menuInput);
+				downloading=true;
 			} catch (MalformedURLException e) {
 			}
 		}
@@ -233,7 +235,24 @@ public class CLInterface implements Runnable{
 						System.out.println("URL: "+podcast.getURL());
 					}
 			} else if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode")){
-				// Need to add the code here.
+				CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
+				CLPodcastSelectedMenu podcastSelectedMenu = (CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"));
+				CLEpisodeMenu episodeMenu = (CLEpisodeMenu)podcastSelectedMenu.findSubmenu("episode_selected");
+				System.out.println("Title: "+episodeMenu.getEpisode().getTitle());
+				System.out.println("Date: "+episodeMenu.getEpisode().getDate());
+				System.out.print("Status: ");
+				switch (episodeMenu.getEpisode().getStatus()){
+					case Episode.NOT_STARTED:
+						System.out.println ("Status: Not Downloaded");
+						break;
+					case Episode.CURRENTLY_DOWNLOADING:
+					case Episode.PREVIOUSLY_STARTED:
+						System.out.println ("Status: Download Incomplete");
+						break;
+					case Episode.FINISHED:
+						System.out.println ("Status: Completed Download");
+						break;
+				}
 			} else {
 				System.out.println(menuList.getArray().lastElement().name+": "+menuList.getArray().lastElement().value);
 			}
