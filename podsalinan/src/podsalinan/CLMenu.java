@@ -113,6 +113,10 @@ public class CLMenu {
 			if (submenu.getMenuName().equalsIgnoreCase(name)){
 				return submenu; 
 			}
+			// Going to search the entire menu tree for the menu we want
+			CLMenu childMenu = submenu.findSubmenu(name);
+			if (childMenu!=null)
+				return childMenu;
 		}
 		return null;
 	}

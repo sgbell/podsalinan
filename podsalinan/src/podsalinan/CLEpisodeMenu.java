@@ -33,21 +33,7 @@ public class CLEpisodeMenu extends CLMenu {
 	
 	public void printMainMenu(){
 		if (episode!=null){
-			System.out.println ("Podcast: "+podcast.getName());
-			System.out.println ("Episode: "+episode.getTitle());
-			System.out.println ("Date: "+episode.getDate());
-			switch (episode.getStatus()){
-				case Episode.NOT_STARTED:
-					System.out.println ("Status: Not Downloaded");
-					break;
-				case Episode.CURRENTLY_DOWNLOADING:
-				case Episode.PREVIOUSLY_STARTED:
-					System.out.println ("Status: Download Incomplete");
-					break;
-				case Episode.FINISHED:
-					System.out.println ("Status: Completed Download");
-					break;
-			}
+			printDetails();
 			super.printMainMenu();
 		}/* else {
 			
@@ -56,6 +42,24 @@ public class CLEpisodeMenu extends CLMenu {
 		}*/
 	}
 
+	public void printDetails() {
+		System.out.println ("Podcast: "+podcast.getName());
+		System.out.println ("Episode: "+episode.getTitle());
+		System.out.println ("Date: "+episode.getDate());
+		switch (episode.getStatus()){
+			case Episode.NOT_STARTED:
+				System.out.println ("Status: Not Downloaded");
+				break;
+			case Episode.CURRENTLY_DOWNLOADING:
+			case Episode.PREVIOUSLY_STARTED:
+				System.out.println ("Status: Download Incomplete");
+				break;
+			case Episode.FINISHED:
+				System.out.println ("Status: Completed Download");
+				break;
+		}
+	}
+	
 	public Episode getEpisode() {
 		return episode;
 	}
