@@ -79,18 +79,18 @@ public class CLEpisodeMenu extends CLMenu {
 		this.urlDownloads = urlDownloads;
 	}
 
-	private void cancelDownloadEpisode() {
+	public void cancelDownloadEpisode() {
 		urlDownloads.cancelDownload(urlDownloads.findDownload(episode.getURL()));
 		// urlDownload.removeDownload will do all of the podcast status alterations, so that it is uniform and
 		// in the 1 place.
 	}
 
-	private void deleteEpisodeFromDrive() {
+	public void deleteEpisodeFromDrive() {
 		// Added a new method to podcast, if we already have the episode instance
 		podcast.deleteEpisodeFromDrive(episode);
 	}
 
-	private void downloadEpisode() {
+	public void downloadEpisode() {
 		episode.setStatus(Details.CURRENTLY_DOWNLOADING);
 		urlDownloads.addDownload(episode, podcast);
 	}

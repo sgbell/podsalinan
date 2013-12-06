@@ -21,6 +21,8 @@
  */
 package podsalinan;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -108,6 +110,12 @@ public class CLInterface implements Runnable{
 					showCommand(menuInput);
 				} else if (menuInput.toUpperCase().startsWith("HIDE")){
 					hideCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("DOWNLOAD")){
+					downloadCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("DELETE")){
+					deleteCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("CANCEL")){
+					cancelCommand(menuInput);
 				} else if ((settings.findSetting("menuVisible")==null)||
 						   (settings.findSetting("menuVisible").value.equalsIgnoreCase("true")))
 					mainMenu.process(menuInput);
@@ -115,6 +123,44 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
+	private void cancelCommand(String menuInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void deleteCommand(String menuInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void downloadCommand(String menuInput) {
+		boolean downloading=false;
+		menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
+		if ((menuInput.toLowerCase().equalsIgnoreCase("download"))||
+			(menuInput.toLowerCase().equalsIgnoreCase("episode"))){
+			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode")){
+				// If user enters "download" or "download episode" and user has selected episode, download the episode
+				CLPodcastMenu podcastMenu = (CLPodcastMenu)(mainMenu.findSubmenu("podcast"));
+				CLPodcastSelectedMenu podcastSelectedMenu = (CLPodcastSelectedMenu)(podcastMenu.findSubmenu("podcast_selected"));
+				CLEpisodeMenu episodeMenu = (CLEpisodeMenu)podcastSelectedMenu.findSubmenu("episode_selected");
+				episodeMenu.downloadEpisode();
+				System.out.println("Downloading Episode: "+episodeMenu.getEpisode().getTitle()+" - "+episodeMenu.getEpisode().getDate());
+				downloading=true;
+			}
+		} else if (menuInput.length()>6){
+			try {
+				// newURL is only used to confirm that the user input is a url
+				URL newURL = new URL(menuInput);
+				urlDownloads.addDownload(menuInput, settings.getSettingValue("defaultDirectory"),"-1",false);
+			} catch (MalformedURLException e) {
+			}
+		}
+		
+		if (!downloading){
+			System.out.println("Error: Invalid user Input");
+		}
+	}
+
 	private void hideCommand(String menuInput) {
 		if (menuInput.equalsIgnoreCase("hide menu"))
 			if (!settings.addSetting("menuVisible", "false"))
