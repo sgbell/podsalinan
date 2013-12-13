@@ -119,6 +119,10 @@ public class CLInterface implements Runnable{
 					removeCommand(menuInput);
 				} else if (menuInput.toUpperCase().startsWith("CLEAR")){
 					clearCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("INCREASE")){
+					increaseCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("DECREASE")){
+					decreaseCommand(menuInput);
 				} else if ((settings.findSetting("menuVisible")==null)||
 						   (settings.findSetting("menuVisible").value.equalsIgnoreCase("true")))
 					mainMenu.process(menuInput);
@@ -126,6 +130,22 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
+	/** This method will mostly be used to move a download down the download queue
+	 * @param menuInput
+	 */
+	private void decreaseCommand(String menuInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/** This method will mostly be used to move a download higher in the download queue
+	 * @param menuInput
+	 */
+	private void increaseCommand(String menuInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/** clearCommand - used to clear menuList selection
 	 * @param menuInput
 	 */
@@ -138,13 +158,17 @@ public class CLInterface implements Runnable{
 	 */
 	private void stopCommand(String menuInput){
 		
+		// Below is the command used to cancel a download (this does not remove it from the list)
+		//downloadList.cancelDownload(downloadList.findDownload(download.getURL()));
 	}
 	
 	/** cancelCommand - Used to remove a download from the download list. 
 	 * @param menuInput
 	 */
 	private void removeCommand(String menuInput) {
-		
+		 
+		// below is the command used to remove a download from the list
+		//urlDownloads.deleteDownload();
 	}
 
 	/** deleteCommand - if it is used on an episode, it will remove the datafile for the episode.
