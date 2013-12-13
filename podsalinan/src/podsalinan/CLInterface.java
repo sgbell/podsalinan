@@ -23,7 +23,6 @@ package podsalinan;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -112,10 +111,12 @@ public class CLInterface implements Runnable{
 					hideCommand(menuInput);
 				} else if (menuInput.toUpperCase().startsWith("DOWNLOAD")){
 					downloadCommand(menuInput);
-				} else if (menuInput.toUpperCase().startsWith("DELETE")){
-					deleteCommand(menuInput);
-				} else if (menuInput.toUpperCase().startsWith("CANCEL")){
-					cancelCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("RESTART")){
+					restartCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("STOP")){
+					stopCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("REMOVE")){
+					removeCommand(menuInput);
 				} else if (menuInput.toUpperCase().startsWith("CLEAR")){
 					clearCommand(menuInput);
 				} else if ((settings.findSetting("menuVisible")==null)||
@@ -132,11 +133,17 @@ public class CLInterface implements Runnable{
 		menuList.clear();
 	}
 
-	/** cancelCommand - if it is used on an episode, it will remove the episode from the download list.
-	 *  If it used on a download, it will stop download of file. 
+	/** stopCommand - used to pause the download.
 	 * @param menuInput
 	 */
-	private void cancelCommand(String menuInput) {
+	private void stopCommand(String menuInput){
+		
+	}
+	
+	/** cancelCommand - Used to remove a download from the download list. 
+	 * @param menuInput
+	 */
+	private void removeCommand(String menuInput) {
 		
 	}
 
@@ -145,7 +152,7 @@ public class CLInterface implements Runnable{
 	 * from the drive.
 	 * @param menuInput
 	 */
-	private void deleteCommand(String menuInput) {
+	private void restartCommand(String menuInput) {
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")+" ", "");
 		if (((menuInput.equalsIgnoreCase("delete"))||(menuInput.equalsIgnoreCase("episode")))&&
 			(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode"))){
@@ -167,7 +174,7 @@ public class CLInterface implements Runnable{
 	private void downloadCommand(String menuInput) {
 		boolean downloading=false;
 		menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
-		if ((menuInput.toLowerCase().equalsIgnoreCase("download"))||
+		if ((menuInput.toLowerCase().contentEquals("download"))||
 			(menuInput.toLowerCase().equalsIgnoreCase("episode"))){
 			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode")){
 				// If user enters "download" or "download episode" and user has selected episode, download the episode
