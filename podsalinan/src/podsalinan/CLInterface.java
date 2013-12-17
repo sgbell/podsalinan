@@ -157,9 +157,10 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void stopCommand(String menuInput){
+		// Grab the selected download and call the method below
 		
 		// Below is the command used to cancel a download (this does not remove it from the list)
-		//downloadList.cancelDownload(downloadList.findDownload(download.getURL()));
+		//downloadList.cancelDownload(download);
 	}
 	
 	/** cancelCommand - Used to remove a download from the download list. 
