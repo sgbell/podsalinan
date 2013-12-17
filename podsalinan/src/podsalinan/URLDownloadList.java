@@ -158,22 +158,40 @@ public class URLDownloadList extends DownloadDetails {
 			}
 	}
 
+	/** This is a wrapper for cancelDownload(URLDownload)
+	 * @param download
+	 */
 	public void cancelDownload(int download) {
 		//System.out.println("URLDownloadList.cancelDownload() - downloads.size()="+downloads.size());
 		if ((download >=0)&&(download<downloads.size())){
 			// if download is an episode from a podcast we need to set the status on the episode and remove it from the list
 			//System.out.println("Debug: URLDownloadList.cancelDownload(int) - podcastID: "+downloads.get(download).getPodcastId());
-			if (downloads.get(download).getPodcastId()!=""){
-				for (Podcast currentPodcast : podcasts)
-					if (currentPodcast.getDatafile().equalsIgnoreCase(downloads.get(download).getPodcastId())){
-						downloads.get(download).setRemoved(true);
-						Episode selectedEpisode=currentPodcast.getEpisodeByURL(downloads.get(download).getURL().toString());
-						if (selectedEpisode!=null)
-							selectedEpisode.setStatus(Details.NOT_STARTED);
-					}
-			} else
-				downloads.get(download).setStatus(Details.DO_NOT_DOWNLOAD);
+			URLDownload selectedDownload= downloads.get(download);
+			cancelDownload(selectedDownload);
 		}
+	}
+	
+	/** This is a wrapper for cancelDownload(int)
+	 * @param url
+	 */
+	public void cancelDownload (URL url){
+		cancelDownload(findDownload(url));
+	}
+
+	/** This is the parent method for all cancelDownload methods
+	 * @param download
+	 */
+	public void cancelDownload (URLDownload download){
+		if (download.getPodcastId()!=""){
+			for (Podcast currentPodcast : podcasts)
+				if (currentPodcast.getDatafile().equalsIgnoreCase(download.getPodcastId())){
+					download.setRemoved(true);
+					Episode selectedEpisode = currentPodcast.getEpisodeByURL(download.getURL().toString());
+					if (selectedEpisode!=null)
+						selectedEpisode.setStatus(Details.NOT_STARTED);
+				}
+		} else
+			download.setStatus(Details.DO_NOT_DOWNLOAD);
 	}
 	
 	public void deleteDownload(int download) {
@@ -191,10 +209,19 @@ public class URLDownloadList extends DownloadDetails {
 
 	public boolean restartDownload(int download) {
 		if ((download >=0)&&(download<downloads.size())){
-			if (deleteFile(downloads.get(download))){
-				downloads.get(download).setStatus(Details.NOT_STARTED);
-				return true;
-			}
+			return restartDownload(downloads.get(download));
+		}
+		return false;
+	}
+	
+	public boolean restartDownload(URL url){
+		return restartDownload(findDownload(url));
+	}
+	
+	public boolean restartDownload(URLDownload download){
+		if (deleteFile(download)){
+			download.setStatus(Details.NOT_STARTED);
+			return true;
 		}
 		return false;
 	}

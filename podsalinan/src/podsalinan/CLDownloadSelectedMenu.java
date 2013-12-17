@@ -129,15 +129,14 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		        	
  		    	    // search downloaders array to see if it is currently downloading.
  		    	    // stop downloader if active
-		        	
-		        	downloadList.restartDownload(downloadList.findDownload(download.getURL()));
+		        	downloadList.restartDownload(download.getURL());
 		    	    break;
 		        case 3:
 		        	// Stop Download
 
 		        	// search downloaders array to see if it is currently downloading.
  		    	    // stop downloader if active
-		        	downloadList.cancelDownload(downloadList.findDownload(download.getURL()));
+		        	downloadList.cancelDownload(download.getURL());
 		    	    break;
 		        case 4:
 		        	// Increase Download priority
