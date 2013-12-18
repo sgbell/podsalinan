@@ -158,9 +158,17 @@ public class CLInterface implements Runnable{
 	 */
 	private void stopCommand(String menuInput){
 		// Grab the selected download and call the method below
-		
-		// Below is the command used to cancel a download (this does not remove it from the list)
-		//downloadList.cancelDownload(download);
+		menuInput = menuInput.replaceFirst(menuInput.split(" ")+" ", "");
+		if (menuInput.equalsIgnoreCase("stop")){
+			URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
+			if (download!=null){
+				// Stop the download
+				urlDownloads.cancelDownload(download);
+			}
+		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
+			int select = mainMenu.convertCharToNumber(menuInput);
+			// working here
+		}
 	}
 	
 	/** cancelCommand - Used to remove a download from the download list. 
@@ -216,6 +224,8 @@ public class CLInterface implements Runnable{
 				System.out.println("Downloading URL: "+menuInput);
 				downloading=true;
 			} catch (MalformedURLException e) {
+				// menuInput is not a url
+				System.out.println("Error: Invalid Input");
 			}
 		}
 		
