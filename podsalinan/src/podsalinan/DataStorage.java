@@ -24,8 +24,6 @@ import java.util.Vector;
 
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
-import com.almworks.sqlite4java.SQLiteJob;
-import com.almworks.sqlite4java.SQLiteQueue;
 import com.almworks.sqlite4java.SQLiteStatement;
 
 /**
@@ -207,7 +205,12 @@ public class DataStorage {
 					return 1;
 				}
 			}
-
+		}
+		if (!settings.isValidSetting("defaultDirectory")){
+			if (System.getProperty("os.name").startsWith("Windows"))
+			    settings.addSetting("defaultDirectory", System.getProperty("user.home").concat("\\Download"));
+			else
+			    settings.addSetting("defaultDirectory", System.getProperty("user.home").concat("/Download"));
 		}
 		return 0;
 	}
