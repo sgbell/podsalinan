@@ -134,7 +134,7 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void decreaseCommand(String menuInput) {
-		// TODO Auto-generated method stub
+		// TODO Drop the priority of the download in the queue
 		
 	}
 
@@ -142,7 +142,7 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void increaseCommand(String menuInput) {
-		// TODO Auto-generated method stub
+		// TODO Increase the priority of the download in the queue
 		
 	}
 
@@ -167,7 +167,7 @@ public class CLInterface implements Runnable{
 			}
 		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
 			int select = mainMenu.convertCharToNumber(menuInput);
-			// working here
+			//TODO: search the list and call cancelDownload() on it
 			System.out.println(select);
 		}
 	}
@@ -176,12 +176,13 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void removeCommand(String menuInput) {
-		 
+		//TODO: Flesh out this command too
+		
 		// below is the command used to remove a download from the list
 		//urlDownloads.deleteDownload();
 	}
 
-	/** deleteCommand - if it is used on an episode, it will remove the datafile for the episode.
+	/** restartCommand - if it is used on an episode, it will remove the datafile for the episode.
 	 * If it is used on a download, it will remove the data file for the download.
 	 * from the drive.
 	 * @param menuInput
@@ -254,6 +255,7 @@ public class CLInterface implements Runnable{
 			mainMenu.process(99);
 		} else if (menuInput.toLowerCase().startsWith("show")){
 			menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
+			//TODO: Add code here to process for download/episode/podcast details
 			System.out.println(menuInput);
 		}
 	}
@@ -337,7 +339,7 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void setCommand(String menuInput) {
-		
+		//TODO: Flesh out this command for preferences
 	}
 
 	/** cliSelection(String) - used for processing select commands. for everything
@@ -543,6 +545,7 @@ public class CLInterface implements Runnable{
 			System.out.println("   list                           used for listing podcasts/episodes/queued downloads/preferences");
 			System.out.println("   hide menu                      used to disable the menu");
 			System.out.println("   show menu                      used to enable the menu");
+			System.out.println("   show details                   used to show details of podcast/episode/queued download");
 			System.out.println("");
 			System.out.println("podcast specific commands");
 			System.out.println("   update                         used to force an update");
