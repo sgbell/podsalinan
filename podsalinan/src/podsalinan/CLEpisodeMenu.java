@@ -134,6 +134,8 @@ public class CLEpisodeMenu extends CLMenu {
 					setEpisode(null,null);
 					menuList.removeSetting("selectedEpisode");
 					break;
+				case 99:
+					printMainMenu();
 			}
 			userInput=-1000;
 		}

@@ -168,10 +168,11 @@ public class CLInterface implements Runnable{
 		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
 			int select = mainMenu.convertCharToNumber(menuInput);
 			// working here
+			System.out.println(select);
 		}
 	}
 	
-	/** cancelCommand - Used to remove a download from the download list. 
+	/** removeCommand - Used to remove a download from the download list. 
 	 * @param menuInput
 	 */
 	private void removeCommand(String menuInput) {
@@ -247,9 +248,14 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void showCommand(String menuInput) {
-		if (menuInput.equalsIgnoreCase("show menu"))
+		if (menuInput.equalsIgnoreCase("show menu")){
 			if (!settings.addSetting("menuVisible", "true"))
 				settings.updateSetting("menuVisible", "true");
+			mainMenu.process(99);
+		} else if (menuInput.toLowerCase().startsWith("show")){
+			menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
+			System.out.println(menuInput);
+		}
 	}
 
 	@Override
@@ -468,6 +474,17 @@ public class CLInterface implements Runnable{
 		} else if (menuInput.toLowerCase().startsWith("download")){
 			menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
 			// Select download
+			int select = mainMenu.convertCharToNumber(menuInput);
+			if ((select>=0) && (select<urlDownloads.getDownloads().size())){
+				menuList.addSetting("mainMenu", "downloads");
+				menuList.addSetting("selectedDownload", urlDownloads.getDownloads().get(select).getURL().toString());
+				CLDownloadSelectedMenu dsMenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu"); 
+				dsMenu.setDownload(urlDownloads.getDownloads().get(select));
+				if ((settings.isValidSetting("menuVisible"))&&
+				    (settings.findSetting("menuVisible").value.equalsIgnoreCase("true"))){
+					dsMenu.printMainMenu();
+				}
+			}
 		} else {
 			System.out.println("Error: Invalid User entry.");
 		}

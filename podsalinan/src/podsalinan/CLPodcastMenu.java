@@ -54,6 +54,8 @@ public class CLPodcastMenu extends CLMenu{
 				case 9:
 					menuList.clear();
 					break;
+				case 99:
+					printMainMenu();
 			}
 		if (menuList.size()>1)
 			((CLPodcastSelectedMenu)findSubmenu("podcast_selected")).process(userInputInt);

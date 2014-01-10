@@ -52,6 +52,8 @@ public class CLMainMenu extends CLMenu{
 				case 3:
 					menuList.addSetting("mainMenu","preferences");
 					break;
+				case 99:
+					printMainMenu();
 			}
 			userInputInt=-1000;
 		}

@@ -252,6 +252,8 @@ public class CLPreferencesMenu extends CLMenu{
 			case 9:
 				menuList.clear();
 				break;
+			case 99:
+				printMainMenu();
 		}
 		userInputInt=-1000;
 		super.process(userInputInt);
