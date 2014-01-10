@@ -37,6 +37,12 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			super.printMainMenu();
 		}
 	}
+	
+	public void printDetails(){
+		System.out.println("Podcast: "+selectedPodcast.getName());
+		System.out.println("URL: "+selectedPodcast.getURL());
+		System.out.println("Local Directory: "+selectedPodcast.getDirectory());
+	}
 
 	public Podcast getSelectedPodcast() {
 		return selectedPodcast;
@@ -94,6 +100,9 @@ public class CLPodcastSelectedMenu extends CLMenu {
 				case 9:
 					setSelectedPodcast(null);
 					menuList.removeSetting("selectedPodcast");
+					break;
+				case 98:
+					printDetails();
 					break;
 				case 99:
 					printMainMenu();
