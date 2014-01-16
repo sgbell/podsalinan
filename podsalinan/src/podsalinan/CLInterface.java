@@ -167,7 +167,12 @@ public class CLInterface implements Runnable{
 			}
 		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
 			int select = mainMenu.convertCharToNumber(menuInput);
-			// working here
+			if ((select>=0)&&(select<urlDownloads.size()))
+			   urlDownloads.cancelDownload(select);
+			else
+			   System.out.println("Error: Invalid download to stop.");
+		} else {
+			System.out.println("Error: Invalid user input.");
 		}
 	}
 	
@@ -180,7 +185,7 @@ public class CLInterface implements Runnable{
 		//urlDownloads.deleteDownload();
 	}
 
-	/** deleteCommand - if it is used on an episode, it will remove the datafile for the episode.
+	/** restartCommand - if it is used on an episode, it will remove the datafile for the episode.
 	 * If it is used on a download, it will remove the data file for the download.
 	 * from the drive.
 	 * @param menuInput
