@@ -150,6 +150,8 @@ public class CLDownloadSelectedMenu extends CLMenu {
 					setDownload(null);
 					menuList.removeSetting("selectedDownload");
 					break;
+				case 99:
+					printMainMenu();
 			}
 		}
 		//System.out.println("menuList.size()="+menuList.size());

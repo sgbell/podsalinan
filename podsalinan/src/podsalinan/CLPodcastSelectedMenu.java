@@ -95,6 +95,8 @@ public class CLPodcastSelectedMenu extends CLMenu {
 					setSelectedPodcast(null);
 					menuList.removeSetting("selectedPodcast");
 					break;
+				case 99:
+					printMainMenu();
 			}
 		}
 		if (menuList.size()>2){

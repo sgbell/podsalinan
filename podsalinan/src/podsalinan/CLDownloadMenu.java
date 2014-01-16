@@ -46,6 +46,8 @@ public class CLDownloadMenu extends CLMenu{
 			    case 9:
 				    menuList.clear();
 				    break;
+				case 99:
+					printMainMenu();
 		    }
 		}
 		//System.out.println("CLDownloadMenu.process(int) - menuList.size()="+menuList.size());
