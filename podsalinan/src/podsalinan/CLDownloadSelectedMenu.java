@@ -55,8 +55,13 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	}
 
 	public void printMainMenu() {
-		System.out.println("URL: "+download.getURL().toString());
-		switch (download.getStatus()){
+		printDetails(download);
+		super.printMainMenu();
+	}
+	
+	public void printDetails(URLDownload selectedDownload){
+		System.out.println("URL: "+selectedDownload.getURL().toString());
+		switch (selectedDownload.getStatus()){
 			case Episode.NOT_STARTED:
 				System.out.println ("Status: Not Downloaded");
 				break;
@@ -69,8 +74,10 @@ public class CLDownloadSelectedMenu extends CLMenu {
 			case Episode.FINISHED:
 				System.out.println ("Status: Completed Download");
 				break;
+			case Episode.DOWNLOAD_CANCELLED:
+				System.out.println ("Status: Download Cancelled");
 		}
-		File destination = new File(download.getDestination());
+		File destination = new File(selectedDownload.getDestination());
 		long fileSize;
 		if (destination.exists())
 			fileSize = destination.length();
@@ -79,11 +86,9 @@ public class CLDownloadSelectedMenu extends CLMenu {
 
 		
 		// Need to make these sizes human readable
-		System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(new Long(download.getSize()).longValue()));
-		
-		super.printMainMenu();
+		System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(new Long(selectedDownload.getSize()).longValue()));
 	}
-	
+
 	private String humanReadableSize(long fileSize) {
 		String fileSizeModifier="";
 		double newOutputSize;

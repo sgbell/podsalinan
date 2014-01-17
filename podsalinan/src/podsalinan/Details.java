@@ -45,7 +45,8 @@ public class Details {
 			 		 		PREVIOUSLY_STARTED=1,
 			 		 		CURRENTLY_DOWNLOADING=2,
 			 		 		FINISHED=3,
-			 		 		DO_NOT_DOWNLOAD=4;
+			 		 		DO_NOT_DOWNLOAD=4,
+			 		 		DOWNLOAD_CANCELLED=5;
 	
 	public Details (){
 		
@@ -129,12 +130,7 @@ public class Details {
 	public void setStatus(int newStatus){
 		status=newStatus;
 		updated=true;
-		/*
-		if (updated){
-			System.out.println("Updated URL: "+getURL().toString());
-		    System.out.println("Status: "+getStatus());
-		}
-		*/
+		System.out.println("Status: "+status);
 	}
 
 	/**
