@@ -188,10 +188,10 @@ public class URLDownloadList extends DownloadDetails {
 					download.setRemoved(true);
 					Episode selectedEpisode = currentPodcast.getEpisodeByURL(download.getURL().toString());
 					if (selectedEpisode!=null)
-						selectedEpisode.setStatus(Details.NOT_STARTED);
+						selectedEpisode.setStatus(Details.DOWNLOAD_CANCELLED);
 				}
 		} else
-			download.setStatus(Details.DO_NOT_DOWNLOAD);
+			download.setStatus(Details.DOWNLOAD_CANCELLED);
 	}
 	
 	public void deleteDownload(int download) {

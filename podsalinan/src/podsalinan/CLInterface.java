@@ -158,17 +158,24 @@ public class CLInterface implements Runnable{
 	 */
 	private void stopCommand(String menuInput){
 		// Grab the selected download and call the method below
-		menuInput = menuInput.replaceFirst(menuInput.split(" ")+" ", "");
+		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		if (menuInput.equalsIgnoreCase("stop")){
 			URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 			if (download!=null){
 				// Stop the download
+				// working here. apparently the status is not being set in the method below this comment. find it and fix it!
 				urlDownloads.cancelDownload(download);
+				((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(download);
 			}
 		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
 			int select = mainMenu.convertCharToNumber(menuInput);
-			//TODO: search the list and call cancelDownload() on it
-			System.out.println(select);
+			if ((select>=0)&&(select<urlDownloads.size())){
+			   urlDownloads.cancelDownload(select);
+			   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select));
+			} else
+			   System.out.println("Error: Invalid download to stop.");
+		} else {
+			System.out.println("Error: Invalid user input.");
 		}
 	}
 	
@@ -188,7 +195,7 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void restartCommand(String menuInput) {
-		menuInput = menuInput.replaceFirst(menuInput.split(" ")+" ", "");
+		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		if (((menuInput.equalsIgnoreCase("delete"))||(menuInput.equalsIgnoreCase("episode")))&&
 			(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode"))){
 			CLEpisodeMenu episodeMenu = (CLEpisodeMenu)mainMenu.findSubmenu("episode_selected");

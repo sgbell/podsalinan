@@ -55,10 +55,48 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	}
 
 	public void printMainMenu() {
+<<<<<<< HEAD
 		printDetails(false);
+		super.printMainMenu();
+=======
+		printDetails(download,false);
 		super.printMainMenu();
 	}
 	
+	public void printDetails(URLDownload selectedDownload, boolean showDirectory){
+		System.out.println("URL: "+selectedDownload.getURL().toString());
+		switch (selectedDownload.getStatus()){
+			case Episode.NOT_STARTED:
+				System.out.println ("Status: Not Downloaded");
+				break;
+			case Episode.CURRENTLY_DOWNLOADING:
+				System.out.println ("Status: Currently Downloading");
+				break;
+			case Episode.PREVIOUSLY_STARTED:
+				System.out.println ("Status: Download Incomplete");
+				break;
+			case Episode.FINISHED:
+				System.out.println ("Status: Completed Download");
+				break;
+			case Episode.DOWNLOAD_CANCELLED:
+				System.out.println ("Status: Download Cancelled");
+		}
+		if (showDirectory)
+			System.out.println("Destination: "+download.getDestination());
+
+		File destination = new File(selectedDownload.getDestination());
+		long fileSize;
+		if (destination.exists())
+			fileSize = destination.length();
+		else
+			fileSize = 0;
+
+		
+		// Need to make these sizes human readable
+		System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(new Long(selectedDownload.getSize()).longValue()));
+>>>>>>> branch 'master' of git://zhadum/bgdownloader
+	}
+
 	private String humanReadableSize(long fileSize) {
 		String fileSizeModifier="";
 		double newOutputSize;
