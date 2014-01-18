@@ -93,9 +93,11 @@ public class CLPodcastMenu extends CLMenu{
 	}
 
 	public void listPodcasts() {
-		for (Podcast podcast : podcasts){
-			if (!podcast.isRemoved())
-				System.out.println("("+podcast.getDatafile()+") "+podcast.getName());
-		}
+		if (podcasts.size()==0)
+			System.out.println("Error: No podcasts stored in the system.");
+		else
+			for (Podcast podcast : podcasts)
+				if (!podcast.isRemoved())
+					System.out.println("("+podcast.getDatafile()+") "+podcast.getName());
 	}
 }

@@ -262,8 +262,11 @@ public class CLInterface implements Runnable{
 			mainMenu.process(99);
 		} else if (menuInput.toLowerCase().startsWith("show")){
 			menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
-			//TODO: Add code here to process for download/episode/podcast details
-			System.out.println(menuInput);
+			if (menuInput.toLowerCase().equalsIgnoreCase("details")){
+				mainMenu.process(98);
+			} else {
+				System.out.println("Error: Invalid User Input");
+			}
 		}
 	}
 
@@ -322,21 +325,7 @@ public class CLInterface implements Runnable{
 					System.out.println(currentItem.name+": "+currentItem.value);
 			}
 		} else if (menuInput.toLowerCase().startsWith("details")){
-			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast")){
-				Podcast podcast = ((CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected")).getSelectedPodcast();
-				if (podcast!=null){
-					System.out.println("Name: "+podcast.getName());
-					System.out.println("Directory: "+podcast.getDirectory());
-					System.out.println("URL: "+podcast.getURL());
-				}
-			} else if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode")){
-				CLEpisodeMenu episodeMenu = (CLEpisodeMenu)mainMenu.findSubmenu("episode_selected");
-				if (episodeMenu!=null){
-					episodeMenu.printDetails();
-				}
-			} else {
-				System.out.println(menuList.getArray().lastElement().name+": "+menuList.getArray().lastElement().value);
-			}
+			mainMenu.process(98);
 		} else if (menuInput.toLowerCase().startsWith("downloads")){
 			((CLDownloadMenu)mainMenu.findSubmenu("downloads")).listDownloads();
 		}

@@ -55,11 +55,11 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	}
 
 	public void printMainMenu() {
-		printDetails(download);
+		printDetails(download,false);
 		super.printMainMenu();
 	}
 	
-	public void printDetails(URLDownload selectedDownload){
+	public void printDetails(URLDownload selectedDownload, boolean showDirectory){
 		System.out.println("URL: "+selectedDownload.getURL().toString());
 		switch (selectedDownload.getStatus()){
 			case Episode.NOT_STARTED:
@@ -77,6 +77,9 @@ public class CLDownloadSelectedMenu extends CLMenu {
 			case Episode.DOWNLOAD_CANCELLED:
 				System.out.println ("Status: Download Cancelled");
 		}
+		if (showDirectory)
+			System.out.println("Destination: "+download.getDestination());
+
 		File destination = new File(selectedDownload.getDestination());
 		long fileSize;
 		if (destination.exists())
@@ -155,12 +158,15 @@ public class CLDownloadSelectedMenu extends CLMenu {
 					setDownload(null);
 					menuList.removeSetting("selectedDownload");
 					break;
+				case 98:
+					printDetails(true);
+					break;
 				case 99:
 					printMainMenu();
 			}
 		}
 		//System.out.println("menuList.size()="+menuList.size());
-		if (menuList.size()==2){
+		if ((menuList.size()==2)&&(inputInt!=98)&&(inputInt!=99)){
 			inputInt=-1000;
 			super.process(inputInt);
 		}
