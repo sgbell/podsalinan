@@ -163,15 +163,16 @@ public class CLInterface implements Runnable{
 			URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 			if (download!=null){
 				// Stop the download
-				// working here. apparently the status is not being set in the method below this comment. find it and fix it!
 				urlDownloads.cancelDownload(download);
-				((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(download);
+				((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(download,true);
 			}
+		} else if (menuInput.toLowerCase().startsWith("download")){
+			
 		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
 			int select = mainMenu.convertCharToNumber(menuInput);
 			if ((select>=0)&&(select<urlDownloads.size())){
 			   urlDownloads.cancelDownload(select);
-			   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select));
+			   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select),true);
 			} else
 			   System.out.println("Error: Invalid download to stop.");
 		} else {

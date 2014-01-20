@@ -55,10 +55,6 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	}
 
 	public void printMainMenu() {
-<<<<<<< HEAD
-		printDetails(false);
-		super.printMainMenu();
-=======
 		printDetails(download,false);
 		super.printMainMenu();
 	}
@@ -94,7 +90,6 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		
 		// Need to make these sizes human readable
 		System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(new Long(selectedDownload.getSize()).longValue()));
->>>>>>> branch 'master' of git://zhadum/bgdownloader
 	}
 
 	private String humanReadableSize(long fileSize) {
@@ -121,36 +116,6 @@ public class CLDownloadSelectedMenu extends CLMenu {
         	return Double.toString(newOutputSize)+fileSizeModifier;
 	}
 
-    public void printDetails(boolean showDirectory){
-		System.out.println("URL: "+download.getURL().toString());
-		switch (download.getStatus()){
-			case Episode.NOT_STARTED:
-				System.out.println ("Status: Not Downloaded");
-				break;
-			case Episode.CURRENTLY_DOWNLOADING:
-				System.out.println ("Status: Currently Downloading");
-				break;
-			case Episode.PREVIOUSLY_STARTED:
-				System.out.println ("Status: Download Incomplete");
-				break;
-			case Episode.FINISHED:
-				System.out.println ("Status: Completed Download");
-				break;
-		}
-		if (showDirectory)
-			System.out.println("Destination: "+download.getDestination());
-		File destination = new File(download.getDestination());
-		long fileSize;
-		if (destination.exists())
-			fileSize = destination.length();
-		else
-			fileSize = 0;
-
-		
-		// Need to make these sizes human readable
-		System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(new Long(download.getSize()).longValue()));
-    }
-	
 	public void process(int inputInt){
 		//System.out.println("CLDownloadSelectedMenu.process(int)");
 		if (menuList.size()==2){
@@ -194,7 +159,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 					menuList.removeSetting("selectedDownload");
 					break;
 				case 98:
-					printDetails(true);
+					printDetails(download,true);
 					break;
 				case 99:
 					printMainMenu();

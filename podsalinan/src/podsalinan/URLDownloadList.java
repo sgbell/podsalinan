@@ -190,8 +190,8 @@ public class URLDownloadList extends DownloadDetails {
 					if (selectedEpisode!=null)
 						selectedEpisode.setStatus(Details.DOWNLOAD_CANCELLED);
 				}
-		} else
-			download.setStatus(Details.DOWNLOAD_CANCELLED);
+		}
+		download.setStatus(Details.DOWNLOAD_CANCELLED);
 	}
 	
 	public void deleteDownload(int download) {
