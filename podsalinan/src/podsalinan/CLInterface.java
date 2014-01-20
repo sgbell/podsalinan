@@ -167,14 +167,31 @@ public class CLInterface implements Runnable{
 				((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(download,true);
 			}
 		} else if (menuInput.toLowerCase().startsWith("download")){
+			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
+			if ((menuInput.length()>0)&&(menuInput.length()<3)){
+				int select = mainMenu.convertCharToNumber(menuInput);
+				if ((select>=0)&&(select<urlDownloads.size())){
+					urlDownloads.cancelDownload(select);
+				   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select),true);
+				}
+			} else
+				System.out.println("Error: User Input is invalid");
 		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
 			int select = mainMenu.convertCharToNumber(menuInput);
 			if ((select>=0)&&(select<urlDownloads.size())){
 			   urlDownloads.cancelDownload(select);
 			   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select),true);
-			} else
-			   System.out.println("Error: Invalid download to stop.");
+			} else {
+				if (menuInput.equalsIgnoreCase("download")){
+					URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
+					if (download!=null){
+						// Stop the download
+						urlDownloads.cancelDownload(download);
+						((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(download,true);
+					}
+				}
+			}
 		} else {
 			System.out.println("Error: Invalid user input.");
 		}
@@ -184,7 +201,8 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void removeCommand(String menuInput) {
-		//TODO: Flesh out this command too
+		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+		
 		
 		// below is the command used to remove a download from the list
 		//urlDownloads.deleteDownload();
