@@ -130,7 +130,6 @@ public class Details {
 	public void setStatus(int newStatus){
 		status=newStatus;
 		updated=true;
-		System.out.println("Status: "+status);
 	}
 
 	/**
