@@ -175,13 +175,6 @@ public class CLInterface implements Runnable{
 					urlDownloads.cancelDownload(select);
 				   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select),true);
 				}
-			} else
-				System.out.println("Error: User Input is invalid");
-		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
-			int select = mainMenu.convertCharToNumber(menuInput);
-			if ((select>=0)&&(select<urlDownloads.size())){
-			   urlDownloads.cancelDownload(select);
-			   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select),true);
 			} else {
 				if (menuInput.equalsIgnoreCase("download")){
 					URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
@@ -192,6 +185,13 @@ public class CLInterface implements Runnable{
 					}
 				}
 			}
+		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
+			int select = mainMenu.convertCharToNumber(menuInput);
+			if ((select>=0)&&(select<urlDownloads.size())){
+			   urlDownloads.cancelDownload(select);
+			   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select),true);
+			} else
+				System.out.println("Error: User Input is invalid");
 		} else {
 			System.out.println("Error: Invalid user input.");
 		}
