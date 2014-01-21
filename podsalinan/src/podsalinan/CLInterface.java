@@ -151,47 +151,39 @@ public class CLInterface implements Runnable{
 	 */
 	private void clearCommand(String menuInput) {
 		menuList.clear();
+		System.out.println("Selecteion Cleared.");
 	}
 
 	/** stopCommand - used to pause the download.
 	 * @param menuInput
 	 */
 	private void stopCommand(String menuInput){
+		URLDownload download=null;
 		// Grab the selected download and call the method below
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		if (menuInput.equalsIgnoreCase("stop")){
-			URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
-			if (download!=null){
-				// Stop the download
-				urlDownloads.cancelDownload(download);
-				((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(download,true);
-			}
+			download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 		} else if (menuInput.toLowerCase().startsWith("download")){
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
 			if ((menuInput.length()>0)&&(menuInput.length()<3)){
 				int select = mainMenu.convertCharToNumber(menuInput);
-				if ((select>=0)&&(select<urlDownloads.size())){
-					urlDownloads.cancelDownload(select);
-				   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select),true);
-				}
+				if ((select>=0)&&(select<urlDownloads.size()))
+					download = urlDownloads.getDownloads().get(select);
 			} else {
 				if (menuInput.equalsIgnoreCase("download")){
-					URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
-					if (download!=null){
-						// Stop the download
-						urlDownloads.cancelDownload(download);
-						((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(download,true);
-					}
+					download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 				}
 			}
 		} else if ((menuInput.length()>0)&&(menuInput.length()<3)){
 			int select = mainMenu.convertCharToNumber(menuInput);
-			if ((select>=0)&&(select<urlDownloads.size())){
-			   urlDownloads.cancelDownload(select);
-			   ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(urlDownloads.getDownloads().get(select),true);
-			} else
-				System.out.println("Error: User Input is invalid");
+			if ((select>=0)&&(select<urlDownloads.size()))
+				download = urlDownloads.getDownloads().get(select);
+		}
+		if (download!=null){
+			// Stop the download
+			urlDownloads.cancelDownload(download);
+			((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(download,true);
 		} else {
 			System.out.println("Error: Invalid user input.");
 		}
