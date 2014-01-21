@@ -212,7 +212,11 @@ public class CLInterface implements Runnable{
 				
 				if (confirmRemoval()){
 					clpsmenu.getSelectedPodcast().setRemove(true);
-					//TODO: Working here. you need to delete links to podcast in download list. Then delete podcast from the system.
+					for (URLDownload download : urlDownloads.getDownloads()){
+						if (download.getPodcastId().equalsIgnoreCase(clpsmenu.getSelectedPodcast().getDatafile())){
+							download.setPodcastId("");
+						}
+					}
 					System.out.println("Podcast deleted.");
 				}
 			} else
@@ -241,7 +245,12 @@ public class CLInterface implements Runnable{
 					CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
 					clpsmenu.printDetails();
 					if (confirmRemoval()){
-						// See podcast code above to copy it down to here,
+						clpsmenu.getSelectedPodcast().setRemove(true);
+						for (URLDownload download : urlDownloads.getDownloads()){
+							if (download.getPodcastId().equalsIgnoreCase(clpsmenu.getSelectedPodcast().getDatafile())){
+								download.setPodcastId("");
+							}
+						}
 						System.out.println("Podcast deleted.");
 					}
 				}
