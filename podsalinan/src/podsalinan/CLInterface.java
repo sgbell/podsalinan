@@ -100,7 +100,7 @@ public class CLInterface implements Runnable{
 				} else if (menuInput.toUpperCase().startsWith("HELP")){
 					helpList(menuInput);
 				} else if (menuInput.toUpperCase().startsWith("SELECT")){
-					cliSelection(menuInput);
+					selectCommand(menuInput);
 				} else if (menuInput.toUpperCase().startsWith("SET")){
 					setCommand(menuInput);
 				} else if (menuInput.toUpperCase().startsWith("LIST")){
@@ -232,14 +232,20 @@ public class CLInterface implements Runnable{
 						urlDownloads.deleteDownload(cldsmenu.getDownload());
 						System.out.println("Download deleted.");
 					}
-				}
+				} else 
+					System.out.println("Error: Invalid user input");
 			} else {
-				// If the user has specified a number
+				if ((menuInput.length()>0)&&(menuInput.length()<3)){
+					int select = mainMenu.convertCharToNumber(menuInput);
+					urlDownloads.deleteDownload(select);
+					System.out.println("Download deleted.");
+				} else 
+					System.out.println("Error: Invalid user input");
 			}
 		} else if (menuInput.startsWith("podcast")){
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
-			if (menuInput.equalsIgnoreCase("download")){
+			if (menuInput.equalsIgnoreCase("podcast")){
 				if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast")){
 					// remove the podcast from the system
 					CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
@@ -253,9 +259,41 @@ public class CLInterface implements Runnable{
 						}
 						System.out.println("Podcast deleted.");
 					}
+				} else {
+					int podcastCount=0;
+					boolean podcastFound=false;
+					Podcast podcast;
+					
+		            while ((podcastCount<podcasts.size())&&(!podcastFound)){
+		            	podcast=podcasts.get(podcastCount);
+						if (((podcast.getName().equalsIgnoreCase(menuInput))||
+							(podcast.getDatafile().equalsIgnoreCase(menuInput)))&&
+							(!podcast.isRemoved())){
+							selectPodcast(podcast);
+							podcastFound=true;
+						}
+		            	podcastCount++;
+		            }
+		            
+		            if (podcastFound){
+		            	// CLPodcastSelectedMenu.printDetails()
+						if (confirmRemoval()){
+							//clpsmenu.getSelectedPodcast().setRemove(true);
+							for (URLDownload download : urlDownloads.getDownloads()){
+								//if (download.getPodcastId().equalsIgnoreCase(clpsmenu.getSelectedPodcast().getDatafile())){
+									download.setPodcastId("");
+								//}
+							}
+							System.out.println("Podcast deleted.");
+		            	}
+		            } else {
+						System.out.println("Error: Invalid user input");
+		            }
 				}
-			}
-		}
+			} else 
+				System.out.println("Error: Invalid user input");
+		} else 
+			System.out.println("Error: Invalid user input");
 	}
 
 		
@@ -422,7 +460,7 @@ public class CLInterface implements Runnable{
 	/** cliSelection(String) - used for processing select commands. for everything
 	 * @param menuInput
 	 */
-	private void cliSelection(String menuInput) {
+	private void selectCommand(String menuInput) {
 		menuInput = menuInput.replaceAll("(?i)select ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
 			// remove podcast text at the start (and the space)
