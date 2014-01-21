@@ -194,19 +194,24 @@ public class URLDownloadList extends DownloadDetails {
 		download.setStatus(Details.DOWNLOAD_CANCELLED);
 	}
 	
-	public void deleteDownload(int download) {
+	public boolean deleteDownload(int download) {
 		if ((download >=0)&&(download<downloads.size())){
-			downloads.get(download).setRemoved(true);
-			// Grab the download item
-			URLDownload downloadItem = downloads.get(download);
-			// remove it from the list
-			downloads.remove(downloadItem);
-			// add it to the end of the list
-			downloads.add(downloadItem);
-			restartDownload(download);
+			return deleteDownload(downloads.get(download));
 		}
+		return false;
 	}
 
+	public boolean deleteDownload(URL url) {
+		return deleteDownload(findDownload(url));
+	}
+	
+	public boolean deleteDownload(URLDownload download){
+		download.setRemoved(true);
+		downloads.remove(download);
+		downloads.add(download);
+		return true;
+	}
+	
 	public boolean restartDownload(int download) {
 		if ((download >=0)&&(download<downloads.size())){
 			return restartDownload(downloads.get(download));

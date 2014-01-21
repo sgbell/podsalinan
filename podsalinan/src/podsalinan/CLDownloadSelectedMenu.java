@@ -60,6 +60,8 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	}
 	
 	public void printDetails(URLDownload selectedDownload, boolean showDirectory){
+		if ((selectedDownload==null)&&(download!=null))
+			selectedDownload=download;
 		System.out.println("URL: "+selectedDownload.getURL().toString());
 		switch (selectedDownload.getStatus()){
 			case Episode.NOT_STARTED:

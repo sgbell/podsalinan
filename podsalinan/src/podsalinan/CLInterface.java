@@ -195,7 +195,34 @@ public class CLInterface implements Runnable{
 	private void removeCommand(String menuInput) {
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
-		
+		if (menuInput.equalsIgnoreCase("remove")){
+			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload")){
+				// remove the download
+				CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
+				cldsmenu.printDetails(null,true);
+				System.out.println("Are you sure you want to delete this (Y/N)?");
+				String deletePrompt = input.getStringInput();
+				if (deletePrompt.equalsIgnoreCase("Y")){
+					urlDownloads.deleteDownload(cldsmenu.getDownload());
+					System.out.println("Download deleted.");
+				}
+			} else if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast")){
+				// remove the podcast from the system
+				CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
+				clpsmenu.printDetails();
+				System.out.println("Are you sure you want to delete this (Y/N)?");
+				String deletePrompt = input.getStringInput();
+				if (deletePrompt.equalsIgnoreCase("Y")){
+					//TODO: Working here. you need to delete links to podcast in download list. Then delete podcast from the system.
+					System.out.println("Podcast deleted.");
+				}
+			} else
+				System.out.println("Error: No Download or Episode selected");
+		} else if (menuInput.startsWith("download")){
+			
+		} else if (menuInput.startsWith("podcast")){
+			
+		}
 		// below is the command used to remove a download from the list
 		//urlDownloads.deleteDownload();
 	}
