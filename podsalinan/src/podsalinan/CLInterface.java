@@ -134,7 +134,6 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void decreaseCommand(String menuInput) {
-		// TODO Drop the priority of the download in the queue
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 
 		if (menuInput.equalsIgnoreCase("decrease")){
@@ -498,7 +497,10 @@ public class CLInterface implements Runnable{
 			mainMenu.process(98);
 		} else if (menuInput.toLowerCase().startsWith("downloads")){
 			((CLDownloadMenu)mainMenu.findSubmenu("downloads")).listDownloads();
-		}
+		} else if (menuInput.toLowerCase().startsWith("preferences")){
+			((CLPreferencesMenu)mainMenu.findSubmenu("preferences")).printList();
+		} else
+			System.out.println("Error: Invalid user input.");
 	}
 
 	/** setCommand(String) - used to set preferences

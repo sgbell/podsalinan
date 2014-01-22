@@ -44,6 +44,26 @@ public class CLPreferencesMenu extends CLMenu{
 		this.settings = settings;
 	}
 
+	private String printUserFriendlyUpdateRate(){
+    	switch (Integer.parseInt(settings.findSetting("updateInterval").value)){
+		    case 60:
+			    return "Hourly";
+		    case 120:
+		    	return "2 Hours";
+		    case 180:
+		    	return "3 Hours";
+		    case 360:
+		    	return "6 Hours";
+		    case 720:
+		    	return "12 Hours";
+		    case 1440:
+		    	return "Daily";
+		    default:
+		    	return null;
+    	}
+
+	}
+	
 	private void changePodcastRate() {
 		System.out.println ();
 		System.out.println ("How often to update the podcast feeds?");
@@ -57,28 +77,7 @@ public class CLPreferencesMenu extends CLMenu{
         if (podcastRateSetting==null)
         	settings.addSetting("updateInterval", "1440");
         
-        System.out.print ("Choice [");
-    	switch (Integer.parseInt(settings.findSetting("updateInterval").value)){
-    		case 60:
-    			System.out.print("Hourly");
-    			break;
-    		case 120:
-    			System.out.print("2 Hours");
-    			break;
-    		case 180:
-    			System.out.print("3 Hours");
-    			break;
-    		case 360:
-    			System.out.print("6 Hours");
-    			break;
-    		case 720:
-    			System.out.print("12 Hours");
-    			break;
-    		case 1440:
-    			System.out.print("Daily");
-    			break;
-    	}
-        System.out.print ("]: ");
+        System.out.print ("Choice ["+printUserFriendlyUpdateRate()+"]: ");
 		/* Take user input.
 		 * Make sure it is between 1 & 6
 		 * If not leave PodcastRate as it's current value.
@@ -257,5 +256,19 @@ public class CLPreferencesMenu extends CLMenu{
 		}
 		userInputInt=-1000;
 		super.process(userInputInt);
+	}
+	
+	public boolean printList(){
+		for (Setting setting : settings.getArray()){
+			
+			if (setting.name.equalsIgnoreCase("updateInterval")){
+				System.out.println(setting.name+" = "+printUserFriendlyUpdateRate());
+			} else if (setting.name.equalsIgnoreCase("downloadLimit")){
+				System.out.println(setting.name+" = "+setting.value+"Kbps");
+			} else
+				System.out.println(setting.name+" = "+setting.value);
+		}
+		
+		return true;
 	}
 }
