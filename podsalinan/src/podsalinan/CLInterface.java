@@ -143,7 +143,8 @@ public class CLInterface implements Runnable{
 					URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 					urlDownloads.decreasePriority(urlDownloads.findDownload(download.getURL()));
 				}
-		} else if (menuInput.toLowerCase().startsWith("download")){
+		} else if ((menuInput.toLowerCase().startsWith("download"))||
+				   ((menuInput.length()>0)&&(menuInput.length()<3))){
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
 			if ((menuInput.length()>0)&&(menuInput.length()<3)){
@@ -171,7 +172,8 @@ public class CLInterface implements Runnable{
 				URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 				urlDownloads.increasePriority(urlDownloads.findDownload(download.getURL()));
 			}
-		} else if (menuInput.toLowerCase().startsWith("download")){
+		} else if (((menuInput.toLowerCase().startsWith("download")))||
+				 	((menuInput.length()>0)&&(menuInput.length()<3))){
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
 			if ((menuInput.length()>0)&&(menuInput.length()<3)){
