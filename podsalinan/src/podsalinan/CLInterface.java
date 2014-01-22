@@ -135,15 +135,38 @@ public class CLInterface implements Runnable{
 	 */
 	private void decreaseCommand(String menuInput) {
 		// TODO Drop the priority of the download in the queue
-		
+		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+
+		if (menuInput.equalsIgnoreCase("decrease")){
+			if ((menuList.size()>0)&&
+				(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
+					URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
+					urlDownloads.decreasePriority(urlDownloads.findDownload(download.getURL()));
+				}
+		} else if (menuInput.toLowerCase().startsWith("download")){
+			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+			
+		} else 
+			System.out.println("Error: Invalid user input.");
 	}
 
 	/** This method will mostly be used to move a download higher in the download queue
 	 * @param menuInput
 	 */
 	private void increaseCommand(String menuInput) {
-		// TODO Increase the priority of the download in the queue
-		
+		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+
+		if (menuInput.equalsIgnoreCase("increase")){
+			if ((menuList.size()>0)&&
+				(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
+				URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
+				urlDownloads.increasePriority(urlDownloads.findDownload(download.getURL()));
+			}
+		} else if (menuInput.toLowerCase().startsWith("download")){
+			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+			
+		} else 
+			System.out.println("Error: Invalid user input.");
 	}
 
 	/** clearCommand - used to clear menuList selection
@@ -151,7 +174,7 @@ public class CLInterface implements Runnable{
 	 */
 	private void clearCommand(String menuInput) {
 		menuList.clear();
-		System.out.println("Selecteion Cleared.");
+		System.out.println("Selection Cleared.");
 	}
 
 	/** stopCommand - used to pause the download.
@@ -196,7 +219,8 @@ public class CLInterface implements Runnable{
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
 		if (menuInput.equalsIgnoreCase("remove")){
-			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload")){
+			if ((menuList.size()>0)&&
+			    (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
 				// remove the download
 				CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
 				cldsmenu.printDetails(null,true);
@@ -225,7 +249,8 @@ public class CLInterface implements Runnable{
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
 			if (menuInput.equalsIgnoreCase("download")){
-				if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload")){
+				if ((menuList.size()>0)&&
+					(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
 					CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
 					cldsmenu.printDetails(null,true);
 					if (confirmRemoval()){
@@ -246,7 +271,8 @@ public class CLInterface implements Runnable{
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
 			if (menuInput.equalsIgnoreCase("podcast")){
-				if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast")){
+				if ((menuList.size()>0)&&
+				    (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast"))){
 					// remove the podcast from the system
 					CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
 					clpsmenu.printDetails(null);
