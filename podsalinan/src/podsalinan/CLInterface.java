@@ -507,7 +507,21 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void setCommand(String menuInput) {
-		//TODO: Flesh out this command for preferences
+		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+		
+		if (menuInput.toLowerCase().startsWith("updateinterval")){
+			
+		} else if (menuInput.toLowerCase().startsWith("downloadlimit")){
+			
+		} else if (menuInput.toLowerCase().startsWith("maxdownloaders")){
+
+		} else if ((menuInput.toLowerCase().startsWith("autoqueue"))||
+				   (menuInput.toLowerCase().startsWith("menuvisible"))){
+
+		} else if (menuInput.toLowerCase().startsWith("defaultdirectory")){
+
+		} else
+			System.out.println("Error: Invalid user input.");
 	}
 
 	/** cliSelection(String) - used for processing select commands. for everything
