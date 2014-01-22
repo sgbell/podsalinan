@@ -75,9 +75,18 @@ public class CLPodcastMenu extends CLMenu{
 					(podcastNumber<0))
 					System.out.println("Error: Invalid Podcast");
 				else{
-					menuList.addSetting("selectedPodcast", podcasts.get(podcastNumber).getDatafile());
-					((CLPodcastSelectedMenu)findSubmenu("podcast_selected")).setSelectedPodcast(podcasts.get(podcastNumber));
-					System.out.println("Selected Podcast: "+podcasts.get(podcastNumber).getName());
+					int podcastCount=1;
+					boolean podcastFound=false;
+					while ((podcastCount<podcasts.size())&&(!podcastFound)){
+						Podcast podcast = podcasts.get(podcastCount);
+						if ((podcastCount==podcastNumber)&&(!podcast.isRemoved())){
+							menuList.addSetting("selectedPodcast", podcast.getDatafile());
+							((CLPodcastSelectedMenu)findSubmenu("podcast_selected")).setSelectedPodcast(podcast);
+							System.out.println("Selected Podcast: "+podcast.getName());
+							podcastFound=true;
+						}
+						podcastCount++;
+					}
 				}
 				userInput=null;
 			}

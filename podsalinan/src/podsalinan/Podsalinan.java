@@ -74,7 +74,7 @@ public class Podsalinan {
 		while(!cli.isFinished()){
 			// List the podcast titles.
 			for (Podcast podcast : podcasts){
-				if (!cli.isFinished()){
+				if ((!cli.isFinished())&&(!podcast.isRemoved())){
 					podcast.updateList(dataFiles.getSettingsDir());
 					dataFiles.savePodcast(podcast);
 				}
