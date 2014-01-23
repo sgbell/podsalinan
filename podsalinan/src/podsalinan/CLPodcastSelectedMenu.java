@@ -3,6 +3,8 @@
  */
 package podsalinan;
 
+import java.io.File;
+
 
 /**
  * @author sbell
@@ -77,6 +79,24 @@ public class CLPodcastSelectedMenu extends CLMenu {
 		}
 	}
 
+	public boolean changeDirectory(Podcast podcast){
+		File newPath;
+		System.out.println ();
+		System.out.print ("Enter Podcast Download Directory["+podcast.getDirectory()+"]: ");
+		String userInput=input.getStringInput();
+		if ((userInput.length()>0)&&(userInput!=null)){
+			newPath=new File(userInput);
+			if ((newPath.exists())&&(newPath.isDirectory())){
+				podcast.setDirectory(userInput);
+				System.out.println("Podcast Download Directory: "+podcast.getDirectory());
+				return true;
+			} else {
+				System.out.println ("Error: User Input invalid");
+			}
+		}
+		return false;
+	}
+	
 	public void process(int userInputInt){
 		//System.out.println("CLPodcastSelectedMenu.process(int)");
 		//System.out.println("menuList.size(): "+menuList.size());
@@ -106,7 +126,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			    	}
 			    	break;
 			    case 4:
-			    	
+			    	changeDirectory(selectedPodcast);
 			    	break;
 				case 9:
 					setSelectedPodcast(null);

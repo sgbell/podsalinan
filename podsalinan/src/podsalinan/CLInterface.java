@@ -510,6 +510,7 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void setCommand(String menuInput) {
+		//TODO: add "set podcast directory" and "set directory"
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
 		if (menuInput.toLowerCase().startsWith("updateinterval")){
@@ -743,6 +744,7 @@ public class CLInterface implements Runnable{
 			// Select download
 			int select = mainMenu.convertCharToNumber(menuInput);
 			if ((select>=0) && (select<urlDownloads.getDownloads().size())){
+				menuList.clear();
 				menuList.addSetting("mainMenu", "downloads");
 				menuList.addSetting("selectedDownload", urlDownloads.getDownloads().get(select).getURL().toString());
 				CLDownloadSelectedMenu dsMenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu"); 
@@ -815,6 +817,7 @@ public class CLInterface implements Runnable{
 			System.out.println("podcast specific commands");
 			System.out.println("   update                         used to force an update");
 			System.out.println("   download <episode number>      used to download an episode");
+			System.out.println("   set podcast directory <path>   used to change download directory");
 			System.out.println("");
 			System.out.println("download specific commands");
 			System.out.println("   increase <download number>     used to move download up in the list");
@@ -822,6 +825,7 @@ public class CLInterface implements Runnable{
 			System.out.println("   remove <download number>       used to cancel download");
 			System.out.println("   restart <download number>      used to restart download");
 			System.out.println("   stop <download number>         used to stop download");
+			System.out.println("   set directory <path>           used to change download directory");
 			System.out.println("");
 			System.out.println("Commands to exit the program");
 			System.out.println("   quit");
