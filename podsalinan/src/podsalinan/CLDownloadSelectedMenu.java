@@ -79,8 +79,8 @@ public class CLDownloadSelectedMenu extends CLMenu {
 			case Episode.DOWNLOAD_CANCELLED:
 				System.out.println ("Status: Download Cancelled");
 		}
-		if (showDirectory)
-			System.out.println("Destination: "+download.getDestination());
+		if ((showDirectory)&&(selectedDownload.getDestination()!=null))
+			System.out.println("Destination: "+selectedDownload.getDestination());
 
 		File destination = new File(selectedDownload.getDestination());
 		long fileSize;
