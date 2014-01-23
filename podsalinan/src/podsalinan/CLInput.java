@@ -80,4 +80,15 @@ public class CLInput {
 				+"-"+maxNumber);
 		return null;
 	}
+
+	public boolean confirmRemoval(){
+		System.out.println("Are you sure you want to delete this (Y/N)?");
+		String deletePrompt = getStringInput();
+		if ((deletePrompt.equalsIgnoreCase("Y"))||
+			(deletePrompt.equalsIgnoreCase("Yes"))){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

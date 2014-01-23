@@ -22,7 +22,8 @@ public class CLPodcastSelectedMenu extends CLMenu {
 		super(newMenuList, "podcast_selected");
 		String[] mainMenuList = {"1. List Episodes",
 								 "2. Update List",
-								 "3. Remove Podcast",
+								 "3. Delete Podcast",
+								 "4. Change Download Directory",
 								 "<AA>. Select Episode",
 								 "",
 								 "9. Return to List of Podcasts"};
@@ -98,7 +99,14 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			    	}
 			    	break;
 			    case 3:
-			    	// Delete Podcast
+			    	if(input.confirmRemoval()){
+			    		selectedPodcast.setRemove(true);
+			    		setSelectedPodcast(null);
+			    		menuList.removeSetting("selectedPodcast");
+			    	}
+			    	break;
+			    case 4:
+			    	
 			    	break;
 				case 9:
 					setSelectedPodcast(null);

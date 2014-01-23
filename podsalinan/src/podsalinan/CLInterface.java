@@ -245,7 +245,7 @@ public class CLInterface implements Runnable{
 				CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
 				cldsmenu.printDetails(null,true);
 
-				if (confirmRemoval()){
+				if (input.confirmRemoval()){
 					urlDownloads.deleteDownload(cldsmenu.getDownload());
 					System.out.println("Download deleted.");
 				}
@@ -254,7 +254,7 @@ public class CLInterface implements Runnable{
 				CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
 				clpsmenu.printDetails(null);
 				
-				if (confirmRemoval()){
+				if (input.confirmRemoval()){
 					clpsmenu.getSelectedPodcast().setRemove(true);
 					for (URLDownload download : urlDownloads.getDownloads()){
 						if (download.getPodcastId().equalsIgnoreCase(clpsmenu.getSelectedPodcast().getDatafile())){
@@ -273,7 +273,7 @@ public class CLInterface implements Runnable{
 					(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
 					CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
 					cldsmenu.printDetails(null,true);
-					if (confirmRemoval()){
+					if (input.confirmRemoval()){
 						urlDownloads.deleteDownload(cldsmenu.getDownload());
 						System.out.println("Download deleted.");
 					}
@@ -284,7 +284,7 @@ public class CLInterface implements Runnable{
 					int select = mainMenu.convertCharToNumber(menuInput);
 					CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
 					cldsmenu.printDetails(urlDownloads.getDownloads().get(select), true);
-					if (confirmRemoval()){
+					if (input.confirmRemoval()){
 						urlDownloads.deleteDownload(select);
 						System.out.println("Download deleted.");
 					}
@@ -300,7 +300,7 @@ public class CLInterface implements Runnable{
 					// remove the podcast from the system
 					CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
 					clpsmenu.printDetails(null);
-					if (confirmRemoval()){
+					if (input.confirmRemoval()){
 						clpsmenu.getSelectedPodcast().setRemove(true);
 						for (URLDownload download : urlDownloads.getDownloads()){
 							if (download.getPodcastId().equalsIgnoreCase(clpsmenu.getSelectedPodcast().getDatafile())){
@@ -328,7 +328,7 @@ public class CLInterface implements Runnable{
 		            if (podcastFound){
 						CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
 						clpsmenu.printDetails(podcast);
-						if (confirmRemoval()){
+						if (input.confirmRemoval()){
 							podcast.setRemove(true);
 							for (URLDownload download : urlDownloads.getDownloads()){
 								if (download.getPodcastId().equalsIgnoreCase(podcast.getDatafile())){
@@ -351,7 +351,7 @@ public class CLInterface implements Runnable{
 
 				CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
 				cldsmenu.printDetails(download, true);
-				if (confirmRemoval()){
+				if (input.confirmRemoval()){
 					urlDownloads.deleteDownload(select);
 					System.out.println("Download deleted.");
 				}
@@ -361,18 +361,6 @@ public class CLInterface implements Runnable{
 			System.out.println("Error: Invalid user input");
 	}
 
-		
-	private boolean confirmRemoval(){
-		System.out.println("Are you sure you want to delete this (Y/N)?");
-		String deletePrompt = input.getStringInput();
-		if ((deletePrompt.equalsIgnoreCase("Y"))||
-			(deletePrompt.equalsIgnoreCase("Yes"))){
-			return true;
-		} else {
-			return false;
-		}
-	}
-		
 	/** restartCommand - if it is used on an episode, it will remove the datafile for the episode.
 	 * If it is used on a download, it will remove the data file for the download.
 	 * from the drive.
