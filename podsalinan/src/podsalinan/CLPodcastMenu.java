@@ -75,7 +75,7 @@ public class CLPodcastMenu extends CLMenu{
 					(podcastNumber<0))
 					System.out.println("Error: Invalid Podcast");
 				else{
-					int podcastCount=1;
+					int podcastCount=0;
 					boolean podcastFound=false;
 					while ((podcastCount<podcasts.size())&&(!podcastFound)){
 						Podcast podcast = podcasts.get(podcastCount);
