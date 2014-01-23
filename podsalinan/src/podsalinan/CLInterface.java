@@ -208,7 +208,7 @@ public class CLInterface implements Runnable{
 			} else if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast")){
 				// remove the podcast from the system
 				CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
-				clpsmenu.printDetails();
+				clpsmenu.printDetails(null);
 				
 				if (confirmRemoval()){
 					clpsmenu.getSelectedPodcast().setRemove(true);
@@ -249,7 +249,7 @@ public class CLInterface implements Runnable{
 				if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast")){
 					// remove the podcast from the system
 					CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
-					clpsmenu.printDetails();
+					clpsmenu.printDetails(null);
 					if (confirmRemoval()){
 						clpsmenu.getSelectedPodcast().setRemove(true);
 						for (URLDownload download : urlDownloads.getDownloads()){
@@ -262,7 +262,7 @@ public class CLInterface implements Runnable{
 				} else {
 					int podcastCount=0;
 					boolean podcastFound=false;
-					Podcast podcast;
+					Podcast podcast=null;
 					
 		            while ((podcastCount<podcasts.size())&&(!podcastFound)){
 		            	podcast=podcasts.get(podcastCount);
@@ -276,13 +276,14 @@ public class CLInterface implements Runnable{
 		            }
 		            
 		            if (podcastFound){
-		            	// CLPodcastSelectedMenu.printDetails()
+						CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
+						clpsmenu.printDetails(podcast);
 						if (confirmRemoval()){
-							//clpsmenu.getSelectedPodcast().setRemove(true);
+							podcast.setRemove(true);
 							for (URLDownload download : urlDownloads.getDownloads()){
-								//if (download.getPodcastId().equalsIgnoreCase(clpsmenu.getSelectedPodcast().getDatafile())){
+								if (download.getPodcastId().equalsIgnoreCase(podcast.getDatafile())){
 									download.setPodcastId("");
-								//}
+								}
 							}
 							System.out.println("Podcast deleted.");
 		            	}
