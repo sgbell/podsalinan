@@ -605,9 +605,15 @@ public class CLInterface implements Runnable{
 			} else
 				System.out.println("Error: Invalid directory.");
 		} else if (menuInput.toLowerCase().startsWith("destination")){
-			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
-
-			
+			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload")){
+				menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+				
+				if (!menuInput.toLowerCase().startsWith("destination")){
+					CLDownloadSelectedMenu downloadMenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
+					downloadMenu.changeDirectory(menuInput);
+				}
+			} else
+				System.out.println("Error: No download selected.");
 		} else if (menuInput.toLowerCase().startsWith("podcast")){
 			// This is used for changing the podcast download directory
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");

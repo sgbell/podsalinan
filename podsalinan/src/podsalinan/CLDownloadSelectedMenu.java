@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 public class CLDownloadSelectedMenu extends CLMenu {
 	private URLDownload download;
 	private URLDownloadList downloadList;
+    private CLInput input;
 	
 	/**
 	 * @param newMenuList
@@ -26,10 +27,12 @@ public class CLDownloadSelectedMenu extends CLMenu {
 				             "3. Stop Download",
 				             "4. Increase Priority",
 				             "5. Decrease Priority",
+				             "6. Change Destination",
 				             "",
 				             "9. Return to Download List"};
 		setMainMenuList(menuList);
 		setDownloadList(downloads);
+		input = new CLInput();
 	}
 
 	public void setDownload(URLDownload urlDownload) {
@@ -156,6 +159,10 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		        	// Decrease download priority
 		        	downloadList.decreasePriority(downloadList.findDownload(download.getURL()));
 		        	break;
+		        case 6:
+		        	// Change Destination
+		        	
+		        	break;
 				case 9:
 					setDownload(null);
 					menuList.removeSetting("selectedDownload");
@@ -178,5 +185,27 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		//System.out.println("CLDownloadSelectedMenu.process(String)");
 
 		super.process(userInput);
+	}
+	
+	public boolean changeDirectory(String userInput){
+		File newPath;
+		if ((userInput.length()>0)&&(userInput!=null)){
+			newPath=new File(userInput);
+			if ((newPath.exists())&&(newPath.isDirectory())){
+				System.out.println("Download Directory: "+download.getDestination());
+				return true;
+			} else if ((newPath.getParentFile().exists())&&
+					   (newPath.getParentFile().isDirectory())){
+				System.out.println("Error: Directory does no exist.");
+				if (input.confirmCreation()){
+					newPath.mkdir();
+					System.out.println("Directory Created: "+newPath);
+					download.setDestination(userInput);
+				}
+			} else {
+				System.out.println ("Error: Invalid path");
+			}
+		}
+		return false;
 	}
 }
