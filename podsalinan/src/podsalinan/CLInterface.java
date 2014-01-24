@@ -608,9 +608,16 @@ public class CLInterface implements Runnable{
 			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload")){
 				menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 				
-				if (!menuInput.toLowerCase().startsWith("destination")){
+				String checkForDownload = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+				if ((checkForDownload.length()>0)&&(checkForDownload.length()<3)){
+					int selection = mainMenu.convertCharToNumber(checkForDownload);
+					URLDownload urlDownload = urlDownloads.getDownloads().get(selection);
 					CLDownloadSelectedMenu downloadMenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
-					downloadMenu.changeDirectory(menuInput);
+					downloadMenu.changeDirectory(urlDownload,menuInput);
+					
+				} else if (!menuInput.toLowerCase().startsWith("destination")){
+					CLDownloadSelectedMenu downloadMenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
+					downloadMenu.changeDirectory(null,menuInput);
 				}
 			} else
 				System.out.println("Error: No download selected.");

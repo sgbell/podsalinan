@@ -187,12 +187,14 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		super.process(userInput);
 	}
 	
-	public boolean changeDirectory(String userInput){
+	public boolean changeDirectory(URLDownload selectedDownload, String userInput){
+		if (selectedDownload==null)
+			selectedDownload=download;
 		File newPath;
 		if ((userInput.length()>0)&&(userInput!=null)){
 			newPath=new File(userInput);
 			if ((newPath.exists())&&(newPath.isDirectory())){
-				System.out.println("Download Directory: "+download.getDestination());
+				System.out.println("Download Directory: "+selectedDownload.getDestination());
 				return true;
 			} else if ((newPath.getParentFile().exists())&&
 					   (newPath.getParentFile().isDirectory())){
@@ -200,7 +202,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 				if (input.confirmCreation()){
 					newPath.mkdir();
 					System.out.println("Directory Created: "+newPath);
-					download.setDestination(userInput);
+					selectedDownload.setDestination(userInput);
 				}
 			} else {
 				System.out.println ("Error: Invalid path");
