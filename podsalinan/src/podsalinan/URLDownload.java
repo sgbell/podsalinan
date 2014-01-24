@@ -69,9 +69,7 @@ public class URLDownload extends Details {
 	 * @param destination the destination to set
 	 */
 	public void setDestination(String destination) {
-		String filename = getURL().toString();
-		filename = filename.substring(filename.lastIndexOf('/')+1, filename.length());
-		this.destination = new File(destination+"/"+filename);
+		this.destination = new File(destination);
 	}
 
 	public void setDestination(File outputFile) {

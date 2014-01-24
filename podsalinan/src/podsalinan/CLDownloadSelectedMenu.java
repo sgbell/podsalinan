@@ -162,7 +162,9 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		        case 6:
 		        	// Change Destination
 					System.out.println ();
-					System.out.print ("Enter Podcast Download Directory["+download.getDestination()+"]: ");
+					String destination = download.getDestination();
+					
+					System.out.print ("Enter Download Destination["+destination+"]: ");
 					String userInput=input.getStringInput();
 			    	changeDirectory(download,userInput);
 		        	break;
@@ -201,8 +203,8 @@ public class CLDownloadSelectedMenu extends CLMenu {
 				selectedDownload.setUpdated(true);
 				System.out.println("Download path: "+selectedDownload.getDestination());
 				return true;
-			} else if ((newPath.getParentFile().exists())&&
-					   (newPath.getParentFile().isDirectory())){
+			} else if ((newPath.getParentFile()!=null)&&((newPath.getParentFile().exists())&&
+					   (newPath.getParentFile().isDirectory()))){
 				System.out.println("Error: Directory does no exist.");
 				if (input.confirmCreation()){
 					newPath.mkdir();
