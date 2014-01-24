@@ -31,23 +31,24 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private Vector<Downloader> downloaders;	// Collection of running downloaders
-	private Vector<URLDownload> downloadList;
+	private URLDownloadList downloadList;
 	private ProgSettings progSettings;
 
 	public DownloadQueue(){
 		
 	}
 	
-	public DownloadQueue(ProgSettings progSettings){
+	public DownloadQueue(ProgSettings progSettings, URLDownloadList listOfDownloads){
 		this.progSettings=progSettings;
-		
+		downloadList = listOfDownloads;
 	}
 	
 	public void run(){
+		
 	}
 
 	/**
-	 * Moved these lines to it's own method, as podcasts and url downloads are essentially doing the same
+	 * Starts a new Download.
 	 * @param newDownloader
 	 */
 	public void startDownload(Downloader newDownloader){
@@ -74,7 +75,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		}
 	}
 	
-	public Vector<URLDownload> getDownloadList(){
+	public URLDownloadList getDownloadList(){
 		return downloadList;
 	}
 	

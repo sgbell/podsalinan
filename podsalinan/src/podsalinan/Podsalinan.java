@@ -117,7 +117,7 @@ public class Podsalinan {
 			dataFiles.loadPodcast(podcast);
 
 		// Downloader List
-		downloaderList = new DownloadQueue(settings);
+		downloaderList = new DownloadQueue(settings,urlDownloads);
 		
 		cli = new CLInterface(podcasts, urlDownloads, settings);
 		Thread cliThread = new Thread(cli);
