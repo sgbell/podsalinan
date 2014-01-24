@@ -161,7 +161,10 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		        	break;
 		        case 6:
 		        	// Change Destination
-		        	
+					System.out.println ();
+					System.out.print ("Enter Podcast Download Directory["+download.getDestination()+"]: ");
+					String userInput=input.getStringInput();
+			    	changeDirectory(download,userInput);
 		        	break;
 				case 9:
 					setDownload(null);
@@ -195,6 +198,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 			newPath=new File(userInput);
 			if ((newPath.exists())&&(newPath.isDirectory())){
 				selectedDownload.setDestination(userInput);
+				selectedDownload.setUpdated(true);
 				System.out.println("Download path: "+selectedDownload.getDestination());
 				return true;
 			} else if ((newPath.getParentFile().exists())&&
@@ -204,6 +208,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 					newPath.mkdir();
 					System.out.println("Directory Created: "+userInput);
 					selectedDownload.setDestination(userInput);
+					selectedDownload.setUpdated(true);
 				}
 			} else {
 				System.out.println ("Error: Invalid path");
