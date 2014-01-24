@@ -194,14 +194,15 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		if ((userInput.length()>0)&&(userInput!=null)){
 			newPath=new File(userInput);
 			if ((newPath.exists())&&(newPath.isDirectory())){
-				System.out.println("Download Directory: "+selectedDownload.getDestination());
+				selectedDownload.setDestination(userInput);
+				System.out.println("Download path: "+selectedDownload.getDestination());
 				return true;
 			} else if ((newPath.getParentFile().exists())&&
 					   (newPath.getParentFile().isDirectory())){
 				System.out.println("Error: Directory does no exist.");
 				if (input.confirmCreation()){
 					newPath.mkdir();
-					System.out.println("Directory Created: "+newPath);
+					System.out.println("Directory Created: "+userInput);
 					selectedDownload.setDestination(userInput);
 				}
 			} else {
