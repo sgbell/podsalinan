@@ -146,6 +146,15 @@ public class CLInterface implements Runnable{
 		} else if (menuInput.toLowerCase().startsWith("download")){
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
+			if ((menuInput.length()>0)&&(menuInput.length()<3)){
+				int select = mainMenu.convertCharToNumber(menuInput);
+				if ((select>=0)&&(select<urlDownloads.size())){
+					if (urlDownloads.decreasePriority(select))
+					   System.out.println("Decreased Priority: "+urlDownloads.getDownloads().get(select+1).getURL().toString());
+					else
+						System.out.println("Error: Download already at the bottom of the list.");
+				}
+			}
 		} else 
 			System.out.println("Error: Invalid user input.");
 	}
@@ -165,6 +174,15 @@ public class CLInterface implements Runnable{
 		} else if (menuInput.toLowerCase().startsWith("download")){
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
+			if ((menuInput.length()>0)&&(menuInput.length()<3)){
+				int select = mainMenu.convertCharToNumber(menuInput);
+				if ((select>=0)&&(select<urlDownloads.size())){
+					if (urlDownloads.increasePriority(select))
+						System.out.println("Increased Priority: "+urlDownloads.getDownloads().get(select-1).getURL().toString());
+					else
+						System.out.println("Error: Download already highest priority.");
+				}
+			}
 		} else 
 			System.out.println("Error: Invalid user input.");
 	}
@@ -262,8 +280,12 @@ public class CLInterface implements Runnable{
 			} else {
 				if ((menuInput.length()>0)&&(menuInput.length()<3)){
 					int select = mainMenu.convertCharToNumber(menuInput);
-					urlDownloads.deleteDownload(select);
-					System.out.println("Download deleted.");
+					CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
+					cldsmenu.printDetails(urlDownloads.getDownloads().get(select), true);
+					if (confirmRemoval()){
+						urlDownloads.deleteDownload(select);
+						System.out.println("Download deleted.");
+					}
 				} else 
 					System.out.println("Error: Invalid user input");
 			}

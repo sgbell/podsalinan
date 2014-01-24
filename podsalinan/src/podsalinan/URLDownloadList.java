@@ -113,26 +113,30 @@ public class URLDownloadList extends DownloadDetails {
 	 * This will move the selected download up the queue
 	 * @param downloadId
 	 */
-	public void increasePriority(int downloadId){
+	public boolean increasePriority(int downloadId){
 		if ((downloadId>0)&&
 		    (!downloads.get(downloadId).isRemoved())){
 			Collections.swap(downloads, downloadId, downloadId-1);
 			downloads.get(downloadId).setUpdated(true);
 			downloads.get(downloadId-1).setUpdated(true);
+			return true;
 		}
+		return false;
 	}
 	
 	/**
 	 * This will move the selected download down the queue
 	 * @param downloadId
 	 */
-	public void decreasePriority(int downloadId){
+	public boolean decreasePriority(int downloadId){
 		if ((downloadId<downloads.size()-1)&&
 			(!downloads.get(downloadId+1).isRemoved())){
 			Collections.swap(downloads, downloadId, downloadId+1);
 			downloads.get(downloadId).setUpdated(true);
 			downloads.get(downloadId+1).setUpdated(true);
+			return true;
 		}
+		return false;
 	}
 	
 	public void checkDownloadSize(URLDownload newFile){
