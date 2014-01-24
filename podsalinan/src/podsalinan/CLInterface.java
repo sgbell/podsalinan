@@ -604,6 +604,24 @@ public class CLInterface implements Runnable{
 				System.out.println(name+" value updated");
 			} else
 				System.out.println("Error: Invalid directory.");
+		} else if (menuInput.toLowerCase().startsWith("destination")){
+			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+
+			
+		} else if (menuInput.toLowerCase().startsWith("podcast")){
+			// This is used for changing the podcast download directory
+			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+			if (menuInput.toLowerCase().startsWith("directory")){
+				menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+				
+				if ((!menuInput.toLowerCase().startsWith("directory"))&&
+					(menuList.isValidSetting("selectedPodcast"))){
+					CLPodcastSelectedMenu podcastSelectedMenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
+					Podcast podcast = podcastSelectedMenu.getSelectedPodcast();
+					podcastSelectedMenu.changeDirectory(podcast, menuInput);
+				} else
+					System.out.println("Error: Invalid user input.");
+			}
 		} else
 			System.out.println("Error: Invalid user input.");
 	}
@@ -825,7 +843,7 @@ public class CLInterface implements Runnable{
 			System.out.println("   remove <download number>       used to cancel download");
 			System.out.println("   restart <download number>      used to restart download");
 			System.out.println("   stop <download number>         used to stop download");
-			System.out.println("   set directory <path>           used to change download directory");
+			System.out.println("   set destination <path>         used to change download directory");
 			System.out.println("");
 			System.out.println("Commands to exit the program");
 			System.out.println("   quit");

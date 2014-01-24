@@ -79,19 +79,24 @@ public class CLPodcastSelectedMenu extends CLMenu {
 		}
 	}
 
-	public boolean changeDirectory(Podcast podcast){
+	public boolean changeDirectory(Podcast podcast, String userInput){
 		File newPath;
-		System.out.println ();
-		System.out.print ("Enter Podcast Download Directory["+podcast.getDirectory()+"]: ");
-		String userInput=input.getStringInput();
 		if ((userInput.length()>0)&&(userInput!=null)){
 			newPath=new File(userInput);
 			if ((newPath.exists())&&(newPath.isDirectory())){
 				podcast.setDirectory(userInput);
 				System.out.println("Podcast Download Directory: "+podcast.getDirectory());
 				return true;
+			} else if ((newPath.getParentFile().exists())&&
+					   (newPath.getParentFile().isDirectory())){
+				System.out.println("Error: Directory does no exist.");
+				if (input.confirmCreation()){
+					newPath.mkdir();
+					System.out.println("Podcast Download Directory Created: "+newPath);
+					podcast.setDirectory(userInput);
+				}
 			} else {
-				System.out.println ("Error: User Input invalid");
+				System.out.println ("Error: Invalid path");
 			}
 		}
 		return false;
@@ -126,7 +131,10 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			    	}
 			    	break;
 			    case 4:
-			    	changeDirectory(selectedPodcast);
+					System.out.println ();
+					System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
+					String userInput=input.getStringInput();
+			    	changeDirectory(selectedPodcast,userInput);
 			    	break;
 				case 9:
 					setSelectedPodcast(null);

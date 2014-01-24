@@ -91,4 +91,15 @@ public class CLInput {
 			return false;
 		}
 	}
+	
+	public boolean confirmCreation(){
+		System.out.println("Would you like to create it (Y/N)?");
+		String deletePrompt = getStringInput();
+		if ((deletePrompt.equalsIgnoreCase("Y"))||
+			(deletePrompt.equalsIgnoreCase("Yes"))){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
