@@ -34,7 +34,6 @@ import java.util.Vector;
  *
  */
 public class CLInterface implements Runnable{
-	private boolean finished=false;
 	private Vector<Podcast> podcasts;
 	private URLDownloadList urlDownloads;
 	private ProgSettings settings;
@@ -85,7 +84,7 @@ public class CLInterface implements Runnable{
 				int inputInt = Integer.parseInt(menuInput);
 				// process number input
 				if ((menuList.size()==0)&&(inputInt==4))
-					finished=true;
+					settings.setFinished(true);
 				else if ((settings.findSetting("menuVisible")==null)||
 						 (settings.findSetting("menuVisible").value.equalsIgnoreCase("true")))
 					mainMenu.process(inputInt);
@@ -93,7 +92,7 @@ public class CLInterface implements Runnable{
 				// If the input is not a number This area will sort out that code
 				if ((menuInput.equalsIgnoreCase("quit"))||
 					(menuInput.equalsIgnoreCase("exit"))){
-					finished=true;
+					settings.setFinished(true);
 				} else if ((menuInput.toUpperCase().startsWith("HTTP"))||
 						   (menuInput.toUpperCase().startsWith("FTP"))){
 					// User has entered a url to download.
@@ -446,12 +445,12 @@ public class CLInterface implements Runnable{
 	public void run() {
 		System.out.println("Welcome to podsalinan.");
 		System.out.println("----------------------");
-		while (!finished){
+		while (!settings.isFinished()){
 			if ((menuList.size()==0)&&
 				((settings.findSetting("menuVisible")==null)||
 				 (settings.findSetting("menuVisible").value.equalsIgnoreCase("true"))))
 				mainMenu.printMainMenu();
-			if (!finished)
+			if (!settings.isFinished())
 				userInput();
 		}
 		System.out.println("Please Standby for system Shutdown.");
@@ -894,14 +893,6 @@ public class CLInterface implements Runnable{
 		System.out.println("");
 	}
 
-	public boolean isFinished(){
-		return finished;
-	}
-	
-	public void setFinished(boolean isFinished){
-		finished = isFinished;
-	}
-	
 	public String getCharForNumber(int i){
 		return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
 	}

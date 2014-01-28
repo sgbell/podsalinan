@@ -30,9 +30,11 @@ import java.util.Vector;
 public class ProgSettings {
 
 	private Vector<Setting> settings;
+	private boolean finished;
 	
 	public ProgSettings (){
 		settings = new Vector<Setting>();
+		finished=false;
 	}
 	/**
 	 * Loop through the array of settings and return the value for the requested setting
@@ -113,5 +115,17 @@ public class ProgSettings {
 	
 	public Vector<Setting> getArray(){
 		return settings;
+	}
+	/**
+	 * @return the finished
+	 */
+	public boolean isFinished() {
+		return finished;
+	}
+	/**
+	 * @param finished the finished to set
+	 */
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 }

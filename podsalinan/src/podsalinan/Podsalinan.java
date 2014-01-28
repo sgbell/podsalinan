@@ -71,10 +71,10 @@ public class Podsalinan {
 			updateInterval=60;
 		}
 		
-		while(!cli.isFinished()){
+		while(!settings.isFinished()){
 			// List the podcast titles.
 			for (Podcast podcast : podcasts){
-				if ((!cli.isFinished())&&(!podcast.isRemoved())){
+				if ((!settings.isFinished())&&(!podcast.isRemoved())){
 					podcast.updateList(dataFiles.getSettingsDir());
 					dataFiles.savePodcast(podcast);
 				}
@@ -82,7 +82,7 @@ public class Podsalinan {
 			
 			try {
 				synchronized (cli.getWaitObject()){
-					if (!cli.isFinished())
+					if (!settings.isFinished())
 						// updateInterval will be a multiple of 1 minute
 						cli.getWaitObject().wait(updateInterval*60000);
 				}
