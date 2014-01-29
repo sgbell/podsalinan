@@ -44,7 +44,21 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	}
 	
 	public void run(){
-		
+		downloaders = new Vector<Downloader>();
+		while (!progSettings.isFinished()){
+			/*
+			 *  Psuedo code:
+			 *  
+			 *  while ((urldownloadlist.numberOfDownloadsNotCurrentlyDownload)&&
+			 *         (countActiveDownloaders<settings.getValue("maxDownloaders")){
+			 *       urldownloadList.getNextDownloadNotCurrentlyDownloading
+			 *       Create Downloader with next URLDownload object
+			 *       start downloader        
+			 *  }
+			 *  
+			 *  sleep
+			 */
+		}
 	}
 
 	/**
@@ -74,17 +88,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			}
 		}
 	}
-	
+		
 	public URLDownloadList getDownloadList(){
 		return downloadList;
-	}
-	
-	public void increasePriority (URLDownload downloadItem){
-		
-	}
-	
-	public void decreasePriority (URLDownload downloadItem){
-		
 	}
 	
 	public void setProgSettings(ProgSettings globalSettings){

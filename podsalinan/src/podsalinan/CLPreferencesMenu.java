@@ -13,9 +13,8 @@ import java.io.File;
 public class CLPreferencesMenu extends CLMenu{
 	private ProgSettings settings;
 	private CLInput input;
-	private Object waitObject;
 
-	public CLPreferencesMenu(ProgSettings newMenuList, ProgSettings preferences, Object waitObject) {
+	public CLPreferencesMenu(ProgSettings newMenuList, ProgSettings preferences) {
 		super(newMenuList,"preferences");
 		String[] mainMenuList = {"1. Change Podcast Update Rate",
 								 "2. Number of Downloaders",
@@ -27,7 +26,6 @@ public class CLPreferencesMenu extends CLMenu{
 		setMainMenuList(mainMenuList);
 		setSettings(preferences);
 		input = new CLInput();
-		this.waitObject = waitObject;
 	}
 
 	@Override
@@ -116,8 +114,8 @@ public class CLPreferencesMenu extends CLMenu{
 				System.out.println("Update Interval now set to:"+settings.findSetting("updateInterval").value);
 				// Wake up the main thread in Podsalinan to update the wait value
 				
-				synchronized (waitObject){
-					waitObject.notify();
+				synchronized (settings.getWaitObject()){
+					settings.getWaitObject().notify();
 				}
 			}
 		}

@@ -37,7 +37,6 @@ public class CLInterface implements Runnable{
 	private Vector<Podcast> podcasts;
 	private URLDownloadList urlDownloads;
 	private ProgSettings settings;
-	private Object waitObject = new Object();
 	private CLInput input;
 	private ProgSettings menuList;
 	private CLMainMenu mainMenu;
@@ -57,7 +56,7 @@ public class CLInterface implements Runnable{
 		// When creating the Podcast Menus, we need settings to grab the default directory to do a manual update,
 		// and urlDownloads so we can queue episodes up for downloading manually.
 		mainMenu.addSubmenu(new CLPodcastMenu(menuList,podcasts,urlDownloads));
-		mainMenu.addSubmenu(new CLPreferencesMenu(menuList,settings,waitObject));
+		mainMenu.addSubmenu(new CLPreferencesMenu(menuList,settings));
 		mainMenu.addSubmenu(new CLDownloadMenu(menuList,urlDownloads));
 	}
 
@@ -454,8 +453,8 @@ public class CLInterface implements Runnable{
 				userInput();
 		}
 		System.out.println("Please Standby for system Shutdown.");
-		synchronized (waitObject){
-			waitObject.notify();
+		synchronized (settings.getWaitObject()){
+			settings.getWaitObject().notify();
 		}
 	}
 	
@@ -911,19 +910,5 @@ public class CLInterface implements Runnable{
 		}
 		
 		return charOutput;
-	}
-
-	/**
-	 * @return the waitObject
-	 */
-	public Object getWaitObject() {
-		return waitObject;
-	}
-
-	/**
-	 * @param waitObject the waitObject to set
-	 */
-	public void setWaitObject(Object waitObject) {
-		this.waitObject = waitObject;
 	}
 }

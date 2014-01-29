@@ -31,6 +31,7 @@ public class ProgSettings {
 
 	private Vector<Setting> settings;
 	private boolean finished;
+	private Object waitObject = new Object();
 	
 	public ProgSettings (){
 		settings = new Vector<Setting>();
@@ -127,5 +128,19 @@ public class ProgSettings {
 	 */
 	public void setFinished(boolean finished) {
 		this.finished = finished;
+	}
+	
+	/**
+	 * @return the waitObject
+	 */
+	public Object getWaitObject() {
+		return waitObject;
+	}
+
+	/**
+	 * @param waitObject the waitObject to set
+	 */
+	public void setWaitObject(Object waitObject) {
+		this.waitObject = waitObject;
 	}
 }

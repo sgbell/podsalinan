@@ -81,10 +81,10 @@ public class Podsalinan {
 			}
 			
 			try {
-				synchronized (cli.getWaitObject()){
+				synchronized (settings.getWaitObject()){
 					if (!settings.isFinished())
 						// updateInterval will be a multiple of 1 minute
-						cli.getWaitObject().wait(updateInterval*60000);
+						settings.getWaitObject().wait(updateInterval*60000);
 				}
 			} catch (InterruptedException e) {
 			}
