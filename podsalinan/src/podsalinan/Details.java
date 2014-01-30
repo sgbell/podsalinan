@@ -36,17 +36,14 @@ public class Details {
 	   			    remove=false, // Does this podcast need to be deleted from the system
 					updated=false;
 	private int	    status;  	  // This is used to track if the system has already downloaded the file.
-								  // 0 - not started
-								  // 1 - was previously started, but not yet handled by a downloader
-								  // 2 - currently downloading
-								  // 3 - finished
 	
-	public static final int NOT_STARTED=0,
-			 		 		PREVIOUSLY_STARTED=1,
-			 		 		CURRENTLY_DOWNLOADING=2,
-			 		 		FINISHED=3,
-			 		 		DO_NOT_DOWNLOAD=4,
-			 		 		DOWNLOAD_CANCELLED=5;
+	public static final int NOT_QUEUED=0,
+							DOWNLOAD_QUEUED=1,
+							CURRENTLY_DOWNLOADING=2,
+							FINISHED=3,
+							DOWNLOAD_CANCELLED=4,
+							DO_NOT_DOWNLOAD=5,
+							INCOMPLETE_DOWNLOAD=6;
 	
 	public Details (){
 		

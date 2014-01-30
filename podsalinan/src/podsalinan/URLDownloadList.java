@@ -145,7 +145,7 @@ public class URLDownloadList extends DownloadDetails {
 				URLConnection stream = newFile.getURL().openConnection();
 				int fileSize=stream.getContentLength();
 				newFile.setSize(Long.toString(fileSize));
-				newFile.setStatus(Details.NOT_STARTED);
+				newFile.setStatus(Details.DOWNLOAD_QUEUED);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -156,7 +156,7 @@ public class URLDownloadList extends DownloadDetails {
 		File localFile = new File(filename);
 		if (localFile.exists())
 			if (localFile.length() < Long.parseLong(newFile.getSize())){
-				newFile.setStatus(Details.PREVIOUSLY_STARTED);
+				newFile.setStatus(Details.INCOMPLETE_DOWNLOAD);
 			} else if (localFile.length() >= Long.parseLong(newFile.getSize())){
 				newFile.setStatus(Details.FINISHED);					
 			}
@@ -229,7 +229,7 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public boolean restartDownload(URLDownload download){
 		if (deleteFile(download)){
-			download.setStatus(Details.NOT_STARTED);
+			download.setStatus(Details.DOWNLOAD_QUEUED);
 			return true;
 		}
 		return false;

@@ -47,11 +47,16 @@ public class CLEpisodeMenu extends CLMenu {
 		System.out.println ("Episode: "+episode.getTitle());
 		System.out.println ("Date: "+episode.getDate());
 		switch (episode.getStatus()){
-			case Episode.NOT_STARTED:
+			case Episode.NOT_QUEUED:
 				System.out.println ("Status: Not Downloaded");
 				break;
 			case Episode.CURRENTLY_DOWNLOADING:
-			case Episode.PREVIOUSLY_STARTED:
+				System.out.println ("Status: Downloading Currently");
+				break;
+			case Episode.DOWNLOAD_QUEUED:
+				System.out.println ("Status: Download Queued");
+				break;
+			case Episode.INCOMPLETE_DOWNLOAD:
 				System.out.println ("Status: Download Incomplete");
 				break;
 			case Episode.FINISHED:

@@ -67,13 +67,13 @@ public class CLDownloadSelectedMenu extends CLMenu {
 			selectedDownload=download;
 		System.out.println("URL: "+selectedDownload.getURL().toString());
 		switch (selectedDownload.getStatus()){
-			case Episode.NOT_STARTED:
-				System.out.println ("Status: Not Downloaded");
+			case Episode.DOWNLOAD_QUEUED:
+				System.out.println ("Status: Download Queued");
 				break;
 			case Episode.CURRENTLY_DOWNLOADING:
 				System.out.println ("Status: Currently Downloading");
 				break;
-			case Episode.PREVIOUSLY_STARTED:
+			case Episode.INCOMPLETE_DOWNLOAD:
 				System.out.println ("Status: Download Incomplete");
 				break;
 			case Episode.FINISHED:

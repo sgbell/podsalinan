@@ -259,7 +259,7 @@ public class Podcast extends DownloadDetails{
 				if (destinationFile!=null){
 					if (destinationFile.exists()){
 						destinationFile.delete();
-						selectedEpisode.setStatus(Episode.NOT_STARTED);
+						selectedEpisode.setStatus(Episode.NOT_QUEUED);
 						return 0;
 					}
 				}
