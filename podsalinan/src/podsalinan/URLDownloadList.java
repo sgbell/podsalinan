@@ -287,4 +287,14 @@ public class URLDownloadList extends DownloadDetails {
 		}
 		return -1;
 	}
+	
+	public int getNumberOfQueuedDownloads(){
+		int numberofQueuedItems=0;
+		
+		for (URLDownload download : downloads)
+			if (download.getStatus()==Details.DOWNLOAD_QUEUED)
+				numberofQueuedItems++;
+		
+		return numberofQueuedItems;
+	}
 }

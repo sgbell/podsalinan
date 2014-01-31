@@ -58,7 +58,12 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			 *  
 			 *  sleep
 			 */
-			
+			if ((downloadList.getNumberOfQueuedDownloads()>0)&&
+				(downloaders.size()<Integer.parseInt(progSettings.getSettingValue("maxDownloaders")))){
+				//search downloadList for next queued item.
+				//Downloader newDownloader = new Downloader(next queued item);
+				//startDownload(newDownloader);
+			}
 		}
 	}
 
