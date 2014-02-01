@@ -33,12 +33,14 @@ import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import javax.swing.table.DefaultTableModel;
-
 public class Downloader extends NotifyingRunnable{
 	private URLDownload downloadItem;
-	private int percentage=0,
-			    result;
+	private int percentage=0;
+    private static int result;
+	
+	public final static int CONNECTION_FAILED=-1;
+	public final static int DOWNLOAD_COMPLETE=1;
+	public final static int DOWNLOAD_INCOMPLETE=-2;
 	
     public Downloader(URLDownload download){
     	downloadItem = download;
@@ -58,7 +60,7 @@ public class Downloader extends NotifyingRunnable{
 		
 		try {
 			URLConnection conn = downloadItem.getURL().openConnection();
-			List values = conn.getHeaderFields().get("content-Length");
+			List<String> values = conn.getHeaderFields().get("content-Length");
 			if (values != null && !values.isEmpty())
 				downloadItem.setSize((String) values.get(0));
 		} catch (MalformedURLException e) {
@@ -92,9 +94,11 @@ public class Downloader extends NotifyingRunnable{
                 //is no connection, this line will fail
                 Object objData = urlConnect.getContent();
             } catch (UnknownHostException e) {
+            		result=CONNECTION_FAILED;
                     return false;
             }
             catch (IOException e) {
+            		result=CONNECTION_FAILED;
                     return false;
             }
             return true;
@@ -132,7 +136,7 @@ public class Downloader extends NotifyingRunnable{
 					 */
 					//String length=conn.getHeaderField("content-Length");
 					String length=null;
-					List values = conn.getHeaderFields().get("content-Length");
+					List<String> values = conn.getHeaderFields().get("content-Length");
 					if (values != null && !values.isEmpty()){
 						length = (String) values.get(0);
 					}
@@ -144,8 +148,10 @@ public class Downloader extends NotifyingRunnable{
 						downloadItem.setSize(length);
 					remoteFileExists=true;
 				} catch (MalformedURLException e) {
+					result=CONNECTION_FAILED;
 					remoteFileExists=false;
 				} catch (IOException e) {
+					result=CONNECTION_FAILED;
 					remoteFileExists=false;
 				}
 
@@ -165,6 +171,7 @@ public class Downloader extends NotifyingRunnable{
 													newDownload.getPort(),
 													newDownload.getFile()).toString());
 					} catch (MalformedURLException e) {
+						result=CONNECTION_FAILED;
 						remoteFileExists=false;
 					}
 				}
@@ -201,6 +208,7 @@ public class Downloader extends NotifyingRunnable{
 						
 						long time=System.currentTimeMillis();
 						int chunkCount=0;
+						//TODO: Add a check on ProgSettings.isFinished() below.
 						while ((byteRead = inStream.read(buf)) > 0){
 							outStream.write(buf, 0, byteRead);
 							saved+=byteRead;
@@ -248,16 +256,16 @@ public class Downloader extends NotifyingRunnable{
 						downloadItem.setStatus(Details.FINISHED);
 					}
 				} catch (UnknownHostException e){
-					return 1;
+					return CONNECTION_FAILED;
 				} catch (IOException e) {
-					return 1;
+					return CONNECTION_FAILED;
 				}
 			}
 		} else {
 			// No internet connection.
-			return 1;
+			return CONNECTION_FAILED;
 		}
-		return 0;
+		return DOWNLOAD_COMPLETE;
 	}
 	
 	public int downloadCompleted(){
@@ -269,11 +277,12 @@ public class Downloader extends NotifyingRunnable{
 	 * interface Downloader inherits
 	 */
 	public void doRun() {
-		//TODO: get this going
+		// All it needs to do is start downloading and grab the result.
+		result = getFile();
 	}
 	
 	public String getFilenameDownload(){
-		return downloadItem.getURL().toString();
+		return downloadItem.getURL().toString().split("/")[downloadItem.getURL().toString().split("/").length-1];
 	}
 
 	/**
@@ -287,6 +296,6 @@ public class Downloader extends NotifyingRunnable{
 	 * @param result the result to set
 	 */
 	public void setResult(int result) {
-		this.result = result;
+		Downloader.result = result;
 	}
 }

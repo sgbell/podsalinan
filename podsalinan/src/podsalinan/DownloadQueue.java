@@ -66,9 +66,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					/* Change download status here. otherwise if it is set by the Downloader, it may
 					 * Assign the download to multiple downloaders.
 					 */
-					/*download.setStatus(Details.CURRENTLY_DOWNLOADING);
+					download.setStatus(Details.CURRENTLY_DOWNLOADING);
 					Downloader newDownloader = new Downloader(download);
-					startDownload(newDownloader);*/
+					startDownload(newDownloader);
 				}
 			}
 		}
