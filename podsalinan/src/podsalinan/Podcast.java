@@ -334,6 +334,9 @@ public class Podcast extends DownloadDetails{
 		return -1;
 	}
 	
+	/** scanDirectory will check the current directory for episode downloads that have complted
+	 * 
+	 */
 	public void scanDirectory(){
 		//TODO: Scan the local directory and mark episodes as downloaded, that are found in the directory
 	}

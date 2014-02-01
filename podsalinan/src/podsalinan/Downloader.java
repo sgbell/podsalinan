@@ -37,19 +37,18 @@ import javax.swing.table.DefaultTableModel;
 
 public class Downloader extends NotifyingRunnable{
 	private URLDownload downloadItem;
-	private long fileSize;
 	private int percentage=0,
-				result;
+			    result;
 	
-	public String getFilenameDownload(){
-		return downloadItem.getURL().toString();
-	}
+    public Downloader(URLDownload download){
+    	downloadItem = download;
+    }
 	
 	public Downloader(URL urlDownload, String outputFile, String size){
 		downloadItem = new URLDownload();
 		downloadItem.setURL(urlDownload);
 		downloadItem.setDestination(outputFile);
-		fileSize = Long.valueOf(size);
+		downloadItem.setSize(size);
 	}
 	
 	public Downloader(URL urlDownload, String outputFile) {
@@ -59,7 +58,9 @@ public class Downloader extends NotifyingRunnable{
 		
 		try {
 			URLConnection conn = downloadItem.getURL().openConnection();
-			fileSize = conn.getContentLength();
+			List values = conn.getHeaderFields().get("content-Length");
+			if (values != null && !values.isEmpty())
+				downloadItem.setSize((String) values.get(0));
 		} catch (MalformedURLException e) {
 		} catch (IOException e) {
 		}
@@ -139,8 +140,8 @@ public class Downloader extends NotifyingRunnable{
 					long tempfileSize=-1;
 					if (length!=null)
 						tempfileSize = Long.parseLong(length);
-					if (fileSize!=tempfileSize)
-						fileSize=tempfileSize;
+					if (Long.parseLong(downloadItem.getSize())!=tempfileSize)
+						downloadItem.setSize(length);
 					remoteFileExists=true;
 				} catch (MalformedURLException e) {
 					remoteFileExists=false;
@@ -173,19 +174,19 @@ public class Downloader extends NotifyingRunnable{
 			if (remoteFileExists){
 				double fileSizeModified = 0;
 				totalSizeModifier="";
-				if (fileSize>1073741824){
+				if (Long.parseLong(downloadItem.getSize())>1073741824){
 					totalSizeModifier=" Gb";
-					fileSizeModified=fileSize/1073741824;
-				} else if (fileSize>1048576){
+					fileSizeModified=Long.parseLong(downloadItem.getSize())/1073741824;
+				} else if (Long.parseLong(downloadItem.getSize())>1048576){
 					totalSizeModifier=" Mb";
-					fileSizeModified=fileSize/1048576;					
-				} else if (fileSize>1024){
+					fileSizeModified=Long.parseLong(downloadItem.getSize())/1048576;					
+				} else if (Long.parseLong(downloadItem.getSize())>1024){
 					totalSizeModifier=" Kb";
-					fileSizeModified=fileSize/1024;
+					fileSizeModified=Long.parseLong(downloadItem.getSize())/1024;
 				}
 					
 				try {
-					if ((saved<fileSize)||(fileSize==-1)){
+					if ((saved<Long.parseLong(downloadItem.getSize()))||(Long.parseLong(downloadItem.getSize())==-1)){
 						outStream = new RandomAccessFile(outputFile,"rw");
 						outStream.seek(saved);
 						
@@ -223,7 +224,7 @@ public class Downloader extends NotifyingRunnable{
 
 							savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
 
-							if (fileSize>0)
+							if (Long.parseLong(downloadItem.getSize())>0)
 								outputString = savedModified + savedModifier + " of " + fileSizeModified + totalSizeModifier;
 							else
 								outputString = savedModified + savedModifier;
@@ -242,8 +243,9 @@ public class Downloader extends NotifyingRunnable{
 						}
 						inStream.close();
 						outStream.close();					
-					} else if (saved==fileSize){
+					} else if (saved==Long.parseLong(downloadItem.getSize())){
 						percentage=100;
+						downloadItem.setStatus(Details.FINISHED);
 					}
 				} catch (UnknownHostException e){
 					return 1;
@@ -270,7 +272,21 @@ public class Downloader extends NotifyingRunnable{
 
 	}
 	
-	public int getResult(){
+	public String getFilenameDownload(){
+		return downloadItem.getURL().toString();
+	}
+
+	/**
+	 * @return the result
+	 */
+	public int getResult() {
 		return result;
+	}
+
+	/**
+	 * @param result the result to set
+	 */
+	public void setResult(int result) {
+		this.result = result;
 	}
 }

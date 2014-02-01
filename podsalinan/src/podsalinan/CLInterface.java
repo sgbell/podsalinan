@@ -60,6 +60,14 @@ public class CLInterface implements Runnable{
 		mainMenu.addSubmenu(new CLDownloadMenu(menuList,urlDownloads));
 	}
 
+	/* TODO: Rewrite user input to allow command line completion. Current thoughts on how to
+	 * implement this:
+	 *       Pass the the command string, and the method into a method of CLInput.
+	 *       ie: userInput.addCommand("select podcast <userInput>",selectPodcastInput());
+	 *       
+	 * Then when user input is entered, and the user presses tab, it will either complete,
+	 *   or list options.
+	 */
 
 	/** Brain Storming how to deal with user input, as it works on 2 different levels.
 	 *  

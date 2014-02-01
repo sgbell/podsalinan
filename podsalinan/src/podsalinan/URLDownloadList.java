@@ -297,4 +297,17 @@ public class URLDownloadList extends DownloadDetails {
 		
 		return numberofQueuedItems;
 	}
+	
+	/** getHighestQueuedItem will go through the array and find the highest queued item in the
+	 *  list
+	 * @return URLDownload
+	 */
+	public URLDownload getHighestQueuedItem(){
+		for (URLDownload download : downloads)
+			if (download.getStatus()==Details.DOWNLOAD_QUEUED)
+				return download;
+		
+		// if item is not found
+		return null;
+	}
 }
