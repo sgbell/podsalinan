@@ -333,4 +333,8 @@ public class Podcast extends DownloadDetails{
 		
 		return -1;
 	}
+	
+	public void scanDirectory(){
+		//TODO: Scan the local directory and mark episodes as downloaded, that are found in the directory
+	}
 }

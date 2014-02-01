@@ -508,7 +508,6 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void setCommand(String menuInput) {
-		//TODO: add "set podcast directory" and "set directory"
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
 		if (menuInput.toLowerCase().startsWith("updateinterval")){

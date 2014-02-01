@@ -29,6 +29,7 @@ public class CLEpisodeMenu extends CLMenu {
 							 "9. Return to Podcast menu"};
 		setMainMenuList(menuList);
 		setUrlDownloads(urlDownloads);
+		//TODO: Add Menu Option to Change Episode Status
 	}
 	
 	public void printMainMenu(){

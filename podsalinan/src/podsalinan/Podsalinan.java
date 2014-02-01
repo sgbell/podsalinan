@@ -71,6 +71,9 @@ public class Podsalinan {
 			updateInterval=60;
 		}
 		
+		for (Podcast podcast : podcasts)
+			podcast.scanDirectory();
+		
 		while(!settings.isFinished()){
 			// List the podcast titles.
 			for (Podcast podcast : podcasts){
