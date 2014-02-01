@@ -269,7 +269,7 @@ public class Downloader extends NotifyingRunnable{
 	 * interface Downloader inherits
 	 */
 	public void doRun() {
-
+		//TODO: get this going
 	}
 	
 	public String getFilenameDownload(){

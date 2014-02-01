@@ -43,7 +43,8 @@ public class Details {
 							FINISHED=3,
 							DOWNLOAD_CANCELLED=4,
 							DO_NOT_DOWNLOAD=5,
-							INCOMPLETE_DOWNLOAD=6;
+							INCOMPLETE_DOWNLOAD=6,
+							DOWNLOAD_FAULT=7;
 	
 	public Details (){
 		
