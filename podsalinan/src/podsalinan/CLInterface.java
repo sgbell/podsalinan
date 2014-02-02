@@ -41,6 +41,9 @@ public class CLInterface implements Runnable{
 
 	public CLInterface(DataStorage newData){
 		setData(newData);
+		menuList = new ProgSettings();
+		input = new CLInput();
+		initializeMenus();
 	}
 	
 	public CLInterface(Vector<Podcast> podcasts, URLDownloadList urlDownloads, ProgSettings settings){
