@@ -72,6 +72,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				}
 			}
 		}
+		for (Downloader downloader : downloaders)
+			downloader.setStopDownload(true);
 	}
 
 	/**

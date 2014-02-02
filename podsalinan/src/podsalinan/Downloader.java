@@ -37,6 +37,7 @@ public class Downloader extends NotifyingRunnable{
 	private URLDownload downloadItem;
 	private int percentage=0;
     private static int result;
+    private boolean stopDownload=false;
 	
 	public final static int CONNECTION_FAILED=-1;
 	public final static int DOWNLOAD_COMPLETE=1;
@@ -127,7 +128,8 @@ public class Downloader extends NotifyingRunnable{
 			}
 				
 			
-			while ((!remoteFileExists)&&(numTries<2)){
+			while ((!remoteFileExists)&&(numTries<2)
+					&&(!stopDownload)){
 				try {
 					conn = downloadItem.getURL().openConnection();
 					/* The following line gets the file size of the Download. had to do it this 
@@ -193,7 +195,8 @@ public class Downloader extends NotifyingRunnable{
 				}
 					
 				try {
-					if ((saved<Long.parseLong(downloadItem.getSize()))||(Long.parseLong(downloadItem.getSize())==-1)){
+					if ((saved<Long.parseLong(downloadItem.getSize()))||
+						(Long.parseLong(downloadItem.getSize())==-1)){
 						outStream = new RandomAccessFile(outputFile,"rw");
 						outStream.seek(saved);
 						
@@ -209,7 +212,8 @@ public class Downloader extends NotifyingRunnable{
 						long time=System.currentTimeMillis();
 						int chunkCount=0;
 						//TODO: Add a check on ProgSettings.isFinished() below.
-						while ((byteRead = inStream.read(buf)) > 0){
+						while (((byteRead = inStream.read(buf)) > 0)
+								&&(!stopDownload)){
 							outStream.write(buf, 0, byteRead);
 							saved+=byteRead;
 							chunkCount++;
@@ -251,10 +255,13 @@ public class Downloader extends NotifyingRunnable{
 						}
 						inStream.close();
 						outStream.close();					
-					} else if (saved==Long.parseLong(downloadItem.getSize())){
+					}
+					if (saved==Long.parseLong(downloadItem.getSize())){
 						percentage=100;
 						downloadItem.setStatus(Details.FINISHED);
-					}
+					} else if (saved<Long.parseLong(downloadItem.getSize())){
+						downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
+					} 
 				} catch (UnknownHostException e){
 					return CONNECTION_FAILED;
 				} catch (IOException e) {
@@ -297,5 +304,19 @@ public class Downloader extends NotifyingRunnable{
 	 */
 	public void setResult(int result) {
 		Downloader.result = result;
+	}
+
+	/**
+	 * @return the stopDownload
+	 */
+	public boolean isStopDownload() {
+		return stopDownload;
+	}
+
+	/**
+	 * @param stopDownload the stopDownload to set
+	 */
+	public void setStopDownload(boolean stopDownload) {
+		this.stopDownload = stopDownload;
 	}
 }
