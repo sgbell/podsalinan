@@ -31,49 +31,65 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private Vector<Downloader> downloaders;	// Collection of running downloaders
-	private URLDownloadList downloadList;
-	private ProgSettings progSettings;
+	private DataStorage data=null;
 
 	public DownloadQueue(){
 		
 	}
 	
-	public DownloadQueue(ProgSettings progSettings, URLDownloadList listOfDownloads){
-		this.progSettings=progSettings;
-		downloadList = listOfDownloads;
+	public DownloadQueue(DataStorage newData){
+		setData(newData);
 	}
 	
 	public void run(){
 		downloaders = new Vector<Downloader>();
-		while (!progSettings.isFinished()){
-			/*
-			 *  Psuedo code:
-			 *  
-			 *  while ((urldownloadlist.numberOfDownloadsNotCurrentlyDownload)&&
-			 *         (countActiveDownloaders<settings.getValue("maxDownloaders")){
-			 *       urldownloadList.getNextDownloadNotCurrentlyDownloading
-			 *       Create Downloader with next URLDownload object
-			 *       start downloader        
-			 *  }
-			 *  
-			 *  sleep
-			 */
-			if ((downloadList.getNumberOfQueuedDownloads()>0)&&
-				(downloaders.size()<Integer.parseInt(progSettings.getSettingValue("maxDownloaders")))){
-				//search downloadList for next queued item.
-				URLDownload download = downloadList.getHighestQueuedItem();
-				if (download!=null){
-					/* Change download status here. otherwise if it is set by the Downloader, it may
-					 * Assign the download to multiple downloaders.
-					 */
-					download.setStatus(Details.CURRENTLY_DOWNLOADING);
-					Downloader newDownloader = new Downloader(download);
-					startDownload(newDownloader);
+		if (data!=null){
+			while (!data.getSettings().isFinished()){
+				/*
+				 *  Psuedo code:
+				 *  
+				 *  while ((urldownloadlist.numberOfDownloadsNotCurrentlyDownload)&&
+				 *         (countActiveDownloaders<settings.getValue("maxDownloaders")){
+				 *       urldownloadList.getNextDownloadNotCurrentlyDownloading
+				 *       Create Downloader with next URLDownload object
+				 *       start downloader        
+				 *  }
+				 *  
+				 *  sleep
+				 */
+				if ((data.getUrlDownloads().getNumberOfQueuedDownloads()>0)&&
+					(downloaders.size()<Integer.parseInt(data.getSettings().getSettingValue("maxDownloaders")))){
+					//search downloadList for next queued item.
+					URLDownload download = data.getUrlDownloads().getHighestQueuedItem();
+					if (download!=null){
+						/* Change download status here. otherwise if it is set by the Downloader, it may
+						 * Assign the download to multiple downloaders.
+						 */
+						download.setStatus(Details.CURRENTLY_DOWNLOADING);
+						Downloader newDownloader = new Downloader(download);
+						startDownload(newDownloader);
+					}
 				}
 			}
+			// Stop all downloaders when the program is exiting
+			for (Downloader downloader : downloaders)
+				downloader.setStopDownload(true);
+			
+			// Set incomplete downloads to queued, on exit.
+			int downloadCount=0;
+			boolean foundQueuedItem=false;
+			while ((downloadCount<data.getUrlDownloads().size())&&
+				   (!foundQueuedItem)){
+				URLDownload download =data.getUrlDownloads().getDownloads().get(downloadCount);
+				// If download is set to incomplete set it to queued for next start
+				if (download.getStatus()==Details.INCOMPLETE_DOWNLOAD)
+					download.setStatus(Details.DOWNLOAD_QUEUED);
+				// If Queued, exit the while loop
+				if (download.getStatus()==Details.DOWNLOAD_QUEUED)
+					foundQueuedItem=true;
+				downloadCount++;
+			}			
 		}
-		for (Downloader downloader : downloaders)
-			downloader.setStopDownload(true);
 	}
 
 	/**
@@ -86,7 +102,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		newDownloader.addListener(this);
 		Thread downloadThread = new Thread(newDownloader,"Downloader");
 		downloadThread.start();
-		//System.out.println("Download Started: "+newDownloader.getFilenameDownload());		
+		System.out.println("Download Started: "+newDownloader.getFilenameDownload());		
 	}
 	
 	@Override
@@ -105,15 +121,21 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		}
 	}
 		
-	public URLDownloadList getDownloadList(){
-		return downloadList;
-	}
-	
-	public void setProgSettings(ProgSettings globalSettings){
-		progSettings = globalSettings;
-	}
-	
 	public Vector<Downloader> getDownloaders(){
 		return downloaders;
+	}
+
+	/**
+	 * @return the data
+	 */
+	public DataStorage getData() {
+		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(DataStorage data) {
+		this.data = data;
 	}
 }

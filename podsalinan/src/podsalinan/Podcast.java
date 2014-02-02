@@ -341,7 +341,7 @@ public class Podcast extends DownloadDetails{
 		for (Episode episode : episodeList)
 			if (episode.getStatus()!=Details.FINISHED){
 				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
-				System.out.println("Directory: "+directory+'/'+filename);
+				//System.out.println("Directory: "+directory+'/'+filename);
 				File checkFile = new File(directory+'/'+filename);
 				if ((checkFile.exists())&&
 					(checkFile.isFile()))

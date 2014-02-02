@@ -31,6 +31,9 @@ import com.almworks.sqlite4java.SQLiteStatement;
  *
  */
 public class DataStorage {
+	private URLDownloadList urlDownloads;
+	private Vector<Podcast> podcasts;
+	private ProgSettings settings;
 	private String settingsDir;
 	private final String CREATE_PODCAST = "CREATE TABLE IF NOT EXISTS podcasts (" +
 										  "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -68,7 +71,23 @@ public class DataStorage {
 	 * 
 	 */
 	public DataStorage(){
+		podcasts = new Vector<Podcast>();
+		urlDownloads = new URLDownloadList();
+		settings = new ProgSettings();
 		
+		checkSettingsDirectory();
+	}
+	
+	public DataStorage(Vector<Podcast> podcasts, URLDownloadList urlDownloads,
+			ProgSettings settings) {
+		setPodcasts(podcasts);
+		setUrlDownloads(urlDownloads);
+		setSettings(settings);
+		
+		checkSettingsDirectory();
+	}
+	
+	public void checkSettingsDirectory(){
 		// This if Block checks to see if it's windows or linux, and sets the
 		// settings directory appropriately.
 		if (System.getProperty("os.name").equalsIgnoreCase("linux"))
@@ -77,10 +96,14 @@ public class DataStorage {
 			settingsDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
 
 		// Check if the settings directory exists, and if not, create it.
-		File settings = new File(settingsDir);
-		if (!settings.exists()){
-			settings.mkdir();
+		File settingsLocation = new File(settingsDir);
+		if (!settingsLocation.exists()){
+			settingsLocation.mkdir();
 		}
+	}
+
+	public int loadSettings(){
+		return loadSettings(podcasts, urlDownloads, settings);
 	}
 	
 	/** loadSettings loads the settings from the database.
@@ -213,6 +236,10 @@ public class DataStorage {
 			    settings.addSetting("defaultDirectory", System.getProperty("user.home").concat("/Download"));
 		}
 		return 0;
+	}
+	
+	public void saveSettings(){
+		saveSettings(podcasts,urlDownloads,settings);
 	}
 
 	/**
@@ -553,5 +580,47 @@ public class DataStorage {
 	 */
 	public String getSettingsDir(){
 		return settingsDir;
+	}
+
+	/**
+	 * @return the urlDownloads
+	 */
+	public URLDownloadList getUrlDownloads() {
+		return urlDownloads;
+	}
+
+	/**
+	 * @param urlDownloads the urlDownloads to set
+	 */
+	public void setUrlDownloads(URLDownloadList urlDownloads) {
+		this.urlDownloads = urlDownloads;
+	}
+
+	/**
+	 * @return the podcasts
+	 */
+	public Vector<Podcast> getPodcasts() {
+		return podcasts;
+	}
+
+	/**
+	 * @param podcasts the podcasts to set
+	 */
+	public void setPodcasts(Vector<Podcast> podcasts) {
+		this.podcasts = podcasts;
+	}
+
+	/**
+	 * @return the settings
+	 */
+	public ProgSettings getSettings() {
+		return settings;
+	}
+
+	/**
+	 * @param settings the settings to set
+	 */
+	public void setSettings(ProgSettings settings) {
+		this.settings = settings;
 	}
 }

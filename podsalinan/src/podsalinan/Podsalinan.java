@@ -33,13 +33,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Podsalinan {
-	
-	private URLDownloadList urlDownloads;
-	private Vector<Podcast> podcasts;
-	private ProgSettings settings;
 	private CommandPass commands;
 	private DownloadQueue downloaderList;
-	private DataStorage dataFiles;
+	private DataStorage data;
 	private CLInterface cli;
 	
 	/**
@@ -60,48 +56,49 @@ public class Podsalinan {
 		
 		// Find update Interval for podcasts in program settings.
 		try {
-			updateInterval=Integer.parseInt(settings.getSettingValue("updateInterval"));
+			updateInterval=Integer.parseInt(data.getSettings().getSettingValue("updateInterval"));
 		} catch (NumberFormatException e){
 			updateInterval=0;
 		} catch (NullPointerException e){
 			updateInterval=0;
 		}
 		if (updateInterval<60){
-			settings.updateSetting("updateInterval", "60");
+			data.getSettings().updateSetting("updateInterval", "60");
 			updateInterval=60;
 		}
 		
-		for (Podcast podcast : podcasts)
+		for (Podcast podcast : data.getPodcasts())
 			podcast.scanDirectory();
 		
-		while(!settings.isFinished()){
+		while(!data.getSettings().isFinished()){
 			// List the podcast titles.
-			for (Podcast podcast : podcasts){
-				if ((!settings.isFinished())&&(!podcast.isRemoved())){
-					podcast.updateList(dataFiles.getSettingsDir());
-					dataFiles.savePodcast(podcast);
+			for (Podcast podcast : data.getPodcasts()){
+				if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
+					podcast.updateList(data.getSettingsDir());
+					data.savePodcast(podcast);
 				}
 			}
 			
 			try {
-				synchronized (settings.getWaitObject()){
-					if (!settings.isFinished())
+				synchronized (data.getSettings().getWaitObject()){
+					if (!data.getSettings().isFinished())
 						// updateInterval will be a multiple of 1 minute
-						settings.getWaitObject().wait(updateInterval*60000);
+						data.getSettings().getWaitObject().wait(updateInterval*60000);
 				}
 			} catch (InterruptedException e) {
 			}
 		}
-		dataFiles.saveSettings(podcasts, urlDownloads, settings);
+		data.saveSettings();
 		System.out.println("Goodbye.");
 	}
 
 	public Podsalinan(){
-		podcasts = new Vector<Podcast>();
+		// Moved the 3 lines below to DataStorage.
+		// podcasts = new Vector<Podcast>();
 		// URL Downloads
-		urlDownloads = new URLDownloadList(podcasts);
+		// urlDownloads = new URLDownloadList(podcasts);
 		// Program Settings
-		settings = new ProgSettings();
+		// settings = new ProgSettings();
 		
 		// Action Listener for the main window
 		//CommandPass aListener = new CommandPass(settings);
@@ -111,18 +108,18 @@ public class Podsalinan {
 	}
 	
 	public void initialize(){
-		dataFiles = new DataStorage();
+		data = new DataStorage();
 		
 		// load the program settings
-		dataFiles.loadSettings (podcasts, urlDownloads, settings);
+		data.loadSettings ();
 		// Load the podcast data
-		for (Podcast podcast : podcasts)
-			dataFiles.loadPodcast(podcast);
+		for (Podcast podcast : data.getPodcasts())
+			data.loadPodcast(podcast);
 
 		// Downloader List
-		downloaderList = new DownloadQueue(settings,urlDownloads);
+		downloaderList = new DownloadQueue(data);
 		
-		cli = new CLInterface(podcasts, urlDownloads, settings);
+		cli = new CLInterface(data);
 		Thread cliThread = new Thread(cli);
 		cliThread.start();
 	}

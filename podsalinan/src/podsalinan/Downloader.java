@@ -211,7 +211,6 @@ public class Downloader extends NotifyingRunnable{
 						
 						long time=System.currentTimeMillis();
 						int chunkCount=0;
-						//TODO: Add a check on ProgSettings.isFinished() below.
 						while (((byteRead = inStream.read(buf)) > 0)
 								&&(!stopDownload)){
 							outStream.write(buf, 0, byteRead);
