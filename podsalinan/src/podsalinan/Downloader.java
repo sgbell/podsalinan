@@ -38,13 +38,15 @@ public class Downloader extends NotifyingRunnable{
 	private int percentage=0;
     private static int result;
     private boolean stopDownload=false;
+    private String fileSystemSlash;
 	
 	public final static int CONNECTION_FAILED=-1;
 	public final static int DOWNLOAD_COMPLETE=1;
 	public final static int DOWNLOAD_INCOMPLETE=-2;
 	
-    public Downloader(URLDownload download){
+    public Downloader(URLDownload download, String newFileSystemSlash){
     	downloadItem = download;
+    	fileSystemSlash=newFileSystemSlash;
     }
 	
 	public Downloader(URL urlDownload, String outputFile, String size){
@@ -114,22 +116,26 @@ public class Downloader extends NotifyingRunnable{
 		int numTries=0;
 		URLConnection conn;
 		
-			//System.out.println("Is internet Reachable?");
+		//System.out.print("Is internet Reachable? ");
 		if (isInternetReachable()){
+			//System.out.println("Yes it is.");
 			byte buf[]=new byte[1024];
 			int byteRead;	// Number of bytes read from file being downloaded
 			long saved=0;	// Number of bytes saved
 			String totalSizeModifier;
 
 			// The following if statement checks if the file exists, and then get's the size
-			File outputFile = new File(downloadItem.getDestination());
+			String filePath=downloadItem.getDestination()+fileSystemSlash+getFilenameDownload();
+			File outputFile = new File(filePath);
 			if (outputFile.exists()){
 				saved=outputFile.length();
 			}
 				
+			//System.out.println("Internet is reachable.");
 			
 			while ((!remoteFileExists)&&(numTries<2)
 					&&(!stopDownload)){
+				//System.out.println("Inside first while");
 				try {
 					conn = downloadItem.getURL().openConnection();
 					/* The following line gets the file size of the Download. had to do it this 
@@ -144,10 +150,11 @@ public class Downloader extends NotifyingRunnable{
 					}
 					
 					long tempfileSize=-1;
-					if (length!=null)
+					if (length!=null){
 						tempfileSize = Long.parseLong(length);
-					if (Long.parseLong(downloadItem.getSize())!=tempfileSize)
-						downloadItem.setSize(length);
+						if (Long.parseLong(downloadItem.getSize())!=tempfileSize)
+							downloadItem.setSize(length);
+					}
 					remoteFileExists=true;
 				} catch (MalformedURLException e) {
 					result=CONNECTION_FAILED;
@@ -195,8 +202,10 @@ public class Downloader extends NotifyingRunnable{
 				}
 					
 				try {
+					//System.out.println("outside the if");
 					if ((saved<Long.parseLong(downloadItem.getSize()))||
 						(Long.parseLong(downloadItem.getSize())==-1)){
+						
 						outStream = new RandomAccessFile(outputFile,"rw");
 						outStream.seek(saved);
 						
@@ -211,8 +220,10 @@ public class Downloader extends NotifyingRunnable{
 						
 						long time=System.currentTimeMillis();
 						int chunkCount=0;
+						//System.out.println("before the download while");
 						while (((byteRead = inStream.read(buf)) > 0)
 								&&(!stopDownload)){
+							//System.out.println("Downloading....");
 							outStream.write(buf, 0, byteRead);
 							saved+=byteRead;
 							chunkCount++;
@@ -262,8 +273,12 @@ public class Downloader extends NotifyingRunnable{
 						downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
 					} 
 				} catch (UnknownHostException e){
+					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
+					//System.err.println(e);
 					return CONNECTION_FAILED;
 				} catch (IOException e) {
+					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
+					//System.err.println(e);
 					return CONNECTION_FAILED;
 				}
 			}
@@ -283,6 +298,7 @@ public class Downloader extends NotifyingRunnable{
 	 * interface Downloader inherits
 	 */
 	public void doRun() {
+		//System.out.println("Downloader.doRun()");
 		// All it needs to do is start downloading and grab the result.
 		result = getFile();
 	}

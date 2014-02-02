@@ -21,13 +21,7 @@
  */
 package podsalinan;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Vector;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private Vector<Downloader> downloaders;	// Collection of running downloaders
@@ -65,8 +59,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 						/* Change download status here. otherwise if it is set by the Downloader, it may
 						 * Assign the download to multiple downloaders.
 						 */
+						System.out.println("Adding to Download System: "+download.getURL().toString());
 						download.setStatus(Details.CURRENTLY_DOWNLOADING);
-						Downloader newDownloader = new Downloader(download);
+						Downloader newDownloader = new Downloader(download,data.getFileSystemSlash());
 						startDownload(newDownloader);
 					}
 				}
@@ -82,7 +77,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				   (!foundQueuedItem)){
 				URLDownload download =data.getUrlDownloads().getDownloads().get(downloadCount);
 				// If download is set to incomplete set it to queued for next start
-				if (download.getStatus()==Details.INCOMPLETE_DOWNLOAD)
+				if ((download.getStatus()==Details.INCOMPLETE_DOWNLOAD)||
+					(download.getStatus()==Details.CURRENTLY_DOWNLOADING))
 					download.setStatus(Details.DOWNLOAD_QUEUED);
 				// If Queued, exit the while loop
 				if (download.getStatus()==Details.DOWNLOAD_QUEUED)

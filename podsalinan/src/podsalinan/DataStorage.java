@@ -67,6 +67,8 @@ public class DataStorage {
 						CLEAR_ALL_SETTINGS = "DELETE from settings;" +
 								 			 "DELETE from sqlite_sequence WHERE name='settings';";
 	
+	private String fileSystemSlash;
+	
 	/**
 	 * 
 	 */
@@ -90,10 +92,13 @@ public class DataStorage {
 	public void checkSettingsDirectory(){
 		// This if Block checks to see if it's windows or linux, and sets the
 		// settings directory appropriately.
-		if (System.getProperty("os.name").equalsIgnoreCase("linux"))
+		if (System.getProperty("os.name").equalsIgnoreCase("linux")){
 			settingsDir = System.getProperty("user.home").concat("/.podsalinan");
-		else if (System.getProperty("os.name").startsWith("Windows"))
+			fileSystemSlash = "/";
+		}else if (System.getProperty("os.name").startsWith("Windows")){
 			settingsDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
+			fileSystemSlash = "\\";
+		}
 
 		// Check if the settings directory exists, and if not, create it.
 		File settingsLocation = new File(settingsDir);
@@ -430,7 +435,7 @@ public class DataStorage {
 				sql.dispose();
 			}
 			
-			int sqlCount=0;
+			//int sqlCount=0;
 			sql = feedDb.prepare("SELECT * FROM shows;");
 			while (sql.step()){
 				Episode ep = new Episode(sql.columnString(1),
@@ -443,7 +448,7 @@ public class DataStorage {
 				ep.setUpdated(false);
 				//podcast.getEpisodes().add(ep);
 				podcast.addEpisode(ep);
-				sqlCount++;
+				//sqlCount++;
 			}
 			sql.dispose();
 			//System.out.println("Podcast: "+podcast.getName()+" - "+podcast.getEpisodes().size());
@@ -542,6 +547,7 @@ public class DataStorage {
 				// Using the current episode's db minimum id, it will remove all matching episodes except for the minimum id
 				
 				if (urlID!=null){
+					/*
 					int urlCount=0;
 					sql = podsalinanDB.prepare("SELECT count(*) "
 									   + "FROM "+tableName+" "
@@ -550,7 +556,6 @@ public class DataStorage {
 						urlCount=Integer.parseInt(sql.columnString(0));
 					}
 					sql.dispose();
-					/*
 					if (urlCount>1){
 						sql = podsalinanDB.prepare("SELECT id "
 						           + "FROM "+tableName+" "
@@ -622,5 +627,19 @@ public class DataStorage {
 	 */
 	public void setSettings(ProgSettings settings) {
 		this.settings = settings;
+	}
+
+	/**
+	 * @return the fileSystemSlash
+	 */
+	public String getFileSystemSlash() {
+		return fileSystemSlash;
+	}
+
+	/**
+	 * @param fileSystemSlash the fileSystemSlash to set
+	 */
+	public void setFileSystemSlash(String fileSystemSlash) {
+		this.fileSystemSlash = fileSystemSlash;
 	}
 }

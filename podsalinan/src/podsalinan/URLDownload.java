@@ -51,7 +51,7 @@ public class URLDownload extends Details {
 			           int status){
 		super(url, length);
 		setDestination(destination);
-		
+		setStatus(status);
 	}
 	
 	public URLDownload(URL url, boolean added){

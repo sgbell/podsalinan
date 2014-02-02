@@ -28,12 +28,11 @@
  */
 package podsalinan;
 
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Podsalinan {
-	private CommandPass commands;
+	//private CommandPass commands;
 	private DownloadQueue downloaderList;
 	private DataStorage data;
 	private CLInterface cli;
@@ -118,6 +117,8 @@ public class Podsalinan {
 
 		// Downloader List
 		downloaderList = new DownloadQueue(data);
+		Thread downloadListThread = new Thread(downloaderList);
+		downloadListThread.start();
 		
 		cli = new CLInterface(data);
 		Thread cliThread = new Thread(cli);
