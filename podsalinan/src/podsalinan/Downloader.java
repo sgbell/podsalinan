@@ -32,6 +32,12 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
+
+/*TODO: Check if URL connection is handing program the filename to save file as.
+ *      if filename is supplied by server, use that to save download, otherwise
+ *      look at the url path, and use the filename in that, to save the file.
+ */      
 
 public class Downloader extends NotifyingRunnable{
 	private URLDownload downloadItem;
@@ -52,14 +58,12 @@ public class Downloader extends NotifyingRunnable{
 	public Downloader(URL urlDownload, String outputFile, String size){
 		downloadItem = new URLDownload();
 		downloadItem.setURL(urlDownload);
-		downloadItem.setDestination(outputFile);
 		downloadItem.setSize(size);
 	}
 	
 	public Downloader(URL urlDownload, String outputFile) {
 		downloadItem = new URLDownload();
 		downloadItem.setURL(urlDownload);
-		downloadItem.setDestination(outputFile);
 		
 		try {
 			URLConnection conn = downloadItem.getURL().openConnection();
@@ -75,7 +79,7 @@ public class Downloader extends NotifyingRunnable{
 	public Downloader(URL urlDownload, File outputFile){
 		downloadItem = new URLDownload();
 		downloadItem.setURL(urlDownload);
-		downloadItem.setDestination(outputFile);
+		downloadItem.setDestinationFile(outputFile);
 	}
 
 	/** code found at: 
@@ -125,7 +129,7 @@ public class Downloader extends NotifyingRunnable{
 			String totalSizeModifier;
 
 			// The following if statement checks if the file exists, and then get's the size
-			String filePath=downloadItem.getDestination()+fileSystemSlash+downloadItem.getFilenameDownload();
+			String filePath=downloadItem.getDestinationFolder()+fileSystemSlash+getFilenameDownload();
 			File outputFile = new File(filePath);
 			if (outputFile.exists()){
 				saved=outputFile.length();
@@ -145,6 +149,25 @@ public class Downloader extends NotifyingRunnable{
 					//String length=conn.getHeaderField("content-Length");
 					String length=null;
 					List<String> values = conn.getHeaderFields().get("content-Length");
+					List<String> disposition = conn.getHeaderFields().get("content-disposition");
+
+					if (disposition!=null){
+						int index = disposition.get(0).indexOf("filename=");
+						if (index > 0){
+							String newFilename=disposition.get(0).substring(index+10, disposition.get(0).length() - 1);
+								File newFile = new File(downloadItem.getDestinationFolder()+fileSystemSlash+newFilename);
+								if ((newFile.exists())&&(newFile.isFile()))
+									downloadItem.setDestinationFile(newFile);
+						}
+					}
+					/*
+					Map<String, List<String>> map = conn.getHeaderFields();
+					for (Map.Entry<String, List<String>> entry: map.entrySet()){
+						System.out.println("Key : " + entry.getKey()+
+								" , Value : "+entry.getValue());
+					}
+					*/
+					
 					if (values != null && !values.isEmpty()){
 						length = (String) values.get(0);
 					}
@@ -157,9 +180,11 @@ public class Downloader extends NotifyingRunnable{
 					}
 					remoteFileExists=true;
 				} catch (MalformedURLException e) {
+					e.printStackTrace();
 					result=CONNECTION_FAILED;
 					remoteFileExists=false;
 				} catch (IOException e) {
+					e.printStackTrace();
 					result=CONNECTION_FAILED;
 					remoteFileExists=false;
 				}
@@ -274,11 +299,11 @@ public class Downloader extends NotifyingRunnable{
 					} 
 				} catch (UnknownHostException e){
 					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
-					//System.err.println(e);
+					e.printStackTrace();
 					return CONNECTION_FAILED;
 				} catch (IOException e) {
 					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
-					//System.err.println(e);
+					e.printStackTrace();
 					return CONNECTION_FAILED;
 				}
 			}
@@ -301,6 +326,10 @@ public class Downloader extends NotifyingRunnable{
 		//System.out.println("Downloader.doRun()");
 		// All it needs to do is start downloading and grab the result.
 		result = getFile();
+	}
+	
+	public String getFilenameDownload(){
+		return downloadItem.getURL().toString().split("/")[downloadItem.getURL().toString().split("/").length-1];
 	}
 
 	/**
@@ -329,9 +358,5 @@ public class Downloader extends NotifyingRunnable{
 	 */
 	public void setStopDownload(boolean stopDownload) {
 		this.stopDownload = stopDownload;
-	}
-
-	public String getFilenameDownload() {
-		return downloadItem.getFilenameDownload();
 	}
 }

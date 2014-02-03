@@ -12,7 +12,8 @@ import java.net.URL;
  */
 public class URLDownload extends Details {
 	
-	private File destination;
+	private File destinationFile;
+	private String destinationFolder;
 	private String podcastId;
 	
 	public URLDownload(){
@@ -33,24 +34,24 @@ public class URLDownload extends Details {
 	
 	public URLDownload(String url, String length, String destination){
 		super(url, length);
-		setDestination(destination);
+		setDestinationFolder(destination);
 	}
 	
 	public URLDownload(String url, boolean added, String destination){
 		super(url, added);
-		setDestination(destination);
+		setDestinationFolder(destination);
 	}
 
 	public URLDownload(String url, String length, boolean added, String destination){
 		super(url, added);
 		setSize(length);
-		setDestination(destination);
+		setDestinationFolder(destination);
 	}
 	
 	public URLDownload(String url, String length, String destination, String podcast, 
 			           int status){
 		super(url, length);
-		setDestination(destination);
+		setDestinationFolder(destination);
 		setStatus(status);
 	}
 	
@@ -61,19 +62,23 @@ public class URLDownload extends Details {
 	/**
 	 * @return the destination, including the filename
 	 */
-	public String getDestination() {
-		return destination.toString();
+	public String getDestinationFolder() {
+		return destinationFolder;
 	}
 
 	/**
 	 * @param destination the destination to set
 	 */
-	public void setDestination(String destination) {
-		this.destination = new File(destination);
+	public void setDestinationFolder(String newDestinationFolder) {
+		destinationFolder = newDestinationFolder;
 	}
 
-	public void setDestination(File outputFile) {
-		destination = outputFile;
+	public void setDestinationFile(File outputFile) {
+		destinationFile = outputFile;
+	}
+	
+	public File getDestinationFile(){
+		return destinationFile;
 	}
 
 	/**
@@ -89,10 +94,5 @@ public class URLDownload extends Details {
 	public void setPodcastId(String podcastId) {
 		this.podcastId = podcastId;
 		this.setUpdated(true);
-	}
-	
-	
-	public String getFilenameDownload(){
-		return getURL().toString().split("/")[getURL().toString().split("/").length-1];
 	}
 }

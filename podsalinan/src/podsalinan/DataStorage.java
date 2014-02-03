@@ -296,6 +296,11 @@ public class DataStorage {
 					//System.out.println("Adding Download");
 					//System.out.println("URL= "+download.getURL().toString());
 					//System.out.println("Destination= "+download.getDestination());
+					/* TODO: After changing URLDownload, I will need to fix this
+					 * so that it will save the filename, if the download has been started.
+					 * 
+					 *  If it has not been started the value will only be a a folder, and it will be checked on load.
+					 */
 					sql = podsalinanDB.prepare("INSERT INTO downloads(url,size,destination,priority,podcastSource,status) " +
 											   "VALUES ('"+download.getURL().toString()+"',"+
 											           "'"+download.getSize()+"',"+ 
