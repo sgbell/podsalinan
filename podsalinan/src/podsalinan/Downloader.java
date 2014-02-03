@@ -125,7 +125,7 @@ public class Downloader extends NotifyingRunnable{
 			String totalSizeModifier;
 
 			// The following if statement checks if the file exists, and then get's the size
-			String filePath=downloadItem.getDestination()+fileSystemSlash+getFilenameDownload();
+			String filePath=downloadItem.getDestination()+fileSystemSlash+downloadItem.getFilenameDownload();
 			File outputFile = new File(filePath);
 			if (outputFile.exists()){
 				saved=outputFile.length();
@@ -302,10 +302,6 @@ public class Downloader extends NotifyingRunnable{
 		// All it needs to do is start downloading and grab the result.
 		result = getFile();
 	}
-	
-	public String getFilenameDownload(){
-		return downloadItem.getURL().toString().split("/")[downloadItem.getURL().toString().split("/").length-1];
-	}
 
 	/**
 	 * @return the result
@@ -333,5 +329,9 @@ public class Downloader extends NotifyingRunnable{
 	 */
 	public void setStopDownload(boolean stopDownload) {
 		this.stopDownload = stopDownload;
+	}
+
+	public String getFilenameDownload() {
+		return downloadItem.getFilenameDownload();
 	}
 }

@@ -87,9 +87,13 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		if ((showDirectory)&&(selectedDownload.getDestination()!=null))
 			System.out.println("Destination: "+selectedDownload.getDestination());
 
-		//String filePath=selectedDownload.getDestination()+fileSystemSlash+getFilenameDownload();
-		//TODO: need to connect CLDownloadSelectedMenu to DataStorage object
-		File destination = new File(selectedDownload.getDestination());
+		String filePath=selectedDownload.getDestination();
+		if (System.getProperty("os.name").equalsIgnoreCase("linux")){
+			filePath+="/"+selectedDownload.getFilenameDownload();
+		}else if (System.getProperty("os.name").startsWith("Windows")){
+			filePath+="\\"+selectedDownload.getFilenameDownload();
+		}
+		File destination = new File(filePath);
 		long fileSize;
 		if (destination.exists())
 			fileSize = destination.length();

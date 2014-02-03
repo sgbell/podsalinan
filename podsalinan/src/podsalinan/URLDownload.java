@@ -90,4 +90,9 @@ public class URLDownload extends Details {
 		this.podcastId = podcastId;
 		this.setUpdated(true);
 	}
+	
+	
+	public String getFilenameDownload(){
+		return getURL().toString().split("/")[getURL().toString().split("/").length-1];
+	}
 }
