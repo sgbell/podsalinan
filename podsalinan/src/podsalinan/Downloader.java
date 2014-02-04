@@ -79,7 +79,7 @@ public class Downloader extends NotifyingRunnable{
 	public Downloader(URL urlDownload, File outputFile){
 		downloadItem = new URLDownload();
 		downloadItem.setURL(urlDownload);
-		downloadItem.setDestinationFile(outputFile);
+		downloadItem.setDestination(outputFile);
 	}
 
 	/** code found at: 
@@ -128,12 +128,6 @@ public class Downloader extends NotifyingRunnable{
 			long saved=0;	// Number of bytes saved
 			String totalSizeModifier;
 
-			// The following if statement checks if the file exists, and then get's the size
-			String filePath=downloadItem.getDestinationFolder()+fileSystemSlash+getFilenameDownload();
-			File outputFile = new File(filePath);
-			if (outputFile.exists()){
-				saved=outputFile.length();
-			}
 				
 			//System.out.println("Internet is reachable.");
 			
@@ -149,15 +143,34 @@ public class Downloader extends NotifyingRunnable{
 					//String length=conn.getHeaderField("content-Length");
 					String length=null;
 					List<String> values = conn.getHeaderFields().get("content-Length");
-					List<String> disposition = conn.getHeaderFields().get("content-disposition");
 
-					if (disposition!=null){
-						int index = disposition.get(0).indexOf("filename=");
-						if (index > 0){
-							String newFilename=disposition.get(0).substring(index+10, disposition.get(0).length() - 1);
-								File newFile = new File(downloadItem.getDestinationFolder()+fileSystemSlash+newFilename);
-								if ((newFile.exists())&&(newFile.isFile()))
-									downloadItem.setDestinationFile(newFile);
+					// If the destination is currently set to a folder, we need to add the filename to it
+					if ((downloadItem.getDestinationFile().exists())&&(downloadItem.getDestinationFile().isDirectory())){
+						// First we test if the server is handing the program a filename to set, set it here.
+						List<String> disposition = conn.getHeaderFields().get("content-disposition");
+
+						if (disposition!=null){
+							// If the file is going to be renamed from the server, grab the new name here
+							int index = disposition.get(0).indexOf("filename=");
+							if (index > 0){
+								String newFilename=disposition.get(0).substring(index+10, disposition.get(0).length() - 1);
+									File newFile = new File(downloadItem.getDestination()+fileSystemSlash+newFilename);
+									// If it doesn't exists create it.
+									if (!newFile.exists())
+										newFile.createNewFile();
+									// If it has been created set it as the destination for the download.
+									if ((newFile.exists())&&(newFile.isFile()))
+										downloadItem.setDestination(newFile);
+							}
+						} else {
+							// 
+							// The following if statement checks if the file exists, and then get's the size
+							String filePath=downloadItem.getDestination()+fileSystemSlash+getFilenameDownload();
+							File outputFile = new File(filePath);
+							if (outputFile.exists()){
+								downloadItem.setDestination(outputFile);
+								saved=outputFile.length();
+							}
 						}
 					}
 					/*
@@ -231,7 +244,7 @@ public class Downloader extends NotifyingRunnable{
 					if ((saved<Long.parseLong(downloadItem.getSize()))||
 						(Long.parseLong(downloadItem.getSize())==-1)){
 						
-						outStream = new RandomAccessFile(outputFile,"rw");
+						outStream = new RandomAccessFile(downloadItem.getDestinationFile(),"rw");
 						outStream.seek(saved);
 						
 						conn = downloadItem.getURL().openConnection();
