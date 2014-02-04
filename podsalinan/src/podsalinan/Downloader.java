@@ -34,10 +34,6 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
-/*TODO: Check if URL connection is handing program the filename to save file as.
- *      if filename is supplied by server, use that to save download, otherwise
- *      look at the url path, and use the filename in that, to save the file.
- */      
 
 public class Downloader extends NotifyingRunnable{
 	private URLDownload downloadItem;

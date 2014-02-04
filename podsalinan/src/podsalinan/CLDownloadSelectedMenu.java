@@ -89,8 +89,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 
 		long fileSize;
 		//String filePath=selectedDownload.getDestination()+fileSystemSlash+getFilenameDownload();
-		//TODO: need to connect CLDownloadSelectedMenu to DataStorage object
-		if (selectedDownload.getStatus()!=Details.CURRENTLY_DOWNLOADING){
+		if (!selectedDownload.getDestinationFile().isDirectory()){
 			File destination = selectedDownload.getDestinationFile();
 			if (destination.exists())
 				fileSize = destination.length();
@@ -100,7 +99,6 @@ public class CLDownloadSelectedMenu extends CLMenu {
 			fileSize=0;
 		}
 
-		
 		// Need to make these sizes human readable
 		System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(new Long(selectedDownload.getSize()).longValue()));
 	}
