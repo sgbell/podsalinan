@@ -91,7 +91,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		//String filePath=selectedDownload.getDestination()+fileSystemSlash+getFilenameDownload();
 		//TODO: need to connect CLDownloadSelectedMenu to DataStorage object
 		if (selectedDownload.getStatus()!=Details.CURRENTLY_DOWNLOADING){
-			File destination = new File(selectedDownload.getDestination());
+			File destination = selectedDownload.getDestinationFile();
 			if (destination.exists())
 				fileSize = destination.length();
 			else
