@@ -163,6 +163,7 @@ public class Downloader extends NotifyingRunnable{
 							// The following if statement checks if the file exists, and then get's the size
 							String filePath=downloadItem.getDestination()+fileSystemSlash+getFilenameDownload();
 							File outputFile = new File(filePath);
+							downloadItem.setDestination(outputFile);
 							if (outputFile.exists()){
 								downloadItem.setDestination(outputFile);
 								saved=outputFile.length();
