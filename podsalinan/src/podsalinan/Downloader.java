@@ -36,15 +36,16 @@ import java.util.Map;
 
 
 public class Downloader extends NotifyingRunnable{
-	private URLDownload downloadItem;
-	private int percentage=0;
-    private static int result;
-    private boolean stopDownload=false;
-    private String fileSystemSlash;
-	
 	public final static int CONNECTION_FAILED=-1;
+    public final static int NO_STATUS=0;
 	public final static int DOWNLOAD_COMPLETE=1;
 	public final static int DOWNLOAD_INCOMPLETE=-2;
+	
+	private URLDownload downloadItem;
+	private int percentage=0;
+    private static int result=NO_STATUS;
+    private boolean stopDownload=false;
+    private String fileSystemSlash;
 	
     public Downloader(URLDownload download, String newFileSystemSlash){
     	downloadItem = download;
@@ -305,8 +306,10 @@ public class Downloader extends NotifyingRunnable{
 					if (saved==Long.parseLong(downloadItem.getSize())){
 						percentage=100;
 						downloadItem.setStatus(Details.FINISHED);
+						return DOWNLOAD_COMPLETE;
 					} else if (saved<Long.parseLong(downloadItem.getSize())){
 						downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
+						return DOWNLOAD_INCOMPLETE;
 					} 
 				} catch (UnknownHostException e){
 					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
@@ -322,7 +325,7 @@ public class Downloader extends NotifyingRunnable{
 			// No internet connection.
 			return CONNECTION_FAILED;
 		}
-		return DOWNLOAD_COMPLETE;
+		return DOWNLOAD_INCOMPLETE;
 	}
 	
 	public int downloadCompleted(){
@@ -369,5 +372,9 @@ public class Downloader extends NotifyingRunnable{
 	 */
 	public void setStopDownload(boolean stopDownload) {
 		this.stopDownload = stopDownload;
+	}
+	
+	public URLDownload getURLDownload(){
+		return downloadItem;
 	}
 }

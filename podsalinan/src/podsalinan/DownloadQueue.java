@@ -93,7 +93,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	 * the download has finished, and remove the downloader from the array of downloaders.
 	 * @param newDownloader
 	 */
-	public void startDownload(Downloader newDownloader){
+	public synchronized void startDownload(Downloader newDownloader){
 		downloaders.add(newDownloader);
 		newDownloader.addListener(this);
 		Thread downloadThread = new Thread(newDownloader,"Downloader");
@@ -103,16 +103,12 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	
 	@Override
 	public void notifyOfThreadComplete(Runnable runnable) {
-		for (int dc=0; dc < downloaders.size(); dc++){
-			if ((downloaders.get(dc).getResult()==1)||(downloaders.get(dc).downloadCompleted()==100)){
-				//System.out.println("Finished: "+downloaders.get(dc).getFilenameDownload());
-				// Locking on the queueGui so it can't be updated while an item is being released.
-				/*
-				if (downloaders.get(dc).isPodcast()){
-				} else {
-				}
-				downloaders.remove(dc);
-					*/
+		for (Downloader downloader: downloaders){
+			if ((downloader.getResult()==1)||(downloader.downloadCompleted()==100)){
+				downloaders.remove(downloader);
+			} else if (downloader.getResult()==Downloader.DOWNLOAD_INCOMPLETE){
+				System.out.println(downloader.getURLDownload());
+				downloaders.remove(downloader);
 			}
 		}
 	}
