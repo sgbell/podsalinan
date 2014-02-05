@@ -224,6 +224,8 @@ public class Downloader extends NotifyingRunnable{
 			if (remoteFileExists){
 				double fileSizeModified = 0;
 				totalSizeModifier="";
+				if (downloadItem.getSize()==null)
+					downloadItem.setSize("-1");
 				if (Long.parseLong(downloadItem.getSize())>1073741824){
 					totalSizeModifier=" Gb";
 					fileSizeModified=Long.parseLong(downloadItem.getSize())/1073741824;
@@ -234,7 +236,6 @@ public class Downloader extends NotifyingRunnable{
 					totalSizeModifier=" Kb";
 					fileSizeModified=Long.parseLong(downloadItem.getSize())/1024;
 				}
-					
 				try {
 					//System.out.println("outside the if");
 					if ((saved<Long.parseLong(downloadItem.getSize()))||
