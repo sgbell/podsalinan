@@ -165,10 +165,6 @@ public class Downloader extends NotifyingRunnable{
 							String filePath=downloadItem.getDestination()+fileSystemSlash+getFilenameDownload();
 							File outputFile = new File(filePath);
 							downloadItem.setDestination(outputFile);
-							if (outputFile.exists()){
-								downloadItem.setDestination(outputFile);
-								saved=outputFile.length();
-							}
 						}
 					}
 					/*
@@ -181,6 +177,9 @@ public class Downloader extends NotifyingRunnable{
 					
 					if (values != null && !values.isEmpty()){
 						length = (String) values.get(0);
+					}
+					if (downloadItem.getDestinationFile().exists()){
+						saved=downloadItem.getDestinationFile().length();
 					}
 					
 					long tempfileSize=-1;

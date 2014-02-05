@@ -35,7 +35,7 @@ public class Details {
 	private boolean added=false,		  // Has this podcast been added to the database
 	   			    remove=false, // Does this podcast need to be deleted from the system
 					updated=false;
-	private int	    status;  	  // This is used to track if the system has already downloaded the file.
+	protected int	    status;  	  // This is used to track if the system has already downloaded the file.
 	
 	public static final int NOT_QUEUED=0,
 							DOWNLOAD_QUEUED=1,

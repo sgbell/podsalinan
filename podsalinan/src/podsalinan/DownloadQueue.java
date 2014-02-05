@@ -26,6 +26,7 @@ import java.util.Vector;
 public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private Vector<Downloader> downloaders;	// Collection of running downloaders
 	private DataStorage data=null;
+	private boolean isFinished;
 
 	public DownloadQueue(){
 		
@@ -37,6 +38,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	
 	public void run(){
 		downloaders = new Vector<Downloader>();
+		isFinished=false;
 		if (data!=null){
 			while (!data.getSettings().isFinished()){
 				/*
@@ -67,24 +69,41 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				}
 			}
 			// Stop all downloaders when the program is exiting
-			for (Downloader downloader : downloaders)
-				downloader.setStopDownload(true);
+			synchronized(downloaders){
+				for (Downloader downloader : downloaders)
+					downloader.setStopDownload(true);
+			}
 			
-			// Set incomplete downloads to queued, on exit.
-			int downloadCount=0;
-			boolean foundQueuedItem=false;
-			while ((downloadCount<data.getUrlDownloads().size())&&
-				   (!foundQueuedItem)){
-				URLDownload download =data.getUrlDownloads().getDownloads().get(downloadCount);
-				// If download is set to incomplete set it to queued for next start
-				if ((download.getStatus()==Details.INCOMPLETE_DOWNLOAD)||
-					(download.getStatus()==Details.CURRENTLY_DOWNLOADING))
-					download.setStatus(Details.DOWNLOAD_QUEUED);
-				// If Queued, exit the while loop
-				if (download.getStatus()==Details.DOWNLOAD_QUEUED)
-					foundQueuedItem=true;
-				downloadCount++;
-			}			
+		}
+		
+		// While Downloaders still shutting down we need to put a pause in until all downloaders have finished
+		while (downloaders.size()>0){
+			synchronized(data.getFinishWait()){
+				try {
+					data.getFinishWait().wait(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		// Set incomplete downloads to queued, on exit.
+		int downloadCount=0;
+		boolean foundQueuedItem=false;
+		while ((downloadCount<data.getUrlDownloads().size())&&
+			   (!foundQueuedItem)){
+			URLDownload download =data.getUrlDownloads().getDownloads().get(downloadCount);
+			// If download is set to incomplete set it to queued for next start
+			if ((download.getStatus()==Details.INCOMPLETE_DOWNLOAD)||
+				(download.getStatus()==Details.CURRENTLY_DOWNLOADING))
+				download.setStatus(Details.DOWNLOAD_QUEUED);
+			// If Queued, exit the while loop
+			if (download.getStatus()==Details.DOWNLOAD_QUEUED)
+				foundQueuedItem=true;
+			downloadCount++;
+		}			
+		isFinished=true;
+		synchronized(data.getFinishWait()){
+			data.getFinishWait().notify();
 		}
 	}
 
@@ -93,7 +112,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	 * the download has finished, and remove the downloader from the array of downloaders.
 	 * @param newDownloader
 	 */
-	public synchronized void startDownload(Downloader newDownloader){
+	public void startDownload(Downloader newDownloader){
 		downloaders.add(newDownloader);
 		newDownloader.addListener(this);
 		Thread downloadThread = new Thread(newDownloader,"Downloader");
@@ -103,13 +122,11 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	
 	@Override
 	public void notifyOfThreadComplete(Runnable runnable) {
-		for (Downloader downloader: downloaders){
-			if ((downloader.getResult()==1)||(downloader.downloadCompleted()==100)){
-				downloaders.remove(downloader);
-			} else if (downloader.getResult()==Downloader.DOWNLOAD_INCOMPLETE){
-				System.out.println(downloader.getURLDownload());
-				downloaders.remove(downloader);
-			}
+		Downloader downloader = (Downloader) runnable;
+		if ((downloader.getResult()==1)||(downloader.downloadCompleted()==100)){
+			downloaders.remove(downloader);
+		} else if (downloader.getResult()==Downloader.DOWNLOAD_INCOMPLETE){
+			downloaders.remove(downloader);
 		}
 	}
 		
@@ -129,5 +146,19 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	 */
 	public void setData(DataStorage data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the isFinished
+	 */
+	public boolean isFinished() {
+		return isFinished;
+	}
+
+	/**
+	 * @param isFinished the isFinished to set
+	 */
+	public void setFinished(boolean isFinished) {
+		this.isFinished = isFinished;
 	}
 }

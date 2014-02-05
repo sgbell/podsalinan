@@ -35,6 +35,7 @@ public class DataStorage {
 	private Vector<Podcast> podcasts;
 	private ProgSettings settings;
 	private String settingsDir;
+	private Object finishWait= new Object();
 	private final String CREATE_PODCAST = "CREATE TABLE IF NOT EXISTS podcasts (" +
 										  "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 										  "name TEXT, " +
@@ -641,5 +642,19 @@ public class DataStorage {
 	 */
 	public void setFileSystemSlash(String fileSystemSlash) {
 		this.fileSystemSlash = fileSystemSlash;
+	}
+
+	/**
+	 * @return the finishWait
+	 */
+	public Object getFinishWait() {
+		return finishWait;
+	}
+
+	/**
+	 * @param finishWait the finishWait to set
+	 */
+	public void setFinishWait(Object finishWait) {
+		this.finishWait = finishWait;
 	}
 }

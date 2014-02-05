@@ -87,6 +87,14 @@ public class Podsalinan {
 			} catch (InterruptedException e) {
 			}
 		}
+		while (!downloaderList.isFinished()){
+			synchronized (data.getFinishWait()){
+				try {
+					data.getFinishWait().wait();
+				} catch (InterruptedException e) {
+				}
+			}
+		}
 		data.saveSettings();
 		System.out.println("Goodbye.");
 	}
