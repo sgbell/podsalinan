@@ -198,6 +198,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		super.process(userInput);
 	}
 	
+	//TODO: Fix this, so it changes the Directory and doesn't overwrite the folder with a file.
 	public boolean changeDirectory(URLDownload selectedDownload, String userInput){
 		if (selectedDownload==null)
 			selectedDownload=download;

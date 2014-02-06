@@ -291,9 +291,11 @@ public class URLDownloadList extends DownloadDetails {
 	public int getNumberOfQueuedDownloads(){
 		int numberofQueuedItems=0;
 		
-		for (URLDownload download : downloads)
-			if (download.getStatus()==Details.DOWNLOAD_QUEUED)
-				numberofQueuedItems++;
+		synchronized (downloads){
+			for (URLDownload download : downloads)
+				if (download.getStatus()==Details.DOWNLOAD_QUEUED)
+					numberofQueuedItems++;
+		}
 		
 		return numberofQueuedItems;
 	}

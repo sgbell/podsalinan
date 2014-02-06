@@ -101,7 +101,7 @@ public class CLEpisodeMenu extends CLMenu {
 	}
 
 	public void downloadEpisode() {
-		episode.setStatus(Details.CURRENTLY_DOWNLOADING);
+		episode.setStatus(Details.DOWNLOAD_QUEUED);
 		urlDownloads.addDownload(episode, podcast);
 	}
 

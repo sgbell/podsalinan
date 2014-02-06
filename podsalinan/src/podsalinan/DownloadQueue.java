@@ -126,7 +126,15 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		if ((downloader.getResult()==1)||(downloader.downloadCompleted()==100)){
 			downloaders.remove(downloader);
 		} else if (downloader.getResult()==Downloader.DOWNLOAD_INCOMPLETE){
+			URLDownload download = downloader.getURLDownload();
 			downloaders.remove(downloader);
+			synchronized(download){
+				try {
+					download.wait(5000);
+				} catch (InterruptedException e) {
+				}
+			}
+			download.setStatus(Details.DOWNLOAD_QUEUED);
 		}
 	}
 		
