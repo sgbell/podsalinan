@@ -104,7 +104,7 @@ public class URLDownloadList extends DownloadDetails {
 			URLDownload download = getDownloads().get(position);
 			if ((download!=null)&&
 				(download.getPodcastId()==null)){
-				episode.setStatus(Details.CURRENTLY_DOWNLOADING);
+				episode.setStatus(Details.DOWNLOAD_QUEUED);
 				download.setPodcastId(podcast.getDatafile());
 			}
 		}
