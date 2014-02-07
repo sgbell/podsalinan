@@ -134,6 +134,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				} catch (InterruptedException e) {
 				}
 			}
+			data.getUrlDownloads().decreasePriority(download);
 			download.setStatus(Details.DOWNLOAD_QUEUED);
 		}
 	}

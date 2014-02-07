@@ -138,7 +138,13 @@ public class URLDownloadList extends DownloadDetails {
 		}
 		return false;
 	}
-	
+
+	public boolean decreasePriority(URLDownload download) {
+		int downloadId = findDownload(download);
+		
+		return decreasePriority(downloadId);
+	}
+
 	public void checkDownloadSize(URLDownload newFile){
 		if (Long.parseLong(newFile.getSize())==0){
 			try {
@@ -286,6 +292,18 @@ public class URLDownloadList extends DownloadDetails {
 			count++;
 		}
 		return -1;
+	}
+
+	private int findDownload(URLDownload download) {
+		int count=0;
+		boolean found=false;
+		
+		while ((count<downloads.size())){
+			if (downloads.get(count).equals(download))
+				found=true;
+			count++;
+		}
+		return count;
 	}
 	
 	public int getNumberOfQueuedDownloads(){

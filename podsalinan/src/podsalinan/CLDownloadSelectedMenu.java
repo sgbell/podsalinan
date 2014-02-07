@@ -4,6 +4,7 @@
 package podsalinan;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
 /**
@@ -198,26 +199,32 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		super.process(userInput);
 	}
 	
-	//TODO: Fix this, so it changes the Directory and doesn't overwrite the folder with a file.
 	public boolean changeDirectory(URLDownload selectedDownload, String userInput){
 		if (selectedDownload==null)
 			selectedDownload=download;
-		File newPath;
+		File newPath=null;
 		if ((userInput.length()>0)&&(userInput!=null)){
-			newPath=new File(userInput);
-			if ((newPath.exists())&&(newPath.isDirectory())){
-				selectedDownload.setDestination(userInput);
-				selectedDownload.setUpdated(true);
-				System.out.println("Download path: "+selectedDownload.getDestination());
-				return true;
-			} else if ((newPath.getParentFile()!=null)&&((newPath.getParentFile().exists())&&
-					   (newPath.getParentFile().isDirectory()))){
-				System.out.println("Error: Directory does no exist.");
-				if (input.confirmCreation()){
-					newPath.mkdir();
-					System.out.println("Directory Created: "+userInput);
+			try {
+				newPath=new File(userInput).getCanonicalFile();
+			} catch (IOException e) {
+			}
+			if (newPath!=null){
+				if ((newPath.exists())&&(newPath.isDirectory())){
 					selectedDownload.setDestination(userInput);
 					selectedDownload.setUpdated(true);
+					System.out.println("Download path: "+selectedDownload.getDestination());
+					return true;
+				} else if ((newPath.getParentFile()!=null)&&((newPath.getParentFile().exists())&&
+						   (newPath.getParentFile().isDirectory()))){
+					System.out.println("Error: Directory does no exist.");
+					if (input.confirmCreation()){
+						newPath.mkdir();
+						System.out.println("Directory Created: "+userInput);
+						selectedDownload.setDestination(userInput);
+						selectedDownload.setUpdated(true);
+					}
+				} else {
+					System.out.println ("Error: Invalid path");
 				}
 			} else {
 				System.out.println ("Error: Invalid path");
