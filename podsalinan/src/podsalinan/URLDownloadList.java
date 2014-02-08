@@ -94,6 +94,7 @@ public class URLDownloadList extends DownloadDetails {
 			URLDownload newFile = new URLDownload(episode.getURL(),false);
 			newFile.setDestination(podcast.getDirectory());
 			newFile.setPodcastId(podcast.getDatafile());
+			newFile.setStatus(Details.DOWNLOAD_QUEUED);
 			//System.out.println("Debug: URLDownloadList.addDownload(Episode, Podcast) - podcastID="+podcast.getDatafile());
 			if (episode.getSize()!="-1")
 				newFile.setSize(episode.getSize());
@@ -242,13 +243,18 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	public boolean deleteFile(URLDownload download){
-		File localFile = new File(download.getDestination());
-		if (localFile.exists()){
+		File localFile = download.getDestinationFile();
+
+		if ((localFile.list()==null)&&
+			(localFile.exists())){
 			// delete the file
 			localFile.delete();
 			return true;
-		}
-		return false;
+		} else if (localFile.list()!=null)
+			// If it's a directory, don't delete it, but say you have
+			return true;
+		else
+			return false;
 	}
 
 	public int size() {

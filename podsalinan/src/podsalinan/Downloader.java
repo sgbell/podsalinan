@@ -40,6 +40,7 @@ public class Downloader extends NotifyingRunnable{
     public final static int NO_STATUS=0;
 	public final static int DOWNLOAD_COMPLETE=1;
 	public final static int DOWNLOAD_INCOMPLETE=-2;
+	public final static int DESTINATION_INVALID=-3;
 	
 	private URLDownload downloadItem;
 	private int percentage=0;
@@ -140,9 +141,16 @@ public class Downloader extends NotifyingRunnable{
 					//String length=conn.getHeaderField("content-Length");
 					String length=null;
 					List<String> values = conn.getHeaderFields().get("content-Length");
+					boolean isDirectory=false;
 
+					File destinationFile=downloadItem.getDestinationFile();
+					if (destinationFile.list()!=null)
+						isDirectory=true;
+					else
+						isDirectory=false;
+					
 					// If the destination is currently set to a folder, we need to add the filename to it
-					if ((downloadItem.getDestinationFile().exists())&&(downloadItem.getDestinationFile().isDirectory())){
+					if (isDirectory){
 						// First we test if the server is handing the program a filename to set, set it here.
 						List<String> disposition = conn.getHeaderFields().get("content-disposition");
 
@@ -164,6 +172,9 @@ public class Downloader extends NotifyingRunnable{
 							File outputFile = new File(filePath);
 							downloadItem.setDestination(outputFile);
 						}
+					} else if ((!destinationFile.exists())&&(!destinationFile.getParentFile().exists())){
+						downloadItem.setStatus(Details.DOWNLOAD_FAULT);
+						return DESTINATION_INVALID;
 					}
 					/*
 					Map<String, List<String>> map = conn.getHeaderFields();

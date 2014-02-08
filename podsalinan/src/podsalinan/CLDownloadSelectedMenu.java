@@ -199,16 +199,12 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		super.process(userInput);
 	}
 	
-	//TODO: still a problem here.
 	public boolean changeDirectory(URLDownload selectedDownload, String userInput){
 		if (selectedDownload==null)
 			selectedDownload=download;
 		File newPath=null;
 		if ((userInput.length()>0)&&(userInput!=null)){
-			try {
-				newPath=new File(userInput).getCanonicalFile();
-			} catch (IOException e) {
-			}
+			newPath = new File(userInput);
 			if (newPath!=null){
 				if ((newPath.exists())&&(newPath.isDirectory())){
 					selectedDownload.setDestination(userInput);
