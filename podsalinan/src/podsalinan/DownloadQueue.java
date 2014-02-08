@@ -136,7 +136,19 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			}
 			data.getUrlDownloads().decreasePriority(download);
 			download.setStatus(Details.DOWNLOAD_QUEUED);
-		}
+		} else if (downloader.getResult()==Downloader.DESTINATION_INVALID){
+			URLDownload download = downloader.getURLDownload();
+			downloaders.remove(downloader);
+			synchronized(download){
+				try {
+					download.wait(5000);
+				} catch (InterruptedException e) {
+				}
+			}
+			data.getUrlDownloads().decreasePriority(download);
+			download.setStatus(Details.DOWNLOAD_FAULT);
+		} else
+			System.out.println("Downloader Status: "+downloader.getResult());
 	}
 		
 	public Vector<Downloader> getDownloaders(){
