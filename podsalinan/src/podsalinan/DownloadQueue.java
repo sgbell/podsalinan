@@ -129,6 +129,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		
 		int percentage = (int)((double)download.getDestinationFile().length()/(Double.parseDouble(download.getSize()))*100);
 		
+		//TODO The following if statements need to also hit up the podcast if the download is a podcast and set the
+		//     episode status to finished.
 		if (percentage==100){
 			download.setStatus(Details.FINISHED);
 			downloaders.remove(downloader);
