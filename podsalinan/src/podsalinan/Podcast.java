@@ -337,6 +337,7 @@ public class Podcast extends DownloadDetails{
 	/** scanDirectory will check the current directory for episode downloads that have complted
 	 * 
 	 */
+	//TODO Make scanDirectory check subdirectories for downloaded episodes
 	public void scanDirectory(){
 		for (Episode episode : episodeList)
 			if (episode.getStatus()!=Details.FINISHED){
@@ -345,10 +346,10 @@ public class Podcast extends DownloadDetails{
 				File checkFile = new File(directory+'/'+filename);
 				if ((checkFile.exists())&&
 					(checkFile.isFile()))
-					if (checkFile.length()==Long.parseLong(episode.getSize()))
+					if (checkFile.length()>=Long.parseLong(episode.getSize()))
 						episode.setStatus(Details.FINISHED);
-					if (checkFile.length()>Long.parseLong(episode.getSize()))
-						episode.setStatus(Details.DOWNLOAD_FAULT);
+					if (checkFile.length()<Long.parseLong(episode.getSize()))
+						episode.setStatus(Details.INCOMPLETE_DOWNLOAD);
 			}
 	}
 }
