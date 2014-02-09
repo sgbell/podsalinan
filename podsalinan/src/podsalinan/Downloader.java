@@ -321,11 +321,9 @@ public class Downloader extends NotifyingRunnable{
 					} 
 				} catch (UnknownHostException e){
 					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
-					e.printStackTrace();
 					return CONNECTION_FAILED;
 				} catch (IOException e) {
 					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
-					e.printStackTrace();
 					return CONNECTION_FAILED;
 				}
 			}

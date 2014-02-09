@@ -106,6 +106,10 @@ public class DataStorage {
 		if (!settingsLocation.exists()){
 			settingsLocation.mkdir();
 		}
+		
+		File tempXMLFile = new File (settingsDir+fileSystemSlash+"temp.xml");
+		if (tempXMLFile.exists())
+			tempXMLFile.delete();
 	}
 
 	public int loadSettings(){
