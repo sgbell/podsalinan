@@ -61,7 +61,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 						/* Change download status here. otherwise if it is set by the Downloader, it may
 						 * Assign the download to multiple downloaders.
 						 */
-						System.out.println("Adding to Download System: "+download.getURL().toString());
+						//System.out.println("Adding to Download System: "+download.getURL().toString());
 						download.setStatus(Details.CURRENTLY_DOWNLOADING);
 						Downloader newDownloader = new Downloader(download,data.getFileSystemSlash());
 						startDownload(newDownloader);
@@ -113,20 +113,26 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	 * @param newDownloader
 	 */
 	public void startDownload(Downloader newDownloader){
-		downloaders.add(newDownloader);
+		synchronized(downloaders){
+			downloaders.add(newDownloader);
+		}
 		newDownloader.addListener(this);
 		Thread downloadThread = new Thread(newDownloader,"Downloader");
 		downloadThread.start();
-		System.out.println("Download Started: "+newDownloader.getFilenameDownload());		
+		//System.out.println("Download Started: "+newDownloader.getFilenameDownload());		
 	}
 	
 	@Override
 	public void notifyOfThreadComplete(Runnable runnable) {
 		Downloader downloader = (Downloader) runnable;
-		if ((downloader.getResult()==1)||(downloader.downloadCompleted()==100)){
+		URLDownload download = downloader.getURLDownload();
+		
+		int percentage = (int)((double)download.getDestinationFile().length()/(Double.parseDouble(download.getSize()))*100);
+		
+		if (percentage==100){
+			download.setStatus(Details.FINISHED);
 			downloaders.remove(downloader);
-		} else if (downloader.getResult()==Downloader.DOWNLOAD_INCOMPLETE){
-			URLDownload download = downloader.getURLDownload();
+		} else if (percentage<100){
 			downloaders.remove(downloader);
 			synchronized(download){
 				try {
@@ -136,8 +142,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			}
 			data.getUrlDownloads().decreasePriority(download);
 			download.setStatus(Details.DOWNLOAD_QUEUED);
-		} else if (downloader.getResult()==Downloader.DESTINATION_INVALID){
-			URLDownload download = downloader.getURLDownload();
+		} else if ((!download.getDestinationFile().isFile())||
+				   (!download.getDestinationFile().exists())){
 			downloaders.remove(downloader);
 			synchronized(download){
 				try {
@@ -147,8 +153,17 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			}
 			data.getUrlDownloads().decreasePriority(download);
 			download.setStatus(Details.DOWNLOAD_FAULT);
-		} else
-			System.out.println("Downloader Status: "+downloader.getResult());
+		} else if (percentage>100){
+			downloaders.remove(downloader);
+			synchronized(download){
+				try {
+					download.wait(5000);
+				} catch (InterruptedException e) {
+				}
+			}
+			data.getUrlDownloads().decreasePriority(download);
+			download.setStatus(Details.DOWNLOAD_FAULT);
+		}
 	}
 		
 	public Vector<Downloader> getDownloaders(){

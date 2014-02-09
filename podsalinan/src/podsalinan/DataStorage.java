@@ -60,7 +60,7 @@ public class DataStorage {
 				  								"size TEXT," +
 				  								"destination TEXT," +
 				  								"priority INTGEGER," +
-				  								"podcastSource INTEGER," +
+				  								"podcastSource TEXT," +
 				  								"status INTEGER);",
 						SELECT_ALL_PODCASTS = "SELECT * from podcasts;",
 						SELECT_ALL_SETTINGS = "SELECT * from settings;",

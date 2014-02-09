@@ -52,6 +52,7 @@ public class URLDownload extends Details {
 		super(url, length);
 		setDestination(destination);
 		this.status=status;
+		this.podcastId=podcast;
 	}
 	
 	public URLDownload(URL url, boolean added){

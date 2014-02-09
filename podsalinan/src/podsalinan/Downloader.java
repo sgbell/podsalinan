@@ -41,9 +41,9 @@ public class Downloader extends NotifyingRunnable{
 	public final static int DOWNLOAD_COMPLETE=1;
 	public final static int DOWNLOAD_INCOMPLETE=-2;
 	public final static int DESTINATION_INVALID=-3;
+	public final static int DOWNLOAD_ERROR=-4;
 	
 	private URLDownload downloadItem;
-	private int percentage=0;
     private static int result=NO_STATUS;
     private boolean stopDownload=false;
     private String fileSystemSlash;
@@ -311,31 +311,30 @@ public class Downloader extends NotifyingRunnable{
 						inStream.close();
 						outStream.close();					
 					}
+					
 					if (saved==Long.parseLong(downloadItem.getSize())){
-						percentage=100;
 						downloadItem.setStatus(Details.FINISHED);
-						return DOWNLOAD_COMPLETE;
+						result = DOWNLOAD_COMPLETE;
 					} else if (saved<Long.parseLong(downloadItem.getSize())){
 						downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
-						return DOWNLOAD_INCOMPLETE;
-					} 
+						result = DOWNLOAD_INCOMPLETE;
+					} else if (saved>Long.parseLong(downloadItem.getSize())){
+						downloadItem.setStatus(Details.DOWNLOAD_FAULT);
+						result = DOWNLOAD_ERROR;
+					}
 				} catch (UnknownHostException e){
 					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
-					return CONNECTION_FAILED;
+					result = CONNECTION_FAILED;
 				} catch (IOException e) {
 					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
-					return CONNECTION_FAILED;
+					result = CONNECTION_FAILED;
 				}
 			}
 		} else {
 			// No internet connection.
-			return CONNECTION_FAILED;
+			result = CONNECTION_FAILED;
 		}
-		return DOWNLOAD_INCOMPLETE;
-	}
-	
-	public int downloadCompleted(){
-		return percentage;
+		return result;
 	}
 	
 	/**
