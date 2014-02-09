@@ -78,6 +78,13 @@ public class Podsalinan {
 				}
 			}
 			
+			//TODO: Do for loop for jumping through podcasts to autoADD episodes to download
+			if ((data.getSettings().findSetting("autoQueue")!=null)&&
+				(data.getSettings().findSetting("autoQueue").value.equalsIgnoreCase("true")))
+				for (Podcast podcast : data.getPodcasts()){
+					
+				}
+			
 			try {
 				synchronized (data.getSettings().getWaitObject()){
 					if (!data.getSettings().isFinished())

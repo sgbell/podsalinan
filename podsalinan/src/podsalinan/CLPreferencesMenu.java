@@ -168,6 +168,7 @@ public class CLPreferencesMenu extends CLMenu{
 				case 'Y':
 				case 'y':
 					settings.updateSetting("autoQueue","true");
+					settings.getWaitObject().notify();
 					break;
 				case 'N':
 				case 'n':
