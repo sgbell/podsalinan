@@ -45,36 +45,10 @@ public class CLEpisodeMenu extends CLMenu {
 		System.out.println ("Podcast: "+podcast.getName());
 		System.out.println ("Episode: "+episode.getTitle());
 		System.out.println ("Date: "+episode.getDate());
-		System.out.println ("Status: "+getStatusString(episode));
+		System.out.println ("Status: "+episode.getCurrentStatus());
 	}
 	
-	public String getStatusString(Episode episode){
-		if (episode==null){
-			episode=this.episode;
-		}
-		String status=null;
-		
-		switch (episode.getStatus()){
-			case Episode.NOT_QUEUED:
-				status = "Not Downloaded";
-				break;
-			case Episode.CURRENTLY_DOWNLOADING:
-				status = "Downloading Currently";
-				break;
-			case Episode.DOWNLOAD_QUEUED:
-				status = "Download Queued";
-				break;
-			case Episode.INCOMPLETE_DOWNLOAD:
-				status = "Download Incomplete";
-				break;
-			case Episode.FINISHED:
-				status = "Completed Download";
-				break;
-		}
-		
-		return status;
-	}
-	
+
 	public Episode getEpisode() {
 		return episode;
 	}
@@ -119,7 +93,10 @@ public class CLEpisodeMenu extends CLMenu {
 	 * @param statusInput
 	 */
 	public void changeStatus(Episode episode, String statusInput) {
-		//TODO: code changeStatus
+		if (episode==null)
+			episode=this.episode;
+		
+		episode.setStatus(convertCharToNumber(statusInput));
 	}
 	
 	/**
@@ -156,11 +133,14 @@ public class CLEpisodeMenu extends CLMenu {
 				    // Change episode status
 					System.out.println ();
 					
-					//TODO list all status types.
-					System.out.print ("Enter Download Destination["+getStatusString(null)+"]: ");
-					String statusInput=input.getValidNumber(0,7);
+					for (int statusCount=0; statusCount<4; statusCount++)
+						System.out.println(this.getCharForNumber(statusCount+1)+". "+
+								episode.getStatusString(statusCount));
+					System.out.print("Please select status ["+episode.getCurrentStatus()+"]: ");
+					String statusInput=input.getValidLetter('A','D');
 					if (statusInput!=null)
 						changeStatus(null, statusInput);
+					break;
 				case 9:
 					// Exit episode menu, clearing the selected episode information
 					setEpisode(null,null);

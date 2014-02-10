@@ -143,4 +143,41 @@ public class Details {
 	public void setUpdated(boolean updated) {
 		this.updated = updated;
 	}
+	
+	public String getCurrentStatus(){
+		return getStatusString(getStatus());
+	}
+	
+	public String getStatusString(int statusValue){
+		String status=null;
+		
+		switch (statusValue){
+			case NOT_QUEUED:
+				status = "Not Downloaded";
+				break;
+			case DOWNLOAD_QUEUED:
+				status = "Download Queued";
+				break;
+			case CURRENTLY_DOWNLOADING:
+				status = "Downloading Currently";
+				break;
+			case FINISHED:
+				status = "Completed Download";
+				break;
+			case DOWNLOAD_CANCELLED:
+				status = "Download Cancelled";
+				break;
+			case DO_NOT_DOWNLOAD:
+				status = "Marked do not Download";
+				break;
+			case INCOMPLETE_DOWNLOAD:
+				status = "Download Incomplete";
+				break;
+			case DOWNLOAD_FAULT:
+				status = "Download Fault";
+				break;
+		}
+		
+		return status;
+	}
 }

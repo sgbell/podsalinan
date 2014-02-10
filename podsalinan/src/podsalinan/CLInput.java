@@ -102,4 +102,21 @@ public class CLInput {
 			return false;
 		}
 	}
+
+	public String getValidLetter(char lowestLetter, char highestLetter) {
+		char inputValue = getSingleCharInput();
+		int lowestInt, highestInt, inputInt;
+		
+		
+		lowestInt = (int)(Character.toUpperCase(lowestLetter)-64);
+		highestInt = (int)(Character.toUpperCase(highestLetter)-64);
+		inputInt = (int)(Character.toUpperCase(inputValue)-64);
+		
+		if ((inputInt>=lowestInt)&&
+			(inputInt<=highestInt))
+			return ""+inputValue;
+		System.err.println ("Error: User Input Invalid. Valid values between "+lowestLetter
+				+"-"+highestLetter);
+		return null;
+	}
 }
