@@ -20,6 +20,7 @@ package podsalinan;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.Vector;
 
 import com.almworks.sqlite4java.SQLiteConnection;
@@ -660,5 +661,20 @@ public class DataStorage {
 	 */
 	public void setFinishWait(Object finishWait) {
 		this.finishWait = finishWait;
+	}
+	
+	public void scanDirectory(File directory, List<String> fileList){
+		if (directory == null)
+			return;
+		if ((directory.exists())&&
+			(directory.isDirectory())){
+			File[] files = directory.listFiles();
+			for (File file : files){
+				if (file.isDirectory())
+					scanDirectory(file,fileList);
+				else
+					fileList.add(file.getName());
+			}
+		}
 	}
 }

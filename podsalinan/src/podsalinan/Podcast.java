@@ -30,7 +30,9 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -334,22 +336,30 @@ public class Podcast extends DownloadDetails{
 		return -1;
 	}
 	
-	/** scanDirectory will check the current directory for episode downloads that have complted
+	/** scanDirectory will check the current directory for episode downloads that have completed
 	 * 
 	 */
-	//TODO Make scanDirectory check subdirectories for downloaded episodes
-	public void scanDirectory(){
+	public void scanDirectory(DataStorage data){
+		ArrayList<String> filesInDir = new ArrayList<String>();
+		File directory = new File (this.directory);
+		data.scanDirectory(directory, filesInDir);
 		for (Episode episode : episodeList)
 			if (episode.getStatus()!=Details.FINISHED){
 				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
-				//System.out.println("Directory: "+directory+'/'+filename);
-				File checkFile = new File(directory+'/'+filename);
-				if ((checkFile.exists())&&
-					(checkFile.isFile()))
-					if (checkFile.length()>=Long.parseLong(episode.getSize()))
+				boolean found=false;
+				int fileCount=0;
+				String file=null;
+				while ((fileCount<filesInDir.size())&&(!found)){
+					file = filesInDir.get(fileCount);
+					if (file.equalsIgnoreCase(filename)){
 						episode.setStatus(Details.FINISHED);
-					if (checkFile.length()<Long.parseLong(episode.getSize()))
-						episode.setStatus(Details.INCOMPLETE_DOWNLOAD);
+						found=true;
+					} else
+						fileCount++;
+				}
+				if (found)
+					filesInDir.remove(file);
 			}
 	}
+	
 }

@@ -67,7 +67,7 @@ public class Podsalinan {
 		}
 		
 		for (Podcast podcast : data.getPodcasts())
-			podcast.scanDirectory();
+			podcast.scanDirectory(data);
 		
 		while(!data.getSettings().isFinished()){
 			// List the podcast titles.
