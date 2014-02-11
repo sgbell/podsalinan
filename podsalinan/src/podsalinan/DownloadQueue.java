@@ -119,7 +119,30 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		newDownloader.addListener(this);
 		Thread downloadThread = new Thread(newDownloader,"Downloader");
 		downloadThread.start();
-		//System.out.println("Download Started: "+newDownloader.getFilenameDownload());		
+		URLDownload download = newDownloader.getURLDownload();
+		updatePodcastEpisodeStatus(download.getPodcastId(),download.getURL().toString(),Details.CURRENTLY_DOWNLOADING);
+	}
+	
+	public boolean updatePodcastEpisodeStatus(String podcastId, String url, int newStatus){
+		Vector<Podcast> podcasts = data.getPodcasts();
+		Podcast selectedPodcast=null;
+		if (podcastId!=null){
+			synchronized(podcasts){
+				int podcastCount=0;
+				while ((selectedPodcast==null)&&(podcastCount<podcasts.size())){
+						if (podcasts.get(podcastCount).getDatafile().equalsIgnoreCase(podcastId))
+							selectedPodcast=podcasts.get(podcastCount);
+						else
+							podcastCount++;
+				}
+				if (selectedPodcast!=null){
+					selectedPodcast.getEpisodeByURL(url).setStatus(newStatus);
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	@Override
@@ -164,35 +187,16 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			data.getUrlDownloads().decreasePriority(download);
 			download.setStatus(Details.DOWNLOAD_FAULT);
 		}
-		/* The following If statement will be triggered, if the download has been queued from a podcast.
-		 * It will find the correct podcast, and then find the episode and mark the episode as either, Finished,
-		 * or Queued. Depending on the outcome. It will not show an error on the Podcast episode list. 
-		 */
-		if (download.getPodcastId()!=null){
-			Vector<Podcast> podcasts = data.getPodcasts();
-			Podcast selectedPodcast=null;
-			synchronized(podcasts){
-				int podcastCount=0;
-				while ((selectedPodcast==null)&&(podcastCount<podcasts.size())){
-						if (podcasts.get(podcastCount).getDatafile().equalsIgnoreCase(download.getPodcastId()))
-							selectedPodcast=podcasts.get(podcastCount);
-						else
-							podcastCount++;
-				}
-			}
-			if (selectedPodcast!=null){
-				int newEpisodeStatus=0;
-				switch (download.getStatus()){
-					case Details.FINISHED:
-					case Details.DOWNLOAD_QUEUED:
-						newEpisodeStatus=download.getStatus();
-						break;
-					case Details.DOWNLOAD_FAULT:
-						newEpisodeStatus=Details.DOWNLOAD_QUEUED;
-				}
-				selectedPodcast.getEpisodeByURL(download.getURL().toString()).setStatus(newEpisodeStatus);
-			}
+		int newEpisodeStatus=0;
+		switch (download.getStatus()){
+			case Details.FINISHED:
+			case Details.DOWNLOAD_QUEUED:
+				newEpisodeStatus=download.getStatus();
+				break;
+			case Details.DOWNLOAD_FAULT:
+				newEpisodeStatus=Details.DOWNLOAD_QUEUED;
 		}
+		updatePodcastEpisodeStatus(download.getPodcastId(),download.getURL().toString(), newEpisodeStatus);
 
 	}
 		
