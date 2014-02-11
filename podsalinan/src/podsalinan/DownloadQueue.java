@@ -129,8 +129,6 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		
 		int percentage = (int)((double)download.getDestinationFile().length()/(Double.parseDouble(download.getSize()))*100);
 		
-		//TODO The following if statements need to also hit up the podcast if the download is a podcast and set the
-		//     episode status to finished.
 		if (percentage==100){
 			download.setStatus(Details.FINISHED);
 			downloaders.remove(downloader);
@@ -166,6 +164,36 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			data.getUrlDownloads().decreasePriority(download);
 			download.setStatus(Details.DOWNLOAD_FAULT);
 		}
+		/* The following If statement will be triggered, if the download has been queued from a podcast.
+		 * It will find the correct podcast, and then find the episode and mark the episode as either, Finished,
+		 * or Queued. Depending on the outcome. It will not show an error on the Podcast episode list. 
+		 */
+		if (download.getPodcastId()!=null){
+			Vector<Podcast> podcasts = data.getPodcasts();
+			Podcast selectedPodcast=null;
+			synchronized(podcasts){
+				int podcastCount=0;
+				while ((selectedPodcast==null)&&(podcastCount<podcasts.size())){
+						if (podcasts.get(podcastCount).getDatafile().equalsIgnoreCase(download.getPodcastId()))
+							selectedPodcast=podcasts.get(podcastCount);
+						else
+							podcastCount++;
+				}
+			}
+			if (selectedPodcast!=null){
+				int newEpisodeStatus=0;
+				switch (download.getStatus()){
+					case Details.FINISHED:
+					case Details.DOWNLOAD_QUEUED:
+						newEpisodeStatus=download.getStatus();
+						break;
+					case Details.DOWNLOAD_FAULT:
+						newEpisodeStatus=Details.DOWNLOAD_QUEUED;
+				}
+				selectedPodcast.getEpisodeByURL(download.getURL().toString()).setStatus(newEpisodeStatus);
+			}
+		}
+
 	}
 		
 	public Vector<Downloader> getDownloaders(){
