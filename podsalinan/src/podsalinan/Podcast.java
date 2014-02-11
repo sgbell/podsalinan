@@ -340,7 +340,7 @@ public class Podcast extends DownloadDetails{
 	 * 
 	 */
 	public void scanDirectory(DataStorage data){
-		ArrayList<String> filesInDir = new ArrayList<String>();
+		ArrayList<File> filesInDir = new ArrayList<File>();
 		File directory = new File (this.directory);
 		data.scanDirectory(directory, filesInDir);
 		for (Episode episode : episodeList)
@@ -348,10 +348,11 @@ public class Podcast extends DownloadDetails{
 				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
 				boolean found=false;
 				int fileCount=0;
-				String file=null;
+				File file=null;
 				while ((fileCount<filesInDir.size())&&(!found)){
 					file = filesInDir.get(fileCount);
-					if (file.equalsIgnoreCase(filename)){
+					if ((file.getName().equalsIgnoreCase(filename))&&
+						(file.length()>=Long.parseLong(episode.getSize()))){
 						episode.setStatus(Details.FINISHED);
 						found=true;
 					} else

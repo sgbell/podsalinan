@@ -663,7 +663,7 @@ public class DataStorage {
 		this.finishWait = finishWait;
 	}
 	
-	public void scanDirectory(File directory, List<String> fileList){
+	public void scanDirectory(File directory, List<File> fileList){
 		if (directory == null)
 			return;
 		if ((directory.exists())&&
@@ -673,7 +673,7 @@ public class DataStorage {
 				if (file.isDirectory())
 					scanDirectory(file,fileList);
 				else
-					fileList.add(file.getName());
+					fileList.add(file);
 			}
 		}
 	}
