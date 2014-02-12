@@ -336,6 +336,17 @@ public class Podcast extends DownloadDetails{
 		return -1;
 	}
 	
+	public Vector<Episode> getEpisodesByStatus(int statusValue){
+		Vector<Episode> searchResults = new Vector<Episode>();
+		
+		for (Episode episode : episodeList){
+			if (episode.getStatus()==statusValue)
+				searchResults.add(episode);
+		}
+		
+		return searchResults;
+	}
+	
 	/** scanDirectory will check the current directory for episode downloads that have completed
 	 * 
 	 */

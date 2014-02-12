@@ -28,6 +28,7 @@
  */
 package podsalinan;
 
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,9 +67,6 @@ public class Podsalinan {
 			updateInterval=60;
 		}
 		
-		for (Podcast podcast : data.getPodcasts())
-			podcast.scanDirectory(data);
-		
 		while(!data.getSettings().isFinished()){
 			// List the podcast titles.
 			for (Podcast podcast : data.getPodcasts()){
@@ -77,14 +75,25 @@ public class Podsalinan {
 					data.savePodcast(podcast);
 				}
 			}
+
+			// The following will scan the directory for already downloaded episodes of the podcast and mark them as downloaded
+			for (Podcast podcast : data.getPodcasts())
+				podcast.scanDirectory(data);
 			
-			//TODO: Do for loop for jumping through podcasts to autoADD episodes to download
+			/* If autoQueue is set in the program settings to true, scan all podcast lists for episodes
+			 * not yet downloaded, and queue them to download. 
+			 */
 			if ((data.getSettings().findSetting("autoQueue")!=null)&&
 				(data.getSettings().findSetting("autoQueue").value.equalsIgnoreCase("true")))
 				for (Podcast podcast : data.getPodcasts()){
-					
+					Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Details.NOT_QUEUED);
+					if (podcastEpisodes.size()>0)
+						for (Episode episode : podcastEpisodes){
+							episode.setStatus(Details.CURRENTLY_DOWNLOADING);
+							data.getUrlDownloads().addDownload(episode, podcast);
+						}
 				}
-			
+			// Put this thread to sleep till it is next woken up to check for updates in the podcasts
 			try {
 				synchronized (data.getSettings().getWaitObject()){
 					if (!data.getSettings().isFinished())
