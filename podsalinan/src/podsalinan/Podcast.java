@@ -355,7 +355,20 @@ public class Podcast extends DownloadDetails{
 		File directory = new File (this.directory);
 		data.scanDirectory(directory, filesInDir);
 		for (Episode episode : episodeList)
-			if (episode.getStatus()!=Details.FINISHED){
+			if (episode.getStatus()==Details.FINISHED){
+				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
+				boolean found=false;
+				int fileCount=0;
+				File file=null;
+				while ((fileCount<filesInDir.size())&&(!found)){
+					file = filesInDir.get(fileCount);
+					if (file.getName().equalsIgnoreCase(filename))
+						found=true;
+					fileCount++;
+				}
+				if (!found)
+					episode.setStatus(Details.NOT_QUEUED);
+			} else if (episode.getStatus()!=Details.FINISHED){
 				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
 				boolean found=false;
 				int fileCount=0;
