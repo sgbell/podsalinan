@@ -382,6 +382,7 @@ public class Podcast extends DownloadDetails{
 					} else
 						fileCount++;
 				}
+				// The reason for removing the file from the filesInDir array, is it means 1 less record for the system to check against.
 				if (found)
 					filesInDir.remove(file);
 			}
