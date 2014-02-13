@@ -187,7 +187,7 @@ public class Podcast extends DownloadDetails{
 				try {
 					Downloader downloader = new Downloader(new URL(url), outputFile);
 					int result = downloader.getFile();
-					if (result==0){
+					if (result==Downloader.DOWNLOAD_COMPLETE){
 						XmlReader xmlfile = new XmlReader();
 						
 						// Read the episode list from the xml file.
@@ -353,8 +353,15 @@ public class Podcast extends DownloadDetails{
 	public void scanDirectory(DataStorage data){
 		//TODO: link folders on zhadum to centauri to check that code is working here.
 		ArrayList<File> filesInDir = new ArrayList<File>();
-		File directory = new File (this.directory);
-		data.scanDirectory(directory, filesInDir);
+        //int count=0;
+		String directoryToScan;
+		try {
+			directoryToScan=directory.substring(0, directory.indexOf("Download"));
+		} catch (StringIndexOutOfBoundsException e){
+			directoryToScan = this.directory;
+		}
+		File directoryFile = new File (directoryToScan);
+		data.scanDirectory(directoryFile, filesInDir);
 		for (Episode episode : episodeList)
 			if (episode.getStatus()==Details.FINISHED){
 				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];

@@ -78,6 +78,7 @@ public class Downloader extends NotifyingRunnable{
 		downloadItem = new URLDownload();
 		downloadItem.setURL(urlDownload);
 		downloadItem.setDestination(outputFile);
+		downloadItem.setStatus(Details.CURRENTLY_DOWNLOADING);
 	}
 
 	/** code found at: 
@@ -319,9 +320,13 @@ public class Downloader extends NotifyingRunnable{
 					} else if (saved<Long.parseLong(downloadItem.getSize())){
 						downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
 						result = DOWNLOAD_INCOMPLETE;
-					} else if (saved>Long.parseLong(downloadItem.getSize())){
+					} else if ((saved>Long.parseLong(downloadItem.getSize()))&&
+							    (Long.parseLong(downloadItem.getSize())>0)){
 						downloadItem.setStatus(Details.DOWNLOAD_FAULT);
 						result = DOWNLOAD_ERROR;
+					} else if ((Long.parseLong(downloadItem.getSize())==-1)&&saved>0){
+						downloadItem.setStatus(Details.FINISHED);
+						result = DOWNLOAD_COMPLETE;
 					}
 				} catch (UnknownHostException e){
 					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
