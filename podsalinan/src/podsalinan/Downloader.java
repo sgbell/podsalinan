@@ -267,7 +267,8 @@ public class Downloader extends NotifyingRunnable{
 						int chunkCount=0;
 						//System.out.println("before the download while");
 						while (((byteRead = inStream.read(buf)) > 0)
-								&&(!stopDownload)){
+								&&(!stopDownload)
+								&&(downloadItem.getStatus()==Details.CURRENTLY_DOWNLOADING)){
 							//System.out.println("Downloading....");
 							outStream.write(buf, 0, byteRead);
 							saved+=byteRead;
