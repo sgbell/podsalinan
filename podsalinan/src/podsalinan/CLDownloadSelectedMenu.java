@@ -26,9 +26,10 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		String[] menuList = {"1. Delete Download",
 				             "2. Restart Download",
 				             "3. Stop Download",
-				             "4. Increase Priority",
-				             "5. Decrease Priority",
-				             "6. Change Destination",
+				             "4. Start Download (Add to active Queue)",
+				             "5. Increase Priority",
+				             "6. Decrease Priority",
+				             "7. Change Destination",
 				             "",
 				             "9. Return to Download List"};
 		setMainMenuList(menuList);
@@ -159,14 +160,18 @@ public class CLDownloadSelectedMenu extends CLMenu {
 		        	downloadList.cancelDownload(download.getURL());
 		    	    break;
 		        case 4:
+		        	// Start Download
+		        	downloadList.reQueueDownload(download.getURL());
+		        	break;
+		        case 5:
 		        	// Increase Download priority
 		        	downloadList.increasePriority(downloadList.findDownload(download.getURL()));
 		        	break;
-		        case 5:
+		        case 6:
 		        	// Decrease download priority
 		        	downloadList.decreasePriority(downloadList.findDownload(download.getURL()));
 		        	break;
-		        case 6:
+		        case 7:
 		        	// Change Destination
 					System.out.println ();
 					String destination = download.getDestination();

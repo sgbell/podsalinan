@@ -336,4 +336,13 @@ public class URLDownloadList extends DownloadDetails {
 		// if item is not found
 		return null;
 	}
+
+	public void reQueueDownload(URL url) {
+		reQueueDownload(downloads.get(findDownload(url)));
+	}
+
+	public void reQueueDownload(URLDownload download) {
+		if (download!=null)
+			download.setStatus(Details.DOWNLOAD_QUEUED);
+	}
 }
