@@ -154,6 +154,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		
 		if (percentage==100){
 			download.setStatus(Details.FINISHED);
+			if (download.getPodcastId().length()>0)
+				data.getUrlDownloads().deleteDownload(download);
 			downloaders.remove(downloader);
 		} else if (percentage<100){
 			downloaders.remove(downloader);
