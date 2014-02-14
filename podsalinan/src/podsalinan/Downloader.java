@@ -134,12 +134,25 @@ public class Downloader extends NotifyingRunnable{
 					&&(!stopDownload)){
 				//System.out.println("Inside first while");
 				try {
+					// The following code is used to handle if the url is a redirect.
+					HttpURLConnection httpConn = (HttpURLConnection)downloadItem.getURL().openConnection();
+					httpConn.setReadTimeout(5000);
+					
+					int status = httpConn.getResponseCode();
+					if (status!= HttpURLConnection.HTTP_OK)
+						if ((status == HttpURLConnection.HTTP_MOVED_TEMP)||
+							(status == HttpURLConnection.HTTP_MOVED_PERM)||
+							(status == HttpURLConnection.HTTP_SEE_OTHER)){
+							String newURL = httpConn.getHeaderField("Location");
+							downloadItem.setURL(newURL);
+						}
+
+					
 					conn = downloadItem.getURL().openConnection();
 					/* The following line gets the file size of the Download. had to do it this 
 					 * way cos URLConnection.getContentLength was an int and couldn't handle over
 					 * 2GB
 					 */
-					//String length=conn.getHeaderField("content-Length");
 					String length=null;
 					List<String> values = conn.getHeaderFields().get("content-Length");
 					boolean isDirectory=false;
@@ -344,7 +357,7 @@ public class Downloader extends NotifyingRunnable{
 	}
 	
 	/**
-	 * doRun is just a reconfiguration because4 of the NotifyingRunnable, it is called by the run method in the
+	 * doRun is just a reconfiguration because of the NotifyingRunnable, it is called by the run method in the
 	 * interface Downloader inherits
 	 */
 	public void doRun() {
