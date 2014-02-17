@@ -47,27 +47,47 @@ public class Downloader extends NotifyingRunnable{
     private static int result=NO_STATUS;
     private boolean stopDownload=false;
     private String fileSystemSlash;
+    private URL downloadURL;
 	
     public Downloader(URLDownload download, String newFileSystemSlash){
     	downloadItem = download;
     	fileSystemSlash=newFileSystemSlash;
+    	// Creating a new object for downloadURL from downloadItem, so that if the url is changed for the source,
+    	// it wont change in the system
+    	try {
+			downloadURL = new URL(downloadItem.getURL().toString());
+		} catch (MalformedURLException e) {
+			downloadURL=null;
+		}
     }
 	
 	public Downloader(URL urlDownload, String outputFile, String size){
 		downloadItem = new URLDownload();
 		downloadItem.setURL(urlDownload);
 		downloadItem.setSize(size);
+		try {
+			downloadURL = new URL(urlDownload.toString());
+		} catch (MalformedURLException e) {
+			downloadURL = null;
+		}
 	}
 	
 	public Downloader(URL urlDownload, String outputFile) {
 		downloadItem = new URLDownload();
 		downloadItem.setURL(urlDownload);
+		try {
+			downloadURL = new URL(urlDownload.toString());
+		} catch (MalformedURLException e1) {
+			downloadURL = null;
+		}
 		
 		try {
-			URLConnection conn = downloadItem.getURL().openConnection();
-			List<String> values = conn.getHeaderFields().get("content-Length");
-			if (values != null && !values.isEmpty())
-				downloadItem.setSize((String) values.get(0));
+			if (downloadURL!=null){
+				URLConnection conn = downloadURL.openConnection();
+				List<String> values = conn.getHeaderFields().get("content-Length");
+				if (values != null && !values.isEmpty())
+					downloadItem.setSize((String) values.get(0));
+			}
 		} catch (MalformedURLException e) {
 		} catch (IOException e) {
 		}
@@ -79,6 +99,12 @@ public class Downloader extends NotifyingRunnable{
 		downloadItem.setURL(urlDownload);
 		downloadItem.setDestination(outputFile);
 		downloadItem.setStatus(Details.CURRENTLY_DOWNLOADING);
+		try {
+			downloadURL = new URL(urlDownload.toString());
+		} catch (MalformedURLException e1) {
+			downloadURL = null;
+		}
+		
 	}
 
 	/** code found at: 
@@ -109,6 +135,30 @@ public class Downloader extends NotifyingRunnable{
             }
             return true;
     }
+
+	public boolean checkURLRedirect(URL urlToCheck){
+		HttpURLConnection httpConn;
+		try {
+			httpConn = (HttpURLConnection)urlToCheck.openConnection();
+			httpConn.setReadTimeout(5000);
+		
+			int status;
+			status = httpConn.getResponseCode();
+			if (status!= HttpURLConnection.HTTP_OK){
+				if ((status == HttpURLConnection.HTTP_MOVED_TEMP)||
+					(status == HttpURLConnection.HTTP_MOVED_PERM)||
+					(status == HttpURLConnection.HTTP_SEE_OTHER)){
+					String newURL = httpConn.getHeaderField("Location");
+					downloadURL = new URL(newURL);
+				}
+				return true;
+			}
+
+		} catch (IOException e) {
+			return false;
+		}
+		return false;
+	}
 	
 	/** This is where the file gets downloaded from
 	 * 
@@ -134,21 +184,9 @@ public class Downloader extends NotifyingRunnable{
 					&&(!stopDownload)){
 				//System.out.println("Inside first while");
 				try {
-					// The following code is used to handle if the url is a redirect.
-					HttpURLConnection httpConn = (HttpURLConnection)downloadItem.getURL().openConnection();
-					httpConn.setReadTimeout(5000);
+					checkURLRedirect(downloadItem.getURL());
 					
-					int status = httpConn.getResponseCode();
-					if (status!= HttpURLConnection.HTTP_OK)
-						if ((status == HttpURLConnection.HTTP_MOVED_TEMP)||
-							(status == HttpURLConnection.HTTP_MOVED_PERM)||
-							(status == HttpURLConnection.HTTP_SEE_OTHER)){
-							String newURL = httpConn.getHeaderField("Location");
-							downloadItem.setURL(newURL);
-						}
-
-					
-					conn = downloadItem.getURL().openConnection();
+					conn = downloadURL.openConnection();
 					/* The following line gets the file size of the Download. had to do it this 
 					 * way cos URLConnection.getContentLength was an int and couldn't handle over
 					 * 2GB
