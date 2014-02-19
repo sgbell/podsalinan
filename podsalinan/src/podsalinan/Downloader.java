@@ -265,16 +265,16 @@ public class Downloader extends NotifyingRunnable{
 				 */
 				if (!remoteFileExists){
 					String protocol;
-					if (downloadItem.getURL().toString().substring(0, 3).equals("http")){
+					if (downloadURL.toString().substring(0, 3).equals("http")){
 						protocol = "ftp";
 					} else
 						protocol = "http";
 					try {
-						URL newDownload = downloadItem.getURL();
-						downloadItem.setURL(new URL(protocol,
-													newDownload.getHost(),
-													newDownload.getPort(),
-													newDownload.getFile()).toString());
+						
+						downloadURL = new URL(protocol,
+												downloadURL.getHost(),
+												downloadURL.getPort(),
+												downloadURL.getFile());
 					} catch (MalformedURLException e) {
 						result=CONNECTION_FAILED;
 						remoteFileExists=false;
@@ -306,7 +306,7 @@ public class Downloader extends NotifyingRunnable{
 						outStream = new RandomAccessFile(downloadItem.getDestinationFile(),"rw");
 						outStream.seek(saved);
 						
-						conn = downloadItem.getURL().openConnection();
+						conn = downloadURL.openConnection();
 						/* Skip incoming connection ahead before we connect a stream to it,
 						 * otherwise it'll waste user bandwidth						
 						 */
@@ -405,7 +405,7 @@ public class Downloader extends NotifyingRunnable{
 	}
 	
 	public String getFilenameDownload(){
-		return downloadItem.getURL().toString().split("/")[downloadItem.getURL().toString().split("/").length-1];
+		return downloadURL.toString().split("/")[downloadURL.toString().split("/").length-1];
 	}
 
 	/**
