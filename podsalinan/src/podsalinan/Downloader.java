@@ -48,6 +48,7 @@ public class Downloader extends NotifyingRunnable{
     private boolean stopDownload=false;
     private String fileSystemSlash;
     private URL downloadURL;
+    private long saved=0;
 	
     public Downloader(URLDownload download, String newFileSystemSlash){
     	downloadItem = download;
@@ -174,7 +175,6 @@ public class Downloader extends NotifyingRunnable{
 			//System.out.println("Yes it is.");
 			byte buf[]=new byte[1024];
 			int byteRead;	// Number of bytes read from file being downloaded
-			long saved=0;	// Number of bytes saved
 			String totalSizeModifier;
 
 				
@@ -284,22 +284,7 @@ public class Downloader extends NotifyingRunnable{
 			}
 			
 			if (remoteFileExists){
-				double fileSizeModified = 0;
-				totalSizeModifier="";
-				if (downloadItem.getSize()==null)
-					downloadItem.setSize("-1");
-				if (Long.parseLong(downloadItem.getSize())>1073741824){
-					totalSizeModifier=" Gb";
-					fileSizeModified=Long.parseLong(downloadItem.getSize())/1073741824;
-				} else if (Long.parseLong(downloadItem.getSize())>1048576){
-					totalSizeModifier=" Mb";
-					fileSizeModified=Long.parseLong(downloadItem.getSize())/1048576;					
-				} else if (Long.parseLong(downloadItem.getSize())>1024){
-					totalSizeModifier=" Kb";
-					fileSizeModified=Long.parseLong(downloadItem.getSize())/1024;
-				}
 				try {
-					//System.out.println("outside the if");
 					if ((saved<Long.parseLong(downloadItem.getSize()))||
 						(Long.parseLong(downloadItem.getSize())==-1)){
 						
@@ -326,29 +311,6 @@ public class Downloader extends NotifyingRunnable{
 							saved+=byteRead;
 							chunkCount++;
 							
-							String outputString;
-							String savedModifier="";
-							double savedModified=0;
-							// Download window output
-							if (saved>1073741824){
-								savedModifier=" Gb";
-								savedModified = (double)saved/1073741824;
-							} else if (saved>1048576){
-								savedModifier=" Mb";
-								savedModified = (double)saved/1048576;
-							} else if (saved>1024){
-								savedModifier=" Kb";
-								savedModified = (double)saved/1024;
-							} else
-								savedModified=saved;
-
-							savedModified=new Double(new DecimalFormat("#.##").format(savedModified)).doubleValue();
-
-							if (Long.parseLong(downloadItem.getSize())>0)
-								outputString = savedModified + savedModifier + " of " + fileSizeModified + totalSizeModifier;
-							else
-								outputString = savedModified + savedModifier;
-								
 							// Download speed limited to 300kb/sec
 							if (chunkCount>=300){
 								try {
@@ -438,5 +400,13 @@ public class Downloader extends NotifyingRunnable{
 	
 	public URLDownload getURLDownload(){
 		return downloadItem;
+	}
+	
+	/** This is used to get the on going downloaded size
+	 * 
+	 * @return amount of data downloaded
+	 */
+	public long getSaved(){
+		return saved;
 	}
 }
