@@ -80,12 +80,13 @@ public class Podsalinan {
 			for (Podcast podcast : data.getPodcasts())
 				podcast.scanDirectory(data);
 			
-			/* If autoQueue is set in the program settings to true, scan all podcast lists for episodes
-			 * not yet downloaded, and queue them to download. 
+			/* If autoQueue is set in the program settings to true, or autoQueue is set in the podcast,
+			 * scan the podcast lists for episodes not yet downloaded, and queue them to download. 
 			 */
-			if ((data.getSettings().findSetting("autoQueue")!=null)&&
-				(data.getSettings().findSetting("autoQueue").value.equalsIgnoreCase("true")))
-				for (Podcast podcast : data.getPodcasts()){
+			for (Podcast podcast : data.getPodcasts()){
+				if (((data.getSettings().findSetting("autoQueue")!=null)&&
+					 (data.getSettings().findSetting("autoQueue").value.equalsIgnoreCase("true")))||
+					 (podcast.isAutomaticQueue())){
 					Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Details.NOT_QUEUED);
 					if (podcastEpisodes.size()>0)
 						for (Episode episode : podcastEpisodes){
@@ -93,6 +94,8 @@ public class Podsalinan {
 							data.getUrlDownloads().addDownload(episode, podcast);
 						}
 				}
+			}
+				
 			// Put this thread to sleep till it is next woken up to check for updates in the podcasts
 			try {
 				synchronized (data.getSettings().getWaitObject()){

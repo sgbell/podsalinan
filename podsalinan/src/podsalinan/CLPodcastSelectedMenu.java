@@ -26,6 +26,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 								 "2. Update List",
 								 "3. Delete Podcast",
 								 "4. Change Download Directory",
+								 "5. Autoqueue Episodes",
 								 "<AA>. Select Episode",
 								 "",
 								 "9. Return to List of Podcasts"};
@@ -135,6 +136,10 @@ public class CLPodcastSelectedMenu extends CLMenu {
 					System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
 					String userInput=input.getStringInput();
 			    	changeDirectory(selectedPodcast,userInput);
+			    	break;
+			    case 5:
+			    	System.out.println ();
+			    	//TODO: get user input and set autoQueue value in podcast
 			    	break;
 				case 9:
 					setSelectedPodcast(null);

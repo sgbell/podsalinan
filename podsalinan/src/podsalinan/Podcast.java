@@ -46,7 +46,8 @@ public class Podcast extends DownloadDetails{
 					image;
 	private boolean changed=false,
 					remove=false,
-					added=false;
+					added=false,
+					automaticQueue=false;
 	
 	private Vector<Episode> episodeList = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
 	
@@ -75,6 +76,11 @@ public class Podcast extends DownloadDetails{
 		setName(newName);
 		setDirectory(newDirectory);
 		setDatafile(newDatastore);
+	}
+	
+	public Podcast(String newName, String newURL, String newDirectory, String newDatastore, boolean autoDownload){
+		this(newName,newURL,newDirectory,newDatastore);
+		automaticQueue=autoDownload;
 	}
 	
 	public Vector<Episode> getEpisodes(){
@@ -393,6 +399,20 @@ public class Podcast extends DownloadDetails{
 				if (found)
 					filesInDir.remove(file);
 			}
+	}
+
+	/**
+	 * @return the automaticQueue
+	 */
+	public boolean isAutomaticQueue() {
+		return automaticQueue;
+	}
+
+	/**
+	 * @param automaticQueue the automaticQueue to set
+	 */
+	public void setAutomaticQueue(boolean automaticQueue) {
+		this.automaticQueue = automaticQueue;
 	}
 	
 }

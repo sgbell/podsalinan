@@ -71,6 +71,8 @@ public class DataStorage {
 	
 	private String fileSystemSlash;
 	
+	//TODO: Need to add autoqueue value to podcast table, and then read it into podcast object
+	
 	/**
 	 * 
 	 */
