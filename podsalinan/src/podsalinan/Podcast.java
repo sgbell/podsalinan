@@ -351,7 +351,6 @@ public class Podcast extends DownloadDetails{
 	 * 
 	 */
 	public void scanDirectory(DataStorage data){
-		//TODO: link folders on zhadum to centauri to check that code is working here.
 		ArrayList<File> filesInDir = new ArrayList<File>();
         //int count=0;
 		String directoryToScan;

@@ -71,7 +71,6 @@ public class Podsalinan {
 			// List the podcast titles.
 			for (Podcast podcast : data.getPodcasts()){
 				if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
-					//TODO: Need to check why some podcasts arent updating the list
 					podcast.updateList(data.getSettingsDir());
 					data.savePodcast(podcast);
 				}
