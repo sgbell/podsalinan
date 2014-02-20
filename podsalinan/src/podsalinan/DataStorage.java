@@ -42,7 +42,8 @@ public class DataStorage {
 										  "name TEXT, " +
 										  "localFile TEXT, " +
 										  "url TEXT, " +
-										  "directory TEXT);",
+										  "directory TEXT, " +
+										  "auto_queue INTEGER);",
 						CREATE_SETTINGS = "CREATE TABLE IF NOT EXISTS settings (" +
 										  "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 										  "name TEXT, " +
@@ -70,8 +71,6 @@ public class DataStorage {
 								 			 "DELETE from sqlite_sequence WHERE name='settings';";
 	
 	private String fileSystemSlash;
-	
-	//TODO: Need to add autoqueue value to podcast table, and then read it into podcast object
 	
 	/**
 	 * 
@@ -134,6 +133,9 @@ public class DataStorage {
 			SQLiteConnection podsalinanDB = new SQLiteConnection(podsalinanDBFile);
 			try {
 				podsalinanDB.open(true);
+				
+				addColumnToTable(podsalinanDB,"podcasts","auto_queue","INTEGER");
+				
 				sql = podsalinanDB.prepare(SELECT_ALL_DOWNLOADS);
 				while (sql.step()){
 					if (sql.hasRow()){
@@ -163,7 +165,8 @@ public class DataStorage {
 						Podcast newPodcast = new Podcast(sql.columnString(1),
 													  	 sql.columnString(3),
 													  	 sql.columnString(4),
-													  	 sql.columnString(2).replaceAll("&apos;", "\'"));
+													  	 sql.columnString(2).replaceAll("&apos;", "\'"),
+													  	 (sql.columnInt(5)==1));
 						newPodcast.setAdded(true);
 						podcasts.add(newPodcast);
 					}
@@ -416,34 +419,13 @@ public class DataStorage {
 	public void loadPodcast(Podcast podcast){
 		String feedFilename=settingsDir.concat("/"+podcast.getDatafile()+".pod");
 		SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
+		SQLiteStatement sql;
 
 		try {
 			feedDb.open();
 			
-			/* The following 13 lines are used to see if the status field is found in the shows table
-			 * if it is not, it is added before reading the information from the podcast data file.
-			 */
-			SQLiteStatement sql = feedDb.prepare("PRAGMA table_info(shows);");
-			boolean statusFound=false;
-			
-			// While loop jumps through the table description
-			while (sql.step())
-				for (int columnCounter=0; columnCounter<sql.columnCount(); columnCounter++)
-					// does the column name equal status?
-					if ((sql.getColumnName(columnCounter).equalsIgnoreCase("name"))&&
-						(sql.columnString(columnCounter).equalsIgnoreCase("status")))
-						statusFound=true;
-					
-			sql.dispose();
-			
-			// If status is not found change the table to add it.
-			if (!statusFound){
-				sql = feedDb.prepare("ALTER TABLE shows ADD status INTEGER;");
-				sql.stepThrough();
-				sql.dispose();
-			}
-			
-			//int sqlCount=0;
+			addColumnToTable(feedDb,"shows","status","INTEGER");
+
 			sql = feedDb.prepare("SELECT * FROM shows;");
 			while (sql.step()){
 				Episode ep = new Episode(sql.columnString(1),
@@ -463,6 +445,36 @@ public class DataStorage {
 			//System.out.println("DB count: "+sqlCount);
 		} catch (SQLiteException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/** addColumnToTable is used to check for a column in a table, and if it doesn't exist, to add it.
+	 * 
+	 */
+	private boolean addColumnToTable(SQLiteConnection dbConnection, String tableName, String columnName, String columnType){
+		try {
+			SQLiteStatement sql = dbConnection.prepare("PRAGMA table_info("+tableName+");");
+			boolean columnFound=false;
+			
+			while (sql.step())
+				for (int columnCounter=0; columnCounter<sql.columnCount(); columnCounter++)
+					// does the column name equal status?
+					if ((sql.getColumnName(columnCounter).equalsIgnoreCase("name"))&&
+						(sql.columnString(columnCounter).equalsIgnoreCase("status")))
+						columnFound=true;
+					
+			sql.dispose();
+			
+			if (!columnFound){
+				sql = dbConnection.prepare("ALTER TABLE "+tableName+" ADD "+columnName+" "+columnType.toUpperCase()+";");
+				sql.stepThrough();
+				sql.dispose();
+				return true;
+			} else {
+				return true;
+			}
+		} catch (SQLiteException e) {
+			return false;
 		}
 	}
 	
