@@ -36,7 +36,6 @@ public class CLInput {
 		stdInReader = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
-	//TODO: This is not working for single character input, it still expects the user to press enter
 	public char getSingleCharInput() {
 		char input=' ';
 		
