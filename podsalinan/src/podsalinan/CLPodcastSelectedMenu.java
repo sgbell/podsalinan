@@ -139,7 +139,13 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			    	break;
 			    case 5:
 			    	System.out.println ();
-			    	//TODO: get user input and set autoQueue value in podcast
+			    	if (selectedPodcast.isAutomaticQueue()){
+			    		selectedPodcast.setAutomaticQueue(false);
+			    		System.out.println(selectedPodcast.getName()+" podcast autoqueue disabled.");
+			    	}else{
+			    		selectedPodcast.setAutomaticQueue(true);
+			    		System.out.println(selectedPodcast.getName()+"podcast autoqeue enabled.");
+			    	}
 			    	break;
 				case 9:
 					setSelectedPodcast(null);
