@@ -380,11 +380,12 @@ public class DataStorage {
 			int sqlMethod=0;
 			try {
 				if ((!podcast.isAdded())&&(!podcast.isRemoved())){
-					sql = podsalinanDB.prepare("INSERT INTO podcasts(name, localFile, url, directory)" +
+					sql = podsalinanDB.prepare("INSERT INTO podcasts(name, localFile, url, directory, auto_queue)" +
 							 				   "VALUES ('"+podcast.getName()+"',"+
 							 				   "'"+podcast.getDatafile()+"'," +
 							 				   "'"+podcast.getURL()+"'," +
-							 				   "'"+podcast.getDirectory()+"');");
+							 				   "'"+podcast.getDirectory()+"'," + 
+							 				   (podcast.isAutomaticQueue()?1:0)+");");
 					sqlMethod=1;
 				} else if (podcast.isRemoved()){
 					sql = podsalinanDB.prepare("DELETE FROM podcasts " +
@@ -393,7 +394,8 @@ public class DataStorage {
 					sql = podsalinanDB.prepare("UPDATE podcasts " +
 											   "SET name='"+podcast.getName()+"',"+
 											       "directory='"+podcast.getDirectory()+"',"+
-											       "url='"+podcast.getURL()+"'"+
+											       "url='"+podcast.getURL()+"',"+
+											       "auto_queue="+(podcast.isAutomaticQueue()?1:0)+
 											   "WHERE localFile='"+podcast.getDatafile()+"';");
 					sqlMethod=3;
 				}
