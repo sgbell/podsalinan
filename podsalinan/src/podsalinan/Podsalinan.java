@@ -37,6 +37,8 @@ public class Podsalinan {
 	private DownloadQueue downloaderList;
 	private DataStorage data;
 	private CLInterface cli;
+	private MainWindow gui;
+	private String[] cmdLineArgs;
 	
 	/**
 	 * Upon execution the program will create a new instance of podsalinan, which is where
@@ -47,6 +49,7 @@ public class Podsalinan {
 	 */
 	public static void main(String[] args) {
 		Podsalinan mainProgram = new Podsalinan();
+		mainProgram.setCmdLineArgs(args);
 		mainProgram.initialize();
 		mainProgram.backgroundProcess();
 	}
@@ -134,6 +137,9 @@ public class Podsalinan {
 	}
 	
 	public void initialize(){
+		boolean showCli=false,
+		        showGui=false;
+		
 		data = new DataStorage();
 		
 		// load the program settings
@@ -146,9 +152,43 @@ public class Podsalinan {
 		downloaderList = new DownloadQueue(data);
 		Thread downloadListThread = new Thread(downloaderList);
 		downloadListThread.start();
+
+		if (data.getSettings().findSetting("interface")==null)
+			showCli=true;
+		if (data.getSettings().findSetting("interface").value.equalsIgnoreCase("cli"))
+			showCli=true;
+		if (data.getSettings().findSetting("interface").value.equalsIgnoreCase("gui"))
+			showGui=true;
+		for (String arg : cmdLineArgs){
+			if (arg.contentEquals("--show-gui"))
+				showGui=true;
+			if (arg.contentEquals("--show-cli"))
+				showCli=true;
+		}
 		
-		cli = new CLInterface(data);
-		Thread cliThread = new Thread(cli);
-		cliThread.start();
+		if (showCli){
+			cli = new CLInterface(data);
+			Thread cliThread = new Thread(cli);
+			cliThread.start();
+		}
+		
+		if (showGui){
+			gui = new MainWindow(data);
+			
+		}
+	}
+
+	/**
+	 * @return the cmdLineArgs
+	 */
+	public String[] getCmdLineArgs() {
+		return cmdLineArgs;
+	}
+
+	/**
+	 * @param cmdLineArgs the cmdLineArgs to set
+	 */
+	public void setCmdLineArgs(String[] cmdLineArgs) {
+		this.cmdLineArgs = cmdLineArgs;
 	}
 }

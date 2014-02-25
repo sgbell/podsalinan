@@ -29,14 +29,7 @@ import javax.swing.JFileChooser;
  *
  */
 public class CommandPass implements ActionListener {
-	private Vector<ProgSettings> progSettings;
-	private boolean programExiting;
 
-	public CommandPass(Vector<ProgSettings> progSettings) {
-		this.setProgramExiting(programExiting);
-		this.setProgSettings(progSettings);
-	}
-	
 	public CommandPass(){
 		
 	}
