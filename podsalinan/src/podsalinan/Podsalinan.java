@@ -153,12 +153,15 @@ public class Podsalinan {
 		Thread downloadListThread = new Thread(downloaderList);
 		downloadListThread.start();
 
-		if (data.getSettings().findSetting("interface")==null)
+		Setting interfaceType = data.getSettings().findSetting("interface");
+		if (interfaceType==null)
 			showCli=true;
-		if (data.getSettings().findSetting("interface").value.equalsIgnoreCase("cli"))
-			showCli=true;
-		if (data.getSettings().findSetting("interface").value.equalsIgnoreCase("gui"))
-			showGui=true;
+		else{
+			if ((interfaceType.value.equalsIgnoreCase("cli")))
+				showCli=true;
+			if (data.getSettings().findSetting("interface").value.equalsIgnoreCase("gui"))
+				showGui=true;
+		}
 		for (String arg : cmdLineArgs){
 			if (arg.contentEquals("--show-gui"))
 				showGui=true;

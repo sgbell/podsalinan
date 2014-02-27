@@ -20,7 +20,6 @@ package podsalinan;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 
 import javax.swing.JFileChooser;
 
@@ -29,9 +28,10 @@ import javax.swing.JFileChooser;
  *
  */
 public class CommandPass implements ActionListener {
+	private DataStorage data;
 
 	public CommandPass(){
-		
+		data = null;
 	}
 
 	@Override
@@ -39,8 +39,8 @@ public class CommandPass implements ActionListener {
 		String command = event.getActionCommand();
 		
 		if (command.compareTo("quit")==0){
-			setProgramExiting(true);
-			System.exit(0);
+			if (data!=null)
+				data.getSettings().setFinished(true);
 		}
 		if (command.compareTo("addURL")==0){
 		}
@@ -80,32 +80,8 @@ public class CommandPass implements ActionListener {
 
     	return null;
 	}
-	
-	/**
-	 * @return the programExiting
-	 */
-	public boolean isProgramExiting() {
-		return programExiting;
-	}
 
-	/**
-	 * @param programExiting the programExiting to set
-	 */
-	public void setProgramExiting(boolean programExiting) {
-		this.programExiting = programExiting;
-	}
-
-	/**
-	 * @return the progSettings
-	 */
-	public Vector<ProgSettings> getProgSettings() {
-		return progSettings;
-	}
-
-	/**
-	 * @param progSettings the progSettings to set
-	 */
-	public void setProgSettings(Vector<ProgSettings> progSettings) {
-		this.progSettings = progSettings;
+	public void setDataStorage(DataStorage data) {
+		this.data = data;
 	}
 }

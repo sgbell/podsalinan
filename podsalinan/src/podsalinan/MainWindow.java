@@ -15,10 +15,19 @@ public class MainWindow extends JFrame {
 	
 	public MainWindow(){
 		commandPasser = new CommandPass();
+		MenuBar menubar = new MenuBar(commandPasser);
+		menubar.createMenu("menu.xml");
+		
+		setSize(800,600);
+		setTitle("Podsalinan");
+		setJMenuBar(menubar);
 	}
 	
 	public MainWindow(DataStorage newData) {
 		this();
 		data = newData;
+		
+		commandPasser.setDataStorage(data);
+		setVisible(true);
 	}
 }
