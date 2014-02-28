@@ -249,6 +249,8 @@ public class Downloader extends NotifyingRunnable{
 						if (Long.parseLong(downloadItem.getSize())!=tempfileSize)
 							downloadItem.setSize(length);
 					}
+					if (downloadItem.getSize()==null)
+						downloadItem.setSize("-1");
 					remoteFileExists=true;
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
