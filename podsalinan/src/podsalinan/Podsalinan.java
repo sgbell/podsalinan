@@ -28,6 +28,7 @@
  */
 package podsalinan;
 
+import java.awt.event.WindowEvent;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -117,8 +118,11 @@ public class Podsalinan {
 				}
 			}
 		}
+			
 		data.saveSettings();
 		System.out.println("Goodbye.");
+		// added line below so program exits, as having gui changes things
+		System.exit(0);
 	}
 
 	public Podsalinan(){
