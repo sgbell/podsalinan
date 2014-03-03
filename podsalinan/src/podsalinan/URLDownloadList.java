@@ -345,4 +345,12 @@ public class URLDownloadList extends DownloadDetails {
 		if (download!=null)
 			download.setStatus(Details.DOWNLOAD_QUEUED);
 	}
+	
+	public void setPodcasts(Vector<Podcast> newPodcasts){
+		podcasts=newPodcasts;
+	}
+	
+	public Vector<Podcast> getPodcastArray(){
+		return podcasts;
+	}
 }

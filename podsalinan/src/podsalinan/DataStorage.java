@@ -77,7 +77,7 @@ public class DataStorage {
 	 */
 	public DataStorage(){
 		podcasts = new Vector<Podcast>();
-		urlDownloads = new URLDownloadList();
+		urlDownloads = new URLDownloadList(podcasts);
 		settings = new ProgSettings();
 		
 		checkSettingsDirectory();
@@ -87,6 +87,7 @@ public class DataStorage {
 			ProgSettings settings) {
 		setPodcasts(podcasts);
 		setUrlDownloads(urlDownloads);
+		urlDownloads.setPodcasts(podcasts);
 		setSettings(settings);
 		
 		checkSettingsDirectory();
