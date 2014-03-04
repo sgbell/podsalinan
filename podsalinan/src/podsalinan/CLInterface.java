@@ -22,8 +22,11 @@
 package podsalinan;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -136,6 +139,8 @@ public class CLInterface implements Runnable{
 					increaseCommand(menuInput);
 				} else if (menuInput.toUpperCase().startsWith("DECREASE")){
 					decreaseCommand(menuInput);
+				} else if (menuInput.toUpperCase().startsWith("DUMP")){
+					dumpCommand(menuInput);
 				} else if ((data.getSettings().findSetting("menuVisible")==null)||
 						   (data.getSettings().findSetting("menuVisible").value.equalsIgnoreCase("true")))
 					mainMenu.process(menuInput);
@@ -143,6 +148,39 @@ public class CLInterface implements Runnable{
 		}
 	}
 	
+	/** This method will be used for debugging purposes of the download queue
+	 * @param menuInput
+	 */
+	private void dumpCommand(String menuInput) {
+		RandomAccessFile outputFile=null;
+		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+		
+		if ((menuInput.equalsIgnoreCase("dump"))||
+			(menuInput.equalsIgnoreCase("urldownloads"))){
+			outputFile = data.getDebugFile();
+			if (outputFile!=null){
+				synchronized (outputFile){
+					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+					Date date = new Date();
+					try {
+						outputFile.seek(outputFile.length());
+						outputFile.writeBytes("--URLDownload Contents - "+dateFormat.format(date)+" --");
+						outputFile.writeBytes("DownladURL,status,destination,podcastid");
+						for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
+							outputFile.writeBytes(currentDownload.getURL().toString()+
+									","+currentDownload.getCurrentStatus()+
+									","+currentDownload.getDestination()+
+									","+currentDownload.getPodcastId());
+						}
+						outputFile.writeBytes("-- URLDownload Contents end --");
+					} catch (IOException e) {
+						System.err.println("Error writing to debug file.");
+					}
+				}
+			}
+		}
+	}
+
 	/** This method will mostly be used to move a download down the download queue
 	 * @param menuInput
 	 */

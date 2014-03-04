@@ -29,6 +29,7 @@
 package podsalinan;
 
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -120,6 +121,12 @@ public class Podsalinan {
 		}
 			
 		data.saveSettings();
+		try {
+			if (data.getDebugFile()!=null)
+			   data.getDebugFile().close();
+		} catch (IOException e) {
+			System.err.println("Error closing debug file");
+		}
 		System.out.println("Goodbye.");
 		// added line below so program exits, as having gui changes things
 		System.exit(0);

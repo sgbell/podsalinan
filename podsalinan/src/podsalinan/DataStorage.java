@@ -19,6 +19,9 @@
 package podsalinan;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URL;
 import java.util.List;
 import java.util.Vector;
@@ -37,6 +40,7 @@ public class DataStorage {
 	private ProgSettings settings;
 	private String settingsDir;
 	private Object finishWait= new Object();
+	private RandomAccessFile debugOutput=null;
 	private final String CREATE_PODCAST = "CREATE TABLE IF NOT EXISTS podcasts (" +
 										  "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 										  "name TEXT, " +
@@ -693,5 +697,20 @@ public class DataStorage {
 					fileList.add(file);
 			}
 		}
+	}
+	
+	public RandomAccessFile getDebugFile(){
+        if (debugOutput==null){
+    		try {
+    			debugOutput = new RandomAccessFile(settingsDir+fileSystemSlash+"debug.output","rw");
+    			debugOutput.seek(debugOutput.length());
+    		} catch (FileNotFoundException e) {
+    			System.err.println("Error opening debug output");
+    		} catch (IOException e) {
+				System.err.println("Cannot seek to the eof");
+			}
+        }
+		
+		return debugOutput;
 	}
 }
