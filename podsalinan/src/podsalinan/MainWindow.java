@@ -21,6 +21,7 @@ public class MainWindow extends JFrame {
 		setSize(800,600);
 		setTitle("Podsalinan");
 		setJMenuBar(menubar);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	public MainWindow(DataStorage newData) {
