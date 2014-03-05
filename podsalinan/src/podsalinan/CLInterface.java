@@ -165,14 +165,18 @@ public class CLInterface implements Runnable{
 					try {
 						outputFile.seek(outputFile.length());
 						outputFile.writeBytes("--URLDownload Contents - "+dateFormat.format(date)+" --");
+						outputFile.writeBytes(System.getProperty("line.separator"));
 						outputFile.writeBytes("DownladURL,status,destination,podcastid");
+						outputFile.writeBytes(System.getProperty("line.separator"));
 						for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
 							outputFile.writeBytes(currentDownload.getURL().toString()+
 									","+currentDownload.getCurrentStatus()+
 									","+currentDownload.getDestination()+
 									","+currentDownload.getPodcastId());
+							outputFile.writeBytes(System.getProperty("line.separator"));
 						}
 						outputFile.writeBytes("-- URLDownload Contents end --");
+						outputFile.writeBytes(System.getProperty("line.separator"));
 					} catch (IOException e) {
 						System.err.println("Error writing to debug file.");
 					}

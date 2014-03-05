@@ -100,4 +100,5 @@ public class URLDownload extends Details {
 	public File getDestinationFile(){
 		return destination;
 	}
+
 }

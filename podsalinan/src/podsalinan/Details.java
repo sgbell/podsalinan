@@ -180,4 +180,37 @@ public class Details {
 		
 		return status;
 	}
+	
+	public char getCharStatus() {
+		char status='\0';
+		
+		switch (this.status){
+		case NOT_QUEUED:
+			status = '\0';
+			break;
+		case DOWNLOAD_QUEUED:
+			status = 'Q';
+			break;
+		case CURRENTLY_DOWNLOADING:
+			status = 'D';
+			break;
+		case FINISHED:
+			status = 'F';
+			break;
+		case DOWNLOAD_CANCELLED:
+			status = 'C';
+			break;
+		case DO_NOT_DOWNLOAD:
+			status = '*';
+			break;
+		case INCOMPLETE_DOWNLOAD:
+			status = 'I';
+			break;
+		case DOWNLOAD_FAULT:
+			status = 'B';
+			break;
+	}
+		
+		return status;
+	}
 }
