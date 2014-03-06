@@ -44,7 +44,8 @@ public class Details {
 							DOWNLOAD_CANCELLED=4,
 							DO_NOT_DOWNLOAD=5,
 							INCOMPLETE_DOWNLOAD=6,
-							DOWNLOAD_FAULT=7;
+							DOWNLOAD_FAULT=7,
+							DESTINATION_INVALID=8;
 	
 	public Details (){
 		
@@ -176,6 +177,9 @@ public class Details {
 			case DOWNLOAD_FAULT:
 				status = "Download Fault";
 				break;
+			case DESTINATION_INVALID:
+				status = "Destination Invalid";
+				break;
 		}
 		
 		return status;
@@ -208,6 +212,9 @@ public class Details {
 			break;
 		case DOWNLOAD_FAULT:
 			status = 'B';
+			break;
+		case DESTINATION_INVALID:
+			status = '-';
 			break;
 	}
 		

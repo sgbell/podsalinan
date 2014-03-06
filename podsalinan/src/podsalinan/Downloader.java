@@ -225,7 +225,7 @@ public class Downloader extends NotifyingRunnable{
 							downloadItem.setDestination(outputFile);
 						}
 					} else if ((!destinationFile.exists())&&(!destinationFile.getParentFile().exists())){
-						downloadItem.setStatus(Details.DOWNLOAD_FAULT);
+						downloadItem.setStatus(Details.DESTINATION_INVALID);
 						return DESTINATION_INVALID;
 					}
 					/*
