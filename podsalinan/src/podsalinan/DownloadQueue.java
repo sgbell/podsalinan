@@ -157,7 +157,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			if (download.getPodcastId().length()>0)
 				data.getUrlDownloads().deleteDownload(download);
 			downloaders.remove(downloader);
-		} else if (percentage<100){
+		} else if ((percentage<100)&&(download.getStatus()!=Details.DESTINATION_INVALID)){
 			downloaders.remove(downloader);
 			synchronized(download){
 				try {
@@ -177,7 +177,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				}
 			}
 			data.getUrlDownloads().decreasePriority(download);
-			download.setStatus(Details.DOWNLOAD_FAULT);
+			download.setStatus(Details.DESTINATION_INVALID);
 		} else if (percentage>100){
 			downloaders.remove(downloader);
 			synchronized(download){
