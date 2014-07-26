@@ -19,9 +19,6 @@
 package podsalinan;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.net.URL;
 import java.util.List;
 import java.util.Vector;
@@ -29,56 +26,93 @@ import java.util.Vector;
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
 import com.almworks.sqlite4java.SQLiteStatement;
+import com.mimpidev.dev.debug.Log;
 
 /**
  * @author bugman
  *
  */
 public class DataStorage {
+    /**
+     * URLDownloadList is storage area for all url downloads 
+     */
 	private URLDownloadList urlDownloads;
+	/**
+	 * podcasts is the storage area for all of the podcasts
+	 */
 	private Vector<Podcast> podcasts;
+	/**
+	 * settings is where the program settings are listed
+	 */
 	private ProgSettings settings;
 	private String settingsDir;
 	private Object finishWait= new Object();
-	private RandomAccessFile debugOutput=null;
+	private Log debugOutput=null;
+
+	/**
+	 *  SQL Statement for creating podcasts table in main database file.
+	 */
 	private final String CREATE_PODCAST = "CREATE TABLE IF NOT EXISTS podcasts (" +
 										  "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 										  "name TEXT, " +
 										  "localFile TEXT, " +
 										  "url TEXT, " +
 										  "directory TEXT, " +
-										  "auto_queue INTEGER);",
-						CREATE_SETTINGS = "CREATE TABLE IF NOT EXISTS settings (" +
-										  "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-										  "name TEXT, " +
-										  "value TEXT);",
-						CREATE_SHOWS = "CREATE TABLE IF NOT EXISTS shows(" +
-								 	   "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-								 	   "published TEXT," +
-								 	   "title TEXT," +
-								 	   "url TEXT," +
-								 	   "size INTEGER," +
-								 	   "description TEXT," +
-								 	   "status INTEGER);",
-						CREATE_DOWNLOADS = "CREATE TABLE IF NOT EXISTS downloads(" +
-				  								"id INTEGER PRIMARY KEY AUTOINCREMENT," +
-				  								"url TEXT," +
-				  								"size TEXT," +
-				  								"destination TEXT," +
-				  								"priority INTGEGER," +
-				  								"podcastSource TEXT," +
-				  								"status INTEGER);",
-						SELECT_ALL_PODCASTS = "SELECT * from podcasts;",
-						SELECT_ALL_SETTINGS = "SELECT * from settings;",
-						SELECT_ALL_DOWNLOADS = "SELECT * from downloads;",
-						CLEAR_ALL_SETTINGS = "DELETE from settings;" +
-								 			 "DELETE from sqlite_sequence WHERE name='settings';";
-	
-	private String fileSystemSlash;
+										  "auto_queue INTEGER);";
+
+	/**
+	 *  SQL Statement for creating settings table in main database file.
+	 */
+	private final String CREATE_SETTINGS = "CREATE TABLE IF NOT EXISTS settings (" +
+										   "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+										   "name TEXT, " +
+										   "value TEXT);";
+	/**
+	 *  SQL Statement for creating shows table in podcast database file.
+	 */
+	private final String CREATE_SHOWS = "CREATE TABLE IF NOT EXISTS shows(" +
+								 	    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+								 	    "published TEXT," +
+								 	    "title TEXT," +
+								 	    "url TEXT," +
+								 	    "size INTEGER," +
+								 	    "description TEXT," +
+								 	    "status INTEGER);";
+	/**
+	 *  SQL Statement for creating downloads table in main database file.
+	 */
+	private final String CREATE_DOWNLOADS = "CREATE TABLE IF NOT EXISTS downloads(" +
+				  							"id INTEGER PRIMARY KEY AUTOINCREMENT," +
+				  							"url TEXT," +
+				  							"size TEXT," +
+				  							"destination TEXT," +
+				  							"priority INTGEGER," +
+				  							"podcastSource TEXT," +
+				  							"status INTEGER);";
+	/**
+	 *  SQL Statement for listing podcasts table in main database file.
+	 */
+	private final String SELECT_ALL_PODCASTS = "SELECT * from podcasts;";
+	/**
+	 *  SQL Statement for listing settings table in main database file.
+	 */
+	private final String SELECT_ALL_SETTINGS = "SELECT * from settings;";
+	/**
+	 *  SQL Statement for listing download table in main database file.
+	 */
+	private final String SELECT_ALL_DOWNLOADS = "SELECT * from downloads;";
+	/**
+	 *  SQL Statement for deleting all settings from main database file.
+	 */
+	private final String CLEAR_ALL_SETTINGS = "DELETE from settings;" +
+								 			  "DELETE from sqlite_sequence " +
+								 			  "WHERE name='settings';";
 	
 	/**
-	 * 
+	 *  Used to Define the current File system slash.
 	 */
+	private String fileSystemSlash;
+	
 	public DataStorage(){
 		podcasts = new Vector<Podcast>();
 		urlDownloads = new URLDownloadList(podcasts);
@@ -97,6 +131,10 @@ public class DataStorage {
 		checkSettingsDirectory();
 	}
 	
+	/**
+	 *  This is used to set settingsDir and fileSystemSlash for the current operating
+	 *  system.
+	 */
 	public void checkSettingsDirectory(){
 		// This if Block checks to see if it's windows or linux, and sets the
 		// settings directory appropriately.
@@ -117,15 +155,25 @@ public class DataStorage {
 		File tempXMLFile = new File (settingsDir+fileSystemSlash+"temp.xml");
 		if (tempXMLFile.exists())
 			tempXMLFile.delete();
+
+        // Initializing debugOutput File
+		debugOutput = new Log(settingsDir+fileSystemSlash+"debug.log","rw");
 	}
 
+	/**
+	 * Used to load this object's podcasts, downloads, and settings. 
+	 * @return
+	 */
 	public int loadSettings(){
 		return loadSettings(podcasts, urlDownloads, settings);
 	}
 	
-	/** loadSettings loads the settings from the database.
-	 * 
-	 * @return
+	/**
+ 	 * Used to load the passed in podcast Vector, download array and settings.
+	 * @param podcasts The Vector list used to store the values being read.
+	 * @param downloads The download list used to store the values being read.
+	 * @param settings The settings list used to store the values being read.
+	 * @return Success status -1 is failure 0 is success
 	 */
 	public int loadSettings(Vector<Podcast> podcasts,
 							URLDownloadList downloads,
@@ -156,6 +204,11 @@ public class DataStorage {
 					}
 				}
 				sql.dispose();
+			} catch (SQLiteException e){
+				debugOutput.printStackTrace(e.getStackTrace());
+				return -1;
+			}
+			try {
 				sql = podsalinanDB.prepare(SELECT_ALL_SETTINGS);
 				while (sql.step()){
 					if (sql.hasRow()){
@@ -164,6 +217,11 @@ public class DataStorage {
 					}
 				}
 				sql.dispose();
+			} catch (SQLiteException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
+				return -1;
+			}
+			try {
 				sql = podsalinanDB.prepare(SELECT_ALL_PODCASTS);
 				while (sql.step()){
 					if (sql.hasRow()){
@@ -179,7 +237,8 @@ public class DataStorage {
 				sql.dispose();
 				podsalinanDB.dispose();
 			} catch (SQLiteException e) {
-				
+				debugOutput.printStackTrace(e.getStackTrace());
+				return -1;
 			}
 		} else {
 			/* This area is for the older version of the data files, so we can easily migrate to
@@ -206,7 +265,8 @@ public class DataStorage {
 						}
 					}
 				} catch (SQLiteException e) {
-					e.printStackTrace();
+					debugOutput.printStackTrace(e.getStackTrace());
+					return -1;
 				}
 				
 			}
@@ -235,6 +295,13 @@ public class DataStorage {
 							}
 						}
 						sql.dispose();
+					}
+				} catch (SQLiteException e) {
+					debugOutput.printStackTrace(e.getStackTrace());
+					return -1;
+				}
+				try {
+					if (!firstRun){
 						sql = settingsDB.prepare(SELECT_ALL_SETTINGS);
 						while (sql.step()){
 							if (sql.hasRow()){
@@ -246,7 +313,8 @@ public class DataStorage {
 						settingsDB.dispose();
 					}
 				} catch (SQLiteException e) {
-					return 1;
+					debugOutput.printStackTrace(e.getStackTrace());
+					return -1;
 				}
 			}
 		}
@@ -259,14 +327,19 @@ public class DataStorage {
 		return 0;
 	}
 	
+	/**
+	 * This is used to save the locally stored information to the databases
+	 */
 	public void saveSettings(){
 		saveSettings(podcasts,urlDownloads,settings);
 	}
 
-	/**
-	 * @param downloads 
-	 * 
-	 */
+    /**
+     * This is used to save the passed in information to the databases 
+     * @param podcasts The podcast Vector
+     * @param downloads The downloads Array
+     * @param settings The settings Array
+     */
 	public void saveSettings(Vector<Podcast> podcasts,
 							 URLDownloadList downloads,
 							 ProgSettings settings) {
@@ -282,23 +355,27 @@ public class DataStorage {
 				sql.stepThrough();
 				sql.dispose();
 			} catch (SQLiteException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
 			}
 			try {
 				sql = podsalinanDB.prepare(CREATE_PODCAST);
 				sql.stepThrough();
 				sql.dispose();
 			} catch (SQLiteException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
 			}
 			try {
 				sql = podsalinanDB.prepare(CREATE_SETTINGS);
 				sql.stepThrough();
 				sql.dispose();
 			} catch (SQLiteException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
 			}
 		} else {
 			try {
 				podsalinanDB.open();
 			} catch (SQLiteException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
 			}
 		}
 		//podsalinanDB.dispose();
@@ -355,7 +432,7 @@ public class DataStorage {
 				cleanDownloadsinDB(podsalinanDB,download.getURL(),"downloads");
 				
 			} catch (SQLiteException e) {
-				e.printStackTrace();
+				debugOutput.printStackTrace(e.getStackTrace());
 			}
 			downloadCount++;
 		}
@@ -366,6 +443,7 @@ public class DataStorage {
 			sql.stepThrough();
 			sql.dispose();
 		} catch (SQLiteException e){
+			debugOutput.printStackTrace(e.getStackTrace());
 		}
 		// add settings back into the database
 		for (Setting setting : settings.getArray()){
@@ -376,6 +454,7 @@ public class DataStorage {
 				sql.stepThrough();
 				sql.dispose();
 			} catch (SQLiteException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
 			} 
 		}
 		
@@ -417,12 +496,19 @@ public class DataStorage {
 					}
 				}
 			} catch (SQLiteException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
 			}
 			
 			savePodcast(podcast);
 		}
 	}
 
+	/**
+	 * This will populate a podcast object with all of the episodes stored in the
+	 * podcast database file. The passed in Podcast object will have settings pre-populated
+	 * before being passed in, like the dataFile name.
+	 * @param podcast Podcast Vector to be populated.
+	 */
 	public void loadPodcast(Podcast podcast){
 		String feedFilename=settingsDir.concat("/"+podcast.getDatafile()+".pod");
 		SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
@@ -451,12 +537,12 @@ public class DataStorage {
 			//System.out.println("Podcast: "+podcast.getName()+" - "+podcast.getEpisodes().size());
 			//System.out.println("DB count: "+sqlCount);
 		} catch (SQLiteException e) {
-			e.printStackTrace();
+			debugOutput.printStackTrace(e.getStackTrace());
 		}
 	}
 	
-	/** addColumnToTable is used to check for a column in a table, and if it doesn't exist, to add it.
-	 * 
+	/** 
+	 * Used to check for a column in a table, and if it doesn't exist, add it.
 	 */
 	private boolean addColumnToTable(SQLiteConnection dbConnection, String tableName, String columnName, String columnType){
 		try {
@@ -481,15 +567,15 @@ public class DataStorage {
 				return true;
 			}
 		} catch (SQLiteException e) {
+			debugOutput.printStackTrace(e.getStackTrace());
 			return false;
 		}
 	}
 	
-	/**
-	 * 
-	 * @param episodes
-	 * @param feedDBName
-	 */
+    /**
+     * This will save the episodes stored in the Podcast Array to the dataFile.
+     * @param savedPodcast The podcast to save
+     */
 	public void savePodcast(Podcast savedPodcast){
 		boolean feedDBExists=false;
 		SQLiteStatement sql;
@@ -502,28 +588,40 @@ public class DataStorage {
 		SQLiteConnection feedDB = new SQLiteConnection(new File(feedFilename));
 		try {
 			feedDB.open(true);
+		} catch (SQLiteException e) {
+			debugOutput.printStackTrace(e.getStackTrace());
+		}
 			
-			if (!feedDBExists){
+		if (!feedDBExists){
+			try {
 				sql = feedDB.prepare(CREATE_SHOWS);
 				sql.stepThrough();
 				sql.dispose();
+			} catch (SQLiteException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
 			}
+		}
 			
-			for (int epCount=0; epCount< savedPodcast.getEpisodes().size(); epCount++){
-				Episode currentEpisode = savedPodcast.getEpisodes().get(epCount);
-				if (!currentEpisode.isAdded()){
+		for (int epCount=0; epCount< savedPodcast.getEpisodes().size(); epCount++){
+			Episode currentEpisode = savedPodcast.getEpisodes().get(epCount);
+			if (!currentEpisode.isAdded()){
+				try {
 					//System.out.println("Adding URL to database: "+currentEpisode.getURL().toString());
 					sql = feedDB.prepare("INSERT INTO shows(published,title,url,size,description,status)" +
-							"						VALUES ('"+currentEpisode.getOriginalDate()+"'," +
-							 							   "'"+currentEpisode.getTitle().replaceAll("\'", "&apos;")+"'," +
-							 							   "'"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"'," +
-							 							   "'"+currentEpisode.getSize()+"'," +
-							 							   "'"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"'," +
-							 							   	   currentEpisode.getStatus()+");");
+									     "VALUES ('"+currentEpisode.getOriginalDate()+"'," +
+							 				     "'"+currentEpisode.getTitle().replaceAll("\'", "&apos;")+"'," +
+							 					 "'"+currentEpisode.getURL().toString().replaceAll("\'", "&apos;")+"'," +
+							 					 "'"+currentEpisode.getSize()+"'," +
+							 					 "'"+currentEpisode.getDescription().replaceAll("\'", "&apos;")+"'," +
+							 					     currentEpisode.getStatus()+");");
 					sql.stepThrough();
 					sql.dispose();
 					currentEpisode.setAdded(true);
-				} else if (currentEpisode.isUpdated()) {
+				} catch (SQLiteException e) {
+					debugOutput.printStackTrace(e.getStackTrace());
+				}
+			} else if (currentEpisode.isUpdated()) {
+				try {
 					// If the episode has been updated. it will up updated in the database.
 					//System.out.println("Updating DB: "+currentEpisode.getURL().toString());
 					sql = feedDB.prepare("UPDATE shows " +
@@ -535,14 +633,14 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 					currentEpisode.setUpdated(false);
+				} catch (SQLiteException e) {
+					debugOutput.printStackTrace(e.getStackTrace());
 				}
-				
-				cleanDownloadsinDB(feedDB, currentEpisode.getURL(),"shows");
 			}
-			feedDB.dispose();
-		} catch (SQLiteException e) {
-			e.printStackTrace();
+				
+			cleanDownloadsinDB(feedDB, currentEpisode.getURL(),"shows");
 		}
+		feedDB.dispose();
 	}
 	
 	/**
@@ -550,128 +648,133 @@ public class DataStorage {
 	 * episode string, I forgot to make the original format available. This caused every episode to be written to the database
 	 * every time the program was executed :(
 	 * 
-	 * @param feedDB
-	 * @param currentUrl 
-	 * @param currentEpisode
+	 * @param podsalinanDB Database connection to an sqlite file to delete duplicates
+	 * @param currentUrl URL string to match on in the database   
+	 * @param tableName Table name to be checked.
 	 */
 	private void cleanDownloadsinDB(SQLiteConnection podsalinanDB, URL currentUrl, String tableName) {
 		
 		SQLiteStatement sql;
 		
-		try {
-			if ((podsalinanDB!=null) && (currentUrl!=null) && 
-				((tableName.equalsIgnoreCase("shows"))||(tableName.equalsIgnoreCase("downloads")))){
-				// Looking for multiple copies of the 1 episode
-				String urlID=null;
-	            // The following will search through the database for the current episode's minimum id
-					sql = podsalinanDB.prepare("SELECT min(id) "
+		if ((podsalinanDB!=null) && (currentUrl!=null) && 
+			((tableName.equalsIgnoreCase("shows"))||(tableName.equalsIgnoreCase("downloads")))){
+			// Looking for multiple copies of the 1 episode
+			String urlID=null;
+            // The following will search through the database for the current episode's minimum id
+			try {
+				sql = podsalinanDB.prepare("SELECT min(id) "
 							           + "FROM   "+tableName+" "
 							           + "WHERE  url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"';");
 				while (sql.step()){
 					urlID=sql.columnString(0);
 				}
 				sql.dispose();
-				// Using the current episode's db minimum id, it will remove all matching episodes except for the minimum id
+			} catch (SQLiteException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
+			}
+			// Using the current episode's db minimum id, it will remove all matching episodes except for the minimum id
 				
-				if (urlID!=null){
-					/*
-					int urlCount=0;
-					sql = podsalinanDB.prepare("SELECT count(*) "
-									   + "FROM "+tableName+" "
-									   + "WHERE url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"';");
+			if (urlID!=null){
+				/*
+				int urlCount=0;
+				sql = podsalinanDB.prepare("SELECT count(*) "
+								   + "FROM "+tableName+" "
+								   + "WHERE url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"';");
+				while(sql.step()){
+					urlCount=Integer.parseInt(sql.columnString(0));
+				}
+				sql.dispose();
+				if (urlCount>1){
+					sql = podsalinanDB.prepare("SELECT id "
+					           + "FROM "+tableName+" "
+					           + "WHERE url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"';");
 					while(sql.step()){
-						urlCount=Integer.parseInt(sql.columnString(0));
+						System.out.println("URL='"+currentUrl.toString().replaceAll("\'", "&apos;")+"' - "+
+										   sql.columnString(0));
 					}
-					sql.dispose();
-					if (urlCount>1){
-						sql = podsalinanDB.prepare("SELECT id "
-						           + "FROM "+tableName+" "
-						           + "WHERE url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"';");
-						while(sql.step()){
-							System.out.println("URL='"+currentUrl.toString().replaceAll("\'", "&apos;")+"' - "+
-											   sql.columnString(0));
-						}
 						
-					}*/
+				}*/
+				
+				try {
 					sql = podsalinanDB.prepare("DELETE "
 							           + "FROM  "+tableName+" "
 							           + "WHERE url='"+currentUrl.toString().replaceAll("\'", "&apos;")+"' "
 							           + "AND   id!="+urlID+";");
 					sql.stepThrough();
 					sql.dispose();
+				} catch (SQLiteException e) {
+					debugOutput.printStackTrace(e.getStackTrace());
 				}
 			}
-		} catch (SQLiteException e) {
-			e.printStackTrace();
 		}
 	}
 
 	/**
 	 * 
-	 * @return
+	 * @return String for settings directory 
 	 */
 	public String getSettingsDir(){
 		return settingsDir;
 	}
 
 	/**
-	 * @return the urlDownloads
+	 * @return Download List
 	 */
 	public URLDownloadList getUrlDownloads() {
 		return urlDownloads;
 	}
 
 	/**
-	 * @param urlDownloads the urlDownloads to set
+	 * @param urlDownloads Array of Downloads
 	 */
 	public void setUrlDownloads(URLDownloadList urlDownloads) {
 		this.urlDownloads = urlDownloads;
 	}
 
 	/**
-	 * @return the podcasts
+	 * @return Array list of Podcasts
 	 */
 	public Vector<Podcast> getPodcasts() {
 		return podcasts;
 	}
 
 	/**
-	 * @param podcasts the podcasts to set
+	 * @param podcasts Array of Podcasts
 	 */
 	public void setPodcasts(Vector<Podcast> podcasts) {
 		this.podcasts = podcasts;
 	}
 
 	/**
-	 * @return the settings
+	 * @return Array list of Settings
 	 */
 	public ProgSettings getSettings() {
 		return settings;
 	}
 
 	/**
-	 * @param settings the settings to set
+	 * @param settings Array of Program Settings
 	 */
 	public void setSettings(ProgSettings settings) {
 		this.settings = settings;
 	}
 
 	/**
-	 * @return the fileSystemSlash
+	 * @return the type of file system slash
 	 */
 	public String getFileSystemSlash() {
 		return fileSystemSlash;
 	}
 
 	/**
-	 * @param fileSystemSlash the fileSystemSlash to set
+	 * @param fileSystemSlash Defines the current file system slash
 	 */
 	public void setFileSystemSlash(String fileSystemSlash) {
 		this.fileSystemSlash = fileSystemSlash;
 	}
 
 	/**
-	 * @return the finishWait
+	 * @return object for waiting till the reading is finished
 	 */
 	public Object getFinishWait() {
 		return finishWait;
@@ -684,6 +787,12 @@ public class DataStorage {
 		this.finishWait = finishWait;
 	}
 	
+	/**
+	 * This is a directory scanning method, which will create a list of files recursive
+	 * in the directory passed in.
+	 * @param directory Directory to be scanned for files
+	 * @param fileList Array of File objects found 
+	 */
 	public void scanDirectory(File directory, List<File> fileList){
 		if (directory == null)
 			return;
@@ -699,18 +808,12 @@ public class DataStorage {
 		}
 	}
 	
-	public RandomAccessFile getDebugFile(){
-        if (debugOutput==null){
-    		try {
-    			debugOutput = new RandomAccessFile(settingsDir+fileSystemSlash+"debug.output","rw");
-    			debugOutput.seek(debugOutput.length());
-    		} catch (FileNotFoundException e) {
-    			System.err.println("Error opening debug output");
-    		} catch (IOException e) {
-				System.err.println("Cannot seek to the eof");
-			}
-        }
-		
+	/**
+	 * This is used as the main debug output, if it could not open the file, it will
+	 * output the debug information to the screen.
+	 * @return Log object, attached to file
+	 */
+	public Log getDebugFile(){
 		return debugOutput;
 	}
 }

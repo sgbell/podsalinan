@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 
+import com.mimpidev.dev.debug.Log;
+
 /**
  * @author bugman
  *
@@ -152,35 +154,26 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void dumpCommand(String menuInput) {
-		RandomAccessFile outputFile=null;
+		Log outputFile=null;
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
 		if ((menuInput.equalsIgnoreCase("dump"))||
 			(menuInput.equalsIgnoreCase("urldownloads"))){
+			
 			outputFile = data.getDebugFile();
 			if (outputFile!=null){
-				synchronized (outputFile){
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-					Date date = new Date();
-					try {
-						outputFile.seek(outputFile.length());
-						outputFile.writeBytes("--URLDownload Contents - "+dateFormat.format(date)+" --");
-						outputFile.writeBytes(System.getProperty("line.separator"));
-						outputFile.writeBytes("DownladURL,status,destination,podcastid");
-						outputFile.writeBytes(System.getProperty("line.separator"));
-						for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
-							outputFile.writeBytes(currentDownload.getURL().toString()+
-									","+currentDownload.getCurrentStatus()+
-									","+currentDownload.getDestination()+
-									","+currentDownload.getPodcastId());
-							outputFile.writeBytes(System.getProperty("line.separator"));
-						}
-						outputFile.writeBytes("-- URLDownload Contents end --");
-						outputFile.writeBytes(System.getProperty("line.separator"));
-					} catch (IOException e) {
-						System.err.println("Error writing to debug file.");
-					}
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+				Date date = new Date();
+				
+				outputFile.println("--URLDownload Contents - "+dateFormat.format(date)+" --");
+				outputFile.println("DownladURL,status,destination,podcastid");
+				for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
+					outputFile.println(currentDownload.getURL().toString()+
+							","+currentDownload.getCurrentStatus()+
+							","+currentDownload.getDestination()+
+							","+currentDownload.getPodcastId());
 				}
+				outputFile.println("-- URLDownload Contents end --");
 			}
 		}
 	}

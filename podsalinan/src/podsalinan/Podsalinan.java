@@ -121,12 +121,8 @@ public class Podsalinan {
 		}
 			
 		data.saveSettings();
-		try {
-			if (data.getDebugFile()!=null)
-			   data.getDebugFile().close();
-		} catch (IOException e) {
-			System.err.println("Error closing debug file");
-		}
+		if (data.getDebugFile()!=null)
+		   data.getDebugFile().close();
 		System.out.println("Goodbye.");
 		// added line below so program exits, as having gui changes things
 		System.exit(0);

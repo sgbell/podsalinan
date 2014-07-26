@@ -42,6 +42,7 @@ public class CLInput {
 		try {
 			input = (char) stdInReader.read();
 		} catch (IOException e){
+			
 		}
 		return input;
 	}
