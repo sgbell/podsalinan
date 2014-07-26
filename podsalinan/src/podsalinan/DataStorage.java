@@ -23,9 +23,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
-import com.almworks.sqlite4java.SQLiteConnection;
-import com.almworks.sqlite4java.SQLiteException;
-import com.almworks.sqlite4java.SQLiteStatement;
+import org.tmatesoft.sqljet.core.SqlJetException;
+import org.tmatesoft.sqljet.core.schema.ISqlJetColumnDef;
+import org.tmatesoft.sqljet.core.table.SqlJetDb;
+
 import com.mimpidev.dev.debug.Log;
 
 /**
@@ -179,13 +180,11 @@ public class DataStorage {
 							URLDownloadList downloads,
 							ProgSettings settings){
 		boolean firstRun = true;
-		SQLiteStatement sql;
 		
 		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
 		if (podsalinanDBFile.exists()){
-			SQLiteConnection podsalinanDB = new SQLiteConnection(podsalinanDBFile);
+			SqlJetDb podsalinanDB = new SqlJetDb(podsalinanDBFile,true);
 			try {
-				podsalinanDB.open(true);
 				
 				addColumnToTable(podsalinanDB,"podcasts","auto_queue","INTEGER");
 				
@@ -544,31 +543,34 @@ public class DataStorage {
 	/** 
 	 * Used to check for a column in a table, and if it doesn't exist, add it.
 	 */
-	private boolean addColumnToTable(SQLiteConnection dbConnection, String tableName, String columnName, String columnType){
+	private boolean addColumnToTable(SqlJetDb dbConnection, String tableName, String columnName, String columnType){
+		boolean columnFound=false;
+		List<ISqlJetColumnDef> columnList = null;
+
 		try {
-			SQLiteStatement sql = dbConnection.prepare("PRAGMA table_info("+tableName+");");
-			boolean columnFound=false;
-			
-			while (sql.step())
-				for (int columnCounter=0; columnCounter<sql.columnCount(); columnCounter++)
-					// does the column name equal status?
-					if ((sql.getColumnName(columnCounter).equalsIgnoreCase("name"))&&
-						(sql.columnString(columnCounter).equalsIgnoreCase("status")))
-						columnFound=true;
-					
-			sql.dispose();
-			
-			if (!columnFound){
-				sql = dbConnection.prepare("ALTER TABLE "+tableName+" ADD "+columnName+" "+columnType.toUpperCase()+";");
-				sql.stepThrough();
-				sql.dispose();
-				return true;
-			} else {
-				return true;
-			}
-		} catch (SQLiteException e) {
+			columnList = dbConnection.getSchema().getTable(tableName).getColumns();
+		} catch (SqlJetException e) {
 			debugOutput.printStackTrace(e.getStackTrace());
+		}
+		if (columnList!=null){
+			for (ISqlJetColumnDef column: columnList){
+				if (column.getName().contentEquals(columnName))
+					columnFound=true;
+			}
+		} else {
 			return false;
+		}
+		
+		if (!columnFound){
+			try {
+				dbConnection.alterTable("ALTER TABLE "+tableName+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
+			} catch (SqlJetException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
+				return false;
+			}
+			return true;
+		} else {
+			return true;
 		}
 	}
 	
