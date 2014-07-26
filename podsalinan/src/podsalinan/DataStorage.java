@@ -377,9 +377,9 @@ public class DataStorage {
 			    }
 				db.commit();
 				
-				cleanDownloadsinDB(podsalinanDB,download.getURL(),"downloads");
+				cleanDownloadsinDB(db,download.getURL(),"downloads");
 				
-			} catch (SQLiteException e) {
+			} catch (SqlJetException e) {
 				debugOutput.printStackTrace(e.getStackTrace());
 			}
 			downloadCount++;
@@ -390,7 +390,7 @@ public class DataStorage {
 			sql = podsalinanDB.prepare(CLEAR_ALL_SETTINGS);
 			sql.stepThrough();
 			sql.dispose();
-		} catch (SQLiteException e){
+		} catch (SqlJetException e){
 			debugOutput.printStackTrace(e.getStackTrace());
 		}
 		// add settings back into the database
@@ -401,7 +401,7 @@ public class DataStorage {
 						 				           "'"+setting.value+"');");
 				sql.stepThrough();
 				sql.dispose();
-			} catch (SQLiteException e) {
+			} catch (SqlJetException e) {
 				debugOutput.printStackTrace(e.getStackTrace());
 			} 
 		}
@@ -443,7 +443,7 @@ public class DataStorage {
 							break;
 					}
 				}
-			} catch (SQLiteException e) {
+			} catch (SqlJetException e) {
 				debugOutput.printStackTrace(e.getStackTrace());
 			}
 			
@@ -484,7 +484,7 @@ public class DataStorage {
 			sql.dispose();
 			//System.out.println("Podcast: "+podcast.getName()+" - "+podcast.getEpisodes().size());
 			//System.out.println("DB count: "+sqlCount);
-		} catch (SQLiteException e) {
+		} catch (SqlJetException e) {
 			debugOutput.printStackTrace(e.getStackTrace());
 		}
 	}
@@ -529,7 +529,6 @@ public class DataStorage {
      */
 	public void savePodcast(Podcast savedPodcast){
 		boolean feedDBExists=false;
-		SQLiteStatement sql;
 		
 		String feedFilename=settingsDir.concat("/"+savedPodcast.getDatafile()+".pod");
 		
@@ -539,7 +538,7 @@ public class DataStorage {
 		SQLiteConnection feedDB = new SQLiteConnection(new File(feedFilename));
 		try {
 			feedDB.open(true);
-		} catch (SQLiteException e) {
+		} catch (SqlJetException e) {
 			debugOutput.printStackTrace(e.getStackTrace());
 		}
 			
@@ -548,7 +547,7 @@ public class DataStorage {
 				sql = feedDB.prepare(CREATE_SHOWS);
 				sql.stepThrough();
 				sql.dispose();
-			} catch (SQLiteException e) {
+			} catch (SqlJetException e) {
 				debugOutput.printStackTrace(e.getStackTrace());
 			}
 		}
@@ -568,7 +567,7 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 					currentEpisode.setAdded(true);
-				} catch (SQLiteException e) {
+				} catch (SqlJetException e) {
 					debugOutput.printStackTrace(e.getStackTrace());
 				}
 			} else if (currentEpisode.isUpdated()) {
@@ -584,7 +583,7 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 					currentEpisode.setUpdated(false);
-				} catch (SQLiteException e) {
+				} catch (SqlJetException e) {
 					debugOutput.printStackTrace(e.getStackTrace());
 				}
 			}
@@ -603,7 +602,7 @@ public class DataStorage {
 	 * @param currentUrl URL string to match on in the database   
 	 * @param tableName Table name to be checked.
 	 */
-	private void cleanDownloadsinDB(SQLiteConnection podsalinanDB, URL currentUrl, String tableName) {
+	private void cleanDownloadsinDB(SqlJetDb podsalinanDB, URL currentUrl, String tableName) {
 		
 		SQLiteStatement sql;
 		
@@ -620,7 +619,7 @@ public class DataStorage {
 					urlID=sql.columnString(0);
 				}
 				sql.dispose();
-			} catch (SQLiteException e) {
+			} catch (SqlJetException e) {
 				debugOutput.printStackTrace(e.getStackTrace());
 			}
 			// Using the current episode's db minimum id, it will remove all matching episodes except for the minimum id
@@ -653,7 +652,7 @@ public class DataStorage {
 							           + "AND   id!="+urlID+";");
 					sql.stepThrough();
 					sql.dispose();
-				} catch (SQLiteException e) {
+				} catch (SqlJetException e) {
 					debugOutput.printStackTrace(e.getStackTrace());
 				}
 			}
