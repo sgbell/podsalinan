@@ -25,24 +25,32 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.mimpidev.dev.debug.Log;
+
 /**
  * @author bugman
  *
  */
 public class CLInput {
 	private BufferedReader stdInReader;
+	private Log debugLog;
 	
 	public CLInput(){
 		stdInReader = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
+	public CLInput(Log debugFile) {
+		debugLog = debugFile;
+	}
+
 	public char getSingleCharInput() {
 		char input=' ';
 		
 		try {
 			input = (char) stdInReader.read();
 		} catch (IOException e){
-			
+			if (debugLog.showDebug())
+				debugLog.printStackTrace(e.getStackTrace());
 		}
 		return input;
 	}
@@ -52,6 +60,8 @@ public class CLInput {
 		try {
 			input = stdInReader.readLine();
 		} catch (IOException e) {
+			if (debugLog.showDebug())
+				debugLog.printStackTrace(e.getStackTrace());
 		}
 
 		return input;

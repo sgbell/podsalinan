@@ -22,8 +22,6 @@
 package podsalinan;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -47,7 +45,7 @@ public class CLInterface implements Runnable{
 	public CLInterface(DataStorage newData){
 		setData(newData);
 		menuList = new ProgSettings();
-		input = new CLInput();
+		input = new CLInput(newData.getDebugFile());
 		initializeMenus();
 	}
 	
