@@ -24,7 +24,10 @@ import java.util.List;
 import java.util.Vector;
 
 import org.tmatesoft.sqljet.core.SqlJetException;
+import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
 import org.tmatesoft.sqljet.core.schema.ISqlJetColumnDef;
+import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
+import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
@@ -180,141 +183,101 @@ public class DataStorage {
 							URLDownloadList downloads,
 							ProgSettings settings){
 		boolean firstRun = true;
+		ISqlJetTable table = null;
 		
 		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
 		if (podsalinanDBFile.exists()){
 			SqlJetDb podsalinanDB = new SqlJetDb(podsalinanDBFile,true);
-			try {
-				
-				addColumnToTable(podsalinanDB,"podcasts","auto_queue","INTEGER");
-				
-				sql = podsalinanDB.prepare(SELECT_ALL_DOWNLOADS);
-				while (sql.step()){
-					if (sql.hasRow()){
-						URLDownload newDownload = new URLDownload(sql.columnString(1),
-																  sql.columnString(2),
-																  sql.columnString(3),
-																  sql.columnString(5),
-																  sql.columnInt(6));
-						//System.out.println("Download url: "+newDownload.getURL());
-						newDownload.setAdded(true);
-						downloads.addDownload(newDownload, sql.columnInt(4));
-						//System.out.println("Debug: Downloads size = "+downloads.size());
-					}
-				}
-				sql.dispose();
-			} catch (SQLiteException e){
-				debugOutput.printStackTrace(e.getStackTrace());
-				return -1;
-			}
-			try {
-				sql = podsalinanDB.prepare(SELECT_ALL_SETTINGS);
-				while (sql.step()){
-					if (sql.hasRow()){
-						settings.addSetting(sql.columnString(1),
-								            sql.columnString(2));
-					}
-				}
-				sql.dispose();
-			} catch (SQLiteException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-				return -1;
-			}
-			try {
-				sql = podsalinanDB.prepare(SELECT_ALL_PODCASTS);
-				while (sql.step()){
-					if (sql.hasRow()){
-						Podcast newPodcast = new Podcast(sql.columnString(1),
-													  	 sql.columnString(3),
-													  	 sql.columnString(4),
-													  	 sql.columnString(2).replaceAll("&apos;", "\'"),
-													  	 (sql.columnInt(5)==1));
-						newPodcast.setAdded(true);
-						podcasts.add(newPodcast);
-					}
-				}
-				sql.dispose();
-				podsalinanDB.dispose();
-			} catch (SQLiteException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-				return -1;
-			}
-		} else {
-			/* This area is for the older version of the data files, so we can easily migrate to
-			 * the updated version. For instance, the downloads will now be held in a table
-			 * in the main data file. Where as in this code, the downloads we seperate.
-			 */
 			
-			// Path to the downloads database
-			File downloadsDBFile = new File(settingsDir.concat("/downloads.db"));
-			// does the download file exist
-			if (downloadsDBFile.exists()){
-				SQLiteConnection downloadDB = new SQLiteConnection(downloadsDBFile);
-				
-				try {
-					downloadDB.open(true);
-					sql = downloadDB.prepare("SELECT * FROM downloads;");
-					
-					while (sql.step()){
-						if (sql.hasRow()){
-							downloads.addDownload(sql.columnString(1),
-												  sql.columnString(3),
-												  sql.columnString(2),
-												  true);
-						}
+			addColumnToTable(podsalinanDB,"podcasts","auto_queue","INTEGER");
+			
+			try {
+				table = podsalinanDB.getTable("downloads");
+				podsalinanDB.beginTransaction(SqlJetTransactionMode.READ_ONLY);
+				if (table!=null){
+					ISqlJetCursor currentDBLine = table.order(table.getPrimaryKeyIndexName());
+					if (!currentDBLine.eof()){
+						do {
+							URLDownload newDownload = new URLDownload(currentDBLine.getString("url"),
+																	  currentDBLine.getString("size"),
+																      currentDBLine.getString("destination"),
+																      currentDBLine.getString("podcastSource"),
+																      (int)currentDBLine.getInteger("status"));
+						    newDownload.setAdded(true);
+						    downloads.addDownload(newDownload, (int)currentDBLine.getInteger("priority"));
+						} while (currentDBLine.next());
 					}
-				} catch (SQLiteException e) {
+				}
+			} catch (SqlJetException e){
+				debugOutput.printStackTrace(e.getStackTrace());
+				return -1;
+			} finally {
+				try {
+					podsalinanDB.commit();
+				} catch (SqlJetException e) {
 					debugOutput.printStackTrace(e.getStackTrace());
 					return -1;
 				}
-				
 			}
-			
-			String configFile = settingsDir.concat("/podcast.db");
-			
-			if (new File(configFile).exists()){
-				firstRun = false;
-				SQLiteConnection settingsDB = new SQLiteConnection(new File(configFile));
-			
-				try {
-					settingsDB.open(true);
-					
-					
-					if (!firstRun){
-						// Do a search in the podcasts table for podcasts stored in the system
-						sql = settingsDB.prepare(SELECT_ALL_PODCASTS);
-						while (sql.step()){
-							if (sql.hasRow()){
-								Podcast newPodcast = new Podcast(sql.columnString(1),
-															  	 sql.columnString(3),
-															  	 sql.columnString(4),
-															  	 sql.columnString(2).replaceAll("&apos;", "\'"));
-								newPodcast.setAdded(false);
-								podcasts.add(newPodcast);
-							}
-						}
-						sql.dispose();
+				
+			try {
+				table = podsalinanDB.getTable("settings");
+				podsalinanDB.beginTransaction(SqlJetTransactionMode.READ_ONLY);
+				
+				if (table!=null){
+					ISqlJetCursor currentDBLine = table.order(table.getPrimaryKeyIndexName());
+					if (!currentDBLine.eof()){
+						do {
+							settings.addSetting(currentDBLine.getString("name"), currentDBLine.getString("value"));
+						} while (currentDBLine.next());
 					}
-				} catch (SQLiteException e) {
+				}
+			} catch (SqlJetException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
+				return -1;
+			} finally {
+				try {
+					podsalinanDB.commit();
+				} catch (SqlJetException e) {
 					debugOutput.printStackTrace(e.getStackTrace());
 					return -1;
 				}
-				try {
-					if (!firstRun){
-						sql = settingsDB.prepare(SELECT_ALL_SETTINGS);
-						while (sql.step()){
-							if (sql.hasRow()){
-								settings.addSetting(sql.columnString(1),
-													sql.columnString(2));
-							}
-						}
-						sql.dispose();
-						settingsDB.dispose();
+			}
+
+			try {
+				table = podsalinanDB.getTable("podcasts");
+				podsalinanDB.beginTransaction(SqlJetTransactionMode.READ_ONLY);
+				if (table!=null){
+					ISqlJetCursor currentDBLine = table.order(table.getPrimaryKeyIndexName());
+					if (!currentDBLine.eof()){
+						do {
+							Podcast newPodcast = new Podcast(currentDBLine.getString("name"),
+															 currentDBLine.getString("url"),
+															 currentDBLine.getString("directory"),
+															 currentDBLine.getString("localFile").replaceAll("&apos;", "\'"),
+															 currentDBLine.getInteger("auto_queue")==1);
+							newPodcast.setAdded(true);
+							podcasts.add(newPodcast);
+						} while (currentDBLine.next());
 					}
-				} catch (SQLiteException e) {
+				}
+				
+			} catch (SqlJetException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
+				return -1;
+			} finally {
+				try {
+					podsalinanDB.commit();
+				} catch (SqlJetException e) {
 					debugOutput.printStackTrace(e.getStackTrace());
 					return -1;
 				}
+			}
+			try {
+				podsalinanDB.close();
+			} catch (SqlJetException e) {
+				debugOutput.printStackTrace(e.getStackTrace());
+				return -1;
 			}
 		}
 		if (!settings.isValidSetting("defaultDirectory")){
@@ -342,63 +305,54 @@ public class DataStorage {
 	public void saveSettings(Vector<Podcast> podcasts,
 							 URLDownloadList downloads,
 							 ProgSettings settings) {
-		SQLiteStatement sql;
 		
 		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
-		boolean dataFileExists = podsalinanDBFile.exists(); 
-		SQLiteConnection podsalinanDB = new SQLiteConnection(podsalinanDBFile);
+		boolean dataFileExists = podsalinanDBFile.exists();
+		SqlJetDb db = new SqlJetDb(podsalinanDBFile,true);
+		db.beginTransaction(SqlJetTransactionMode.WRITE);
 		if (!dataFileExists){
 			try {
-				podsalinanDB.open(true);
-				sql = podsalinanDB.prepare(CREATE_DOWNLOADS);
-				sql.stepThrough();
-				sql.dispose();
-			} catch (SQLiteException e) {
+				db.createTable(CREATE_DOWNLOADS);
+			} catch (SqlJetException e) {
 				debugOutput.printStackTrace(e.getStackTrace());
+			} finally {
+				db.commit();
 			}
 			try {
-				sql = podsalinanDB.prepare(CREATE_PODCAST);
-				sql.stepThrough();
-				sql.dispose();
-			} catch (SQLiteException e) {
+				db.createTable(CREATE_PODCAST);
+			} catch (SqlJetException e) {
 				debugOutput.printStackTrace(e.getStackTrace());
+			} finally {
+				db.commit();
 			}
 			try {
-				sql = podsalinanDB.prepare(CREATE_SETTINGS);
-				sql.stepThrough();
-				sql.dispose();
-			} catch (SQLiteException e) {
+				db.createTable(CREATE_SETTINGS);
+			} catch (SqlJetException e) {
 				debugOutput.printStackTrace(e.getStackTrace());
-			}
-		} else {
-			try {
-				podsalinanDB.open();
-			} catch (SQLiteException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
+			} finally {
+				db.commit();
 			}
 		}
-		//podsalinanDB.dispose();
 		int downloadCount=0;
 		for (URLDownload download : downloads.getDownloads()){
 			//System.out.println("download: "+download.getURL());
 			try {
-				sql = null;
 				int sqlType=0;
 				if (!download.isAdded()){
 					//System.out.println("Adding Download");
 					//System.out.println("URL= "+download.getURL().toString());
 					//System.out.println("Destination= "+download.getDestination());
-					sql = podsalinanDB.prepare("INSERT INTO downloads(url,size,destination,priority,podcastSource,status) " +
-											   "VALUES ('"+download.getURL().toString()+"',"+
-											           "'"+download.getSize()+"',"+ 
-											   		   "'"+download.getDestination()+"',"+
-											           "'"+downloadCount+"',"+
-											   		   "'"+download.getPodcastId()+"',"+
-											           "'"+download.getStatus()+"');");
+					ISqlJetTable table = db.getTable("downloads");
+					table.insert(null,download.getURL().toString(),
+							          Long.parseLong(download.getSize()),
+							          download.getDestination(),
+							          downloadCount,download.getPodcastId(),
+							          download.getStatus());
 					sqlType=1;
 				} else if (download.isRemoved()){
 					//System.out.println("Deleting Download");
 					//System.out.println("URL= "+download.getURL().toString());
+					
 					sql = podsalinanDB.prepare("DELETE FROM downloads " +
 											   "WHERE url='"+download.getURL().toString()+"';");
 					//System.out.println("download being removed to database");
@@ -413,21 +367,16 @@ public class DataStorage {
 					sqlType=3;
 					//System.out.println("download being updated to database");
 				}
-				if (sql!=null){
-					//System.out.println(sql.toString());
-					//podDBQueue.execute(new SQLiteJob());
-					sql.stepThrough();
-					sql.dispose();
-					switch (sqlType){
-					    case 1:
-						    download.setAdded(true);
-						    break;
-					    case 3:
-						    download.setUpdated(false);
-						    break;
-				    }
-
-				}
+				switch (sqlType){
+				    case 1:
+					    download.setAdded(true);
+					    break;
+				    case 3:
+					    download.setUpdated(false);
+					    break;
+			    }
+				db.commit();
+				
 				cleanDownloadsinDB(podsalinanDB,download.getURL(),"downloads");
 				
 			} catch (SQLiteException e) {
