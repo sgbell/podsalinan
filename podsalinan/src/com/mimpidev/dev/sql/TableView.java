@@ -23,9 +23,15 @@ package com.mimpidev.dev.sql;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.tmatesoft.sqljet.core.SqlJetException;
+import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
+import org.tmatesoft.sqljet.core.schema.ISqlJetColumnDef;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
+
+import com.mimpidev.dev.debug.Log;
 
 /**
  * @author bugman
@@ -41,6 +47,10 @@ public class TableView {
 	 * The list of columns in the database table
 	 */
 	private Map<Integer,TableColumn> columnList;
+	/**
+	 * The log.
+	 */
+	private Log log;
     /**
      * The name of the table this is related to.
      */
@@ -51,9 +61,10 @@ public class TableView {
 		columnList = new HashMap<Integer,TableColumn>();
 	}
 	
-	public TableView(File databaseFile, HashMap<Integer,TableColumn> newColumnList){
+	public TableView(File databaseFile, HashMap<Integer,TableColumn> newColumnList, Log debugLog){
 		this(databaseFile);
 		columnList=newColumnList;
+		log=debugLog;
 	}
 	
 	public TableView(SqlJetDb newDb, HashMap<Integer,TableColumn> newColumnList){
@@ -61,13 +72,86 @@ public class TableView {
 		columnList = newColumnList;
 	}
 	
+	public boolean isDbOpen(){
+		return ((db!=null)&&(db.isOpen()));
+	}
+	
 	public boolean createTable(){
-		if ((name!=null)&&(name.length()>1)){
+		if ((name!=null)&&
+			(name.length()>1)&&
+			(columnList.size()>0)){
 			String sql = "CREATE TABLE IF NOT EXISTS "+name+" (";
 			// Do a for loop to go through each of the columns in columnList, and add them to the sql string
+			for (int cc=0; cc<columnList.size(); cc++){
+				sql.concat(columnList.get(cc).name+" "+columnList.get(cc).type);
+			}
 			
 			sql.concat(");");
+			if (isDbOpen()){
+				try {
+					db.beginTransaction(SqlJetTransactionMode.WRITE);
+					db.createTable(sql);
+					db.commit();
+					return true;
+				} catch (SqlJetException e) {
+					log.printStackTrace(e.getStackTrace());
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean insert(){
+		
+		return false;
+	}
+	
+	public boolean addNewColumn(String columnName, String columnType){
+		boolean columnFound=false;
+		List<ISqlJetColumnDef> columns = null;
+
+		if (isDbOpen()){
+			try {
+				db.beginTransaction(SqlJetTransactionMode.WRITE);
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+			}
 			
+			try {
+				columns = db.getSchema().getTable(name).getColumns();
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+			}
+			if (columns!=null){
+				for (ISqlJetColumnDef column : columns){
+					if (column.getName().contentEquals(columnName))
+						columnFound=true;
+				}
+			} else {
+				return false;
+			}
+			
+			if (!columnFound){
+				try {
+					db.alterTable("ALTER TABLE "+name+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
+					return true;
+				} catch (SqlJetException e) {
+					log.printStackTrace(e.getStackTrace());
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean selectAll(){
+		
+		if (isDbOpen()){
+			try {
+				db.beginTransaction(SqlJetTransactionMode.READ_ONLY);
+				
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+			}
 			
 		}
 		
@@ -78,4 +162,5 @@ public class TableView {
 		public String name;
 		public String type;
 	}
+	
 }
