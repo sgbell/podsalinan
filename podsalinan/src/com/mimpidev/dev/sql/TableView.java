@@ -29,6 +29,8 @@ import java.util.Map;
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
 import org.tmatesoft.sqljet.core.schema.ISqlJetColumnDef;
+import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
+import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
@@ -55,6 +57,12 @@ public class TableView {
      * The name of the table this is related to.
      */
 	private String name;
+	/**
+	 * Status for when columns are added to the table 
+	 */
+	public static final int NEW_COLUMNS_ADDED = 1;
+	public static final int NOTHING_CHANGED = 0;
+	public static final int ERROR = -1;
 	
 	public TableView(File databaseFile){
 		db = new SqlJetDb(databaseFile,true);
@@ -70,6 +78,25 @@ public class TableView {
 	public TableView(SqlJetDb newDb, HashMap<Integer,TableColumn> newColumnList){
 		db = newDb;
 		columnList = newColumnList;
+	}
+	
+    /**
+     * 
+     * @return Error status
+     */
+	public int checkColumns(){
+		int result=0;
+		for (int cc=0; cc<columnList.size(); cc++){
+			int newResult = addNewColumn(columnList.get(cc).name,columnList.get(cc).type);
+			if (result!=ERROR){
+				result=newResult;
+			}
+	        if (newResult==ERROR){
+	        	log.println("[Table:"+name+"] Error Adding Column:"+columnList.get(cc).name);
+	        }
+		}
+		
+		return result;
 	}
 	
 	public boolean isDbOpen(){
@@ -106,7 +133,7 @@ public class TableView {
 		return false;
 	}
 	
-	public boolean addNewColumn(String columnName, String columnType){
+	public int addNewColumn(String columnName, String columnType){
 		boolean columnFound=false;
 		List<ISqlJetColumnDef> columns = null;
 
@@ -128,34 +155,36 @@ public class TableView {
 						columnFound=true;
 				}
 			} else {
-				return false;
+				return ERROR;
 			}
 			
 			if (!columnFound){
 				try {
 					db.alterTable("ALTER TABLE "+name+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
-					return true;
+					log.println("[Table:"+name+"] Added Column:"+columnName);
+					return NEW_COLUMNS_ADDED;
 				} catch (SqlJetException e) {
 					log.printStackTrace(e.getStackTrace());
 				}
 			}
 		}
-		return false;
+		return NOTHING_CHANGED;
 	}
 
-	public boolean selectAll(){
+	public ISqlJetCursor selectAll(){
+		ISqlJetTable table = null;
 		
 		if (isDbOpen()){
 			try {
 				db.beginTransaction(SqlJetTransactionMode.READ_ONLY);
-				
+				table = db.getTable(name);
+				ISqlJetCursor currentLine = table.order(table.getPrimaryKeyIndexName());
+				return currentLine;
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
 			}
-			
 		}
-		
-		return false;
+		return null;
 	}
 	
 	public class TableColumn {
