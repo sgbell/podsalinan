@@ -64,20 +64,22 @@ public class TableView {
 	public static final int NOTHING_CHANGED = 0;
 	public static final int ERROR = -1;
 	
-	public TableView(File databaseFile){
+	public TableView(File databaseFile, String tableName){
 		db = new SqlJetDb(databaseFile,true);
 		columnList = new HashMap<Integer,TableColumn>();
+		name = tableName;
 	}
 	
-	public TableView(File databaseFile, HashMap<Integer,TableColumn> newColumnList, Log debugLog){
-		this(databaseFile);
+	public TableView(File databaseFile, HashMap<Integer,TableColumn> newColumnList, Log debugLog, String tableName){
+		this(databaseFile,tableName);
 		columnList=newColumnList;
 		log=debugLog;
 	}
 	
-	public TableView(SqlJetDb newDb, HashMap<Integer,TableColumn> newColumnList){
+	public TableView(SqlJetDb newDb, HashMap<Integer,TableColumn> newColumnList, String tableName){
 		db = newDb;
 		columnList = newColumnList;
+		name=tableName;
 	}
 	
     /**
@@ -185,6 +187,10 @@ public class TableView {
 			}
 		}
 		return null;
+	}
+	
+	public String getTableName (){
+		return name;
 	}
 	
 	public class TableColumn {
