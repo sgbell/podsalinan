@@ -58,28 +58,50 @@ public class TableView {
      */
 	private String name;
 	/**
+	 * 
+	 */
+	private ISqlJetTable table;
+	/**
 	 * Status for when columns are added to the table 
 	 */
 	public static final int NEW_COLUMNS_ADDED = 1;
 	public static final int NOTHING_CHANGED = 0;
 	public static final int ERROR = -1;
 	
-	public TableView(File databaseFile, String tableName){
+	public TableView(File databaseFile, String tableName, Log debugLog){
+		this (new HashMap<Integer,TableColumn>(), tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
-		columnList = new HashMap<Integer,TableColumn>();
-		name = tableName;
+		if (!setTable()){
+			createTable();
+		} else {
+			checkColumns();
+		}
 	}
 	
-	public TableView(File databaseFile, HashMap<Integer,TableColumn> newColumnList, Log debugLog, String tableName){
-		this(databaseFile,tableName);
-		columnList=newColumnList;
-		log=debugLog;
-	}
-	
-	public TableView(SqlJetDb newDb, HashMap<Integer,TableColumn> newColumnList, String tableName){
-		db = newDb;
+	private TableView(HashMap<Integer,TableColumn> newColumnList, String tableName, Log debugLog){
 		columnList = newColumnList;
+		log = debugLog;
 		name=tableName;
+	}
+	
+	public TableView(File databaseFile, HashMap<Integer,TableColumn> newColumnList, String tableName, Log debugLog){
+		this(newColumnList, tableName, debugLog);
+		db = new SqlJetDb(databaseFile,true);
+		if (!setTable()){
+			createTable();
+		} else {
+			checkColumns();
+		}
+	}
+	
+	public TableView(SqlJetDb newDb, HashMap<Integer,TableColumn> newColumnList, String tableName, Log debugLog){
+		this(newColumnList, tableName, debugLog);
+		db = newDb;
+		if (!setTable()){
+			createTable();
+		} else {
+			checkColumns();
+		}
 	}
 	
     /**
@@ -126,6 +148,7 @@ public class TableView {
 					log.printStackTrace(e.getStackTrace());
 				}
 			}
+			setTable();
 		}
 		return false;
 	}
@@ -193,6 +216,26 @@ public class TableView {
 		return name;
 	}
 	
+	/**
+	 * @return the table
+	 */
+	public ISqlJetTable getTable() {
+		return table;
+	}
+
+	/**
+	 * @param table the table to set
+	 */
+	private boolean setTable() {
+		try {
+			table = db.getTable(name);
+		} catch (SqlJetException e) {
+			log.printStackTrace(e.getStackTrace());
+			return false;
+		}
+		return true;
+	}
+
 	public class TableColumn {
 		public String name;
 		public String type;
