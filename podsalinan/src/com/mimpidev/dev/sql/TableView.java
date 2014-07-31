@@ -34,6 +34,8 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.dev.sql.data.definition.BaseColumn;
+import com.mimpidev.dev.sql.data.definition.SqlDefinition;
 
 /**
  * @author bugman
@@ -48,7 +50,7 @@ public class TableView {
 	/**
 	 * The list of columns in the database table
 	 */
-	private Map<Integer,TableColumn> columnList;
+	private Map<Integer,SqlDefinition> columnList;
 	/**
 	 * The log.
 	 */
@@ -69,7 +71,7 @@ public class TableView {
 	public static final int ERROR = -1;
 	
 	public TableView(File databaseFile, String tableName, Log debugLog){
-		this (new HashMap<Integer,TableColumn>(), tableName, debugLog);
+		this (new HashMap<Integer,SqlDefinition>(), tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
 		if (!setTable()){
 			createTable();
@@ -78,13 +80,13 @@ public class TableView {
 		}
 	}
 	
-	private TableView(HashMap<Integer,TableColumn> newColumnList, String tableName, Log debugLog){
+	private TableView(HashMap<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
 		columnList = newColumnList;
 		log = debugLog;
 		name=tableName;
 	}
 	
-	public TableView(File databaseFile, HashMap<Integer,TableColumn> newColumnList, String tableName, Log debugLog){
+	public TableView(File databaseFile, HashMap<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
 		if (!setTable()){
@@ -94,7 +96,7 @@ public class TableView {
 		}
 	}
 	
-	public TableView(SqlJetDb newDb, HashMap<Integer,TableColumn> newColumnList, String tableName, Log debugLog){
+	public TableView(SqlJetDb newDb, HashMap<Integer, SqlDefinition> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = newDb;
 		if (!setTable()){
@@ -153,8 +155,20 @@ public class TableView {
 		return false;
 	}
 	
-	public boolean insert(){
-		
+	public boolean insert(Map<String,BaseColumn> data){
+		Map<String, Object> values = new HashMap<String,Object>();
+		try {
+			db.beginTransaction(SqlJetTransactionMode.WRITE);
+		} catch (SqlJetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (table==null){
+			setTable();
+		}
+		for (int cc=0; cc<columnList.size(); cc++){
+			
+		}
 		return false;
 	}
 	
@@ -202,7 +216,6 @@ public class TableView {
 		if (isDbOpen()){
 			try {
 				db.beginTransaction(SqlJetTransactionMode.READ_ONLY);
-				table = db.getTable(name);
 				ISqlJetCursor currentLine = table.order(table.getPrimaryKeyIndexName());
 				return currentLine;
 			} catch (SqlJetException e) {
@@ -235,10 +248,4 @@ public class TableView {
 		}
 		return true;
 	}
-
-	public class TableColumn {
-		public String name;
-		public String type;
-	}
-	
 }
