@@ -160,15 +160,24 @@ public class TableView {
 		try {
 			db.beginTransaction(SqlJetTransactionMode.WRITE);
 		} catch (SqlJetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.printStackTrace(e.getStackTrace());
 		}
 		if (table==null){
 			setTable();
 		}
 		for (int cc=0; cc<columnList.size(); cc++){
-			
+			if (data.containsKey(columnList.get(cc))){
+				values.put(columnList.get(cc).name, data.get(columnList.get(cc)));
+			}
 		}
+		if (values.size()>0)
+			try {
+				table.insertByFieldNames(values);
+				db.close();
+				return true;
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+			}
 		return false;
 	}
 	
