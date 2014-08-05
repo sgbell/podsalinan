@@ -74,7 +74,11 @@ public class TableView {
 		this (new HashMap<Integer,SqlDefinition>(), tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
 		if (!setTable()){
-			createTable();
+			try {
+				createTable();
+			} catch (SqlException e) {
+				e.getErrorCode();
+			}
 		} else {
 			checkColumns();
 		}
@@ -90,7 +94,12 @@ public class TableView {
 		this(newColumnList, tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
 		if (!setTable()){
-			createTable();
+			try {
+				createTable();
+			} catch (SqlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			checkColumns();
 		}
@@ -100,7 +109,12 @@ public class TableView {
 		this(newColumnList, tableName, debugLog);
 		db = newDb;
 		if (!setTable()){
-			createTable();
+			try {
+				createTable();
+			} catch (SqlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			checkColumns();
 		}
@@ -129,7 +143,7 @@ public class TableView {
 		return ((db!=null)&&(db.isOpen()));
 	}
 	
-	public boolean createTable(){
+	public boolean createTable() throws SqlException{
 		if ((name!=null)&&
 			(name.length()>1)&&
 			(columnList.size()>0)){
@@ -148,6 +162,7 @@ public class TableView {
 					return true;
 				} catch (SqlJetException e) {
 					log.printStackTrace(e.getStackTrace());
+					throw new SqlException(SqlException.CREATE_TABLE_FAILED);
 				}
 			}
 			setTable();
@@ -178,6 +193,12 @@ public class TableView {
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
 			}
+		return false;
+	}
+	
+	public boolean update(){
+		
+		
 		return false;
 	}
 	
