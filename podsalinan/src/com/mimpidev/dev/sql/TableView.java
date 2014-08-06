@@ -290,8 +290,6 @@ public class TableView {
 	 * @throws SqlException
 	 */
 	public ISqlJetCursor selectAll() throws SqlException{
-		ISqlJetTable table = null;
-		
 		if (isDbOpen()){
 			try {
 				db.beginTransaction(SqlJetTransactionMode.READ_ONLY);
