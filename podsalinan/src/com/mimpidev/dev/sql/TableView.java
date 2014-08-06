@@ -73,15 +73,7 @@ public class TableView {
 	public TableView(File databaseFile, String tableName, Log debugLog){
 		this (new HashMap<Integer,SqlDefinition>(), tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
-		if (!setTable()){
-			try {
-				createTable();
-			} catch (SqlException e) {
-				e.getErrorCode();
-			}
-		} else {
-			checkColumns();
-		}
+		initializeTable();
 	}
 	
 	private TableView(HashMap<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
@@ -93,30 +85,27 @@ public class TableView {
 	public TableView(File databaseFile, HashMap<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
-		if (!setTable()){
-			try {
-				createTable();
-			} catch (SqlException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			checkColumns();
-		}
+		initializeTable();
 	}
 	
 	public TableView(SqlJetDb newDb, HashMap<Integer, SqlDefinition> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = newDb;
-		if (!setTable()){
-			try {
+		initializeTable();
+	}
+
+    /**
+     * 
+     */
+	public void initializeTable(){
+		try {
+			if (!setTable()){
 				createTable();
-			} catch (SqlException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} else {
+				checkColumns();
 			}
-		} else {
-			checkColumns();
+		} catch (SqlException e) {
+			e.getErrorCode();
 		}
 	}
 	
@@ -127,11 +116,10 @@ public class TableView {
 	public int checkColumns(){
 		int result=0;
 		for (int cc=0; cc<columnList.size(); cc++){
-			int newResult = addNewColumn(columnList.get(cc).name,columnList.get(cc).type);
-			if (result!=ERROR){
-				result=newResult;
-			}
-	        if (newResult==ERROR){
+			int newResult;
+			try {
+				newResult = addNewColumn(columnList.get(cc).name,columnList.get(cc).type);
+			} catch (SqlException e) {
 	        	log.println("[Table:"+name+"] Error Adding Column:"+columnList.get(cc).name);
 	        }
 		}
@@ -139,10 +127,19 @@ public class TableView {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isDbOpen(){
 		return ((db!=null)&&(db.isOpen()));
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws SqlException
+	 */
 	public boolean createTable() throws SqlException{
 		if ((name!=null)&&
 			(name.length()>1)&&
@@ -170,12 +167,19 @@ public class TableView {
 		return false;
 	}
 	
-	public boolean insert(Map<String,BaseColumn> data){
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 * @throws SqlException
+	 */
+	public boolean insert(Map<String,BaseColumn> data) throws SqlException{
 		Map<String, Object> values = new HashMap<String,Object>();
 		try {
 			db.beginTransaction(SqlJetTransactionMode.WRITE);
 		} catch (SqlJetException e) {
 			log.printStackTrace(e.getStackTrace());
+			throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
 		}
 		if (table==null){
 			setTable();
@@ -192,17 +196,30 @@ public class TableView {
 				return true;
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.FAILED_INSERT_RECORD);
 			}
 		return false;
 	}
 	
-	public boolean update(){
+	/**
+	 * 
+	 * @return
+	 * @throws SqlException
+	 */
+	public boolean update() throws SqlException{
 		
 		
 		return false;
 	}
 	
-	public int addNewColumn(String columnName, String columnType){
+	/**
+	 * 
+	 * @param columnName
+	 * @param columnType
+	 * @return
+	 * @throws SqlException
+	 */
+	public int addNewColumn(String columnName, String columnType) throws SqlException{
 		boolean columnFound=false;
 		List<ISqlJetColumnDef> columns = null;
 
@@ -211,12 +228,14 @@ public class TableView {
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
 			}
 			
 			try {
 				columns = db.getSchema().getTable(name).getColumns();
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_READING_TABLE_SCHEMA);
 			}
 			if (columns!=null){
 				for (ISqlJetColumnDef column : columns){
@@ -234,13 +253,19 @@ public class TableView {
 					return NEW_COLUMNS_ADDED;
 				} catch (SqlJetException e) {
 					log.printStackTrace(e.getStackTrace());
+					throw new SqlException(SqlException.FAILED_ADDING_NEW_COLUMN);
 				}
 			}
 		}
 		return NOTHING_CHANGED;
 	}
 
-	public ISqlJetCursor selectAll(){
+	/**
+	 * 
+	 * @return
+	 * @throws SqlException
+	 */
+	public ISqlJetCursor selectAll() throws SqlException{
 		ISqlJetTable table = null;
 		
 		if (isDbOpen()){
@@ -250,11 +275,16 @@ public class TableView {
 				return currentLine;
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.FAILED_READING_RECORDS);
 			}
 		}
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getTableName (){
 		return name;
 	}
@@ -269,12 +299,12 @@ public class TableView {
 	/**
 	 * @param table the table to set
 	 */
-	private boolean setTable() {
+	private boolean setTable()  throws SqlException{
 		try {
 			table = db.getTable(name);
 		} catch (SqlJetException e) {
 			log.printStackTrace(e.getStackTrace());
-			return false;
+			throw new SqlException(SqlException.FAILED_SET_TABLE);
 		}
 		return true;
 	}
