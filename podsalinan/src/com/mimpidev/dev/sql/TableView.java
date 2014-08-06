@@ -201,15 +201,39 @@ public class TableView {
 		return false;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 * @throws SqlException
-	 */
-	public boolean update() throws SqlException{
-		
+    /**
+     * 
+     * @param data
+     * @param condition
+     * @return
+     * @throws SqlException
+     */
+	public boolean update(Map<String, BaseColumn> data, Map<String, BaseColumn> condition) throws SqlException{
+		Map<String, Object> values = new HashMap<String, Object>();
+		try {
+			db.beginTransaction(SqlJetTransactionMode.WRITE);
+		} catch (SqlJetException e) {
+			log.printStackTrace(e.getStackTrace());
+			throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
+		}
+		if (table==null){
+			setTable();
+		}
+		/* Search through table for condition (column, value)
+		 * When found, update the values with the values stored in data
+		 */
 		
 		return false;
+	}
+	
+	/**
+	 * 
+	 * @param condition
+	 * @return
+	 */
+	public boolean delete(Map<String, BaseColumn> condition){
+		
+		return true;
 	}
 	
 	/**
