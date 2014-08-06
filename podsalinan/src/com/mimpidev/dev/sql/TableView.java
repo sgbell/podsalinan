@@ -116,12 +116,15 @@ public class TableView {
 	public int checkColumns(){
 		int result=0;
 		for (int cc=0; cc<columnList.size(); cc++){
-			int newResult;
+			int newResult=0;
 			try {
 				newResult = addNewColumn(columnList.get(cc).name,columnList.get(cc).type);
 			} catch (SqlException e) {
 	        	log.println("[Table:"+name+"] Error Adding Column:"+columnList.get(cc).name);
+	        	newResult = -1;
 	        }
+			if (result>=0)
+				result=newResult;
 		}
 		
 		return result;
