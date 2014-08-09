@@ -176,7 +176,7 @@ public class TableView {
 	 * @return
 	 * @throws SqlException
 	 */
-	public boolean insert(Map<String,BaseColumn> data) throws SqlException{
+	public boolean insert(Map<String,Object> data) throws SqlException{
 		Map<String, Object> values = new HashMap<String,Object>();
 		try {
 			db.beginTransaction(SqlJetTransactionMode.WRITE);
@@ -211,7 +211,7 @@ public class TableView {
      * @return
      * @throws SqlException
      */
-	public boolean update(Map<String, BaseColumn> data, Map<String, BaseColumn> condition) throws SqlException{
+	public boolean update(Map<String, Object> data, Map<String, Object> condition) throws SqlException{
 		Map<String, Object> values = new HashMap<String, Object>();
 		try {
 			db.beginTransaction(SqlJetTransactionMode.WRITE);
@@ -234,7 +234,7 @@ public class TableView {
 	 * @param condition
 	 * @return
 	 */
-	public boolean delete(Map<String, BaseColumn> condition){
+	public boolean delete(Map<String, Object> condition){
 		
 		return true;
 	}
