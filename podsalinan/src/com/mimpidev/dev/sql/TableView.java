@@ -187,15 +187,17 @@ public class TableView {
 		if (table==null){
 			setTable();
 		}
+		// The following loop checks the data passed in, and copies into the values Map, only columns
+		// that exist in this table.
 		for (int cc=0; cc<columnList.size(); cc++){
 			if (data.containsKey(columnList.get(cc))){
-				values.put(columnList.get(cc).name, data.get(columnList.get(cc)));
+				values.put(columnList.get(cc).name, data.get(columnList.get(cc).name));
 			}
 		}
 		if (values.size()>0)
 			try {
 				table.insertByFieldNames(values);
-				db.close();
+				db.commit();
 				return true;
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
@@ -225,8 +227,20 @@ public class TableView {
 		/* Search through table for condition (column, value)
 		 * When found, update the values with the values stored in data
 		 */
+		// The following loop checks the data passed in, and copies into the values Map, only columns
+		// that exist in this table.
+		for (int cc=0; cc<columnList.size(); cc++){
+			if (data.containsKey(columnList.get(cc))){
+				values.put(columnList.get(cc).name, data.get(columnList.get(cc).name));
+			}
+		}
+		if (values.size()>0){
+			ISqlJetCursor updateCursor = table.lookup((String)condition.keySet().toArray()[0], condition.get((String)condition.keySet().toArray()[0]));
+			updateCursor.updateByFieldNames(values);
+			db.commit();
+		}
 		
-		return false;
+		return true;
 	}
 	
 	/**
