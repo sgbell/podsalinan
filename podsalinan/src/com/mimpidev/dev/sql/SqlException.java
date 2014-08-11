@@ -20,6 +20,8 @@ public class SqlException extends Exception {
 	public static final long FAILED_READING_RECORDS = 5;
 	public static final long FAILED_SET_TABLE = 6;
 	public static final long FAILED_INSERT_RECORD = 7;
+	public static final long ERROR_UPDATING_RECORD = 8;
+	public static final long ERROR_DELETING_RECORD = 9;
 	/**
 	 * 
 	 */

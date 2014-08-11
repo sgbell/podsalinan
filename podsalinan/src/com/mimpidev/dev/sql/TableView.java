@@ -34,7 +34,6 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
-import com.mimpidev.dev.sql.data.definition.BaseColumn;
 import com.mimpidev.dev.sql.data.definition.SqlDefinition;
 
 /**
@@ -171,22 +170,12 @@ public class TableView {
 	}
 	
 	/**
-	 * 
+	 * This function is used to output a Map object of only the columns found in the currently loaded table 
 	 * @param data
 	 * @return
-	 * @throws SqlException
 	 */
-	public boolean insert(Map<String,Object> data) throws SqlException{
+	public Map<String, Object> confirmColumns(Map<String, Object> data) {
 		Map<String, Object> values = new HashMap<String,Object>();
-		try {
-			db.beginTransaction(SqlJetTransactionMode.WRITE);
-		} catch (SqlJetException e) {
-			log.printStackTrace(e.getStackTrace());
-			throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
-		}
-		if (table==null){
-			setTable();
-		}
 		// The following loop checks the data passed in, and copies into the values Map, only columns
 		// that exist in this table.
 		for (int cc=0; cc<columnList.size(); cc++){
@@ -194,8 +183,28 @@ public class TableView {
 				values.put(columnList.get(cc).name, data.get(columnList.get(cc).name));
 			}
 		}
+		
+		return values;
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 * @throws SqlException
+	 */
+	public boolean insert(Map<String,Object> data) throws SqlException{
+		Map<String, Object> values = confirmColumns(data);
+		// always call setTable
+		setTable();
 		if (values.size()>0)
 			try {
+				db.beginTransaction(SqlJetTransactionMode.WRITE);
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
+			}
+			try{
 				table.insertByFieldNames(values);
 				db.commit();
 				return true;
@@ -203,7 +212,6 @@ public class TableView {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_INSERT_RECORD);
 			}
-		return false;
 	}
 	
     /**
@@ -214,33 +222,31 @@ public class TableView {
      * @throws SqlException
      */
 	public boolean update(Map<String, Object> data, Map<String, Object> condition) throws SqlException{
-		Map<String, Object> values = new HashMap<String, Object>();
-		try {
-			db.beginTransaction(SqlJetTransactionMode.WRITE);
-		} catch (SqlJetException e) {
-			log.printStackTrace(e.getStackTrace());
-			throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
-		}
-		if (table==null){
-			setTable();
-		}
+		Map<String, Object> values = confirmColumns(data);
+		setTable();
 		/* Search through table for condition (column, value)
 		 * When found, update the values with the values stored in data
 		 */
-		// The following loop checks the data passed in, and copies into the values Map, only columns
-		// that exist in this table.
-		for (int cc=0; cc<columnList.size(); cc++){
-			if (data.containsKey(columnList.get(cc))){
-				values.put(columnList.get(cc).name, data.get(columnList.get(cc).name));
+		if (values.size()>0){
+			try {
+				db.beginTransaction(SqlJetTransactionMode.WRITE);
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
+			}
+			try{
+				ISqlJetCursor updateCursor = table.lookup((String)condition.keySet().toArray()[0], condition.get((String)condition.keySet().toArray()[0]));
+				updateCursor.updateByFieldNames(values);
+				updateCursor.close();
+				db.commit();
+				return true;
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_UPDATING_RECORD);
 			}
 		}
-		if (values.size()>0){
-			ISqlJetCursor updateCursor = table.lookup((String)condition.keySet().toArray()[0], condition.get((String)condition.keySet().toArray()[0]));
-			updateCursor.updateByFieldNames(values);
-			db.commit();
-		}
 		
-		return true;
+		return false;
 	}
 	
 	/**
@@ -248,11 +254,29 @@ public class TableView {
 	 * @param condition
 	 * @return
 	 */
-	public boolean delete(Map<String, Object> condition){
-		
-		return true;
+	public boolean delete(Map<String, Object> condition) throws SqlException{
+		Map<String, Object> values = confirmColumns(condition);
+		setTable();
+		if (values.size()>0){
+			try {
+				db.beginTransaction(SqlJetTransactionMode.WRITE);
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
+			}
+			try {
+				ISqlJetCursor deleteCursor = table.lookup((String)condition.keySet().toArray()[0], condition.get((String)condition.keySet().toArray()[0]));
+				deleteCursor.delete();
+				deleteCursor.close();
+				db.commit();
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_DELETING_RECORD);
+			}
+		}
+		return false;
 	}
-	
+
 	/**
 	 * 
 	 * @param columnName
@@ -320,6 +344,21 @@ public class TableView {
 		return null;
 	}
 	
+	public ISqlJetCursor selectByField(Map<String, Object> conditions) throws SqlException{
+		Map<String, Object> values = confirmColumns(conditions);
+		if ((isDbOpen())&&(values.size()>0)){
+			try {
+				db.beginTransaction(SqlJetTransactionMode.READ_ONLY);
+			} catch (SqlJetException e){
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
+			}
+			ISqlJetCursor currentLine = table.scope(arg0, arg1);
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * 
 	 * @return
@@ -339,11 +378,13 @@ public class TableView {
 	 * @param table the table to set
 	 */
 	private boolean setTable()  throws SqlException{
-		try {
-			table = db.getTable(name);
-		} catch (SqlJetException e) {
-			log.printStackTrace(e.getStackTrace());
-			throw new SqlException(SqlException.FAILED_SET_TABLE);
+		if (table==null){
+			try {
+				table = db.getTable(name);
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.FAILED_SET_TABLE);
+			}
 		}
 		return true;
 	}
