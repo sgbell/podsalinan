@@ -197,7 +197,7 @@ public class TableView {
 		Map<String, Object> values = confirmColumns(data);
 		// always call setTable
 		setTable();
-		if (values.size()>0)
+		if ((isDbOpen())&&(values.size()>0))
 			try {
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
 			} catch (SqlJetException e) {
@@ -227,7 +227,7 @@ public class TableView {
 		/* Search through table for condition (column, value)
 		 * When found, update the values with the values stored in data
 		 */
-		if (values.size()>0){
+		if ((isDbOpen())&&(values.size()>0)){
 			try {
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
 			} catch (SqlJetException e) {
@@ -257,7 +257,7 @@ public class TableView {
 	public boolean delete(Map<String, Object> condition) throws SqlException{
 		Map<String, Object> values = confirmColumns(condition);
 		setTable();
-		if (values.size()>0){
+		if ((isDbOpen())&&(values.size()>0)){
 			try {
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
 			} catch (SqlJetException e) {
@@ -353,7 +353,13 @@ public class TableView {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
 			}
-			ISqlJetCursor currentLine = table.scope(arg0, arg1);
+			try {
+				ISqlJetCursor currentLine = table.scope((String) values.keySet().toArray()[0],new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
+				return currentLine;
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.FAILED_READING_RECORDS);
+			}
 		}
 		
 		return null;
@@ -377,7 +383,7 @@ public class TableView {
 	/**
 	 * @param table the table to set
 	 */
-	private boolean setTable()  throws SqlException{
+	private boolean setTable() throws SqlException{
 		if (table==null){
 			try {
 				table = db.getTable(name);
