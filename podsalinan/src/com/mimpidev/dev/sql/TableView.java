@@ -166,7 +166,7 @@ public class TableView {
 			}
 			setTable();
 		}
-		return false;
+		throw new SqlException(SqlException.ERROR_DB_FAILURE);
 	}
 	
 	/**
@@ -197,7 +197,7 @@ public class TableView {
 		Map<String, Object> values = confirmColumns(data);
 		// always call setTable
 		setTable();
-		if ((isDbOpen())&&(values.size()>0))
+		if ((isDbOpen())&&(values.size()>0)){
 			try {
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
 			} catch (SqlJetException e) {
@@ -212,6 +212,12 @@ public class TableView {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_INSERT_RECORD);
 			}
+		} else if (!isDbOpen()){
+			throw new SqlException(SqlException.ERROR_DB_FAILURE);
+		} else if (values.size()==0) {
+			throw new SqlException(SqlException.ERROR_INVALID_TABLE);
+		}
+		return false;	
 	}
 	
     /**
@@ -244,6 +250,10 @@ public class TableView {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_UPDATING_RECORD);
 			}
+		} else if (!isDbOpen()){
+			throw new SqlException(SqlException.ERROR_DB_FAILURE);
+		} else if (values.size()==0) {
+			throw new SqlException(SqlException.ERROR_INVALID_TABLE);
 		}
 		
 		return false;
@@ -273,6 +283,10 @@ public class TableView {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_DELETING_RECORD);
 			}
+		} else if (!isDbOpen()){
+			throw new SqlException(SqlException.ERROR_DB_FAILURE);
+		} else if (values.size()==0) {
+			throw new SqlException(SqlException.ERROR_INVALID_TABLE);
 		}
 		return false;
 	}
@@ -321,6 +335,8 @@ public class TableView {
 					throw new SqlException(SqlException.FAILED_ADDING_NEW_COLUMN);
 				}
 			}
+		} else if (!isDbOpen()){
+			throw new SqlException(SqlException.ERROR_DB_FAILURE);
 		}
 		return NOTHING_CHANGED;
 	}
@@ -341,7 +357,7 @@ public class TableView {
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
 			}
 		}
-		return null;
+		throw new SqlException(SqlException.ERROR_DB_FAILURE);
 	}
 	
 	public ISqlJetCursor selectByField(Map<String, Object> conditions) throws SqlException{
@@ -360,6 +376,10 @@ public class TableView {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
 			}
+		} else if (!isDbOpen()){
+			throw new SqlException(SqlException.ERROR_DB_FAILURE);
+		} else if (values.size()==0) {
+			throw new SqlException(SqlException.ERROR_INVALID_TABLE);
 		}
 		
 		return null;
