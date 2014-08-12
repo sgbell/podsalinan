@@ -337,6 +337,7 @@ public class DataStorage {
 		for (URLDownload download : downloads.getDownloads()){
 			//System.out.println("download: "+download.getURL());
 			try {
+				
 				int sqlType=0;
 				if (!download.isAdded()){
 					//System.out.println("Adding Download");
