@@ -3,23 +3,17 @@
  */
 package com.mimpidev.podsalinan.db.tables;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.mimpidev.dev.sql.data.definition.SqlDefinition;
 
 /**
  * @author sbell
  *
  */
-public class Downloads {
+public class Downloads extends TableDefinition {
 
-	private final String tableName = "downloads";
-	private final Map<Integer, SqlDefinition> columnList = new HashMap<Integer, SqlDefinition>();
-
-	
 	
 	public Downloads(){
+		tableName = "downloads";
 		columnList.put(0, new SqlDefinition("id","INTEGER PRIMARY KEY AUTOINCREMENT"));
 		columnList.put(1, new SqlDefinition("url","TEXT"));
 		columnList.put(2,new SqlDefinition("size","TEXT"));

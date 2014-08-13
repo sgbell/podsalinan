@@ -75,19 +75,19 @@ public class TableView {
 		initializeTable();
 	}
 	
-	private TableView(HashMap<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
+	private TableView(Map<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
 		columnList = newColumnList;
 		log = debugLog;
 		name=tableName;
 	}
 	
-	public TableView(File databaseFile, HashMap<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
+	public TableView(File databaseFile, Map<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
 		initializeTable();
 	}
 	
-	public TableView(SqlJetDb newDb, HashMap<Integer, SqlDefinition> newColumnList, String tableName, Log debugLog){
+	public TableView(SqlJetDb newDb, Map<Integer, SqlDefinition> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = newDb;
 		initializeTable();

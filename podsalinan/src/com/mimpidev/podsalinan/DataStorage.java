@@ -31,6 +31,9 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.dev.sql.SqlException;
+import com.mimpidev.dev.sql.TableView;
+import com.mimpidev.podsalinan.db.tables.Downloads;
 
 /**
  * @author bugman
@@ -112,6 +115,8 @@ public class DataStorage {
 								 			  "DELETE from sqlite_sequence " +
 								 			  "WHERE name='settings';";
 	
+	private Downloads downloadTable;
+	
 	/**
 	 *  Used to Define the current File system slash.
 	 */
@@ -121,6 +126,9 @@ public class DataStorage {
 		podcasts = new Vector<Podcast>();
 		urlDownloads = new URLDownloadList(podcasts);
 		settings = new ProgSettings();
+		
+		// Database Connection Initialization
+		downloadTable = new Downloads();
 		
 		checkSettingsDirectory();
 	}
@@ -192,6 +200,19 @@ public class DataStorage {
 			addColumnToTable(podsalinanDB,"podcasts","auto_queue","INTEGER");
 			
 			try {
+				TableView downloadsView = new TableView(podsalinanDB,downloadTable.getColumnList(),downloadTable.getName(),debugOutput);
+				try {
+					ISqlJetCursor downloadsList = downloadsView.selectAll();
+					if (!downloadsList.eof()){
+						do {
+							
+						} while (downloadsList.next());
+					}
+				} catch (SqlException e) {
+					// What do you do with a drunken sailor?
+				}
+				
+				
 				table = podsalinanDB.getTable("downloads");
 				podsalinanDB.beginTransaction(SqlJetTransactionMode.READ_ONLY);
 				if (table!=null){
