@@ -33,7 +33,6 @@ import org.tmatesoft.sqljet.core.table.SqlJetDb;
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
-import com.mimpidev.podsalinan.db.tables.Downloads;
 
 /**
  * @author bugman
@@ -45,9 +44,9 @@ public class DataStorage {
      */
 	private URLDownloadList urlDownloads;
 	/**
-	 * podcasts is the storage area for all of the podcasts
+	 * PodcastList is the storage area for all of the podcasts
 	 */
-	private Vector<Podcast> podcasts;
+	private PodcastList podcasts;
 	/**
 	 * settings is where the program settings are listed
 	 */
@@ -57,65 +56,11 @@ public class DataStorage {
 	private Log debugOutput=null;
 
 	/**
-	 *  SQL Statement for creating podcasts table in main database file.
-	 */
-	private final String CREATE_PODCAST = "CREATE TABLE IF NOT EXISTS podcasts (" +
-										  "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-										  "name TEXT, " +
-										  "localFile TEXT, " +
-										  "url TEXT, " +
-										  "directory TEXT, " +
-										  "auto_queue INTEGER);";
-
-	/**
-	 *  SQL Statement for creating settings table in main database file.
-	 */
-	private final String CREATE_SETTINGS = "CREATE TABLE IF NOT EXISTS settings (" +
-										   "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-										   "name TEXT, " +
-										   "value TEXT);";
-	/**
-	 *  SQL Statement for creating shows table in podcast database file.
-	 */
-	private final String CREATE_SHOWS = "CREATE TABLE IF NOT EXISTS shows(" +
-								 	    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-								 	    "published TEXT," +
-								 	    "title TEXT," +
-								 	    "url TEXT," +
-								 	    "size INTEGER," +
-								 	    "description TEXT," +
-								 	    "status INTEGER);";
-	/**
-	 *  SQL Statement for creating downloads table in main database file.
-	 */
-	private final String CREATE_DOWNLOADS = "CREATE TABLE IF NOT EXISTS downloads(" +
-				  							"id INTEGER PRIMARY KEY AUTOINCREMENT," +
-				  							"url TEXT," +
-				  							"size TEXT," +
-				  							"destination TEXT," +
-				  							"priority INTGEGER," +
-				  							"podcastSource TEXT," +
-				  							"status INTEGER);";
-	/**
-	 *  SQL Statement for listing podcasts table in main database file.
-	 */
-	private final String SELECT_ALL_PODCASTS = "SELECT * from podcasts;";
-	/**
-	 *  SQL Statement for listing settings table in main database file.
-	 */
-	private final String SELECT_ALL_SETTINGS = "SELECT * from settings;";
-	/**
-	 *  SQL Statement for listing download table in main database file.
-	 */
-	private final String SELECT_ALL_DOWNLOADS = "SELECT * from downloads;";
-	/**
 	 *  SQL Statement for deleting all settings from main database file.
 	 */
 	private final String CLEAR_ALL_SETTINGS = "DELETE from settings;" +
 								 			  "DELETE from sqlite_sequence " +
 								 			  "WHERE name='settings';";
-	
-	private Downloads downloadTable;
 	
 	/**
 	 *  Used to Define the current File system slash.
@@ -123,12 +68,9 @@ public class DataStorage {
 	private String fileSystemSlash;
 	
 	public DataStorage(){
-		podcasts = new Vector<Podcast>();
+		podcasts = new PodcastList();
 		urlDownloads = new URLDownloadList(podcasts);
 		settings = new ProgSettings();
-		
-		// Database Connection Initialization
-		downloadTable = new Downloads();
 		
 		checkSettingsDirectory();
 	}

@@ -1,12 +1,10 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan.db.tables;
+package com.mimpidev.dev.sql.data.definition;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import com.mimpidev.dev.sql.data.definition.SqlDefinition;
 
 /**
  * @author sbell
@@ -27,5 +25,11 @@ public abstract class TableDefinition {
 	
 	public String getName(){
 		return tableName;
+	}
+	
+	public void createColumnList(String[] columnNames, String[] columnTypes){
+		for (int count=0; count<columnNames.length; count++){
+			columnList.put(count, new SqlDefinition(columnNames[count],columnTypes[count]));
+		}
 	}
 }

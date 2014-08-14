@@ -23,11 +23,13 @@ package com.mimpidev.podsalinan;
 
 import java.util.Vector;
 
+import com.mimpidev.dev.sql.data.definition.TableDefinition;
+
 /**
  * @author bugman
  *
  */
-public class ProgSettings {
+public class ProgSettings extends TableDefinition{
 
 	private Vector<Setting> settings;
 	private boolean finished;
@@ -36,6 +38,12 @@ public class ProgSettings {
 	public ProgSettings (){
 		settings = new Vector<Setting>();
 		finished=false;
+		tableName = "settings";
+		
+		String[] columnNames = {"id","name","value"};
+		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT",
+				                "TEXT","TEXT"};
+		createColumnList (columnNames, columnTypes);
 	}
 	/**
 	 * Loop through the array of settings and return the value for the requested setting

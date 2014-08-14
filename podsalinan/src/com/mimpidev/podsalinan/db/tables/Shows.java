@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.db.tables;
 
 import com.mimpidev.dev.sql.data.definition.SqlDefinition;
+import com.mimpidev.dev.sql.data.definition.TableDefinition;
 
 /**
  * @author sbell

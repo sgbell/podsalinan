@@ -24,7 +24,6 @@ package com.mimpidev.podsalinan;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -32,7 +31,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -61,6 +59,12 @@ public class Podcast extends DownloadDetails{
 		super(null);
 		url = newURL;
 		df = new SimpleDateFormat(Episode.getDateFormat());
+		tableName = "shows";
+		
+		String[] columnNames = {"id","published","title","url","size","directory","status"};
+		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT"
+				               ,"TEXT","TEXT","TEXT","INTEGER","TEXT","INTEGER"};
+		createColumnList(columnNames,columnTypes);
 	}
 	
 	/** Used to create a Podcast from the information in the systems database. 

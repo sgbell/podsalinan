@@ -29,6 +29,8 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Vector;
 
+import com.mimpidev.dev.sql.data.definition.SqlDefinition;
+
 /**
  * @author bugman
  *
@@ -41,6 +43,12 @@ public class URLDownloadList extends DownloadDetails {
 	public URLDownloadList(){
 		super("Downloads");
 		downloads = new Vector<URLDownload>();
+		tableName = "downloads";
+		
+		String[] columnNames = {"id","url","size","destination","priority","podcastSource","status"};
+		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT",
+				                "TEXT","TEXT","TEXT","INTEGER","TEXT","INTEGER"};
+		createColumnList(columnNames,columnTypes);
 	}
 	
 	public URLDownloadList(Vector<Podcast> podcastList){
@@ -48,6 +56,11 @@ public class URLDownloadList extends DownloadDetails {
 		podcasts = podcastList;
 	}
 	
+	public URLDownloadList(PodcastList podcastList) {
+		this();
+		podcasts = podcastList;
+	}
+
 	public Vector<URLDownload> getDownloads(){
 		return downloads;
 	}

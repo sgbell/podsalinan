@@ -22,16 +22,24 @@
 
 package com.mimpidev.podsalinan;
 
+import com.mimpidev.dev.sql.data.definition.SqlDefinition;
+import com.mimpidev.dev.sql.data.definition.TableDefinition;
+
 
 /**
  * 
  * @author bugman
  *
  */
-public class DownloadDetails {
+public class DownloadDetails extends TableDefinition{
 
-	private String name,	   // Podcast name, or just URL for url list
-				   datafile;   // Path to the datafile.
+	/** Podcast name, or just URL for url list
+	 */
+	private String name;
+	/** Path to the datafile
+	 */
+	private String datafile;
+	
 	
 	public DownloadDetails(String name){
 		this.name = name;
