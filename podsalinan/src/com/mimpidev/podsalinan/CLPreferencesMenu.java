@@ -4,6 +4,8 @@
 package com.mimpidev.podsalinan;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.Map;
 
 import com.mimpidev.podsalinan.data.ProgSettings;
 
@@ -73,8 +75,7 @@ public class CLPreferencesMenu extends CLMenu{
 		System.out.println ("4. Every 6 Hours");
 		System.out.println ("5. Every 12 Hours");
 		System.out.println ("6. Daily");
-		Setting podcastRateSetting = settings.findSetting("updateInterval"); 
-        if (podcastRateSetting==null)
+		if (!settings.isValidSetting("updateInterval"))
         	settings.addSetting("updateInterval", "1440");
         
         System.out.print ("Choice ["+printUserFriendlyUpdateRate()+"]: ");
@@ -113,7 +114,7 @@ public class CLPreferencesMenu extends CLMenu{
 						break;
 				}
 				settings.updateSetting("updateInterval",updateValue);
-				System.out.println("Update Interval now set to:"+settings.findSetting("updateInterval").value);
+				System.out.println("Update Interval now set to:"+settings.findSetting("updateInterval"));
 				// Wake up the main thread in Podsalinan to update the wait value
 				
 				synchronized (settings.getWaitObject()){
@@ -126,7 +127,7 @@ public class CLPreferencesMenu extends CLMenu{
 	private void changeDefaultDirectory() {
 		File newPath;
 		System.out.println ();
-		System.out.print ("Enter Default Directory["+settings.findSetting("defaultDirectory").value+"]: ");
+		System.out.print ("Enter Default Directory["+settings.findSetting("defaultDirectory")+"]: ");
 		/* Take user input.
 		 * Create File object to test if directory exists.
 		 * If directory exists set defaultDirectory to file Input
@@ -141,12 +142,12 @@ public class CLPreferencesMenu extends CLMenu{
 				System.out.println ("Error: User Input invalid");
 			}
 		}
-		System.out.println("Default Directory: "+settings.findSetting("defaultDirectory").value);
+		System.out.println("Default Directory: "+settings.findSetting("defaultDirectory"));
 	}
 
 	private void changeNumDownloaders() {
 		System.out.println ();
-		System.out.print ("Enter Number of Simultaneous Downloads["+settings.findSetting("maxDownloaders").value+"]: ");
+		System.out.print ("Enter Number of Simultaneous Downloads["+settings.findSetting("maxDownloaders")+"]: ");
 		/* Take user input.
 		 * Make sure it is between 1 and 30
 		 * If not, get the user to enter it again.
@@ -154,16 +155,15 @@ public class CLPreferencesMenu extends CLMenu{
 		String numDownloaders = input.getValidNumber(1,30);
 		if (numDownloaders!=null)
 			settings.updateSetting("maxDownloaders",numDownloaders);
-		System.out.println("Simultaneous Downloads: "+settings.findSetting("maxDownloaders").value);
+		System.out.println("Simultaneous Downloads: "+settings.findSetting("maxDownloaders"));
 	}
 	
 	private void changeAutoQueueNewEpisodes() {
 		System.out.println ();
-		Setting autoQueueSetting = settings.findSetting("autoQueue");
-		if (autoQueueSetting==null)
+		if (!settings.isValidSetting("autoQueue"))
 			settings.addSetting("autoQueue", "false");
 		System.out.print ("Do you want new episodes Automatically Queued to Download? (Y/N) ["+
-				          settings.findSetting("autoQueue").value+"]: ");
+				          settings.findSetting("autoQueue")+"]: ");
 		String autoDownloadResponse = input.getStringInput();
 		if (autoDownloadResponse.length()==1){
 			switch (autoDownloadResponse.charAt(0)){
@@ -188,7 +188,7 @@ public class CLPreferencesMenu extends CLMenu{
 			else if (autoDownloadResponse.equalsIgnoreCase("no"))
 				System.err.println ("Error: User entered Value is invalid. No change made");
 		}
-		System.out.println("Auto Queue Downloads: "+settings.findSetting("autoQueue").value);
+		System.out.println("Auto Queue Downloads: "+settings.findSetting("autoQueue"));
 
 	}
 
@@ -198,7 +198,7 @@ public class CLPreferencesMenu extends CLMenu{
 		System.out.println("The value you set here is the total limit, which is shared evenly across downloaders");
 		if (settings.findSetting("downloadLimit")==null)
 			settings.addSetting("downloadLimit", "0");
-		System.out.print ("Please enter the Download Speed Limit["+settings.findSetting("downloadLimit").value+"]:");
+		System.out.print ("Please enter the Download Speed Limit["+settings.findSetting("downloadLimit")+"]:");
 		String userInput = input.getStringInput();
 		int speed=-1;
 		if (userInput.length()>0){
@@ -225,7 +225,7 @@ public class CLPreferencesMenu extends CLMenu{
 				settings.updateSetting("downloadLimit",Integer.toString(speed));
 			}
 		}
-		System.out.println("Max Download Speed: "+settings.findSetting("downloadLimit").value);
+		System.out.println("Max Download Speed: "+settings.findSetting("downloadLimit"));
 	}
 
 	public void process(String userInput){
@@ -260,14 +260,15 @@ public class CLPreferencesMenu extends CLMenu{
 	}
 	
 	public boolean printList(){
-		for (Setting setting : settings.getArray()){
-			
-			if (setting.name.equalsIgnoreCase("updateInterval")){
-				System.out.println(setting.name+" = "+printUserFriendlyUpdateRate());
-			} else if (setting.name.equalsIgnoreCase("downloadLimit")){
-				System.out.println(setting.name+" = "+setting.value+"Kbps");
+		Iterator it = settings.getMap().entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry setting = (Map.Entry)it.next();
+			if (((String)setting.getKey()).equalsIgnoreCase("updateInterval")){
+				System.out.println(((String)setting.getKey())+" = "+printUserFriendlyUpdateRate());
+			} else if (((String)setting.getKey()).equalsIgnoreCase("downloadLimit")){
+				System.out.println(((String)setting.getKey())+" = "+((String)setting.getValue())+"Kbps");
 			} else
-				System.out.println(setting.name+" = "+setting.value);
+				System.out.println(((String)setting.getKey())+" = "+((String)setting.getValue()));
 		}
 		
 		return true;
