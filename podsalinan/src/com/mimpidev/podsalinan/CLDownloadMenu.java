@@ -3,6 +3,10 @@
  */
 package com.mimpidev.podsalinan;
 
+import com.mimpidev.podsalinan.data.ProgSettings;
+import com.mimpidev.podsalinan.data.URLDownload;
+import com.mimpidev.podsalinan.data.URLDownloadList;
+
 /**
  * @author bugman
  *

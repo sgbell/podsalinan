@@ -34,6 +34,11 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.mimpidev.podsalinan.data.Details;
+import com.mimpidev.podsalinan.data.Episode;
+import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.Setting;
+
 public class Podsalinan {
 	//private CommandPass commands;
 	private DownloadQueue downloaderList;

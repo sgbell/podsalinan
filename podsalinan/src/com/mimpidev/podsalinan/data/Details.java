@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.data;
 
 import java.net.MalformedURLException;
 import java.net.URL;

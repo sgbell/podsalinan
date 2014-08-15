@@ -31,6 +31,12 @@ import java.util.Date;
 import java.util.Vector;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.podsalinan.data.Episode;
+import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.ProgSettings;
+import com.mimpidev.podsalinan.data.Setting;
+import com.mimpidev.podsalinan.data.URLDownload;
+import com.mimpidev.podsalinan.data.URLDownloadList;
 
 /**
  * @author bugman

@@ -29,6 +29,9 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.URLDownloadList;
+
 /**
  * @author bugman
  *

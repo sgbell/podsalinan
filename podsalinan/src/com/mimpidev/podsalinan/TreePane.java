@@ -22,11 +22,15 @@
 package com.mimpidev.podsalinan;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+
+import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.URLDownloadList;
 
 /**
  * @author bugman

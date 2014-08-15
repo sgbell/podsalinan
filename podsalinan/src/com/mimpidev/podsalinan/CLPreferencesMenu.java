@@ -5,6 +5,9 @@ package com.mimpidev.podsalinan;
 
 import java.io.File;
 
+import com.mimpidev.podsalinan.data.ProgSettings;
+import com.mimpidev.podsalinan.data.Setting;
+
 
 /**
  * @author bugman

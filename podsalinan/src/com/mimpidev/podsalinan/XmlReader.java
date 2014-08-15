@@ -29,6 +29,8 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import com.mimpidev.podsalinan.data.Episode;
+
 /**
  * @author bugman
  *

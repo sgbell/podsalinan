@@ -5,6 +5,12 @@ package com.mimpidev.podsalinan;
 
 import java.io.File;
 
+import com.mimpidev.podsalinan.data.Details;
+import com.mimpidev.podsalinan.data.Episode;
+import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.ProgSettings;
+import com.mimpidev.podsalinan.data.URLDownloadList;
+
 /**
  * @author sbell
  *

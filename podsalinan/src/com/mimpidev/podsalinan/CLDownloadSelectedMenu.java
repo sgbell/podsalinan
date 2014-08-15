@@ -7,6 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+import com.mimpidev.podsalinan.data.Episode;
+import com.mimpidev.podsalinan.data.ProgSettings;
+import com.mimpidev.podsalinan.data.URLDownload;
+import com.mimpidev.podsalinan.data.URLDownloadList;
+
 /**
  * @author sbell
  *

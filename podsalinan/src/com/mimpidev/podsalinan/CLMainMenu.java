@@ -5,6 +5,10 @@ package com.mimpidev.podsalinan;
 
 import java.util.Vector;
 
+import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.ProgSettings;
+import com.mimpidev.podsalinan.data.URLDownloadList;
+
 /**
  * @author bugman
  *

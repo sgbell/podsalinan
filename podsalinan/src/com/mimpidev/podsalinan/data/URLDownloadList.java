@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.data;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +29,13 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Vector;
 
+import org.tmatesoft.sqljet.core.SqlJetException;
+import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
+import org.tmatesoft.sqljet.core.table.SqlJetDb;
+
+import com.mimpidev.dev.debug.Log;
+import com.mimpidev.dev.sql.SqlException;
+import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.data.definition.SqlDefinition;
 
 /**
@@ -58,7 +65,7 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public URLDownloadList(PodcastList podcastList) {
 		this();
-		podcasts = podcastList;
+		podcasts = podcastList.getList();
 	}
 
 	public Vector<URLDownload> getDownloads(){
@@ -366,4 +373,5 @@ public class URLDownloadList extends DownloadDetails {
 	public Vector<Podcast> getPodcastArray(){
 		return podcasts;
 	}
+
 }

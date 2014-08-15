@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.data;
 
 import java.util.Vector;
 
@@ -27,4 +27,11 @@ public class PodcastList extends TableDefinition {
 		createColumnList(columnNames,columnTypes);
 	}
 
+	public void add(Podcast newPodcast) {
+		podcasts.add(newPodcast);
+	}
+
+	public Vector<Podcast> getList() {
+		return podcasts;
+	}
 }

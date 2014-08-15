@@ -5,6 +5,8 @@ package com.mimpidev.podsalinan;
 
 import java.util.ArrayList;
 
+import com.mimpidev.podsalinan.data.ProgSettings;
+
 /**
  * @author bugman
  *

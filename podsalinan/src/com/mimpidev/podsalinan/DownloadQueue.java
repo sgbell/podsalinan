@@ -23,6 +23,10 @@ package com.mimpidev.podsalinan;
 
 import java.util.Vector;
 
+import com.mimpidev.podsalinan.data.Details;
+import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.URLDownload;
+
 public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private Vector<Downloader> downloaders;	// Collection of running downloaders
 	private DataStorage data=null;

@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.data;
 
 import java.text.DateFormat;
 import java.text.ParseException;

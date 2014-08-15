@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.data;
 
 import java.io.File;
 import java.net.URL;

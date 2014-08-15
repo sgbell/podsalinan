@@ -33,6 +33,13 @@ import org.tmatesoft.sqljet.core.table.SqlJetDb;
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
+import com.mimpidev.podsalinan.data.Episode;
+import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.PodcastList;
+import com.mimpidev.podsalinan.data.ProgSettings;
+import com.mimpidev.podsalinan.data.Setting;
+import com.mimpidev.podsalinan.data.URLDownload;
+import com.mimpidev.podsalinan.data.URLDownloadList;
 
 /**
  * @author bugman
@@ -129,7 +136,7 @@ public class DataStorage {
 	 * @param settings The settings list used to store the values being read.
 	 * @return Success status -1 is failure 0 is success
 	 */
-	public int loadSettings(Vector<Podcast> podcasts,
+	public int loadSettings(PodcastList podcasts,
 							URLDownloadList downloads,
 							ProgSettings settings){
 		boolean firstRun = true;
@@ -139,7 +146,8 @@ public class DataStorage {
 		if (podsalinanDBFile.exists()){
 			SqlJetDb podsalinanDB = new SqlJetDb(podsalinanDBFile,true);
 			
-			addColumnToTable(podsalinanDB,"podcasts","auto_queue","INTEGER");
+			downloads.setdbTable(podsalinanDB, debugOutput);
+			downloads.readFromTable();
 			
 			try {
 				TableView downloadsView = new TableView(podsalinanDB,downloadTable.getColumnList(),downloadTable.getName(),debugOutput);
@@ -265,7 +273,7 @@ public class DataStorage {
      * @param downloads The downloads Array
      * @param settings The settings Array
      */
-	public void saveSettings(Vector<Podcast> podcasts,
+	public void saveSettings(PodcastList podcasts,
 							 URLDownloadList downloads,
 							 ProgSettings settings) {
 		

@@ -19,7 +19,7 @@
 /**
  *  This is the class used to store details about the rss feed
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.data;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +32,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
+
+import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Downloader;
+import com.mimpidev.podsalinan.XmlReader;
 
 /**
  * @author bugman

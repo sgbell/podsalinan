@@ -20,11 +20,9 @@
  * 
  */
 
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.data;
 
-import com.mimpidev.dev.sql.data.definition.SqlDefinition;
 import com.mimpidev.dev.sql.data.definition.TableDefinition;
-
 
 /**
  * 

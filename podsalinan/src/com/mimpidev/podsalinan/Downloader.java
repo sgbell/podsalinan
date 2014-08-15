@@ -34,6 +34,9 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
+import com.mimpidev.podsalinan.data.Details;
+import com.mimpidev.podsalinan.data.URLDownload;
+
 
 public class Downloader extends NotifyingRunnable{
 	public final static int CONNECTION_FAILED=-1;

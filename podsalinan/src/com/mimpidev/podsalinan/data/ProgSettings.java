@@ -19,8 +19,10 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.data;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import com.mimpidev.dev.sql.data.definition.TableDefinition;
@@ -31,12 +33,12 @@ import com.mimpidev.dev.sql.data.definition.TableDefinition;
  */
 public class ProgSettings extends TableDefinition{
 
-	private Vector<Setting> settings;
+	private Map<String, String> settings;
 	private boolean finished;
 	private Object waitObject = new Object();
 	
 	public ProgSettings (){
-		settings = new Vector<Setting>();
+		settings = new HashMap<String, String>();
 		finished=false;
 		tableName = "settings";
 		
@@ -52,7 +54,7 @@ public class ProgSettings extends TableDefinition{
 	 */
 	public String getSettingValue(String name){
 		if (settings.size()>0)
-			return findSetting(name).value;
+			return settings.get(name);
 		else
 			return null;
 	}
@@ -64,9 +66,8 @@ public class ProgSettings extends TableDefinition{
 	 * @return
 	 */
 	public boolean updateSetting(String name, String value){
-		Setting currentSetting = findSetting(name);
-		if (currentSetting!=null){
-			currentSetting.value=value;
+		if (settings.containsKey(name)){
+			settings.put(name, value);
 			return true;
 		}
 		return false;
@@ -82,7 +83,6 @@ public class ProgSettings extends TableDefinition{
 	
 	public boolean addSetting(String name, String value){
 		if (!isValidSetting(name)){
-			Setting newSetting = new Setting (name,value);
 			// Updating old program settings to new ones.
 			if (newSetting.name.equalsIgnoreCase("urlDirectory"))
 				newSetting.name="defaultDirectory";
@@ -108,21 +108,13 @@ public class ProgSettings extends TableDefinition{
 	}
 	
 	public boolean isValidSetting(String name){
-		if (findSetting(name)!=null)
+		if (settings.containsKey(name))
 			return true;
 		else
 			return false;
 	}
 	
-	public Setting findSetting(String name){
-		for (Setting currentSetting : settings){
-			if (currentSetting.name.equalsIgnoreCase(name))
-				return currentSetting;
-		}
-		return null;
-	}
-	
-	public Vector<Setting> getArray(){
+	public Map<String,String> getMap(){
 		return settings;
 	}
 	/**
