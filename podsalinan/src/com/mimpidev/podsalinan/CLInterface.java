@@ -34,7 +34,6 @@ import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.ProgSettings;
-import com.mimpidev.podsalinan.data.Setting;
 import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 
@@ -108,7 +107,7 @@ public class CLInterface implements Runnable{
 				if ((menuList.size()==0)&&(inputInt==4))
 					data.getSettings().setFinished(true);
 				else if ((data.getSettings().findSetting("menuVisible")==null)||
-						 (data.getSettings().findSetting("menuVisible").value.equalsIgnoreCase("true")))
+						 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))
 					mainMenu.process(inputInt);
 			} catch (NumberFormatException e){
 				// If the input is not a number This area will sort out that code
@@ -148,7 +147,7 @@ public class CLInterface implements Runnable{
 				} else if (menuInput.toUpperCase().startsWith("DUMP")){
 					dumpCommand(menuInput);
 				} else if ((data.getSettings().findSetting("menuVisible")==null)||
-						   (data.getSettings().findSetting("menuVisible").value.equalsIgnoreCase("true")))
+						   (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))
 					mainMenu.process(menuInput);
 			}
 		}
@@ -500,7 +499,7 @@ public class CLInterface implements Runnable{
 		while (!data.getSettings().isFinished()){
 			if ((menuList.size()==0)&&
 				((data.getSettings().findSetting("menuVisible")==null)||
-				 (data.getSettings().findSetting("menuVisible").value.equalsIgnoreCase("true"))))
+				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))))
 				mainMenu.printMainMenu();
 			if (!data.getSettings().isFinished())
 				userInput();
@@ -523,7 +522,7 @@ public class CLInterface implements Runnable{
 			((CLPodcastMenu)(mainMenu.findSubmenu("podcast"))).listPodcasts();
 		} else if (menuInput.toLowerCase().startsWith("episode")){
 			if ((menuList.isValidSetting("mainMenu"))&&
-				((menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast"))&&
+				((menuList.findSetting("mainMenu").equalsIgnoreCase("podcast"))&&
 				 (menuList.findSetting("selectedPodcast")!=null))){
 				((CLPodcastSelectedMenu)(mainMenu.findSubmenu("podcast_selected"))).printEpisodeList();
 			} else {
@@ -751,14 +750,14 @@ public class CLInterface implements Runnable{
 			}
 			if ((podcastFound)&&
 				(data.getSettings().isValidSetting("menuVisible"))&&
-				(data.getSettings().findSetting("menuVisible").value.equalsIgnoreCase("true"))){
+				(data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
 				// not going to go through the menuList array, because we had just set it in selectPodcast(Podcast)
 				
 				((CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected")).printMainMenu();
 			}
 		} else if (menuInput.toLowerCase().startsWith("episode")){
 			if ((menuList.isValidSetting("mainMenu"))&&
-				((menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast"))&&
+				((menuList.findSetting("mainMenu").equalsIgnoreCase("podcast"))&&
 				 (menuList.findSetting("selectedPodcast")!=null))){
 				menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
 				// Working here next. handling user input to select an episode. my thoughts are,
@@ -816,7 +815,7 @@ public class CLInterface implements Runnable{
 				}
 				if ((episodeSelected)&&
 						(data.getSettings().isValidSetting("menuVisible"))&&
-						(data.getSettings().findSetting("menuVisible").value.equalsIgnoreCase("true"))){
+						(data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
 						// not going to go through the menuList array, because we had just set it in selectPodcast(Podcast)
 						CLEpisodeMenu episodeMenu = (CLEpisodeMenu)mainMenu.findSubmenu("episode_selected");
 						episodeMenu.printMainMenu();
@@ -833,7 +832,7 @@ public class CLInterface implements Runnable{
 				CLDownloadSelectedMenu dsMenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu"); 
 				dsMenu.setDownload(data.getUrlDownloads().getDownloads().get(select));
 				if ((data.getSettings().isValidSetting("menuVisible"))&&
-				    (data.getSettings().findSetting("menuVisible").value.equalsIgnoreCase("true"))){
+				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
 					dsMenu.printMainMenu();
 				}
 			}
@@ -876,7 +875,7 @@ public class CLInterface implements Runnable{
 		((CLPodcastSelectedMenu)(mainMenu.findSubmenu("podcast_selected"))).setSelectedPodcast(podcast);
 
 		if ((data.getSettings().isValidSetting("menuVisible"))&&
-			(data.getSettings().findSetting("menuVisible").value.equalsIgnoreCase("false")))
+			(data.getSettings().findSetting("menuVisible").equalsIgnoreCase("false")))
   		    System.out.println("Selected Podcast: "+podcast.getName());
 	}
 

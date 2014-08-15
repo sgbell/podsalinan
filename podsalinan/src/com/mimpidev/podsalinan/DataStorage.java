@@ -145,104 +145,14 @@ public class DataStorage {
 		if (podsalinanDBFile.exists()){
 			SqlJetDb podsalinanDB = new SqlJetDb(podsalinanDBFile,true);
 			
+			//TODO: After converting all of the table reads to similar lines as below, add them to an array to do all of them in a smaller bunch of code calls
 			downloads.setdbTable(podsalinanDB, debugOutput);
-			downloads.readFromTable();
+			downloads.readTable();
+			settings.setdbTable(podsalinanDB, debugOutput);
+			settings.readTable();
+			podcasts.setdbTable(podsalinanDB, debugOutput);
+			podcasts.readTable();
 			
-			try {
-				TableView downloadsView = new TableView(podsalinanDB,downloadTable.getColumnList(),downloadTable.getName(),debugOutput);
-				try {
-					ISqlJetCursor downloadsList = downloadsView.selectAll();
-					if (!downloadsList.eof()){
-						do {
-							
-						} while (downloadsList.next());
-					}
-				} catch (SqlException e) {
-					// What do you do with a drunken sailor?
-				}
-				
-				
-				table = podsalinanDB.getTable("downloads");
-				podsalinanDB.beginTransaction(SqlJetTransactionMode.READ_ONLY);
-				if (table!=null){
-					ISqlJetCursor currentDBLine = table.order(table.getPrimaryKeyIndexName());
-					if (!currentDBLine.eof()){
-						do {
-							URLDownload newDownload = new URLDownload(currentDBLine.getString("url"),
-																	  currentDBLine.getString("size"),
-																      currentDBLine.getString("destination"),
-																      currentDBLine.getString("podcastSource"),
-																      (int)currentDBLine.getInteger("status"));
-						    newDownload.setAdded(true);
-						    downloads.addDownload(newDownload, (int)currentDBLine.getInteger("priority"));
-						} while (currentDBLine.next());
-					}
-				}
-			} catch (SqlJetException e){
-				debugOutput.printStackTrace(e.getStackTrace());
-				return -1;
-			} finally {
-				try {
-					podsalinanDB.commit();
-				} catch (SqlJetException e) {
-					debugOutput.printStackTrace(e.getStackTrace());
-					return -1;
-				}
-			}
-				
-			try {
-				table = podsalinanDB.getTable("settings");
-				podsalinanDB.beginTransaction(SqlJetTransactionMode.READ_ONLY);
-				
-				if (table!=null){
-					ISqlJetCursor currentDBLine = table.order(table.getPrimaryKeyIndexName());
-					if (!currentDBLine.eof()){
-						do {
-							settings.addSetting(currentDBLine.getString("name"), currentDBLine.getString("value"));
-						} while (currentDBLine.next());
-					}
-				}
-			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-				return -1;
-			} finally {
-				try {
-					podsalinanDB.commit();
-				} catch (SqlJetException e) {
-					debugOutput.printStackTrace(e.getStackTrace());
-					return -1;
-				}
-			}
-
-			try {
-				table = podsalinanDB.getTable("podcasts");
-				podsalinanDB.beginTransaction(SqlJetTransactionMode.READ_ONLY);
-				if (table!=null){
-					ISqlJetCursor currentDBLine = table.order(table.getPrimaryKeyIndexName());
-					if (!currentDBLine.eof()){
-						do {
-							Podcast newPodcast = new Podcast(currentDBLine.getString("name"),
-															 currentDBLine.getString("url"),
-															 currentDBLine.getString("directory"),
-															 currentDBLine.getString("localFile").replaceAll("&apos;", "\'"),
-															 currentDBLine.getInteger("auto_queue")==1);
-							newPodcast.setAdded(true);
-							podcasts.add(newPodcast);
-						} while (currentDBLine.next());
-					}
-				}
-				
-			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-				return -1;
-			} finally {
-				try {
-					podsalinanDB.commit();
-				} catch (SqlJetException e) {
-					debugOutput.printStackTrace(e.getStackTrace());
-					return -1;
-				}
-			}
 			try {
 				podsalinanDB.close();
 			} catch (SqlJetException e) {

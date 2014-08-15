@@ -376,11 +376,22 @@ public class URLDownloadList extends DownloadDetails {
 		return podcasts;
 	}
 
+	/**
+	 * 
+	 */
 	public void readTable() {
 		ArrayList<Map<String,String>> recordSet = readFromTable();
 		
+		if ((recordSet!=null)&&(recordSet.size()>0))
 		for (Map<String,String> record: recordSet){
 			// Create a new URLDownload and add to the downloads Vector
+			URLDownload newDownload = new URLDownload(record.get("url"),
+													  record.get("size"),
+													  record.get("destination"),
+													  record.get("podcastSource"),
+													  Integer.parseInt(record.get("status")));
+			newDownload.setAdded(true);
+			addDownload(newDownload, Integer.parseInt(record.get("priority")));
 		}
 	}
 
