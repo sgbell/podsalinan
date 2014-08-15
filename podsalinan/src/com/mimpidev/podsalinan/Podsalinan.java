@@ -37,7 +37,6 @@ import java.util.logging.Logger;
 import com.mimpidev.podsalinan.data.Details;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
-import com.mimpidev.podsalinan.data.Setting;
 
 public class Podsalinan {
 	//private CommandPass commands;
@@ -95,7 +94,7 @@ public class Podsalinan {
 			 */
 			for (Podcast podcast : data.getPodcasts()){
 				if (((data.getSettings().findSetting("autoQueue")!=null)&&
-					 (data.getSettings().findSetting("autoQueue").value.equalsIgnoreCase("true")))||
+					 (data.getSettings().findSetting("autoQueue").equalsIgnoreCase("true")))||
 					 (podcast.isAutomaticQueue())){
 					Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Details.NOT_QUEUED);
 					if (podcastEpisodes.size()>0)
@@ -165,13 +164,12 @@ public class Podsalinan {
 		Thread downloadListThread = new Thread(downloaderList);
 		downloadListThread.start();
 
-		Setting interfaceType = data.getSettings().findSetting("interface");
-		if (interfaceType==null)
+		if (!data.getSettings().isValidSetting("interface"))
 			showCli=true;
 		else{
-			if ((interfaceType.value.equalsIgnoreCase("cli")))
+			if ((data.getSettings().findSetting("interface").equalsIgnoreCase("cli")))
 				showCli=true;
-			if (data.getSettings().findSetting("interface").value.equalsIgnoreCase("gui"))
+			if (data.getSettings().findSetting("interface").equalsIgnoreCase("gui"))
 				showGui=true;
 		}
 		for (String arg : cmdLineArgs){
