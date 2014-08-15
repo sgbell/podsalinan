@@ -41,7 +41,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 	}
 
 	public void printMainMenu(){
-		if ((selectedPodcast!=null)&&(selectedPodcast.getDatafile().equalsIgnoreCase(menuList.findSetting("selectedPodcast").value))){
+		if ((selectedPodcast!=null)&&(selectedPodcast.getDatafile().equalsIgnoreCase(menuList.findSetting("selectedPodcast")))){
 			System.out.println("Podcast: "+selectedPodcast.getName()+ " - Selected");
 			super.printMainMenu();
 		}
