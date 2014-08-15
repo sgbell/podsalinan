@@ -22,6 +22,7 @@
 package com.mimpidev.dev.sql;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class TableView {
 	/**
 	 * The list of columns in the database table
 	 */
-	private Map<Integer,SqlDefinition> columnList;
+	private ArrayList<SqlDefinition> columnList;
 	/**
 	 * The log.
 	 */
@@ -70,24 +71,24 @@ public class TableView {
 	public static final int ERROR = -1;
 	
 	public TableView(File databaseFile, String tableName, Log debugLog){
-		this (new HashMap<Integer,SqlDefinition>(), tableName, debugLog);
+		this (new ArrayList<SqlDefinition>(), tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
 		initializeTable();
 	}
 	
-	private TableView(Map<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
+	private TableView(ArrayList<SqlDefinition> newColumnList, String tableName, Log debugLog){
 		columnList = newColumnList;
 		log = debugLog;
 		name=tableName;
 	}
 	
-	public TableView(File databaseFile, Map<Integer,SqlDefinition> newColumnList, String tableName, Log debugLog){
+	public TableView(File databaseFile, ArrayList<SqlDefinition> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
 		initializeTable();
 	}
 	
-	public TableView(SqlJetDb newDb, Map<Integer, SqlDefinition> newColumnList, String tableName, Log debugLog){
+	public TableView(SqlJetDb newDb, ArrayList<SqlDefinition> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = newDb;
 		initializeTable();

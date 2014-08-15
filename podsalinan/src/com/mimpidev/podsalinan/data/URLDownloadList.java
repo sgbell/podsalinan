@@ -26,7 +26,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Vector;
 
 import org.tmatesoft.sqljet.core.SqlJetException;
@@ -372,6 +374,14 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public Vector<Podcast> getPodcastArray(){
 		return podcasts;
+	}
+
+	public void readTable() {
+		ArrayList<Map<String,String>> recordSet = readFromTable();
+		
+		for (Map<String,String> record: recordSet){
+			// Create a new URLDownload and add to the downloads Vector
+		}
 	}
 
 }

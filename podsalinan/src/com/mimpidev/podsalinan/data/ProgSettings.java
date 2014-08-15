@@ -83,25 +83,27 @@ public class ProgSettings extends TableDefinition{
 	
 	public boolean addSetting(String name, String value){
 		if (!isValidSetting(name)){
-			// Updating old program settings to new ones.
-			if (newSetting.name.equalsIgnoreCase("urlDirectory"))
-				newSetting.name="defaultDirectory";
-			
-			if (newSetting.name.equalsIgnoreCase("maxPodcastDownloaders"))
-				newSetting.name="maxDownloaders";
-
-			settings.add(newSetting);
+			settings.put(name,value);
 			return true;
 		}
 		return false;
 	}
 	
+	public void upgradeSettings(){
+		renameSetting("urlDirectory","defaultDirectory");
+		renameSetting("maxPodcastDownloaders","maxDownloaders");
+	}
+	
+	public void renameSetting(String originalName, String newName){
+		if (settings.containsKey(originalName)){
+			settings.put(newName, settings.get(originalName));
+			settings.remove(originalName);
+		}
+	}
+	
 	public boolean removeSetting(String name){
-		Setting currentSetting=findSetting(name);
-		if (currentSetting!=null){
-			//System.out.println("Debug: Found setting");
-			settings.remove(currentSetting);
-			//System.out.println("Size: "+settings.size());
+		if (settings.containsKey(name)){
+			settings.remove(name);
 			return true;
 		}
 		return false;

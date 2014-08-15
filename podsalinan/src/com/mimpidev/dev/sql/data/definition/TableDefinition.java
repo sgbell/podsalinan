@@ -3,12 +3,16 @@
  */
 package com.mimpidev.dev.sql.data.definition;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.tmatesoft.sqljet.core.SqlJetException;
+import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 
 /**
@@ -18,14 +22,14 @@ import com.mimpidev.dev.sql.TableView;
 public abstract class TableDefinition {
 
 	protected String tableName = "";
-	protected final Map<Integer, SqlDefinition> columnList = new HashMap<Integer, SqlDefinition>();
+	protected final ArrayList<SqlDefinition> columnList = new ArrayList<SqlDefinition>();
 	protected TableView dbTable=null;
 
 	
 	public TableDefinition() {
 	}
 	
-	public Map<Integer, SqlDefinition> getColumnList(){
+	public ArrayList<SqlDefinition> getColumnList(){
 		return columnList;
 	}
 	
@@ -35,7 +39,7 @@ public abstract class TableDefinition {
 	
 	public void createColumnList(String[] columnNames, String[] columnTypes){
 		for (int count=0; count<columnNames.length; count++){
-			columnList.put(count, new SqlDefinition(columnNames[count],columnTypes[count]));
+			columnList.add(new SqlDefinition(columnNames[count],columnTypes[count]));
 		}
 	}
 	
@@ -43,5 +47,26 @@ public abstract class TableDefinition {
 		dbTable = new TableView(dbConnection,getColumnList(),tableName,log);
 	}
 	
-	
+	public ArrayList<Map<String,String>> readFromTable(){
+		ArrayList<Map<String,String>> recordSet = new ArrayList<Map<String,String>>();
+		try {
+			ISqlJetCursor currentRecord = dbTable.selectAll();
+			while (!currentRecord.eof()){
+				Map<String, String> newRecord = new HashMap<String,String>();
+				for (SqlDefinition currentColumn: columnList){
+					newRecord.put(currentColumn.name, currentRecord.getString(currentColumn.name));
+				}
+				recordSet.add(newRecord);
+				currentRecord.next();
+			}
+			return recordSet;
+		} catch (SqlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SqlJetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
