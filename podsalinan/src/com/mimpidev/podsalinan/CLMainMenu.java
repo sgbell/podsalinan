@@ -62,12 +62,12 @@ public class CLMainMenu extends CLMenu{
 			userInputInt=-1000;
 		}
 		if (menuList.size()>0){
-			if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast")){
-				((CLPodcastMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInputInt);
-			} else if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("downloads")){
-				((CLDownloadMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInputInt);
-			} else if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("preferences")){
-				((CLPreferencesMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInputInt);
+			if (menuList.findSetting("mainMenu").equalsIgnoreCase("podcast")){
+				((CLPodcastMenu)findSubmenu(menuList.findSetting("mainMenu"))).process(userInputInt);
+			} else if (menuList.findSetting("mainMenu").equalsIgnoreCase("downloads")){
+				((CLDownloadMenu)findSubmenu(menuList.findSetting("mainMenu"))).process(userInputInt);
+			} else if (menuList.findSetting("mainMenu").equalsIgnoreCase("preferences")){
+				((CLPreferencesMenu)findSubmenu(menuList.findSetting("mainMenu"))).process(userInputInt);
 			}
 		} else {
 			userInputInt=-1000;
@@ -78,12 +78,12 @@ public class CLMainMenu extends CLMenu{
 	public void process(String userInput){
 		//System.out.println("Debug: CLMainMenu.process(String)");
 		if (menuList.size()>0){
-			if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("podcast")){
-				((CLPodcastMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInput);
-			} else if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("downloads")){
-				((CLDownloadMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInput);
-			} else if (menuList.findSetting("mainMenu").value.equalsIgnoreCase("preferences")){
-				((CLPreferencesMenu)findSubmenu(menuList.findSetting("mainMenu").value)).process(userInput);
+			if (menuList.findSetting("mainMenu").equalsIgnoreCase("podcast")){
+				((CLPodcastMenu)findSubmenu(menuList.findSetting("mainMenu"))).process(userInput);
+			} else if (menuList.findSetting("mainMenu").equalsIgnoreCase("downloads")){
+				((CLDownloadMenu)findSubmenu(menuList.findSetting("mainMenu"))).process(userInput);
+			} else if (menuList.findSetting("mainMenu").equalsIgnoreCase("preferences")){
+				((CLPreferencesMenu)findSubmenu(menuList.findSetting("mainMenu"))).process(userInput);
 			}
 		} else
 			super.process(userInput);
