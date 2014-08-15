@@ -47,7 +47,7 @@ public abstract class TableDefinition {
 		dbTable = new TableView(dbConnection,getColumnList(),tableName,log);
 	}
 	
-	public ArrayList<Map<String,String>> readFromTable(){
+	protected ArrayList<Map<String,String>> readFromTable(){
 		ArrayList<Map<String,String>> recordSet = new ArrayList<Map<String,String>>();
 		try {
 			ISqlJetCursor currentRecord = dbTable.selectAll();

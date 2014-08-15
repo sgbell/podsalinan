@@ -415,21 +415,4 @@ public class TableView {
 		}
 		return true;
 	}
-	
-	public void readFromTable(){
-		try {
-			ISqlJetCursor dbList = selectAll();
-			while (!dbList.eof()){
-				
-				
-				dbList.next();
-			}
-		} catch (SqlException e) {
-			// There was either an error Reading Records, or an Error reading from the database
-			e.printStackTrace();
-		} catch (SqlJetException e) {
-			// Some other error I hadn't wrapped around
-			e.printStackTrace();
-		}
-	}
 }
