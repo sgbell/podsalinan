@@ -190,6 +190,7 @@ public class DataStorage {
 		boolean dataFileExists = podsalinanDBFile.exists();
 		SqlJetDb db = new SqlJetDb(podsalinanDBFile,true);
 		db.beginTransaction(SqlJetTransactionMode.WRITE);
+        //TODO: Convert this to the new way. I have a feeling that I don't need to createTable blocks anymore, as it's already handled earlier.
 		if (!dataFileExists){
 			try {
 				db.createTable(CREATE_DOWNLOADS);
