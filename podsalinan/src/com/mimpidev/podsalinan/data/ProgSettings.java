@@ -145,4 +145,7 @@ public class ProgSettings extends TableDefinition{
 	public void setWaitObject(Object waitObject) {
 		this.waitObject = waitObject;
 	}
+	public String findSetting(String key) {
+		return settings.get(key);
+	}
 }

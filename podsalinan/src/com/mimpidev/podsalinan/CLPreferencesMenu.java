@@ -6,7 +6,6 @@ package com.mimpidev.podsalinan;
 import java.io.File;
 
 import com.mimpidev.podsalinan.data.ProgSettings;
-import com.mimpidev.podsalinan.data.Setting;
 
 
 /**
@@ -46,7 +45,7 @@ public class CLPreferencesMenu extends CLMenu{
 	}
 
 	private String printUserFriendlyUpdateRate(){
-    	switch (Integer.parseInt(settings.findSetting("updateInterval").value)){
+    	switch (Integer.parseInt(settings.findSetting("updateInterval"))){
 		    case 60:
 			    return "Hourly";
 		    case 120:
