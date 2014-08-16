@@ -28,6 +28,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -395,4 +396,21 @@ public class URLDownloadList extends DownloadDetails {
 		}
 	}
 
+	public void updateDatabase(){
+		for (final URLDownload download : downloads){
+			if (!download.isAdded()){
+				try {
+					dbTable.insert(new HashMap<String,Object>(){{
+						put("url",download.getURL().toString());
+						put("size",Long.parseLong(download.getSize()));
+						put("destination",download.getDestination());
+						put("podcastSource",download.getPodcastId());
+						put("status",download.getStatus());
+					}});
+				} catch (SqlException e) {
+					// TODO Auto-generated catch block
+				}
+			}
+		}
+	}
 }

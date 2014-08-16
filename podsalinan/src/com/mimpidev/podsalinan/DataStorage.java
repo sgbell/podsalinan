@@ -187,10 +187,10 @@ public class DataStorage {
 							 ProgSettings settings) {
 		
 		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
-		boolean dataFileExists = podsalinanDBFile.exists();
 		SqlJetDb db = new SqlJetDb(podsalinanDBFile,true);
+		downloads.updateDatabase();
+		
 		db.beginTransaction(SqlJetTransactionMode.WRITE);
-		//TODO: Call insertRecord from Data classes to update tables
 		int downloadCount=0;
 		for (URLDownload download : downloads.getDownloads()){
 			//System.out.println("download: "+download.getURL());
