@@ -70,6 +70,19 @@ public class TableView {
 	public static final int NOTHING_CHANGED = 0;
 	public static final int ERROR = -1;
 	
+	/**
+	 * 
+	 */
+	public static final int ITEM_ADDED_TO_DATABASE = 1;
+	/**
+	 * 
+	 */
+	public static final int ITEM_REMOVED_FROM_DATABASE = 2;
+	/**
+	 * 
+	 */
+	public static final int ITEM_UPDATED_IN_DATABASE = 3;
+	
 	public TableView(File databaseFile, String tableName, Log debugLog){
 		this (new ArrayList<SqlDefinition>(), tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);

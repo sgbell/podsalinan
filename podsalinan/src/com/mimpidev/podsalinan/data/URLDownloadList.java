@@ -397,8 +397,12 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public void updateDatabase(){
+		// Need to figure out how to increment downloadCount
+		final Integer downloadCount= new Integer(0);
 		for (final URLDownload download : downloads){
+			int sqlType=TableView.NOTHING_CHANGED;
 			if (!download.isAdded()){
+				// Used to set the correct flag
 				try {
 					dbTable.insert(new HashMap<String,Object>(){{
 						put("url",download.getURL().toString());
@@ -407,9 +411,44 @@ public class URLDownloadList extends DownloadDetails {
 						put("podcastSource",download.getPodcastId());
 						put("status",download.getStatus());
 					}});
+					sqlType=TableView.ITEM_ADDED_TO_DATABASE;
 				} catch (SqlException e) {
 					// TODO Auto-generated catch block
 				}
+			} else if (download.isRemoved()){
+				try {
+					dbTable.delete(new HashMap<String, Object>(){{
+						put("url",download.getURL().toString());
+					}});
+				} catch (SqlException e) {
+					e.printStackTrace();
+				}
+				sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
+			} else if (download.isUpdated()){
+				try {
+					dbTable.update(new HashMap<String, Object>(){{
+						put("size",Long.parseLong(download.getSize()));
+						put("destination",download.getDestination());
+						put("podcastSource",download.getPodcastId());
+						put("status",download.getStatus());
+						put("priority",downloadCount.intValue());
+					}}, 
+						new HashMap<String, Object>(){{
+							put("url",download.getURL().toString());
+					}});
+				} catch (SqlException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
+			}
+			switch (sqlType){
+				case TableView.ITEM_ADDED_TO_DATABASE:
+					
+					break;
+				case TableView.ITEM_UPDATED_IN_DATABASE:
+					
+					break;
 			}
 		}
 	}

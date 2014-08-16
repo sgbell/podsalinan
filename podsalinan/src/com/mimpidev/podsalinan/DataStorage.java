@@ -197,25 +197,7 @@ public class DataStorage {
 			try {
 				
 				int sqlType=0;
-				if (!download.isAdded()){
-					//System.out.println("Adding Download");
-					//System.out.println("URL= "+download.getURL().toString());
-					//System.out.println("Destination= "+download.getDestination());
-					ISqlJetTable table = db.getTable("downloads");
-					table.insert(null,download.getURL().toString(),
-							          Long.parseLong(download.getSize()),
-							          download.getDestination(),
-							          downloadCount,download.getPodcastId(),
-							          download.getStatus());
-					sqlType=1;
-				} else if (download.isRemoved()){
-					//System.out.println("Deleting Download");
-					//System.out.println("URL= "+download.getURL().toString());
-					
-					sql = podsalinanDB.prepare("DELETE FROM downloads " +
-											   "WHERE url='"+download.getURL().toString()+"';");
-					//System.out.println("download being removed to database");
-				} else if (download.isUpdated()){
+				if (download.isUpdated()){
 					sql = podsalinanDB.prepare("UPDATE downloads " +
 											   "SET destination='"+download.getDestination()+"',"+
 											   	   "size='"+download.getSize()+"',"+
@@ -226,15 +208,6 @@ public class DataStorage {
 					sqlType=3;
 					//System.out.println("download being updated to database");
 				}
-				switch (sqlType){
-				    case 1:
-					    download.setAdded(true);
-					    break;
-				    case 3:
-					    download.setUpdated(false);
-					    break;
-			    }
-				db.commit();
 				
 				cleanDownloadsinDB(db,download.getURL(),"downloads");
 				
