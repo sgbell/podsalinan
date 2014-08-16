@@ -190,30 +190,7 @@ public class DataStorage {
 		boolean dataFileExists = podsalinanDBFile.exists();
 		SqlJetDb db = new SqlJetDb(podsalinanDBFile,true);
 		db.beginTransaction(SqlJetTransactionMode.WRITE);
-        //TODO: Convert this to the new way. I have a feeling that I don't need to createTable blocks anymore, as it's already handled earlier.
-		if (!dataFileExists){
-			try {
-				db.createTable(CREATE_DOWNLOADS);
-			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-			} finally {
-				db.commit();
-			}
-			try {
-				db.createTable(CREATE_PODCAST);
-			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-			} finally {
-				db.commit();
-			}
-			try {
-				db.createTable(CREATE_SETTINGS);
-			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-			} finally {
-				db.commit();
-			}
-		}
+		//TODO: Call insertRecord from Data classes to update tables
 		int downloadCount=0;
 		for (URLDownload download : downloads.getDownloads()){
 			//System.out.println("download: "+download.getURL());
