@@ -69,4 +69,8 @@ public abstract class TableDefinition {
 		}
 		return null;
 	}
+	
+	public void purgeData(){
+		
+	}
 }

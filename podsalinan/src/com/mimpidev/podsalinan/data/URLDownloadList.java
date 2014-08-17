@@ -413,7 +413,7 @@ public class URLDownloadList extends DownloadDetails {
 					}});
 					sqlType=TableView.ITEM_ADDED_TO_DATABASE;
 				} catch (SqlException e) {
-					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			} else if (download.isRemoved()){
 				try {
@@ -437,17 +437,16 @@ public class URLDownloadList extends DownloadDetails {
 							put("url",download.getURL().toString());
 					}});
 				} catch (SqlException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
 			}
 			switch (sqlType){
 				case TableView.ITEM_ADDED_TO_DATABASE:
-					
+					download.setAdded(true);
 					break;
 				case TableView.ITEM_UPDATED_IN_DATABASE:
-					
+					download.setUpdated(true);
 					break;
 			}
 		}

@@ -23,6 +23,7 @@ package com.mimpidev.podsalinan.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -159,6 +160,15 @@ public class ProgSettings extends TableDefinition{
 		if ((recordSet!=null)&&(recordSet.size()>0))
 		for (Map<String,String> record: recordSet){
 			settings.put(record.get("name"),record.get("value"));
+		}
+	}
+	
+	public void updateDatabase(){
+		
+		Iterator setting = settings.entrySet().iterator();
+		
+		while (setting.hasNext()){
+			
 		}
 	}
 }

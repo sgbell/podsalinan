@@ -188,34 +188,11 @@ public class DataStorage {
 		
 		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
 		SqlJetDb db = new SqlJetDb(podsalinanDBFile,true);
+		downloads.setdbTable(db, debugOutput);
 		downloads.updateDatabase();
 		
-		db.beginTransaction(SqlJetTransactionMode.WRITE);
-		int downloadCount=0;
-		for (URLDownload download : downloads.getDownloads()){
-			//System.out.println("download: "+download.getURL());
-			try {
-				
-				int sqlType=0;
-				if (download.isUpdated()){
-					sql = podsalinanDB.prepare("UPDATE downloads " +
-											   "SET destination='"+download.getDestination()+"',"+
-											   	   "size='"+download.getSize()+"',"+
-											       "priority='"+downloadCount+"',"+
-											       "podcastSource='"+download.getPodcastId()+"',"+
-											       "status='"+download.getStatus()+"'"+
-											   "WHERE url='"+download.getURL()+"';");
-					sqlType=3;
-					//System.out.println("download being updated to database");
-				}
-				
-				cleanDownloadsinDB(db,download.getURL(),"downloads");
-				
-			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-			}
-			downloadCount++;
-		}
+		settings.setdbTable(db, debugOutput);
+		settings.updateDatabase();
 		
 		// clear the settings
 		try {
