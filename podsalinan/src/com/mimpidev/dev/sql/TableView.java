@@ -428,4 +428,35 @@ public class TableView {
 		}
 		return true;
 	}
+	
+	public boolean purgeTable() throws SqlException{
+		if (table!=null){
+			try {
+				db.beginTransaction(SqlJetTransactionMode.WRITE);
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
+			}
+			try {
+				ISqlJetTable sequenceTable = db.getTable("sqlite_sequence");
+				ISqlJetCursor deleteCursor = sequenceTable.lookup("name", name);
+				while (!deleteCursor.eof()){
+					deleteCursor.delete();
+				}
+				deleteCursor.close();
+				db.commit();
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_DELETING_RECORD);
+			}
+			try {
+				table.clear();
+			} catch (SqlJetException e) {
+				log.printStackTrace(e.getStackTrace());
+				throw new SqlException(SqlException.ERROR_PURGE_TABLE);
+			}
+		}
+		
+		return true;
+	}
 }

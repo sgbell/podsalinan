@@ -4,9 +4,12 @@
 package com.mimpidev.podsalinan.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import com.mimpidev.dev.sql.SqlException;
+import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.data.definition.TableDefinition;
 
 /**
@@ -53,6 +56,60 @@ public class PodcastList extends TableDefinition {
 					 						 (Integer.parseInt(record.get("auto_queue"))==1));
 			newPodcast.setAdded(true);
 			podcasts.add(newPodcast);
+		}
+	}
+
+	public void updateDatabase() {
+		final Integer podcastCount= new Integer(0);
+		for (final Podcast podcast : podcasts){
+			int sqlType=TableView.NOTHING_CHANGED;
+			if (!podcast.isAdded()){
+				// Used to set the correct flag
+				try {
+					dbTable.insert(new HashMap<String,Object>(){{
+						put("name",podcast.getName());
+						put("localFile",podcast.getDatafile());
+						put("url",podcast.getURL());
+						put("directory",podcast.getDirectory());
+						put("auto_queue",(podcast.isAutomaticQueue()?1:0));
+					}});
+					sqlType=TableView.ITEM_ADDED_TO_DATABASE;
+				} catch (SqlException e) {
+					e.printStackTrace();
+				}
+			} else if (podcast.isRemoved()){
+				try {
+					dbTable.delete(new HashMap<String, Object>(){{
+						put("url",podcast.getURL());
+					}});
+				} catch (SqlException e) {
+					e.printStackTrace();
+				}
+				sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
+			} else if (podcast.isChanged()){
+				try {
+					dbTable.update(new HashMap<String, Object>(){{
+						put("name",podcast.getName());
+						put("directory",podcast.getDirectory());
+						put("url",podcast.getURL());
+						put("auto_queue",(podcast.isAutomaticQueue()?1:0));
+					}}, 
+						new HashMap<String, Object>(){{
+							put("localfile",podcast.getDatafile());
+					}});
+				} catch (SqlException e) {
+					e.printStackTrace();
+				}
+				sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
+			}
+			switch (sqlType){
+				case TableView.ITEM_ADDED_TO_DATABASE:
+					podcasts.get(podcasts.indexOf(podcast)).setAdded(true);
+					break;
+				case TableView.ITEM_UPDATED_IN_DATABASE:
+					podcasts.get(podcasts.indexOf(podcast)).setChanged(false);
+					break;
+			}
 		}
 	}
 }

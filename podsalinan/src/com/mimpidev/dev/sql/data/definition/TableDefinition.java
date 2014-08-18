@@ -47,6 +47,10 @@ public abstract class TableDefinition {
 		dbTable = new TableView(dbConnection,getColumnList(),tableName,log);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	protected ArrayList<Map<String,String>> readFromTable(){
 		ArrayList<Map<String,String>> recordSet = new ArrayList<Map<String,String>>();
 		try {
@@ -70,7 +74,15 @@ public abstract class TableDefinition {
 		return null;
 	}
 	
-	public void purgeData(){
-		
+	/**
+	 * 
+	 */
+	public void purgeTable(){
+        try {
+			dbTable.purgeTable();
+		} catch (SqlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

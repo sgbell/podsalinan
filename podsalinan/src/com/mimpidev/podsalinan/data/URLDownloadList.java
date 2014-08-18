@@ -396,6 +396,9 @@ public class URLDownloadList extends DownloadDetails {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public void updateDatabase(){
 		// Need to figure out how to increment downloadCount
 		final Integer downloadCount= new Integer(0);
@@ -443,10 +446,10 @@ public class URLDownloadList extends DownloadDetails {
 			}
 			switch (sqlType){
 				case TableView.ITEM_ADDED_TO_DATABASE:
-					download.setAdded(true);
+					downloads.get(downloads.indexOf(download)).setAdded(true);
 					break;
 				case TableView.ITEM_UPDATED_IN_DATABASE:
-					download.setUpdated(true);
+					downloads.get(downloads.indexOf(download)).setUpdated(true);
 					break;
 			}
 		}

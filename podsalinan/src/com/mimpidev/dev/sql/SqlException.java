@@ -24,6 +24,7 @@ public class SqlException extends Exception {
 	public static final long ERROR_DELETING_RECORD = 9;
 	public static final long ERROR_DB_FAILURE = 10;
 	public static final long ERROR_INVALID_TABLE = 11;
+	public static final long ERROR_PURGE_TABLE = 12;
 	/**
 	 * 
 	 */

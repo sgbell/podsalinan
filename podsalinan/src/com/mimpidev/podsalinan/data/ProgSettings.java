@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.data.definition.TableDefinition;
 
 /**
@@ -164,11 +165,19 @@ public class ProgSettings extends TableDefinition{
 	}
 	
 	public void updateDatabase(){
+		purgeTable();
 		
-		Iterator setting = settings.entrySet().iterator();
-		
-		while (setting.hasNext()){
-			
+				
+		for (final Map.Entry<String, String> entry : settings.entrySet()){
+			try {
+				dbTable.insert(new HashMap<String, Object>(){{
+					put("name",entry.getKey());
+					put("value",entry.getValue());
+				}});
+			} catch (SqlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

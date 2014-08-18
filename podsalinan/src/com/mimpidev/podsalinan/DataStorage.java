@@ -138,8 +138,6 @@ public class DataStorage {
 	public int loadSettings(PodcastList podcasts,
 							URLDownloadList downloads,
 							ProgSettings settings){
-		boolean firstRun = true;
-		ISqlJetTable table = null;
 		
 		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
 		if (podsalinanDBFile.exists()){
@@ -194,70 +192,11 @@ public class DataStorage {
 		settings.setdbTable(db, debugOutput);
 		settings.updateDatabase();
 		
-		// clear the settings
-		try {
-			sql = podsalinanDB.prepare(CLEAR_ALL_SETTINGS);
-			sql.stepThrough();
-			sql.dispose();
-		} catch (SqlJetException e){
-			debugOutput.printStackTrace(e.getStackTrace());
-		}
-		// add settings back into the database
-		for (Setting setting : settings.getArray()){
-			try {
-				sql = podsalinanDB.prepare("INSERT INTO settings(name,value)" +
-						 				   "VALUES ('"+setting.name+"'," +
-						 				           "'"+setting.value+"');");
-				sql.stepThrough();
-				sql.dispose();
-			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-			} 
-		}
+		podcasts.setdbTable(db, debugOutput);
+		podcasts.updateDatabase();
 		
-		// update the podcast list in the database
-		for (Podcast podcast : podcasts){
-			sql = null;
-			int sqlMethod=0;
-			try {
-				if ((!podcast.isAdded())&&(!podcast.isRemoved())){
-					sql = podsalinanDB.prepare("INSERT INTO podcasts(name, localFile, url, directory, auto_queue)" +
-							 				   "VALUES ('"+podcast.getName()+"',"+
-							 				   "'"+podcast.getDatafile()+"'," +
-							 				   "'"+podcast.getURL()+"'," +
-							 				   "'"+podcast.getDirectory()+"'," + 
-							 				   (podcast.isAutomaticQueue()?1:0)+");");
-					sqlMethod=1;
-				} else if (podcast.isRemoved()){
-					sql = podsalinanDB.prepare("DELETE FROM podcasts " +
-											   "WHERE localfile='"+podcast.getDatafile()+"',");
-				} else if (podcast.isChanged()){
-					sql = podsalinanDB.prepare("UPDATE podcasts " +
-											   "SET name='"+podcast.getName()+"',"+
-											       "directory='"+podcast.getDirectory()+"',"+
-											       "url='"+podcast.getURL()+"',"+
-											       "auto_queue="+(podcast.isAutomaticQueue()?1:0)+
-											   "WHERE localFile='"+podcast.getDatafile()+"';");
-					sqlMethod=3;
-				}
-				if (sql!=null){
-					sql.stepThrough();
-					sql.dispose();
-					switch (sqlMethod){
-						case 1:
-							podcast.setAdded(true);
-							break;
-						case 3:
-							podcast.setChanged(false);
-							break;
-					}
-				}
-			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-			}
-			
-			savePodcast(podcast);
-		}
+
+		savePodcast(podcast);
 	}
 
 	/**
