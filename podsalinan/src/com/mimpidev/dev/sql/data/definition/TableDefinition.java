@@ -3,6 +3,7 @@
  */
 package com.mimpidev.dev.sql.data.definition;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +22,22 @@ import com.mimpidev.dev.sql.TableView;
  */
 public abstract class TableDefinition {
 
+	/**
+	 * 
+	 */
 	protected String tableName = "";
+	/**
+	 * 
+	 */
 	protected final ArrayList<SqlDefinition> columnList = new ArrayList<SqlDefinition>();
+	/**
+	 * 
+	 */
 	protected TableView dbTable=null;
-
+	/**
+	 * 
+	 */
+	protected Log debugLog=null;
 	
 	public TableDefinition() {
 	}
@@ -45,6 +58,7 @@ public abstract class TableDefinition {
 	
 	public void setdbTable(SqlJetDb dbConnection, Log log) {
 		dbTable = new TableView(dbConnection,getColumnList(),tableName,log);
+		debugLog=log;
 	}
 	
 	/**
@@ -84,5 +98,29 @@ public abstract class TableDefinition {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public File getDbFile(){
+		return dbTable.getTable().getDataBase().getFile();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Log getDebugLog(){
+		return debugLog;
+	}
+	
+	/**
+	 * 
+	 * @param newLog
+	 */
+	public void setDebugLog(Log newLog){
+		debugLog=newLog;
 	}
 }

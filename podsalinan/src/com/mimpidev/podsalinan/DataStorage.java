@@ -194,9 +194,6 @@ public class DataStorage {
 		
 		podcasts.setdbTable(db, debugOutput);
 		podcasts.updateDatabase();
-		
-
-		savePodcast(podcast);
 	}
 
 	/**

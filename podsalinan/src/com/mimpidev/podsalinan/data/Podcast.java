@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
+import org.tmatesoft.sqljet.core.table.SqlJetDb;
+
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Downloader;
 import com.mimpidev.podsalinan.XmlReader;
@@ -43,17 +46,46 @@ import com.mimpidev.podsalinan.XmlReader;
  */
 public class Podcast extends DownloadDetails{
 
-	private String  url,
-	   				directory,  // Directory that files will be downloaded to.
-					image;
-	private boolean changed=false,
-					remove=false,
-					added=false,
-					automaticQueue=false;
-	
+	/**
+	 * 
+	 */
+	private String  url;
+	/**
+	 * 
+	 */
+	private String  directory;  // Directory that files will be downloaded to.
+	/**
+	 * 
+	 */
+	private String  image;
+	/**
+	 * 
+	 */
+	private boolean changed=false;
+	/**
+	 * 
+	 */
+	private boolean remove=false;
+	/**
+	 * 
+	 */
+	private boolean added=false;
+	/**
+	 * 
+	 */
+	private boolean automaticQueue=false;
+	/**
+	 * 
+	 */
 	private Vector<Episode> episodeList = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
-	
+	/**
+	 * 
+	 */
 	private DateFormat df;
+	/**
+	 * 
+	 */
+	private String settingsDir = null;
 	
 	/**This is used to create a new Podcast with only a url.
 	 * 
@@ -422,5 +454,24 @@ public class Podcast extends DownloadDetails{
 	public void setAutomaticQueue(boolean automaticQueue) {
 		this.automaticQueue = automaticQueue;
 	}
-	
+
+	public void updateDatabase() {
+
+		if (settingsDir!=null){
+			File podcastData = new File(settingsDir.concat("/"+getDatafile()+".pod"));
+			SqlJetDb db = new SqlJetDb(podcastData,true);
+			this.setdbTable(db, this.debugLog);
+			for (final Episode episode : episodeList){
+				
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param string
+	 */
+	public void setSettingsDir(String newSettingsDir) {
+		settingsDir = newSettingsDir;
+	}	
 }

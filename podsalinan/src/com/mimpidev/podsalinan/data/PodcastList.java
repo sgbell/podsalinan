@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import org.tmatesoft.sqljet.core.table.SqlJetDb;
+
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.data.definition.TableDefinition;
@@ -18,7 +21,11 @@ import com.mimpidev.dev.sql.data.definition.TableDefinition;
  */
 public class PodcastList extends TableDefinition {
 
+	/**
+	 * 
+	 */
 	private Vector<Podcast> podcasts;
+
 	/**
 	 * 
 	 */
@@ -110,6 +117,9 @@ public class PodcastList extends TableDefinition {
 					podcasts.get(podcasts.indexOf(podcast)).setChanged(false);
 					break;
 			}
+			podcast.setSettingsDir(this.getDbFile().getParent());
+			
+			podcast.updateDatabase();
 		}
 	}
 }
