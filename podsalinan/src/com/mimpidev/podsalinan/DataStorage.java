@@ -426,14 +426,14 @@ public class DataStorage {
 	/**
 	 * @return Array list of Podcasts
 	 */
-	public Vector<Podcast> getPodcasts() {
+	public PodcastList getPodcasts() {
 		return podcasts;
 	}
 
 	/**
 	 * @param podcasts Array of Podcasts
 	 */
-	public void setPodcasts(Vector<Podcast> podcasts) {
+	public void setPodcasts(PodcastList podcasts) {
 		this.podcasts = podcasts;
 	}
 
@@ -498,14 +498,5 @@ public class DataStorage {
 					fileList.add(file);
 			}
 		}
-	}
-	
-	/**
-	 * This is used as the main debug output, if it could not open the file, it will
-	 * output the debug information to the screen.
-	 * @return Log object, attached to file
-	 */
-	public Log getDebugFile(){
-		return debugOutput;
 	}
 }
