@@ -34,6 +34,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.Details;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
@@ -43,8 +44,12 @@ public class Podsalinan {
 	private DownloadQueue downloaderList;
 	private DataStorage data;
 	private CLInterface cli;
-	private MainWindow gui;
+	//private MainWindow gui;
 	private String[] cmdLineArgs;
+    /**
+     *  debugLog is going to be handed through all of the system so we can write to the debug log
+     */
+	public static final Log debugLog = new Log();
 	
 	/**
 	 * Upon execution the program will create a new instance of podsalinan, which is where
@@ -54,12 +59,30 @@ public class Podsalinan {
 	 *   Nothing to pass in just yet
 	 */
 	public static void main(String[] args) {
+		initialiseDebug();
 		Podsalinan mainProgram = new Podsalinan();
 		mainProgram.setCmdLineArgs(args);
 		mainProgram.initialize();
 		mainProgram.backgroundProcess();
 	}
 
+	/**
+	 * 
+	 */
+	public static void initialiseDebug(){
+		String settingsDir="";
+		String fileSystemSlash="";
+		if (System.getProperty("os.name").equalsIgnoreCase("linux")){
+			settingsDir = System.getProperty("user.home").concat("/.podsalinan");
+			fileSystemSlash = "/";
+		}else if (System.getProperty("os.name").startsWith("Windows")){
+			settingsDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
+			fileSystemSlash = "\\";
+		}
+		
+		debugLog.setNewLog(settingsDir+fileSystemSlash+"debug.log","rw");
+	}
+	
 	private void backgroundProcess() {
 		int updateInterval=0;
 		
@@ -186,7 +209,7 @@ public class Podsalinan {
 		}
 		
 		if (showGui){
-			gui = new MainWindow(data);
+			//gui = new MainWindow(data);
 			
 		}
 	}

@@ -59,7 +59,6 @@ public class DataStorage {
 	private ProgSettings settings;
 	private String settingsDir;
 	private Object finishWait= new Object();
-	private Log debugOutput=null;
 
 	/**
 	 *  SQL Statement for deleting all settings from main database file.
@@ -116,8 +115,6 @@ public class DataStorage {
 		if (tempXMLFile.exists())
 			tempXMLFile.delete();
 
-        // Initializing debugOutput File
-		debugOutput = new Log(settingsDir+fileSystemSlash+"debug.log","rw");
 	}
 
 	/**
@@ -144,17 +141,17 @@ public class DataStorage {
 			SqlJetDb podsalinanDB = new SqlJetDb(podsalinanDBFile,true);
 			
 			//TODO: After converting all of the table reads to similar lines as below, add them to an array to do all of them in a smaller bunch of code calls
-			downloads.setdbTable(podsalinanDB, debugOutput);
+			downloads.setdbTable(podsalinanDB);
 			downloads.readTable();
-			settings.setdbTable(podsalinanDB, debugOutput);
+			settings.setdbTable(podsalinanDB);
 			settings.readTable();
-			podcasts.setdbTable(podsalinanDB, debugOutput);
+			podcasts.setdbTable(podsalinanDB);
 			podcasts.readTable();
 			
 			try {
 				podsalinanDB.close();
 			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
+				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				return -1;
 			}
 		}

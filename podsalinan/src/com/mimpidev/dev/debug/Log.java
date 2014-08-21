@@ -40,17 +40,23 @@ public class Log {
 
 	private RandomAccessFile fileOutput;
 	
+	public Log(){
+		
+	}
+	
 	public Log(File file, String mode){
-		try {
-			fileOutput = new RandomAccessFile(file, mode);
-			fileOutput.seek(fileOutput.length());
-		} catch (IOException e) {
-			System.err.println("[Error] Cannot open file");
-			e.printStackTrace();
-		}
+		setNewLog(file,mode);
 	}
 
 	public Log(String filename, String mode){
+		setNewLog(filename, mode);
+	}
+	
+	public void setNewLog(String filename, String mode){
+		setNewLog(new File(filename), mode);
+	}
+	
+	public void setNewLog (File filename, String mode){
 		try {
 			fileOutput = new RandomAccessFile(filename, mode);
 			fileOutput.seek(fileOutput.length());

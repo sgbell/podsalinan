@@ -15,6 +15,7 @@ import org.tmatesoft.sqljet.core.table.SqlJetDb;
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
+import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author sbell
@@ -59,6 +60,10 @@ public abstract class TableDefinition {
 	public void setdbTable(SqlJetDb dbConnection, Log log) {
 		dbTable = new TableView(dbConnection,getColumnList(),tableName,log);
 		debugLog=log;
+	}
+	
+	public void setdbTable(SqlJetDb dbConnection){
+		dbTable = new TableView(dbConnection,getColumnList(),tableName,Podsalinan.debugLog);
 	}
 	
 	/**
