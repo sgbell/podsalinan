@@ -80,11 +80,11 @@ public class DataStorage {
 		checkSettingsDirectory();
 	}
 	
-	public DataStorage(Vector<Podcast> podcasts, URLDownloadList urlDownloads,
+	public DataStorage(PodcastList podcasts, URLDownloadList urlDownloads,
 			ProgSettings settings) {
 		setPodcasts(podcasts);
 		setUrlDownloads(urlDownloads);
-		urlDownloads.setPodcasts(podcasts);
+		urlDownloads.setPodcasts(podcasts.getList());
 		setSettings(settings);
 		
 		checkSettingsDirectory();
@@ -395,7 +395,7 @@ public class DataStorage {
 					sql.stepThrough();
 					sql.dispose();
 				} catch (SqlJetException e) {
-					debugOutput.printStackTrace(e.getStackTrace());
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				}
 			}
 		}
