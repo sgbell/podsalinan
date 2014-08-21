@@ -183,13 +183,13 @@ public class DataStorage {
 		
 		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
 		SqlJetDb db = new SqlJetDb(podsalinanDBFile,true);
-		downloads.setdbTable(db, debugOutput);
+		downloads.setdbTable(db);
 		downloads.updateDatabase();
 		
-		settings.setdbTable(db, debugOutput);
+		settings.setdbTable(db);
 		settings.updateDatabase();
 		
-		podcasts.setdbTable(db, debugOutput);
+		podcasts.setdbTable(db);
 		podcasts.updateDatabase();
 	}
 
