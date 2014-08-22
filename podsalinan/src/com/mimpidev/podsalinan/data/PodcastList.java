@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
-import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.data.definition.TableDefinition;
@@ -64,11 +61,11 @@ public class PodcastList extends TableDefinition {
 					 						 (Integer.parseInt(record.get("auto_queue"))==1));
 			newPodcast.setAdded(true);
 			podcasts.add(newPodcast);
+			newPodcast.readTable();
 		}
 	}
 
 	public void updateDatabase() {
-		final Integer podcastCount= new Integer(0);
 		for (final Podcast podcast : podcasts){
 			int sqlType=TableView.NOTHING_CHANGED;
 			if (!podcast.isAdded()){

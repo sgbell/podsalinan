@@ -508,5 +508,12 @@ public class Podcast extends DownloadDetails{
 	 */
 	public void setSettingsDir(String newSettingsDir) {
 		settingsDir = newSettingsDir;
+	}
+
+	/**
+	 * 
+	 */
+	public void readTable() {
+		
 	}	
 }
