@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
@@ -514,6 +515,20 @@ public class Podcast extends DownloadDetails{
 	 * 
 	 */
 	public void readTable() {
+		ArrayList<Map<String,String>> recordSet = readFromTable();
 		
+		if ((recordSet!=null)&&(recordSet.size()>0))
+			for (Map<String,String> record: recordSet){
+				Episode newEpisode = new Episode(
+						record.get("published"),
+						record.get("title").replaceAll("&apos;", "\'"),
+						record.get("url").replaceAll("&apos;", "\'"),
+						record.get("size"),
+						record.get("description").replaceAll("&apos;", "\'"),
+						Integer.parseInt(record.get("status")));
+				newEpisode.setAdded(true);
+				newEpisode.setUpdated(false);
+				addEpisode(newEpisode);
+			}
 	}	
 }
