@@ -31,13 +31,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Vector;
 
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Downloader;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.XmlReader;
 
 /**
@@ -455,6 +458,9 @@ public class Podcast extends DownloadDetails{
 		this.automaticQueue = automaticQueue;
 	}
 
+	/**
+	 * 
+	 */
 	public void updateDatabase() {
 
 		if (settingsDir!=null){
@@ -462,7 +468,36 @@ public class Podcast extends DownloadDetails{
 			SqlJetDb db = new SqlJetDb(podcastData,true);
 			this.setdbTable(db);
 			for (final Episode episode : episodeList){
-				
+				if (!episode.isAdded()){
+					try {
+						dbTable.insert(new HashMap<String,Object>(){{
+							put("published",episode.getOriginalDate());
+							put("title",episode.getTitle().replaceAll("\'", "&apos;"));
+							put("url",episode.getURL().toString().replaceAll("\'", "&apos;"));
+							put("size",episode.getSize());
+							put("description",episode.getDescription().replaceAll("\'", "&apos;"));
+							put("status",episode.getStatus());
+						}});
+						episode.setAdded(true);
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}					
+				} else if (episode.isUpdated()){
+					try {
+						dbTable.update(new HashMap<String,Object>(){{
+							put("status",episode.getStatus());
+							put("description",episode.getDescription().replaceAll("\'", "&apos;"));
+							put("size",episode.getSize());
+							put("published",episode.getOriginalDate());
+						}}, 
+								       new HashMap<String, Object>(){{
+											put("url",episode.getURL().toString().replaceAll("\'", "&apos;"));
+								       }});
+						episode.setUpdated(false);
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+				}
 			}
 		}
 	}

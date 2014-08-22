@@ -159,7 +159,7 @@ public class Podsalinan {
 		// load the program settings
 		data.loadSettings ();
 		// Load the podcast data
-		for (Podcast podcast : data.getPodcasts())
+		for (Podcast podcast : data.getPodcasts().getList())
 			data.loadPodcast(podcast);
 
 		// Downloader List

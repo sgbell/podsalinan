@@ -14,6 +14,7 @@ import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.data.definition.TableDefinition;
+import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
@@ -82,7 +83,7 @@ public class PodcastList extends TableDefinition {
 					}});
 					sqlType=TableView.ITEM_ADDED_TO_DATABASE;
 				} catch (SqlException e) {
-					e.printStackTrace();
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				}
 			} else if (podcast.isRemoved()){
 				try {
@@ -90,7 +91,7 @@ public class PodcastList extends TableDefinition {
 						put("url",podcast.getURL());
 					}});
 				} catch (SqlException e) {
-					e.printStackTrace();
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				}
 				sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
 			} else if (podcast.isChanged()){
@@ -105,7 +106,7 @@ public class PodcastList extends TableDefinition {
 							put("localfile",podcast.getDatafile());
 					}});
 				} catch (SqlException e) {
-					e.printStackTrace();
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				}
 				sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
 			}
