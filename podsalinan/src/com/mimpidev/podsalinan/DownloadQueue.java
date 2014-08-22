@@ -128,7 +128,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	}
 	
 	public boolean updatePodcastEpisodeStatus(String podcastId, String url, int newStatus){
-		Vector<Podcast> podcasts = data.getPodcasts();
+		Vector<Podcast> podcasts = data.getPodcasts().getList();
 		Podcast selectedPodcast=null;
 		if (podcastId!=null){
 			synchronized(podcasts){

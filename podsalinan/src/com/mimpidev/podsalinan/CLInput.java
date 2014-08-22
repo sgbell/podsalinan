@@ -33,24 +33,19 @@ import com.mimpidev.dev.debug.Log;
  */
 public class CLInput {
 	private BufferedReader stdInReader;
-	private Log debugLog;
 	
 	public CLInput(){
 		stdInReader = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
-	public CLInput(Log debugFile) {
-		debugLog = debugFile;
-	}
-
 	public char getSingleCharInput() {
 		char input=' ';
 		
 		try {
 			input = (char) stdInReader.read();
 		} catch (IOException e){
-			if (debugLog.showDebug())
-				debugLog.printStackTrace(e.getStackTrace());
+			if (Podsalinan.debugLog.showDebug())
+				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 		}
 		return input;
 	}
@@ -60,8 +55,8 @@ public class CLInput {
 		try {
 			input = stdInReader.readLine();
 		} catch (IOException e) {
-			if (debugLog.showDebug())
-				debugLog.printStackTrace(e.getStackTrace());
+			if (Podsalinan.debugLog.showDebug())
+				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 		}
 
 		return input;

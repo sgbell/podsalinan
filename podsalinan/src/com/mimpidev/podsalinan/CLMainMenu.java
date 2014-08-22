@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan;
 import java.util.Vector;
 
 import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 
@@ -14,10 +15,10 @@ import com.mimpidev.podsalinan.data.URLDownloadList;
  *
  */
 public class CLMainMenu extends CLMenu{
-	private Vector<Podcast> podcasts;
+	private PodcastList podcasts;
 	private URLDownloadList urlDownloads;
 	
-	public CLMainMenu(ProgSettings parentMenuList, Vector<Podcast> podcastList, URLDownloadList downloadList) {
+	public CLMainMenu(ProgSettings parentMenuList, PodcastList podcastList, URLDownloadList downloadList) {
 		super(parentMenuList,"Main Menu");
 		
 		String[] mainMenuList = {
@@ -32,7 +33,7 @@ public class CLMainMenu extends CLMenu{
 	}
 	
 	public void printMainMenu(){
-		System.out.println(podcasts.size()+" - Podcasts. "+urlDownloads.visibleSize()+" - Downloads Queued");
+		System.out.println(podcasts.getList().size()+" - Podcasts. "+urlDownloads.visibleSize()+" - Downloads Queued");
 
 		super.printMainMenu();
 	}

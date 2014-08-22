@@ -231,40 +231,6 @@ public class DataStorage {
 		}
 	}
 	
-	/** 
-	 * Used to check for a column in a table, and if it doesn't exist, add it.
-	 */
-	private boolean addColumnToTable(SqlJetDb dbConnection, String tableName, String columnName, String columnType){
-		boolean columnFound=false;
-		List<ISqlJetColumnDef> columnList = null;
-
-		try {
-			columnList = dbConnection.getSchema().getTable(tableName).getColumns();
-		} catch (SqlJetException e) {
-			debugOutput.printStackTrace(e.getStackTrace());
-		}
-		if (columnList!=null){
-			for (ISqlJetColumnDef column: columnList){
-				if (column.getName().contentEquals(columnName))
-					columnFound=true;
-			}
-		} else {
-			return false;
-		}
-		
-		if (!columnFound){
-			try {
-				dbConnection.alterTable("ALTER TABLE "+tableName+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
-			} catch (SqlJetException e) {
-				debugOutput.printStackTrace(e.getStackTrace());
-				return false;
-			}
-			return true;
-		} else {
-			return true;
-		}
-	}
-	
     /**
      * This will save the episodes stored in the Podcast Array to the dataFile.
      * @param savedPodcast The podcast to save

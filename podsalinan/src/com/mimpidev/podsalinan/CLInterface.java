@@ -33,6 +33,7 @@ import java.util.Vector;
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -50,11 +51,11 @@ public class CLInterface implements Runnable{
 	public CLInterface(DataStorage newData){
 		setData(newData);
 		menuList = new ProgSettings();
-		input = new CLInput(newData.getDebugFile());
+		input = new CLInput();
 		initializeMenus();
 	}
 	
-	public CLInterface(Vector<Podcast> podcasts, URLDownloadList urlDownloads, ProgSettings settings){
+	public CLInterface(PodcastList podcasts, URLDownloadList urlDownloads, ProgSettings settings){
 		data = new DataStorage();
 		data.setPodcasts(podcasts);
 		data.setUrlDownloads(urlDownloads);
@@ -157,27 +158,23 @@ public class CLInterface implements Runnable{
 	 * @param menuInput
 	 */
 	private void dumpCommand(String menuInput) {
-		Log outputFile=null;
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
 		if ((menuInput.equalsIgnoreCase("dump"))||
 			(menuInput.equalsIgnoreCase("urldownloads"))){
 			
-			outputFile = data.getDebugFile();
-			if (outputFile!=null){
-				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-				Date date = new Date();
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+			Date date = new Date();
 				
-				outputFile.println("--URLDownload Contents - "+dateFormat.format(date)+" --");
-				outputFile.println("DownladURL,status,destination,podcastid");
-				for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
-					outputFile.println(currentDownload.getURL().toString()+
-							","+currentDownload.getCurrentStatus()+
-							","+currentDownload.getDestination()+
-							","+currentDownload.getPodcastId());
-				}
-				outputFile.println("-- URLDownload Contents end --");
+			Podsalinan.debugLog.println("--URLDownload Contents - "+dateFormat.format(date)+" --");
+			Podsalinan.debugLog.println("DownladURL,status,destination,podcastid");
+			for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
+				Podsalinan.debugLog.println(currentDownload.getURL().toString()+
+						","+currentDownload.getCurrentStatus()+
+						","+currentDownload.getDestination()+
+						","+currentDownload.getPodcastId());
 			}
+			Podsalinan.debugLog.println("-- URLDownload Contents end --");
 		}
 	}
 
