@@ -59,30 +59,13 @@ public class Podsalinan {
 	 *   Nothing to pass in just yet
 	 */
 	public static void main(String[] args) {
-		initialiseDebug();
+		debugLog.initialise();
 		Podsalinan mainProgram = new Podsalinan();
 		mainProgram.setCmdLineArgs(args);
 		mainProgram.initialize();
 		mainProgram.backgroundProcess();
 	}
 
-	/**
-	 * 
-	 */
-	public static void initialiseDebug(){
-		String settingsDir="";
-		String fileSystemSlash="";
-		if (System.getProperty("os.name").equalsIgnoreCase("linux")){
-			settingsDir = System.getProperty("user.home").concat("/.podsalinan");
-			fileSystemSlash = "/";
-		}else if (System.getProperty("os.name").startsWith("Windows")){
-			settingsDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
-			fileSystemSlash = "\\";
-		}
-		
-		debugLog.setNewLog(settingsDir+fileSystemSlash+"debug.log","rw");
-	}
-	
 	private void backgroundProcess() {
 		int updateInterval=0;
 		
@@ -101,31 +84,28 @@ public class Podsalinan {
 		
 		while(!data.getSettings().isFinished()){
 			// List the podcast titles.
-			for (Podcast podcast : data.getPodcasts()){
+			for (Podcast podcast : data.getPodcasts().getList()){
 				if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
 					podcast.updateList(data.getSettingsDir());
 					data.savePodcast(podcast);
 				}
-			}
-
-			// The following will scan the directory for already downloaded episodes of the podcast and mark them as downloaded
-			for (Podcast podcast : data.getPodcasts())
+				
+				// The following will scan the directory for already downloaded episodes of the podcast and mark them as downloaded
 				podcast.scanDirectory(data);
-			
-			/* If autoQueue is set in the program settings to true, or autoQueue is set in the podcast,
-			 * scan the podcast lists for episodes not yet downloaded, and queue them to download. 
-			 */
-			for (Podcast podcast : data.getPodcasts()){
+
+				/* If autoQueue is set in the program settings to true, or autoQueue is set in the podcast,
+				 * scan the podcast lists for episodes not yet downloaded, and queue them to download. 
+				 */
 				if (((data.getSettings().findSetting("autoQueue")!=null)&&
-					 (data.getSettings().findSetting("autoQueue").equalsIgnoreCase("true")))||
-					 (podcast.isAutomaticQueue())){
-					Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Details.NOT_QUEUED);
-					if (podcastEpisodes.size()>0)
-						for (Episode episode : podcastEpisodes){
-							episode.setStatus(Details.CURRENTLY_DOWNLOADING);
-							data.getUrlDownloads().addDownload(episode, podcast);
-						}
-				}
+						 (data.getSettings().findSetting("autoQueue").equalsIgnoreCase("true")))||
+						 (podcast.isAutomaticQueue())){
+						Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Details.NOT_QUEUED);
+						if (podcastEpisodes.size()>0)
+							for (Episode episode : podcastEpisodes){
+								episode.setStatus(Details.CURRENTLY_DOWNLOADING);
+								data.getUrlDownloads().addDownload(episode, podcast);
+							}
+					}
 			}
 				
 			// Put this thread to sleep till it is next woken up to check for updates in the podcasts
@@ -148,8 +128,8 @@ public class Podsalinan {
 		}
 			
 		data.saveSettings();
-		if (data.getDebugFile()!=null)
-		   data.getDebugFile().close();
+		if (Podsalinan.debugLog!=null)
+		   Podsalinan.debugLog.close();
 		System.out.println("Goodbye.");
 		// added line below so program exits, as having gui changes things
 		System.exit(0);

@@ -38,7 +38,7 @@ public class Log {
      */
 	private boolean showMeTheDebug=true;
 
-	private RandomAccessFile fileOutput;
+	private RandomAccessFile fileOutput=null;
 	
 	public Log(){
 		
@@ -84,6 +84,8 @@ public class Log {
 	 */
 	public synchronized void println(String debugLine){
 		try {
+			if (fileOutput==null)
+				initialise();
 			fileOutput.writeBytes(debugLine);
 			fileOutput.writeBytes(System.getProperty("line.separator"));
 		} catch (IOException e) {
@@ -106,5 +108,35 @@ public class Log {
 			System.err.println("[Error] Problem closing debug log");
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+    public boolean initialise(){
+    	return initialise("debug.log");
+    }
+	
+	/**
+     * 
+     * @param filename
+     * @return
+     */
+	public boolean initialise(String filename){
+		if (fileOutput==null){
+			String settingsDir="";
+			String fileSystemSlash="";
+			if (System.getProperty("os.name").equalsIgnoreCase("linux")){
+				settingsDir = System.getProperty("user.home").concat("/.podsalinan");
+				fileSystemSlash = "/";
+			}else if (System.getProperty("os.name").startsWith("Windows")){
+				settingsDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
+				fileSystemSlash = "\\";
+			}
+			setNewLog(settingsDir+fileSystemSlash+filename,"rw");
+			return true;
+		}
+		return false;
 	}
 }
