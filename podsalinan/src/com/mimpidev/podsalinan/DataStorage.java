@@ -192,44 +192,6 @@ public class DataStorage {
 		podcasts.setdbTable(db);
 		podcasts.updateDatabase();
 	}
-
-	/**
-	 * This will populate a podcast object with all of the episodes stored in the
-	 * podcast database file. The passed in Podcast object will have settings pre-populated
-	 * before being passed in, like the dataFile name.
-	 * @param podcast Podcast Vector to be populated.
-	 */
-	public void loadPodcast(Podcast podcast){
-		String feedFilename=settingsDir.concat("/"+podcast.getDatafile()+".pod");
-		SQLiteConnection feedDb = new SQLiteConnection (new File(feedFilename));
-		SQLiteStatement sql;
-
-		try {
-			feedDb.open();
-			
-			addColumnToTable(feedDb,"shows","status","INTEGER");
-
-			sql = feedDb.prepare("SELECT * FROM shows;");
-			while (sql.step()){
-				Episode ep = new Episode(sql.columnString(1),
-										 sql.columnString(2).replaceAll("&apos;", "\'"),
-										 sql.columnString(3).replaceAll("&apos;", "\'"),
-										 sql.columnString(4),
-										 sql.columnString(5).replaceAll("&apos;", "\'"),
-										 sql.columnInt(6));
-				ep.setAdded(true);
-				ep.setUpdated(false);
-				//podcast.getEpisodes().add(ep);
-				podcast.addEpisode(ep);
-				//sqlCount++;
-			}
-			sql.dispose();
-			//System.out.println("Podcast: "+podcast.getName()+" - "+podcast.getEpisodes().size());
-			//System.out.println("DB count: "+sqlCount);
-		} catch (SqlJetException e) {
-			debugOutput.printStackTrace(e.getStackTrace());
-		}
-	}
 	
     /**
      * This will save the episodes stored in the Podcast Array to the dataFile.
