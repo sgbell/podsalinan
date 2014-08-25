@@ -87,7 +87,7 @@ public class Podsalinan {
 			for (Podcast podcast : data.getPodcasts().getList()){
 				if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
 					podcast.updateList(data.getSettingsDir());
-					data.savePodcast(podcast);
+					podcast.updateDatabase();
 				}
 				
 				// The following will scan the directory for already downloaded episodes of the podcast and mark them as downloaded
@@ -156,11 +156,8 @@ public class Podsalinan {
 		
 		data = new DataStorage();
 		
-		// load the program settings
+		// load the program settings and data
 		data.loadSettings ();
-		// Load the podcast data
-		for (Podcast podcast : data.getPodcasts().getList())
-			data.loadPodcast(podcast);
 
 		// Downloader List
 		downloaderList = new DownloadQueue(data);
