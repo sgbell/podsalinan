@@ -29,6 +29,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import com.mimpidev.dev.debug.Log;
@@ -48,6 +50,7 @@ public class CLInterface implements Runnable{
 	private ArrayList<MenuPath> menuList;
 	private CLMainMenu mainMenu;
 	private DataStorage data=null;
+	private Map<String, Object> menuOptions=null;
 
 	public CLInterface(DataStorage newData){
 		setData(newData);
@@ -74,6 +77,25 @@ public class CLInterface implements Runnable{
 		mainMenu.addSubmenu(new CLPodcastMenu(menuList,data.getPodcasts(),data.getUrlDownloads()));
 		mainMenu.addSubmenu(new CLPreferencesMenu(menuList,data.getSettings()));
 		mainMenu.addSubmenu(new CLDownloadMenu(menuList,data.getUrlDownloads()));
+		
+		menuOptions = new HashMap<String, Object>();
+		menuOptions.put("quit", new Object());
+		menuOptions.put("exit", new Object());
+		menuOptions.put("http", new Object());
+		menuOptions.put("ftp", new Object());
+		menuOptions.put("help", new Object());
+		menuOptions.put("select", new Object());
+		menuOptions.put("set", new Object());
+		menuOptions.put("list", new Object());
+		menuOptions.put("show", new Object());
+		menuOptions.put("hide", new Object());
+		menuOptions.put("restart", new Object());
+		menuOptions.put("stop", new Object());
+		menuOptions.put("remove", new Object());
+		menuOptions.put("clear", new Object());
+		menuOptions.put("increase", new Object());
+		menuOptions.put("decrease", new Object());
+		menuOptions.put("dump", new Object());
 	}
 
 	/* TODO: Rewrite user input to allow command line completion. Current thoughts on how to
