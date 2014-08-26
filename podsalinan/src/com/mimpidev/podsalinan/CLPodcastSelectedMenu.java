@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
@@ -25,7 +26,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 	 * @param urlDownloads 
 	 * @param "podcast"
 	 */
-	public CLPodcastSelectedMenu(ProgSettings newMenuList, URLDownloadList urlDownloads) {
+	public CLPodcastSelectedMenu(ArrayList<CLInterface.MenuPath> newMenuList, URLDownloadList urlDownloads) {
 		super(newMenuList, "podcast_selected");
 		String[] mainMenuList = {"1. List Episodes",
 								 "2. Update List",

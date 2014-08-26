@@ -27,6 +27,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
@@ -44,13 +45,13 @@ import com.mimpidev.podsalinan.data.URLDownloadList;
  */
 public class CLInterface implements Runnable{
 	private CLInput input;
-	private ProgSettings menuList;
+	private ArrayList<MenuPath> menuList;
 	private CLMainMenu mainMenu;
 	private DataStorage data=null;
 
 	public CLInterface(DataStorage newData){
 		setData(newData);
-		menuList = new ProgSettings();
+		menuList = new ArrayList<MenuPath>();
 		input = new CLInput();
 		initializeMenus();
 	}
@@ -60,7 +61,7 @@ public class CLInterface implements Runnable{
 		data.setPodcasts(podcasts);
 		data.setUrlDownloads(urlDownloads);
 		data.setSettings(settings);
-		menuList = new ProgSettings();
+		menuList = new ArrayList<MenuPath>();
 		input = new CLInput();
 		initializeMenus();
 	}
@@ -186,7 +187,7 @@ public class CLInterface implements Runnable{
 
 		if (menuInput.equalsIgnoreCase("decrease")){
 			if ((menuList.size()>0)&&
-				(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
+				(menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedDownload"))){
 					URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 					data.getUrlDownloads().decreasePriority(data.getUrlDownloads().findDownload(download.getURL()));
 				}
@@ -215,7 +216,7 @@ public class CLInterface implements Runnable{
 
 		if (menuInput.equalsIgnoreCase("increase")){
 			if ((menuList.size()>0)&&
-				(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
+				(menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedDownload"))){
 				URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 				data.getUrlDownloads().increasePriority(data.getUrlDownloads().findDownload(download.getURL()));
 			}
@@ -287,7 +288,7 @@ public class CLInterface implements Runnable{
 		
 		if (menuInput.equalsIgnoreCase("remove")){
 			if ((menuList.size()>0)&&
-			    (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
+			    (menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedDownload"))){
 				// remove the download
 				CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
 				cldsmenu.printDetails(null,true);
@@ -296,7 +297,7 @@ public class CLInterface implements Runnable{
 					data.getUrlDownloads().deleteDownload(cldsmenu.getDownload());
 					System.out.println("Download deleted.");
 				}
-			} else if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast")){
+			} else if (menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedPodcast")){
 				// remove the podcast from the system
 				CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
 				clpsmenu.printDetails(null);
@@ -317,7 +318,7 @@ public class CLInterface implements Runnable{
 			
 			if (menuInput.equalsIgnoreCase("download")){
 				if ((menuList.size()>0)&&
-					(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
+					(menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedDownload"))){
 					CLDownloadSelectedMenu cldsmenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
 					cldsmenu.printDetails(null,true);
 					if (input.confirmRemoval()){
@@ -343,7 +344,7 @@ public class CLInterface implements Runnable{
 			
 			if (menuInput.equalsIgnoreCase("podcast")){
 				if ((menuList.size()>0)&&
-				    (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedPodcast"))){
+				    (menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedPodcast"))){
 					// remove the podcast from the system
 					CLPodcastSelectedMenu clpsmenu = (CLPodcastSelectedMenu)mainMenu.findSubmenu("podcast_selected");
 					clpsmenu.printDetails(null);
@@ -361,8 +362,8 @@ public class CLInterface implements Runnable{
 					boolean podcastFound=false;
 					Podcast podcast=null;
 					
-		            while ((podcastCount<data.getPodcasts().size())&&(!podcastFound)){
-		            	podcast=data.getPodcasts().get(podcastCount);
+		            while ((podcastCount<data.getPodcasts().getList().size())&&(!podcastFound)){
+		            	podcast=data.getPodcasts().getList().get(podcastCount);
 						if (((podcast.getName().equalsIgnoreCase(menuInput))||
 							(podcast.getDatafile().equalsIgnoreCase(menuInput)))&&
 							(!podcast.isRemoved())){
@@ -416,12 +417,12 @@ public class CLInterface implements Runnable{
 	private void restartCommand(String menuInput) {
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		if (((menuInput.equalsIgnoreCase("delete"))||(menuInput.equalsIgnoreCase("episode")))&&
-			(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode"))){
+			(menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedEpisode"))){
 			CLEpisodeMenu episodeMenu = (CLEpisodeMenu)mainMenu.findSubmenu("episode_selected");
 			episodeMenu.deleteEpisodeFromDrive();
 			System.out.println("Deleting file for episode: "+episodeMenu.getEpisode().getTitle());
-		} else if (menuList.getArray().lastElement().name.equalsIgnoreCase("downloads")){
-			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload")){
+		} else if (menuList.get(menuList.size()-1).name.equalsIgnoreCase("downloads")){
+			if (menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedDownload")){
 				URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 				data.getUrlDownloads().deleteDownload(data.getUrlDownloads().findDownload(download.getURL()));
 				System.out.println("Deleting file for download: "+download.getURL().toString());
@@ -437,7 +438,7 @@ public class CLInterface implements Runnable{
 		menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
 		if ((menuInput.toLowerCase().contentEquals("download"))||
 			(menuInput.toLowerCase().equalsIgnoreCase("episode"))){
-			if (menuList.getArray().lastElement().name.equalsIgnoreCase("selectedEpisode")){
+			if (menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedEpisode")){
 				// If user enters "download" or "download episode" and user has selected episode, download the episode
 				CLEpisodeMenu episodeMenu = (CLEpisodeMenu)mainMenu.findSubmenu("episode_selected");
 				episodeMenu.downloadEpisode();
@@ -515,7 +516,7 @@ public class CLInterface implements Runnable{
 		menuInput = menuInput.replaceAll("(?i)list ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
 			menuList.clear();
-			menuList.addSetting("mainMenu", "podcast");
+			menuList.add(new MenuPath("mainMenu", "podcast"));
 			((CLPodcastMenu)(mainMenu.findSubmenu("podcast"))).listPodcasts();
 		} else if (menuInput.toLowerCase().startsWith("episode")){
 			if ((menuList.isValidSetting("mainMenu"))&&
@@ -528,9 +529,9 @@ public class CLInterface implements Runnable{
 		} else if (menuInput.toLowerCase().startsWith("select")){
 			Podcast selectedPodcast=null;
 			System.out.println("Current selection");
-			for (Setting currentItem : menuList.getArray()){
+			for (MenuPath currentItem : menuList){
 				if (currentItem.name.equalsIgnoreCase("selectedPodcast")){
-					for (Podcast podcast : data.getPodcasts())
+					for (Podcast podcast : data.getPodcasts().getList())
 						if (podcast.getDatafile().equalsIgnoreCase(currentItem.value)){
 							selectedPodcast=podcast;
 							System.out.println(currentItem.name+": "+podcast.getName());
@@ -653,7 +654,7 @@ public class CLInterface implements Runnable{
 		} else if (menuInput.toLowerCase().startsWith("destination")){
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
-			if ((menuList.size()>0)&&(menuList.getArray().lastElement().name.equalsIgnoreCase("selectedDownload"))){
+			if ((menuList.size()>0)&&(menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedDownload"))){
 				if (!menuInput.toLowerCase().startsWith("destination")){
 					CLDownloadSelectedMenu downloadMenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu");
 					downloadMenu.changeDirectory(null,menuInput);
@@ -700,8 +701,8 @@ public class CLInterface implements Runnable{
             Podcast podcast=null;
             
             // First while loop for exact matches
-            while ((podcastCount<data.getPodcasts().size())&&(!podcastFound)){
-            	podcast=data.getPodcasts().get(podcastCount);
+            while ((podcastCount<data.getPodcasts().getList().size())&&(!podcastFound)){
+            	podcast=data.getPodcasts().getList().get(podcastCount);
 				if (((podcast.getName().equalsIgnoreCase(menuInput))||
 					(podcast.getDatafile().equalsIgnoreCase(menuInput)))&&
 					(!podcast.isRemoved())){
@@ -713,7 +714,7 @@ public class CLInterface implements Runnable{
 			if (!podcastFound){
 				// If the user only entered part of the name we need to give suggestions to the user
 				Vector<Podcast> foundPodcasts = new Vector<Podcast>();
-				for (Podcast podcastSearch : data.getPodcasts())
+				for (Podcast podcastSearch : data.getPodcasts().getList())
 					if ((podcastSearch.getName().toLowerCase().contains(menuInput.toLowerCase()))&&
 						(!podcastSearch.isRemoved()))
 						foundPodcasts.add(podcastSearch);
@@ -765,7 +766,7 @@ public class CLInterface implements Runnable{
 				if ((menuInput.length()>0) &&(menuInput!=null)){
 					int select = mainMenu.convertCharToNumber(menuInput);
 					if ((select>=0)&&(select<selectedPodcast.getEpisodes().size())){
-						menuList.addSetting("selectedEpisode", Integer.toString(select));
+						menuList.add(new MenuPath("selectedEpisode", Integer.toString(select)));
 						((CLEpisodeMenu)mainMenu.findSubmenu("episode_selected")).setEpisode(selectedPodcast.getEpisodes().get(select),selectedPodcast);
 						episodeSelected = true;
 					}
@@ -798,7 +799,7 @@ public class CLInterface implements Runnable{
 								if ((userInput.length()>0)&&(userInput!=null)){
 									int selection = mainMenu.convertCharToNumber(userInput);
 									if ((selection>=0)&&(selection<matchingEpisodes.size())){
-										menuList.addSetting("selectedEpisode", Integer.toString(selectedPodcast.getEpisodeId(matchingEpisodes.get(selection))));
+										menuList.add(new MenuPath("selectedEpisode", Integer.toString(selectedPodcast.getEpisodeId(matchingEpisodes.get(selection)))));
 										((CLEpisodeMenu)mainMenu.findSubmenu("episode_selected")).setEpisode(matchingEpisodes.get(selection),selectedPodcast);
 										episodeSelected=true;
 									} else
@@ -824,8 +825,8 @@ public class CLInterface implements Runnable{
 			int select = mainMenu.convertCharToNumber(menuInput);
 			if ((select>=0) && (select<data.getUrlDownloads().getDownloads().size())){
 				menuList.clear();
-				menuList.addSetting("mainMenu", "downloads");
-				menuList.addSetting("selectedDownload", data.getUrlDownloads().getDownloads().get(select).getURL().toString());
+				menuList.add(new MenuPath("mainMenu", "downloads"));
+				menuList.add(new MenuPath("selectedDownload", data.getUrlDownloads().getDownloads().get(select).getURL().toString()));
 				CLDownloadSelectedMenu dsMenu = (CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu"); 
 				dsMenu.setDownload(data.getUrlDownloads().getDownloads().get(select));
 				if ((data.getSettings().isValidSetting("menuVisible"))&&
@@ -865,8 +866,8 @@ public class CLInterface implements Runnable{
 	private void selectPodcast(Podcast podcast){
 		// Add information to menuList
 		menuList.clear();
-		menuList.addSetting("mainMenu", "podcast");
-		menuList.addSetting("selectedPodcast", podcast.getDatafile());
+		menuList.add(new MenuPath("mainMenu", "podcast"));
+		menuList.add(new MenuPath("selectedPodcast", podcast.getDatafile()));
 			
 		// Set selected podcast
 		((CLPodcastSelectedMenu)(mainMenu.findSubmenu("podcast_selected"))).setSelectedPodcast(podcast);
@@ -972,5 +973,15 @@ public class CLInterface implements Runnable{
 	 */
 	public void setData(DataStorage data) {
 		this.data = data;
+	}
+	
+	public static class MenuPath {
+		public String name;
+		public String value;
+
+		public MenuPath(String newName, String newValue) {
+			name = newName;
+			newValue = value;
+		}
 	}
 }

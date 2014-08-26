@@ -3,6 +3,9 @@
  */
 package com.mimpidev.podsalinan;
 
+import java.util.ArrayList;
+
+import com.mimpidev.podsalinan.CLInterface.MenuPath;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -14,7 +17,7 @@ import com.mimpidev.podsalinan.data.URLDownloadList;
 public class CLDownloadMenu extends CLMenu{
 	private URLDownloadList urlDownloads;
 
-	public CLDownloadMenu(ProgSettings newMenuList, URLDownloadList downloadList) {
+	public CLDownloadMenu(ArrayList<MenuPath> newMenuList, URLDownloadList downloadList) {
 		super(newMenuList,"downloads");
 		String[] mainMenuList = {"(A-ZZ) Enter Download letter to select Download.",
 								 "To add a new download to the queue just enter the the url to be downloaded.",

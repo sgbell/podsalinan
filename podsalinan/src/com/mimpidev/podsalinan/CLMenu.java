@@ -12,12 +12,12 @@ import com.mimpidev.podsalinan.data.ProgSettings;
  *
  */
 public class CLMenu {
-	protected ProgSettings menuList;
+	protected ArrayList<CLInterface.MenuPath> menuList;
 	private String[] mainMenuList; 
 	private String menuName;
 	private ArrayList<CLMenu> submenus;
 
-	public CLMenu(ProgSettings newMenuList, String newMenuName){
+	public CLMenu(ArrayList<CLInterface.MenuPath> newMenuList, String newMenuName){
 		menuList = newMenuList;
 		setMenuName(newMenuName);
 		submenus = new ArrayList<CLMenu>();
@@ -35,13 +35,13 @@ public class CLMenu {
 	/**
 	 * @return the menuList
 	 */
-	public ProgSettings getMenuList() {
+	public ArrayList<CLInterface.MenuPath> getMenuList() {
 		return menuList;
 	}
 	/**
 	 * @param menuList the menuList to set
 	 */
-	public void setMenuList(ProgSettings menuList) {
+	public void setMenuList(ArrayList<CLInterface.MenuPath> menuList) {
 		this.menuList = menuList;
 	}
 

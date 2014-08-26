@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.mimpidev.podsalinan.data.Details;
 import com.mimpidev.podsalinan.data.Episode;
@@ -27,7 +28,7 @@ public class CLEpisodeMenu extends CLMenu {
 	 * @param urlDownloads 
 	 * @param newMenuName
 	 */
-	public CLEpisodeMenu(ProgSettings newMenuList, URLDownloadList urlDownloads) {
+	public CLEpisodeMenu(ArrayList<CLInterface.MenuPath> newMenuList, URLDownloadList urlDownloads) {
 		super(newMenuList, "episode_selected");
 		String[] menuList = {"1. Download episode",
 							 "2. Delete episode from Drive",
@@ -150,7 +151,7 @@ public class CLEpisodeMenu extends CLMenu {
 				case 9:
 					// Exit episode menu, clearing the selected episode information
 					setEpisode(null,null);
-					menuList.removeSetting("selectedEpisode");
+					menuList.remove(menuList.size()-1);
 					break;
 				case 98:
 					printDetails();

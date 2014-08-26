@@ -6,7 +6,9 @@ package com.mimpidev.podsalinan;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
+import com.mimpidev.podsalinan.CLInterface.MenuPath;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownload;
@@ -26,7 +28,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 	 * @param downloadList2 
 	 * @param newMenuName
 	 */
-	public CLDownloadSelectedMenu(ProgSettings newMenuList, URLDownloadList downloads) {
+	public CLDownloadSelectedMenu(ArrayList<MenuPath> newMenuList, URLDownloadList downloads) {
 		super(newMenuList, "downloadSelected_menu");
 		String[] menuList = {"1. Delete Download",
 				             "2. Restart Download",

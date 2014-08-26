@@ -3,6 +3,7 @@
  */
 package com.mimpidev.podsalinan;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.mimpidev.podsalinan.data.Podcast;
@@ -18,7 +19,7 @@ public class CLMainMenu extends CLMenu{
 	private PodcastList podcasts;
 	private URLDownloadList urlDownloads;
 	
-	public CLMainMenu(ProgSettings parentMenuList, PodcastList podcastList, URLDownloadList downloadList) {
+	public CLMainMenu(ArrayList<CLInterface.MenuPath> parentMenuList, PodcastList podcastList, URLDownloadList downloadList) {
 		super(parentMenuList,"Main Menu");
 		
 		String[] mainMenuList = {
@@ -49,13 +50,13 @@ public class CLMainMenu extends CLMenu{
 		if (menuList.size()==0){
 			switch (userInputInt){
 				case 1:
-					menuList.addSetting("mainMenu","podcast");
+					menuList.add(new CLInterface.MenuPath("mainMenu","podcast"));
 					break;
 				case 2:
-					menuList.addSetting("mainMenu","downloads");
+					menuList.add(new CLInterface.MenuPath("mainMenu","downloads"));
 					break;
 				case 3:
-					menuList.addSetting("mainMenu","preferences");
+					menuList.add(new CLInterface.MenuPath("mainMenu","preferences"));
 					break;
 				case 99:
 					printMainMenu();

@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class CLPreferencesMenu extends CLMenu{
 	private ProgSettings settings;
 	private CLInput input;
 
-	public CLPreferencesMenu(ProgSettings newMenuList, ProgSettings preferences) {
+	public CLPreferencesMenu(ArrayList<CLInterface.MenuPath> newMenuList, ProgSettings preferences) {
 		super(newMenuList,"preferences");
 		String[] mainMenuList = {"1. Change Podcast Update Rate",
 								 "2. Number of Downloaders",

@@ -3,6 +3,7 @@
  */
 package com.mimpidev.podsalinan;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.mimpidev.podsalinan.data.Podcast;
@@ -22,7 +23,7 @@ public class CLPodcastMenu extends CLMenu{
 	 * @param urlDownloads 
 	 * 
 	 */
-	public CLPodcastMenu(ProgSettings parentMenuList, PodcastList podcastList, URLDownloadList urlDownloads) {
+	public CLPodcastMenu(ArrayList<CLInterface.MenuPath> parentMenuList, PodcastList podcastList, URLDownloadList urlDownloads) {
 		super(parentMenuList, "podcast");
 		String[] mainMenuList = {
 				"(A-Z) Enter Podcast letter to select Podcast.",
@@ -85,7 +86,7 @@ public class CLPodcastMenu extends CLMenu{
 					while ((podcastCount<podcasts.getList().size())&&(!podcastFound)){
 						Podcast podcast = podcasts.getList().get(podcastCount);
 						if ((podcastCount==podcastNumber)&&(!podcast.isRemoved())){
-							menuList.addSetting("selectedPodcast", podcast.getDatafile());
+							menuList.add(new CLInterface.MenuPath("selectedPodcast", podcast.getDatafile()));
 							((CLPodcastSelectedMenu)findSubmenu("podcast_selected")).setSelectedPodcast(podcast);
 							System.out.println("Selected Podcast: "+podcast.getName());
 							podcastFound=true;
