@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.options.*;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.PodcastList;
@@ -50,7 +52,7 @@ public class CLInterface implements Runnable{
 	private ArrayList<MenuPath> menuList;
 	private CLMainMenu mainMenu;
 	private DataStorage data=null;
-	private Map<String, Object> menuOptions=null;
+	private Map<String, CLIOption> menuOptions=null;
 
 	public CLInterface(DataStorage newData){
 		setData(newData);
@@ -78,24 +80,24 @@ public class CLInterface implements Runnable{
 		mainMenu.addSubmenu(new CLPreferencesMenu(menuList,data.getSettings()));
 		mainMenu.addSubmenu(new CLDownloadMenu(menuList,data.getUrlDownloads()));
 		
-		menuOptions = new HashMap<String, Object>();
-		menuOptions.put("quit", new Object());
-		menuOptions.put("exit", new Object());
-		menuOptions.put("http", new Object());
-		menuOptions.put("ftp", new Object());
-		menuOptions.put("help", new Object());
-		menuOptions.put("select", new Object());
-		menuOptions.put("set", new Object());
-		menuOptions.put("list", new Object());
-		menuOptions.put("show", new Object());
-		menuOptions.put("hide", new Object());
-		menuOptions.put("restart", new Object());
-		menuOptions.put("stop", new Object());
-		menuOptions.put("remove", new Object());
-		menuOptions.put("clear", new Object());
-		menuOptions.put("increase", new Object());
-		menuOptions.put("decrease", new Object());
-		menuOptions.put("dump", new Object());
+		menuOptions = new HashMap<String, CLIOption>();
+		menuOptions.put("quit", new QuitCommand(data));
+		menuOptions.put("exit", new QuitCommand(data));
+		menuOptions.put("http", new URLCommand(data));
+		menuOptions.put("ftp", new URLCommand(data));
+		menuOptions.put("help", new HelpCommand(data));
+		menuOptions.put("select", new SelectCommand(data));
+		menuOptions.put("set", new SetCommand(data));
+		menuOptions.put("list", new ListCommand(data));
+		menuOptions.put("show", new ShowCommand(data));
+		menuOptions.put("hide", new HideCommand(data));
+		menuOptions.put("restart", new RestartCommand(data));
+		menuOptions.put("stop", new StopCommand(data));
+		menuOptions.put("remove", new RemoveCommand(data));
+		menuOptions.put("clear", new ClearCommand(data));
+		menuOptions.put("increase", new IncreaseCommand(data));
+		menuOptions.put("decrease", new DecreaseCommand(data));
+		menuOptions.put("dump", new DumpCommand(data));
 	}
 
 	/* TODO: Rewrite user input to allow command line completion. Current thoughts on how to
@@ -134,12 +136,11 @@ public class CLInterface implements Runnable{
 						 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))
 					mainMenu.process(inputInt);
 			} catch (NumberFormatException e){
+				// Replacing the If statements below.
+				menuOptions.get(menuInput.toLowerCase().split(" ",2)[0]).execute(menuInput);
 				// If the input is not a number This area will sort out that code
-				if ((menuInput.equalsIgnoreCase("quit"))||
-					(menuInput.equalsIgnoreCase("exit"))){
-					data.getSettings().setFinished(true);
-				} else if ((menuInput.toUpperCase().startsWith("HTTP"))||
-						   (menuInput.toUpperCase().startsWith("FTP"))){
+				if ((menuInput.toUpperCase().startsWith("HTTP"))||
+				    (menuInput.toUpperCase().startsWith("FTP"))){
 					// User has entered a url to download.
 					data.getUrlDownloads().addDownload(menuInput,data.getSettings().getSettingValue("defaultDirectory"),"-1",false);
 				} else if (menuInput.toUpperCase().startsWith("HELP")){
