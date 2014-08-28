@@ -22,8 +22,7 @@ public class URLCommand extends CLIOption {
 
 	@Override
 	public void execute(String command) {
-		// TODO Auto-generated method stub
-		
+		data.getUrlDownloads().addDownload(command,data.getSettings().getSettingValue("defaultDirectory"),"-1",false);
 	}
 
 }

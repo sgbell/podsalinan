@@ -25,8 +25,9 @@ public class HideCommand extends CLIOption {
 	 */
 	@Override
 	public void execute(String command) {
-		// TODO Auto-generated method stub
-
+		if (menuInput.equalsIgnoreCase("hide menu"))
+			if (!data.getSettings().addSetting("menuVisible", "false"))
+				data.getSettings().updateSetting("menuVisible", "false");
 	}
 
 }

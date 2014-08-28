@@ -25,8 +25,8 @@ public class ClearCommand extends CLIOption {
 	 */
 	@Override
 	public void execute(String command) {
-		// TODO Auto-generated method stub
-
+		menuList.clear();
+		System.out.println("Selection Cleared.");
 	}
 
 }
