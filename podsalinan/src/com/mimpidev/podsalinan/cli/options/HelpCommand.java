@@ -38,6 +38,7 @@ public class HelpCommand extends CLIOption {
 			((CLIOption)options.get("")).execute(command);
 		} else {
 		    ((CLIOption)options.get(command.split(" ", 2)[1])).execute(command);
+		}
 		
 		System.out.println("");
 		System.out.println("");
