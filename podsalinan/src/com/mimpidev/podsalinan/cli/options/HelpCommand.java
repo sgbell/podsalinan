@@ -32,12 +32,14 @@ public class HelpCommand extends CLIOption {
 	@Override
 	public void execute(String command) {
 		System.out.println("");
+		String subOption=command.split(" ", 2)[1];
 		
-		if (!options.containsKey(command.split(" ", 2)[1])){
+		if (!options.containsKey(subOption)){
             System.out.println("Error: Invalid Help request.");
+    		System.out.println("");
 			((CLIOption)options.get("")).execute(command);
 		} else {
-		    ((CLIOption)options.get(command.split(" ", 2)[1])).execute(command);
+		    ((CLIOption)options.get(subOption)).execute(command);
 		}
 		
 		System.out.println("");
