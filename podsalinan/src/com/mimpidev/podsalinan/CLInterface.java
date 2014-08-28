@@ -141,12 +141,8 @@ public class CLInterface implements Runnable{
 				String methodCall=menuInput.split(" ",2)[0];
 				menuOptions.get(methodCall).execute(menuInput);
 				// If the input is not a number This area will sort out that code
-				if ((menuInput.toUpperCase().startsWith("HTTP"))||
-				    (menuInput.toUpperCase().startsWith("FTP"))){
-					// User has entered a url to download.
-					data.getUrlDownloads().addDownload(menuInput,data.getSettings().getSettingValue("defaultDirectory"),"-1",false);
-				} else if ((data.getSettings().findSetting("menuVisible")==null)||
-						   (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))
+				if ((data.getSettings().findSetting("menuVisible")==null)||
+				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))
 					mainMenu.process(menuInput);
 			}
 		}
