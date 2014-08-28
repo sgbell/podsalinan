@@ -21,26 +21,17 @@
  */
 package com.mimpidev.podsalinan.cli;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
-
-import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.options.*;
-import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
-import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 
 /**
