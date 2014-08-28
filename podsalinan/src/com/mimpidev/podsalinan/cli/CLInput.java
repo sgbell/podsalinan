@@ -19,13 +19,14 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.cli;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman

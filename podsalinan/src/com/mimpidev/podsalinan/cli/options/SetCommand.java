@@ -5,10 +5,10 @@ package com.mimpidev.podsalinan.cli.options;
 
 import java.io.File;
 
-import com.mimpidev.podsalinan.CLDownloadSelectedMenu;
-import com.mimpidev.podsalinan.CLPodcastSelectedMenu;
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.cli.CLDownloadSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLPodcastSelectedMenu;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
 

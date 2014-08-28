@@ -6,8 +6,8 @@ package com.mimpidev.podsalinan.cli.options;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.mimpidev.podsalinan.CLEpisodeMenu;
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.cli.CLEpisodeMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
 
 /**

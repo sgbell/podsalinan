@@ -3,9 +3,9 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
-import com.mimpidev.podsalinan.CLDownloadSelectedMenu;
-import com.mimpidev.podsalinan.CLEpisodeMenu;
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.cli.CLDownloadSelectedMenu;
+import com.mimpidev.podsalinan.cli.CLEpisodeMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.data.URLDownload;
 

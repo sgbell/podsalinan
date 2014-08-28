@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.cli;
 
 import java.io.File;
 import java.util.ArrayList;

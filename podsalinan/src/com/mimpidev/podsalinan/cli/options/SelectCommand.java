@@ -6,12 +6,12 @@ package com.mimpidev.podsalinan.cli.options;
 import java.util.Date;
 import java.util.Vector;
 
-import com.mimpidev.podsalinan.CLDownloadSelectedMenu;
-import com.mimpidev.podsalinan.CLEpisodeMenu;
-import com.mimpidev.podsalinan.CLPodcastSelectedMenu;
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.CLInterface.MenuPath;
+import com.mimpidev.podsalinan.cli.CLDownloadSelectedMenu;
+import com.mimpidev.podsalinan.cli.CLEpisodeMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLPodcastSelectedMenu;
+import com.mimpidev.podsalinan.cli.CLInterface.MenuPath;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 

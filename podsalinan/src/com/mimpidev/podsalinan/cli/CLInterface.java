@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.cli;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import com.mimpidev.dev.debug.Log;
-import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.options.*;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
