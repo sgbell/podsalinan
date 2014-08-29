@@ -39,15 +39,33 @@ import com.mimpidev.podsalinan.data.URLDownloadList;
  *
  */
 public class CLInterface implements Runnable{
+	/**
+	 * 
+	 */
 	private CLInput input;
-	private ArrayList<MenuPath> menuList;
+	/**
+	 * 
+	 */
 	private CLMainMenu mainMenu;
+	/**
+	 * 
+	 */
 	private DataStorage data=null;
+	/**
+	 * 
+	 */
 	private Map<String, CLIOption> menuOptions=null;
+    /**
+     * 
+     */
+	private Map<String, String> cliMenuCommand=null;
+	/**
+	 * 
+	 */
+	private String menuCommand="";
 
 	public CLInterface(DataStorage newData){
 		setData(newData);
-		menuList = new ArrayList<MenuPath>();
 		input = new CLInput();
 		initializeMenus();
 	}
@@ -57,19 +75,18 @@ public class CLInterface implements Runnable{
 		data.setPodcasts(podcasts);
 		data.setUrlDownloads(urlDownloads);
 		data.setSettings(settings);
-		menuList = new ArrayList<MenuPath>();
 		input = new CLInput();
 		initializeMenus();
 	}
 
 	private void initializeMenus() {
 		// Main menu requires podcasts and urlDownloads so it can display the number of podcasts and downloads queued.
-		mainMenu = new CLMainMenu(menuList,data.getPodcasts(),data.getUrlDownloads());
+		//mainMenu = new CLMainMenu(menuList,data.getPodcasts(),data.getUrlDownloads());
 		// When creating the Podcast Menus, we need settings to grab the default directory to do a manual update,
 		// and urlDownloads so we can queue episodes up for downloading manually.
-		mainMenu.addSubmenu(new CLPodcastMenu(menuList,data.getPodcasts(),data.getUrlDownloads()));
-		mainMenu.addSubmenu(new CLPreferencesMenu(menuList,data.getSettings()));
-		mainMenu.addSubmenu(new CLDownloadMenu(menuList,data.getUrlDownloads()));
+		//mainMenu.addSubmenu(new CLPodcastMenu(menuList,data.getPodcasts(),data.getUrlDownloads()));
+		//mainMenu.addSubmenu(new CLPreferencesMenu(menuList,data.getSettings()));
+		//mainMenu.addSubmenu(new CLDownloadMenu(menuList,data.getUrlDownloads()));
 		
 		menuOptions = new HashMap<String, CLIOption>();
 		menuOptions.put("quit", new QuitCommand(data));
@@ -90,6 +107,15 @@ public class CLInterface implements Runnable{
 		menuOptions.put("increase", new IncreaseCommand(data));
 		menuOptions.put("decrease", new DecreaseCommand(data));
 		menuOptions.put("dump", new DumpCommand(data));
+		menuOptions.put("podcast", new PodcastCommand(data));
+		menuOptions.put("downloads", new DownloadsCommand(data));
+		menuOptions.put("settings", new SettingsCommand(data));
+		
+		cliMenuCommand = new HashMap<String, String>();
+		cliMenuCommand.put("1", "podcast showmenu");
+		cliMenuCommand.put("2", "downloads showmenu");
+		cliMenuCommand.put("3", "settings showmenu");
+		cliMenuCommand.put("4", "quit");
 	}
 
 	/* TODO: Rewrite user input to allow command line completion. Current thoughts on how to
@@ -118,19 +144,29 @@ public class CLInterface implements Runnable{
 	public void userInput(){
 		System.out.print("->");
 		String menuInput=input.getStringInput();
+		String methodCall="";
+		String methodParameters="";
 		if ((menuInput.length()>0)&&(menuInput!=null)){
 			try {
-				int inputInt = Integer.parseInt(menuInput);
+				// Just testing the number being passed
+				Integer.parseInt(menuInput);
 				// process number input
-				if ((menuList.size()==0)&&(inputInt==4))
-					data.getSettings().setFinished(true);
-				else if ((data.getSettings().findSetting("menuVisible")==null)||
-						 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))
-					mainMenu.process(inputInt);
+                if ((data.getSettings().findSetting("menuVisible")==null)||
+				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
+                	if (cliMenuCommand.containsKey(menuInput)){
+                		menuCommand = cliMenuCommand.get(menuInput);
+                	} else {
+                		System.out.println ("Error: Invalid User Entry.");
+                	}
+            		methodCall = menuCommand.split(" ",2)[0];
+            		methodParameters = menuCommand.split(" ",2)[1];
+            		menuOptions.get(methodCall).execute(methodParameters);
+                }
 			} catch (NumberFormatException e){
-				// Replacing the If statements below.
-				String methodCall=menuInput.split(" ",2)[0];
+				// Replacing the old if statements
+				methodCall=menuInput.split(" ",2)[0];
 				menuOptions.get(methodCall).execute(menuInput);
+				
 				// If the input is not a number This area will sort out that code
 				if ((data.getSettings().findSetting("menuVisible")==null)||
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))
@@ -144,8 +180,7 @@ public class CLInterface implements Runnable{
 		System.out.println("Welcome to podsalinan.");
 		System.out.println("----------------------");
 		while (!data.getSettings().isFinished()){
-			if ((menuList.size()==0)&&
-				((data.getSettings().findSetting("menuVisible")==null)||
+			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))))
 				mainMenu.printMainMenu();
 			if (!data.getSettings().isFinished())
@@ -180,7 +215,7 @@ public class CLInterface implements Runnable{
 		
 		return date;
 	}
-
+/*
 	private void selectPodcast(Podcast podcast){
 		// Add information to menuList
 		menuList.clear();
@@ -193,7 +228,7 @@ public class CLInterface implements Runnable{
 		if ((data.getSettings().isValidSetting("menuVisible"))&&
 			(data.getSettings().findSetting("menuVisible").equalsIgnoreCase("false")))
   		    System.out.println("Selected Podcast: "+podcast.getName());
-	}
+	}*/
 
 	public String getCharForNumber(int i){
 		return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;

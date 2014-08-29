@@ -10,12 +10,12 @@ import com.mimpidev.podsalinan.cli.CLIOption;
  * @author sbell
  *
  */
-public class ClearCommand extends CLIOption {
+public class PodcastCommand extends CLIOption {
 
 	/**
 	 * @param newData
 	 */
-	public ClearCommand(DataStorage newData) {
+	public PodcastCommand(DataStorage newData) {
 		super(newData);
 		// TODO Auto-generated constructor stub
 	}
@@ -25,7 +25,8 @@ public class ClearCommand extends CLIOption {
 	 */
 	@Override
 	public void execute(String command) {
-		System.out.println("Selection Cleared.");
+		// TODO Auto-generated method stub
+
 	}
 
 }

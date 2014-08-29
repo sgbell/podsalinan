@@ -61,13 +61,6 @@ public class DataStorage {
 	private Object finishWait= new Object();
 
 	/**
-	 *  SQL Statement for deleting all settings from main database file.
-	 */
-	private final String CLEAR_ALL_SETTINGS = "DELETE from settings;" +
-								 			  "DELETE from sqlite_sequence " +
-								 			  "WHERE name='settings';";
-	
-	/**
 	 *  Used to Define the current File system slash.
 	 */
 	private String fileSystemSlash;
