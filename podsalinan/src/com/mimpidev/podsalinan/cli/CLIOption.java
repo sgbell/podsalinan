@@ -20,5 +20,5 @@ public abstract class CLIOption {
 		data=newData;
 	}
 
-	public abstract void execute(String command);
+	public abstract ReturnCall execute(String command);
 }

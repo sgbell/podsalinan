@@ -55,10 +55,6 @@ public class CLInterface implements Runnable{
 	 * 
 	 */
 	private Map<String, CLIOption> menuOptions=null;
-    /**
-     * 
-     */
-	private Map<String, String> cliMenuCommand=null;
 	/**
 	 * 
 	 */
@@ -94,28 +90,127 @@ public class CLInterface implements Runnable{
 		menuOptions.put("http", new URLCommand(data));
 		menuOptions.put("ftp", new URLCommand(data));
 		menuOptions.put("help", new HelpCommand(data));
+		/** help commands
+		 *  =============
+		 *  help
+		 *  help list
+		 *  help select
+		 *  help set
+		 */
 		menuOptions.put("select", new SelectCommand(data));
+		/** select commands
+		 *  ===============
+		 *  select podcast
+		 *  select episode
+		 *  select download
+		 */
 		menuOptions.put("set", new SetCommand(data));
+		/** set commands
+		 *  ============
+		 *  set updateinterval
+		 *  set downloadlimit
+		 *  set maxdownloaders
+		 *  set autoqueue
+		 *  set menuvisible
+		 *  set defaultdirectory
+		 *  set destination
+		 *  set podcast directory
+		 *  set directory
+		 */
 		menuOptions.put("list", new ListCommand(data));
+		/** list commands
+		 *  =============
+		 *  list podcast
+		 *  list episode
+		 *  list select
+		 *  list details
+		 *  list downloads
+		 *  list preferences
+		 */
 		menuOptions.put("show", new ShowCommand(data));
+		/** show commands
+		 *  =============
+		 *  show menu
+		 */
 		menuOptions.put("hide", new HideCommand(data));
+		/** hide commands
+		 *  =============
+		 *  hide menu
+		 */
 		menuOptions.put("download", new DownloadCommand(data));
+		/** download commands
+		 *  =================
+		 *  download episode
+		 *  download <url>
+		 */
 		menuOptions.put("restart", new RestartCommand(data));
+		/** restart commands
+		 *  ================
+		 *  restart episode
+		 *  restart downloads
+		 */
 		menuOptions.put("stop", new StopCommand(data));
+		/** stop commands
+		 *  =============
+		 *  stop
+		 *  stop download
+		 *  stop <downloadId>
+		 */
 		menuOptions.put("remove", new RemoveCommand(data));
+		/** remove commands
+		 *  ===============
+		 *  remove
+		 *  remove download
+		 *  remove podcast
+		 *  remove <downloadId>
+		 */
 		menuOptions.put("clear", new ClearCommand(data));
+		/** clear commands
+		 *  ==============
+		 *  clear
+		 */
 		menuOptions.put("increase", new IncreaseCommand(data));
+		/** increase commands
+		 *  =================
+		 *  increase
+		 *  increase download <downloadId>
+		 */
 		menuOptions.put("decrease", new DecreaseCommand(data));
+		/** decrease commands
+		 *  =================
+		 *  decrease
+		 *  decrease download <downloadId>
+		 */
 		menuOptions.put("dump", new DumpCommand(data));
+		/** dump commands
+		 *  =============
+		 *  dump
+		 *  dump urldownloads
+		 */
 		menuOptions.put("podcast", new PodcastCommand(data));
+		/** podcast commands
+		 *  ==================
+		 *  <a-zzz>           - Select Podcast
+		 *  9                 - Quit to Main Menu
+		 */
 		menuOptions.put("downloads", new DownloadsCommand(data));
+		/** downloads commands
+		 *  ==================
+		 *  <a-zzz>           - Select Download
+		 *  9                 - Quit to Main Menu
+		 */
 		menuOptions.put("settings", new SettingsCommand(data));
-		
-		cliMenuCommand = new HashMap<String, String>();
-		cliMenuCommand.put("1", "podcast showmenu");
-		cliMenuCommand.put("2", "downloads showmenu");
-		cliMenuCommand.put("3", "settings showmenu");
-		cliMenuCommand.put("4", "quit");
+		/** settings commands
+		 *  =================
+		 */
+		menuOptions.put("", new MainMenuCommand(data));
+		/** mainmenu commands
+		 *  =================
+		 *  1                - Podcast Menu
+		 *  2                - Downloads Menu
+		 *  3                - Settings Menu
+		 *  4                - Quit
+		 */
 	}
 
 	/* TODO: Rewrite user input to allow command line completion. Current thoughts on how to
@@ -153,24 +248,138 @@ public class CLInterface implements Runnable{
 				// process number input
                 if ((data.getSettings().findSetting("menuVisible")==null)||
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
-                	if (cliMenuCommand.containsKey(menuInput)){
-                		menuCommand = cliMenuCommand.get(menuInput);
-                	} else {
-                		System.out.println ("Error: Invalid User Entry.");
+                	/**
+                	 * How to traverse a menu system using commands???
+                	 * 
+                	 * Start with creating an entire tree of the command structure to visualize
+                	 * the different commands.
+                	 * Then we can devise a way of traversing the menu system
+                	 * 
+                	 * - mainMenu showMenu           menuCommand = ""
+                	 * user enters 1
+                	 *   - mainMenu 1                menuCommand = "podcast"
+                	 *   - podcast showMenu          menuCommand = "podcast"
+                	 * user enters a
+                	 *   - podcast a                 menuCommand = "podcast a"              
+                	 *   - podcast showSelectedMenu  menuCommand = "podcast a"
+                	 * user enters 1
+                	 *   - list episode              menuCommand = "podcast a" 
+                	 *   - podcast showSelectedMenu  menuCommand = "podcast a"
+                	 * user enters a
+                	 *   - select episode a          menuCommand = "podcast a episode a"
+                	 *   - episode showMenu          menuCommand = "podcast a episode a"
+                	 * user enters 1
+                	 *   - episode download          menuCommand = "podcast a episode a"
+                	 *   - episode showMenu          menuCommand = "podcast a episode a"
+                	 * user enters 9
+                	 *   - podcastShowSelectedMenu   menuCommand = "podcast a"
+                	 * user enters 9
+                	 *   - podcastShowMenu           menuCommand = "podcast"
+                	 * user enters 9
+                	 *   - mainMenu showMenu         menuCommand = ""
+                	 * 
+                	 * 
+                	 * MainMenu
+                	 * =========
+                	 *                        Functionality                    Command            
+                	 * <empty string>       - display Menu                     mainMenu showMenu
+                	 * 1                    - Podcast Menu                     podcast showMenu
+                	 *     <a-zz>           - Select Podcast                   (podcast <a-zzz>) or (select podcast <a-zzz>) podcast showSelectedMenu 
+                	 *            1         - List Episodes                    list episode
+                	 *            2         - Update List                      podcast update
+                	 *            3         - Delete Podcast                   podcast delete
+                	 *            4         - Change Download Directory        (podcast set directory) or (set podcast directory)
+                	 *            5         - Autoqueue Episodes               podcast autoqueue
+                	 *            <a-zz>    - Select Episode                   (select episode <a-zz>) or (podcast episode <a-zz>) episode showMenu
+                	 *                   1  - Download Episode                 (episode download) or (download episode)
+                	 *                   2  - Delete Episode from Drive        (episode delete) or (delete episode)
+                	 *                   3  - Cancel Download of Episode       (episode cancel) or (cancel episode)
+                	 *                   4  - Change Status of Episode         episode set status
+                	 *                   9  - Quit to Selected Podcast Menu    podcast showSelecetedMenu
+                	 *            9         - Quit to Podcast Menu             podcast showMenu
+                	 *     9                - Quit to Main Menu                mainMenu showMenu
+                	 * 2                    - Downloads Menu                   downloads showMenu
+                	 *     <a-zz>           - Select Download                  select download     downloads showSelectedMenu
+                	 *            1         - Delete Download                  (delete download) or (download delete)
+                	 *            2         - Restart download                 download restart
+                	 *            3         - Stop Download                    download stop
+                	 *            4         - Start Download                   download start
+                	 *            5         - Increase Priority                increase
+                	 *            6         - Decrease Priority                decrease
+                	 *            7         - Change Destination               download destination or set destination
+                	 *            9         - Quit to Downloads Menu           downloads showMenu
+                	 *     9                - Quit to Main Menu                mainMenu showMenu
+                	 * 3                    - Settings Menu                    settings showMenu
+                	 *     1                - Change Update Rate               settings updateinterval
+                	 *     2                - Change Number of Downloaders     settings maxdownloaders
+                	 *     3                - Default Download Directory       settings defaultdirectory
+                	 *     4                - AutoQueue All Podcast Episodes   settings autoqueue
+                	 *     5                - Set Download Speed Limit         settings downloadlimit
+                	 *     9                - Quit to Main Menu                mainMenu showMenu
+                	 * 4                    - Quit                             quit
+                	 * 
+                	 * mainMenu  - showMenu
+                	 * podcast   - showMenu
+                	 *           - showSelectedMenu
+                	 *           - <a-zz>    (load a podcast)
+                	 *           - update
+                	 *           - delete
+                	 *           - set directory
+                	 *           - autoqueue
+                	 *           - episode <a-zz>
+                	 *           - <a-zz> episode <a-zz>
+                	 * episode   - showMenu
+                	 *           - <a-zz>    (load an episode from the selected podcast)
+                	 *           - download
+                	 *           - delete
+                	 *           - cancel
+                	 *           - set status
+                	 * downloads - showMenu
+                	 *           - showSelectedMenu
+                	 * settings  - showMenu
+                	 *           - updateInterval
+                	 *           - maxdownloaders
+                	 *           - defaultdirectory
+                	 *           - autoqueue
+                	 *           - downloadlimit
+                	 * list      - episode
+                	 * delete    - episode
+                	 *           - download
+                	 *           - podcast
+                	 * cancel    - episode
+                	 * select    - podcast <a-zz>
+                	 *           - episode <a-zz>
+                	 *           - download <a-zz>
+                	 * set       - podcast directory
+                	 *           - status episode
+                	 *           - destination 
+                	 * download  - episode
+                	 *           - delete
+                	 *           - stop
+                	 *           - start
+                	 *           - increase
+                	 *           - decrease
+                	 *           - destination
+                	 * increase
+                	 * decrease           
+                	 */
+                	
+                	ReturnCall returnValue = new ReturnCall();
+                	returnValue.execute=true;
+                	returnValue.methodCall = menuCommand.split(" ",2)[0];
+            		returnValue.methodParameters = menuCommand.split(" ",2)[1];
+            		while (returnValue.execute){
+            			returnValue=menuOptions.get(returnValue.methodCall).execute(returnValue.methodParameters);
                 	}
-            		methodCall = menuCommand.split(" ",2)[0];
-            		methodParameters = menuCommand.split(" ",2)[1];
-            		menuOptions.get(methodCall).execute(methodParameters);
+            		menuCommand = returnValue.methodCall;
                 }
 			} catch (NumberFormatException e){
 				// Replacing the old if statements
 				methodCall=menuInput.split(" ",2)[0];
+				if (!menuOptions.containsKey(methodCall)){
+            		System.out.println ("Error: Invalid User Entry.");
+				}
 				menuOptions.get(methodCall).execute(menuInput);
-				
-				// If the input is not a number This area will sort out that code
-				if ((data.getSettings().findSetting("menuVisible")==null)||
-				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))
-					mainMenu.process(menuInput);
 			}
 		}
 	}
