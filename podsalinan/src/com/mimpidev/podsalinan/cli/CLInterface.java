@@ -245,6 +245,8 @@ public class CLInterface implements Runnable{
 			if (!menuOptions.containsKey(methodCall)){
                 if ((data.getSettings().findSetting("menuVisible")==null)||
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
+                	// The reason for the return call is so that we can check mainMenu to transform the call,
+                	// and then have the called method call another one if it needs to.
                 	ReturnCall returnValue = new ReturnCall();
                 	returnValue.execute=true;
                 	returnValue.methodCall = menuCommand; 
