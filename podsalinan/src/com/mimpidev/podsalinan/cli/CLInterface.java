@@ -240,8 +240,27 @@ public class CLInterface implements Runnable{
 		System.out.print("->");
 		String menuInput=input.getStringInput();
 		String methodCall="";
-		String methodParameters="";
 		if ((menuInput.length()>0)&&(menuInput!=null)){
+			methodCall=menuInput.split(" ",2)[0];
+			if (!menuOptions.containsKey(methodCall)){
+                if ((data.getSettings().findSetting("menuVisible")==null)||
+				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
+                	ReturnCall returnValue = new ReturnCall();
+                	returnValue.execute=true;
+                	returnValue.methodCall = menuCommand; 
+            		returnValue.methodParameters = menuInput; 
+            		while (returnValue.execute){
+            			returnValue=menuOptions.get(returnValue.methodCall).execute(returnValue.methodParameters);
+                	}
+            		menuCommand = returnValue.methodCall;
+                }
+			} else {
+				menuOptions.get(methodCall).execute(menuInput);
+			}
+			
+			
+			
+        // Old code starts here			
 			try {
 				// Just testing the number being passed
 				Integer.parseInt(menuInput);
@@ -381,6 +400,7 @@ public class CLInterface implements Runnable{
 				}
 				menuOptions.get(methodCall).execute(menuInput);
 			}
+			// Old code ends here
 		}
 	}
 
