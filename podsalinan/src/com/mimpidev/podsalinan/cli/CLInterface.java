@@ -366,8 +366,8 @@ public class CLInterface implements Runnable{
                 	
                 	ReturnCall returnValue = new ReturnCall();
                 	returnValue.execute=true;
-                	returnValue.methodCall = menuCommand.split(" ",2)[0];
-            		returnValue.methodParameters = menuCommand.split(" ",2)[1];
+                	returnValue.methodCall =""; 
+            		returnValue.methodParameters =""; 
             		while (returnValue.execute){
             			returnValue=menuOptions.get(returnValue.methodCall).execute(returnValue.methodParameters);
                 	}
