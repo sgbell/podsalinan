@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.cli.options.help.*;
 
 /**
@@ -30,7 +31,7 @@ public class HelpCommand extends CLIOption {
 	}
 
 	@Override
-	public void execute(String command) {
+	public ReturnCall execute(String command) {
 		System.out.println("");
 		String subOption=command.split(" ", 2)[1];
 		
@@ -44,6 +45,12 @@ public class HelpCommand extends CLIOption {
 		
 		System.out.println("");
 		System.out.println("");
+		return null;
+	}
+
+	@Override
+	public void showMenu() {
+		
 	}
 
 }

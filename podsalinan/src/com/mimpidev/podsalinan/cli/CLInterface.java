@@ -23,13 +23,11 @@ package com.mimpidev.podsalinan.cli;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.options.*;
-import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -46,7 +44,7 @@ public class CLInterface implements Runnable{
 	/**
 	 * 
 	 */
-	private CLMainMenu mainMenu;
+	//private CLMainMenu mainMenu;
 	/**
 	 * 
 	 */
@@ -248,9 +246,11 @@ public class CLInterface implements Runnable{
                 	// The reason for the return call is so that we can check mainMenu to transform the call,
                 	// and then have the called method call another one if it needs to.
                 	ReturnCall returnValue = new ReturnCall();
+                	
                 	returnValue.execute=true;
                 	returnValue.methodCall = menuCommand; 
-            		returnValue.methodParameters = menuInput; 
+            		returnValue.methodParameters = menuInput;
+            		
             		while (returnValue.execute){
             			returnValue=menuOptions.get(returnValue.methodCall).execute(returnValue.methodParameters);
                 	}
@@ -263,12 +263,12 @@ public class CLInterface implements Runnable{
 			
 			
         // Old code starts here			
-			try {
+		/*	try {
 				// Just testing the number being passed
 				Integer.parseInt(menuInput);
 				// process number input
                 if ((data.getSettings().findSetting("menuVisible")==null)||
-				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
+				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){*/
                 	/**
                 	 * How to traverse a menu system using commands???
                 	 * 
@@ -385,7 +385,7 @@ public class CLInterface implements Runnable{
                 	 * decrease           
                 	 */
                 	
-                	ReturnCall returnValue = new ReturnCall();
+        /*        	ReturnCall returnValue = new ReturnCall();
                 	returnValue.execute=true;
                 	returnValue.methodCall =""; 
             		returnValue.methodParameters =""; 
@@ -394,14 +394,14 @@ public class CLInterface implements Runnable{
                 	}
             		menuCommand = returnValue.methodCall;
                 }
-			} catch (NumberFormatException e){
+			} catch (NumberFormatException e){*/
 				// Replacing the old if statements
-				methodCall=menuInput.split(" ",2)[0];
+				/*methodCall=menuInput.split(" ",2)[0];
 				if (!menuOptions.containsKey(methodCall)){
             		System.out.println ("Error: Invalid User Entry.");
 				}
 				menuOptions.get(methodCall).execute(menuInput);
-			}
+			}*/
 			// Old code ends here
 		}
 	}
@@ -413,7 +413,8 @@ public class CLInterface implements Runnable{
 		while (!data.getSettings().isFinished()){
 			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))))
-				mainMenu.printMainMenu();
+				menuOptions.get("").execute("showMenu");
+				//mainMenu.printMainMenu();
 			if (!data.getSettings().isFinished())
 				userInput();
 		}
@@ -460,26 +461,6 @@ public class CLInterface implements Runnable{
 			(data.getSettings().findSetting("menuVisible").equalsIgnoreCase("false")))
   		    System.out.println("Selected Podcast: "+podcast.getName());
 	}*/
-
-	public String getCharForNumber(int i){
-		return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
-	}
-	
-	public String getEncodingFromNumber(int number){
-		String charOutput="";
-		if (number<27)
-			charOutput = getCharForNumber(number);
-		else {
-			if (number%26!=0){
-				charOutput+=getCharForNumber(number/26);
-				charOutput+=getCharForNumber(number%26);
-			} else {
-				charOutput=getCharForNumber((number/26)-1)+"Z";
-			}
-		}
-		
-		return charOutput;
-	}
 
 	/**
 	 * @return the data
