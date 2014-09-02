@@ -14,6 +14,7 @@ import com.mimpidev.podsalinan.cli.CLPodcastMenu;
 import com.mimpidev.podsalinan.cli.CLPodcastSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLPreferencesMenu;
 import com.mimpidev.podsalinan.cli.CLInterface.MenuPath;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 
@@ -32,24 +33,24 @@ public class ListCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public void execute(String command) {
-		menuInput = menuInput.replaceAll("(?i)list ", "");
+	public ReturnCall execute(String command) {
+		String menuInput = command.replaceAll("(?i)list ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
-			menuList.clear();
+		/*	menuList.clear();
 			menuList.add(new MenuPath("mainMenu", "podcast"));
-			((CLPodcastMenu)(mainMenu.findSubmenu("podcast"))).listPodcasts();
+			((CLPodcastMenu)(mainMenu.findSubmenu("podcast"))).listPodcasts();*/
 		} else if (menuInput.toLowerCase().startsWith("episode")){
-			if ((menuList.isValidSetting("mainMenu"))&&
+			/*if ((menuList.isValidSetting("mainMenu"))&&
 				((menuList.findSetting("mainMenu").equalsIgnoreCase("podcast"))&&
 				 (menuList.findSetting("selectedPodcast")!=null))){
-				((CLPodcastSelectedMenu)(mainMenu.findSubmenu("podcast_selected"))).printEpisodeList();
-			} else {
-				System.out.println("Error: No podcast selected.");
-			}
+				((CLPodcastSelectedMenu)(mainMenu.findSubmenu("podcast_selected"))).printEpisodeList();*/
+			//} else {
+			//	System.out.println("Error: No podcast selected.");
+			//}
 		} else if (menuInput.toLowerCase().startsWith("select")){
-			Podcast selectedPodcast=null;
-			System.out.println("Current selection");
-			for (MenuPath currentItem : menuList){
+		//	Podcast selectedPodcast=null;
+		//	System.out.println("Current selection");
+			/*for (MenuPath currentItem : menuList){
 				if (currentItem.name.equalsIgnoreCase("selectedPodcast")){
 					for (Podcast podcast : data.getPodcasts().getList())
 						if (podcast.getDatafile().equalsIgnoreCase(currentItem.value)){
@@ -63,15 +64,16 @@ public class ListCommand extends CLIOption {
 					}
 			    }else
 					System.out.println(currentItem.name+": "+currentItem.value);
-			}
+			}*/
 		} else if (menuInput.toLowerCase().startsWith("details")){
-			mainMenu.process(98);
+			//mainMenu.process(98);
 		} else if (menuInput.toLowerCase().startsWith("downloads")){
-			((CLDownloadMenu)mainMenu.findSubmenu("downloads")).listDownloads();
+			//((CLDownloadMenu)mainMenu.findSubmenu("downloads")).listDownloads();
 		} else if (menuInput.toLowerCase().startsWith("preferences")){
-			((CLPreferencesMenu)mainMenu.findSubmenu("preferences")).printList();
+			//((CLPreferencesMenu)mainMenu.findSubmenu("preferences")).printList();
 		} else
 			System.out.println("Error: Invalid user input.");
+		return null;
 
 	}
 

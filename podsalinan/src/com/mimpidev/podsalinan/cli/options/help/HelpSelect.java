@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options.help;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 
 /**
  * @author sbell
@@ -18,7 +19,7 @@ public class HelpSelect extends CLIOption {
 	}
 
 	@Override
-	public void execute(String command) {
+	public ReturnCall execute(String command) {
 		System.out.println("select is used to traverse around the system, when not using the menu");
 		System.out.println("");
 		System.out.println("   select podcast <podcast name>       this will select the podcast");
@@ -27,6 +28,7 @@ public class HelpSelect extends CLIOption {
 		System.out.println("   select episode <episode number>     this will select the episode");
 		System.out.println("            If the podcast is not selected this will tell you to select a podcast first.");
 		System.out.println("   select download <download number>   this will select the download");
+		return null;
 	}
 
 }

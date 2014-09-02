@@ -136,16 +136,5 @@ public class CLMenu {
 			printMainMenu();
 	}
 	
-	public int convertCharToNumber(String input) {
-		int number=1;
-		if (input.length()>1){
-			for (int charCount=0; charCount < input.length()-1; charCount++)
-				number=number*26*(int)(input.toUpperCase().charAt(charCount)-64);
-			number+=(int)(input.toUpperCase().charAt(input.length()-1)-64);
-		} else if (input.length()==1)
-			number=(int)(input.toUpperCase().charAt(0)-64);
-		number--;
-		
-		return number;
-	}
+
 }

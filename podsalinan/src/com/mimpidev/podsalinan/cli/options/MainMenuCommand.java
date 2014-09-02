@@ -35,6 +35,7 @@ import com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu;
  */
 public class MainMenuCommand extends CLIOption {
 
+    private Map<String,String> menuCommands;
 	/**
 	 * @param newData
 	 */
@@ -42,27 +43,29 @@ public class MainMenuCommand extends CLIOption {
 		super(newData);
 		options = new HashMap<String, CLIOption>();
 		options.put("showMenu", new ShowMenu(newData));
-
+		
+		menuCommands = new HashMap<String,String>();
+		menuCommands.put("1","podcast");
+		menuCommands.put("2", "downloads");
+		menuCommands.put("3", "settings");
+		menuCommands.put("4", "quit");
 	}
 
-	public void showMenu(){
-		System.out.println(data.getPodcasts().getList().size()+" - Podcasts. "+data.getUrlDownloads().visibleSize()+" - Downloads Queued");
-		System.out.println();
-		System.out.println("1. Podcasts Menu");
-		System.out.println("2. Downloads Menu");
-		System.out.println("3. Preferences");
-		System.out.println();
-		System.out.println("4. Quit");
-	}
-	
 	@Override
 	public ReturnCall execute(String command) {
-		ReturnCall returnValue = new ReturnCall();
-		
-		/*returnValue.methodCall=menuCommands.get(command);
-		returnValue.methodParameters="showMenu";
-		returnValue.execute=true;*/
-		
+		ReturnCall returnValue=null;
+
+		if (options.containsKey(command))
+			options.get(command).execute(command);
+		else if (menuCommands.containsKey(command)){
+			returnValue = new ReturnCall();
+			
+			returnValue.methodCall=menuCommands.get(command);
+			returnValue.methodParameters="showMenu";
+			returnValue.execute=true;
+		} else {
+			System.out.println("Error: Invalid User Command");
+		}
 		return returnValue;
 	}
 

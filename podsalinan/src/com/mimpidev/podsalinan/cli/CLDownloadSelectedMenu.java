@@ -135,7 +135,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
         else
         	return Double.toString(newOutputSize)+fileSizeModifier;
 	}
-
+    /*
 	public void process(int inputInt){
 		//System.out.println("CLDownloadSelectedMenu.process(int)");
 		if (menuList.size()==2){
@@ -210,6 +210,7 @@ public class CLDownloadSelectedMenu extends CLMenu {
 
 		super.process(userInput);
 	}
+	*/
 	
 	public boolean changeDirectory(URLDownload selectedDownload, String userInput){
 		if (selectedDownload==null)

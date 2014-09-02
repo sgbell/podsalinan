@@ -45,7 +45,7 @@ public class CLDownloadMenu extends CLMenu{
 			}
 		}
 	}
-	
+	/*
 	public void process(int userInputInt) {
 		//System.out.println("CLDownloadMenu.process(int);");
 		if (menuList.size()==1){
@@ -93,7 +93,7 @@ public class CLDownloadMenu extends CLMenu{
 		if (menuList.size()==1)
 			super.process(userInput);
 		//System.out.println("CLDownloadMenu.process(int) -menuList.size()="+menuList.size());
-	}
+	}*/
 
 	public URLDownloadList getUrlDownloads() {
 		return urlDownloads;

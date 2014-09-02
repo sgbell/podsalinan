@@ -103,7 +103,7 @@ public class CLEpisodeMenu extends CLMenu {
 		if (episode==null)
 			episode=this.episode;
 		
-		episode.setStatus(convertCharToNumber(statusInput));
+		//episode.setStatus(convertCharToNumber(statusInput));
 	}
 	
 	/**

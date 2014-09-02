@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.options.*;
 import com.mimpidev.podsalinan.data.PodcastList;
@@ -36,7 +37,7 @@ import com.mimpidev.podsalinan.data.URLDownloadList;
  * @author bugman
  *
  */
-public class CLInterface implements Runnable{
+public class CLInterface extends CLIOption implements Runnable{
 	/**
 	 * 
 	 */
@@ -48,23 +49,24 @@ public class CLInterface implements Runnable{
 	/**
 	 * 
 	 */
-	private DataStorage data=null;
+	//private DataStorage data=null;
 	/**
 	 * 
 	 */
-	private Map<String, CLIOption> menuOptions=null;
+	//private Map<String, CLIOption> menuOptions=null;
 	/**
 	 * 
 	 */
 	private String menuCommand="";
 
 	public CLInterface(DataStorage newData){
-		setData(newData);
+		super(newData);
 		input = new CLInput();
 		initializeMenus();
 	}
 	
 	public CLInterface(PodcastList podcasts, URLDownloadList urlDownloads, ProgSettings settings){
+		super(new DataStorage());
 		data = new DataStorage();
 		data.setPodcasts(podcasts);
 		data.setUrlDownloads(urlDownloads);
@@ -74,20 +76,12 @@ public class CLInterface implements Runnable{
 	}
 
 	private void initializeMenus() {
-		// Main menu requires podcasts and urlDownloads so it can display the number of podcasts and downloads queued.
-		//mainMenu = new CLMainMenu(menuList,data.getPodcasts(),data.getUrlDownloads());
-		// When creating the Podcast Menus, we need settings to grab the default directory to do a manual update,
-		// and urlDownloads so we can queue episodes up for downloading manually.
-		//mainMenu.addSubmenu(new CLPodcastMenu(menuList,data.getPodcasts(),data.getUrlDownloads()));
-		//mainMenu.addSubmenu(new CLPreferencesMenu(menuList,data.getSettings()));
-		//mainMenu.addSubmenu(new CLDownloadMenu(menuList,data.getUrlDownloads()));
-		
-		menuOptions = new HashMap<String, CLIOption>();
-		menuOptions.put("quit", new QuitCommand(data));
-		menuOptions.put("exit", new QuitCommand(data));
-		menuOptions.put("http", new URLCommand(data));
-		menuOptions.put("ftp", new URLCommand(data));
-		menuOptions.put("help", new HelpCommand(data));
+		options = new HashMap<String, CLIOption>();
+		options.put("quit", new QuitCommand(data));
+		options.put("exit", new QuitCommand(data));
+		options.put("http", new URLCommand(data));
+		options.put("ftp", new URLCommand(data));
+		options.put("help", new HelpCommand(data));
 		/** help commands
 		 *  =============
 		 *  help
@@ -95,14 +89,14 @@ public class CLInterface implements Runnable{
 		 *  help select
 		 *  help set
 		 */
-		menuOptions.put("select", new SelectCommand(data));
+		options.put("select", new SelectCommand(data));
 		/** select commands
 		 *  ===============
 		 *  select podcast
 		 *  select episode
 		 *  select download
 		 */
-		menuOptions.put("set", new SetCommand(data));
+		options.put("set", new SetCommand(data));
 		/** set commands
 		 *  ============
 		 *  set updateinterval
@@ -115,7 +109,7 @@ public class CLInterface implements Runnable{
 		 *  set podcast directory
 		 *  set directory
 		 */
-		menuOptions.put("list", new ListCommand(data));
+		options.put("list", new ListCommand(data));
 		/** list commands
 		 *  =============
 		 *  list podcast
@@ -125,36 +119,36 @@ public class CLInterface implements Runnable{
 		 *  list downloads
 		 *  list preferences
 		 */
-		menuOptions.put("show", new ShowCommand(data));
+		options.put("show", new ShowCommand(data));
 		/** show commands
 		 *  =============
 		 *  show menu
 		 */
-		menuOptions.put("hide", new HideCommand(data));
+		options.put("hide", new HideCommand(data));
 		/** hide commands
 		 *  =============
 		 *  hide menu
 		 */
-		menuOptions.put("download", new DownloadCommand(data));
+		options.put("download", new DownloadCommand(data));
 		/** download commands
 		 *  =================
 		 *  download episode
 		 *  download <url>
 		 */
-		menuOptions.put("restart", new RestartCommand(data));
+		options.put("restart", new RestartCommand(data));
 		/** restart commands
 		 *  ================
 		 *  restart episode
 		 *  restart downloads
 		 */
-		menuOptions.put("stop", new StopCommand(data));
+		options.put("stop", new StopCommand(data));
 		/** stop commands
 		 *  =============
 		 *  stop
 		 *  stop download
 		 *  stop <downloadId>
 		 */
-		menuOptions.put("remove", new RemoveCommand(data));
+		options.put("remove", new RemoveCommand(data));
 		/** remove commands
 		 *  ===============
 		 *  remove
@@ -162,46 +156,46 @@ public class CLInterface implements Runnable{
 		 *  remove podcast
 		 *  remove <downloadId>
 		 */
-		menuOptions.put("clear", new ClearCommand(data));
+		options.put("clear", new ClearCommand(data));
 		/** clear commands
 		 *  ==============
 		 *  clear
 		 */
-		menuOptions.put("increase", new IncreaseCommand(data));
+		options.put("increase", new IncreaseCommand(data));
 		/** increase commands
 		 *  =================
 		 *  increase
 		 *  increase download <downloadId>
 		 */
-		menuOptions.put("decrease", new DecreaseCommand(data));
+		options.put("decrease", new DecreaseCommand(data));
 		/** decrease commands
 		 *  =================
 		 *  decrease
 		 *  decrease download <downloadId>
 		 */
-		menuOptions.put("dump", new DumpCommand(data));
+		options.put("dump", new DumpCommand(data));
 		/** dump commands
 		 *  =============
 		 *  dump
 		 *  dump urldownloads
 		 */
-		menuOptions.put("podcast", new PodcastCommand(data));
+		options.put("podcast", new PodcastCommand(data));
 		/** podcast commands
 		 *  ==================
 		 *  <a-zzz>           - Select Podcast
 		 *  9                 - Quit to Main Menu
 		 */
-		menuOptions.put("downloads", new DownloadsCommand(data));
+		options.put("downloads", new DownloadsCommand(data));
 		/** downloads commands
 		 *  ==================
 		 *  <a-zzz>           - Select Download
 		 *  9                 - Quit to Main Menu
 		 */
-		menuOptions.put("settings", new SettingsCommand(data));
+		options.put("settings", new SettingsCommand(data));
 		/** settings commands
 		 *  =================
 		 */
-		menuOptions.put("", new MainMenuCommand(data));
+		options.put("", new MainMenuCommand(data));
 		/** mainmenu commands
 		 *  =================
 		 *  1                - Podcast Menu
@@ -220,27 +214,13 @@ public class CLInterface implements Runnable{
 	 *   or list options.
 	 */
 
-	/** Brain Storming how to deal with user input, as it works on 2 different levels.
-	 *  
-	 *  Process
-	 *  ===================
-	 *  accept user_input
-	 *  if user_input is a number then
-	 *  	if ((menuList.size = 0) && (user_input==4))
-	 * 			quit
-	 * 		else
-	 * 			mainMenu.process(user_input);
-	 *  else
-	 *  	process user command
-	 */
-	
 	public void userInput(){
 		System.out.print("->");
 		String menuInput=input.getStringInput();
 		String methodCall="";
 		if ((menuInput.length()>0)&&(menuInput!=null)){
 			methodCall=menuInput.split(" ",2)[0];
-			if (!menuOptions.containsKey(methodCall)){
+			if (!options.containsKey(methodCall)){
                 if ((data.getSettings().findSetting("menuVisible")==null)||
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
                 	// The reason for the return call is so that we can check mainMenu to transform the call,
@@ -252,23 +232,14 @@ public class CLInterface implements Runnable{
             		returnValue.methodParameters = menuInput;
             		
             		while (returnValue.execute){
-            			returnValue=menuOptions.get(returnValue.methodCall).execute(returnValue.methodParameters);
+            			returnValue=options.get(returnValue.methodCall).execute(returnValue.methodParameters);
                 	}
             		menuCommand = returnValue.methodCall;
                 }
 			} else {
-				menuOptions.get(methodCall).execute(menuInput);
+				options.get(methodCall).execute(menuInput);
 			}
 			
-			
-			
-        // Old code starts here			
-		/*	try {
-				// Just testing the number being passed
-				Integer.parseInt(menuInput);
-				// process number input
-                if ((data.getSettings().findSetting("menuVisible")==null)||
-				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){*/
                 	/**
                 	 * How to traverse a menu system using commands???
                 	 * 
@@ -385,24 +356,6 @@ public class CLInterface implements Runnable{
                 	 * decrease           
                 	 */
                 	
-        /*        	ReturnCall returnValue = new ReturnCall();
-                	returnValue.execute=true;
-                	returnValue.methodCall =""; 
-            		returnValue.methodParameters =""; 
-            		while (returnValue.execute){
-            			returnValue=menuOptions.get(returnValue.methodCall).execute(returnValue.methodParameters);
-                	}
-            		menuCommand = returnValue.methodCall;
-                }
-			} catch (NumberFormatException e){*/
-				// Replacing the old if statements
-				/*methodCall=menuInput.split(" ",2)[0];
-				if (!menuOptions.containsKey(methodCall)){
-            		System.out.println ("Error: Invalid User Entry.");
-				}
-				menuOptions.get(methodCall).execute(menuInput);
-			}*/
-			// Old code ends here
 		}
 	}
 
@@ -413,7 +366,7 @@ public class CLInterface implements Runnable{
 		while (!data.getSettings().isFinished()){
 			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))))
-				menuOptions.get("").execute("showMenu");
+				options.get("").execute("showMenu");
 				//mainMenu.printMainMenu();
 			if (!data.getSettings().isFinished())
 				userInput();
@@ -474,6 +427,11 @@ public class CLInterface implements Runnable{
 	 */
 	public void setData(DataStorage data) {
 		this.data = data;
+	}
+	
+	@Override
+	public ReturnCall execute(String command) {
+		return null;
 	}
 	
 	public static class MenuPath {

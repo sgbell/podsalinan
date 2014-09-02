@@ -42,10 +42,10 @@ public class CLPodcastSelectedMenu extends CLMenu {
 	}
 
 	public void printMainMenu(){
-		if ((selectedPodcast!=null)&&(selectedPodcast.getDatafile().equalsIgnoreCase(menuList.findSetting("selectedPodcast")))){
+		/*if ((selectedPodcast!=null)&&(selectedPodcast.getDatafile().equalsIgnoreCase(menuList.findSetting("selectedPodcast")))){
 			System.out.println("Podcast: "+selectedPodcast.getName()+ " - Selected");
 			super.printMainMenu();
-		}
+		}*/
 	}
 	
 	public void printDetails(Podcast podcast){
@@ -108,7 +108,7 @@ public class CLPodcastSelectedMenu extends CLMenu {
 		}
 		return false;
 	}
-	
+	/*
 	public void process(int userInputInt){
 		//System.out.println("CLPodcastSelectedMenu.process(int)");
 		//System.out.println("menuList.size(): "+menuList.size());
@@ -202,5 +202,5 @@ public class CLPodcastSelectedMenu extends CLMenu {
 			userInput=null;
 			super.process(userInput);
 		}
-	}
+	}*/
 }

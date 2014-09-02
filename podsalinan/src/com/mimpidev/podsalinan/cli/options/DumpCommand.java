@@ -10,6 +10,7 @@ import java.util.Date;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
@@ -30,8 +31,8 @@ public class DumpCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public void execute(String command) {
-		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+	public ReturnCall execute(String command) {
+		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
 		
 		if ((menuInput.equalsIgnoreCase("dump"))||
 			(menuInput.equalsIgnoreCase("urldownloads"))){
@@ -49,6 +50,7 @@ public class DumpCommand extends CLIOption {
 			}
 			Podsalinan.debugLog.println("-- URLDownload Contents end --");
 		}
+		return null;
 	}
 
 }

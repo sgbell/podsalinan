@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options.help;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 
 /**
  * @author sbell
@@ -24,7 +25,7 @@ public class Help extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public void execute(String command) {
+	public ReturnCall execute(String command) {
 		// Main help text
 		System.out.println("A url is accepted at almost any time to add it to the download queue.");
 		System.out.println("It will have to start with (http/https/ftp):// for the system to download it.");
@@ -54,6 +55,7 @@ public class Help extends CLIOption {
 		System.out.println("");
 		System.out.println("Commands to exit the program");
 		System.out.println("   quit");
-		System.out.println("   exit");		
+		System.out.println("   exit");
+		return null;
 	}
 }

@@ -52,7 +52,7 @@ public class CLPodcastMenu extends CLMenu{
 	public void setPodcasts(PodcastList podcastList) {
 		this.podcasts = podcastList;
 	}
-	
+	/*
 	public void process(int userInputInt) {
 		//System.out.println("Debug: CLPodcastMenu.process("+userInputInt+")");
 		if (menuList.size()==1)
@@ -105,7 +105,7 @@ public class CLPodcastMenu extends CLMenu{
 			//System.out.println("Debug: CLPodcastMenu.process(String)");
 		    super.process(userInput);
 		}
-	}
+	}*/
 
 	public void listPodcasts() {
 		if (podcasts.getList().size()==0)

@@ -9,6 +9,7 @@ import java.net.URL;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLEpisodeMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 
 /**
  * @author sbell
@@ -22,18 +23,18 @@ public class DownloadCommand extends CLIOption {
 	}
 
 	@Override
-	public void execute(String command) {
+	public ReturnCall execute(String command) {
 		boolean downloading=false;
-		menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
+		String menuInput= command.replaceFirst(command.split(" ")[0]+" ","");
 		if ((menuInput.toLowerCase().contentEquals("download"))||
 			(menuInput.toLowerCase().equalsIgnoreCase("episode"))){
-			if (menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedEpisode")){
+			/*if (menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedEpisode")){
 				// If user enters "download" or "download episode" and user has selected episode, download the episode
 				CLEpisodeMenu episodeMenu = (CLEpisodeMenu)mainMenu.findSubmenu("episode_selected");
 				episodeMenu.downloadEpisode();
 				System.out.println("Downloading Episode: "+episodeMenu.getEpisode().getTitle()+" - "+episodeMenu.getEpisode().getDate());
 				downloading=true;
-			}
+			}*/
 		} else if (menuInput.length()>6){
 			try {
 				// newURL is only used to confirm that the user input is a url
@@ -50,6 +51,7 @@ public class DownloadCommand extends CLIOption {
 		if (!downloading){
 			System.out.println("Error: Invalid user Input");
 		}
+		return null;
 	}
 
 }

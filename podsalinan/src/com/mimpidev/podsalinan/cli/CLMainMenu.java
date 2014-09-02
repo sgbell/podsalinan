@@ -44,6 +44,7 @@ public class CLMainMenu extends CLMenu{
 	 * 
 	 * @param inputInt
 	 */
+	/*
 	public void process(int userInputInt) {
 		//System.out.println("Debug: CLMainMenu.process("+userInputInt+")");
 		// If there are no entries in the menuList, handle the 
@@ -89,5 +90,5 @@ public class CLMainMenu extends CLMenu{
 			}
 		} else
 			super.process(userInput);
-	}
+	}*/
 }

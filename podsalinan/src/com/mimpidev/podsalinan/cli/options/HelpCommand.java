@@ -47,10 +47,4 @@ public class HelpCommand extends CLIOption {
 		System.out.println("");
 		return null;
 	}
-
-	@Override
-	public void showMenu() {
-		
-	}
-
 }

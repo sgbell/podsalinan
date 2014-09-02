@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLDownloadSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
@@ -26,21 +27,21 @@ public class IncreaseCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public void execute(String command) {
-		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+	public ReturnCall execute(String command) {
+		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
 
 		if (menuInput.equalsIgnoreCase("increase")){
-			if ((menuList.size()>0)&&
+			/*if ((menuList.size()>0)&&
 				(menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedDownload"))){
 				URLDownload download = ((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).getDownload();
 				data.getUrlDownloads().increasePriority(data.getUrlDownloads().findDownload(download.getURL()));
-			}
+			}*/
 		} else if (((menuInput.toLowerCase().startsWith("download")))||
 				 	((menuInput.length()>0)&&(menuInput.length()<3))){
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			
 			if ((menuInput.length()>0)&&(menuInput.length()<3)){
-				int select = mainMenu.convertCharToNumber(menuInput);
+				int select = convertCharToNumber(menuInput);
 				if ((select>=0)&&(select<data.getUrlDownloads().size())){
 					if (data.getUrlDownloads().increasePriority(select))
 						System.out.println("Increased Priority: "+data.getUrlDownloads().getDownloads().get(select-1).getURL().toString());
@@ -50,6 +51,7 @@ public class IncreaseCommand extends CLIOption {
 			}
 		} else 
 			System.out.println("Error: Invalid user input.");
+		return null;
 	}
 
 }

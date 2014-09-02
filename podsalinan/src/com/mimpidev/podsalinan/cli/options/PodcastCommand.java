@@ -3,10 +3,12 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.HashMap;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
-import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.cli.options.podcast.*;
 
 /**
  * @author sbell
@@ -19,7 +21,9 @@ public class PodcastCommand extends CLIOption {
 	 */
 	public PodcastCommand(DataStorage newData) {
 		super(newData);
-		
+		options = new HashMap<String, CLIOption>();
+		options.put("<a-zz>", new SelectPodcast(newData));
+		options.put("showMenu", new ShowMenu(newData));
 	}
 
 	/* (non-Javadoc)
@@ -27,24 +31,8 @@ public class PodcastCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
+		if (options.containsKey(command))
+			options.get(command).execute(command);
 		return null;
 	}
-
-	@Override
-	public void showMenu() {
-		System.out.println();
-		int podcastCount=1;
-		
-		for (Podcast podcast : data.getPodcasts().getList()){
-			if (!podcast.isRemoved())
-				System.out.println(getEncodingFromNumber(podcastCount)+". "+podcast.getName());
-			podcastCount++;
-		}
-
-		System.out.println();
-		System.out.println("(A-Z) Enter Podcast letter to select Podcast.");
-		System.out.println();
-		System.out.println("9. Return to Main Menu");
-	}
-
 }
