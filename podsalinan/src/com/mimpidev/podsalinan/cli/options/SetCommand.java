@@ -9,6 +9,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLDownloadSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLPodcastSelectedMenu;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
 
@@ -27,7 +28,9 @@ public class SetCommand extends CLIOption {
 	}
 
 	@Override
-	public void execute(String command) {
+	public ReturnCall execute(String command) {
+		return null;
+		/*
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
 		if (menuInput.toLowerCase().startsWith("updateinterval")){
@@ -155,7 +158,7 @@ public class SetCommand extends CLIOption {
 					System.out.println("Error: Invalid user input.");
 			}
 		} else
-			System.out.println("Error: Invalid user input.");
+			System.out.println("Error: Invalid user input.");*/
 	}
 
 }

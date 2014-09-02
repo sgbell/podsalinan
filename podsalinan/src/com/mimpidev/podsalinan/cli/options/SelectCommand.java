@@ -12,6 +12,7 @@ import com.mimpidev.podsalinan.cli.CLEpisodeMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLPodcastSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLInterface.MenuPath;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 
@@ -27,7 +28,9 @@ public class SelectCommand extends CLIOption {
 	}
 
 	@Override
-	public void execute(String command) {
+	public ReturnCall execute(String command) {
+		return null;
+		/*
 		menuInput = menuInput.replaceAll("(?i)select ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
 			// remove podcast text at the start (and the space)
@@ -110,7 +113,7 @@ public class SelectCommand extends CLIOption {
 						/* Create a vector of matching dates on episodes. and then let the user select from the list
 						 * similar to how selecting a podcast works.
 						 */
-						Date menuInputDate = convertDate(menuInput);
+		/*				Date menuInputDate = convertDate(menuInput);
 						//System.out.println("Date: "+menuInputDate.toString());
 						Vector<Episode> matchingEpisodes = selectedPodcast.getEpisodesByDate(menuInputDate);
 						if (matchingEpisodes.size()==1){
@@ -172,7 +175,7 @@ public class SelectCommand extends CLIOption {
 			}
 		} else {
 			System.out.println("Error: Invalid User entry.");
-		}
+		}*/
 	}
 
 }

@@ -7,6 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLDownloadSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLEpisodeMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
@@ -27,8 +28,8 @@ public class RestartCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public void execute(String command) {
-		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+	public ReturnCall execute(String command) {
+		/*menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		if (((menuInput.equalsIgnoreCase("delete"))||(menuInput.equalsIgnoreCase("episode")))&&
 			(menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedEpisode"))){
 			CLEpisodeMenu episodeMenu = (CLEpisodeMenu)mainMenu.findSubmenu("episode_selected");
@@ -40,7 +41,8 @@ public class RestartCommand extends CLIOption {
 				data.getUrlDownloads().deleteDownload(data.getUrlDownloads().findDownload(download.getURL()));
 				System.out.println("Deleting file for download: "+download.getURL().toString());
 			}
-		}		
+		}*/
+		return null;
 	}
 
 }

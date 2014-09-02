@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 
 /**
  * @author sbell
@@ -24,7 +25,9 @@ public class ShowCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public void execute(String command) {
+	public ReturnCall execute(String command) {
+		return null;
+		/*
 		if (menuInput.equalsIgnoreCase("show menu")){
 			if (!data.getSettings().addSetting("menuVisible", "true"))
 				data.getSettings().updateSetting("menuVisible", "true");
@@ -36,7 +39,7 @@ public class ShowCommand extends CLIOption {
 			} else {
 				System.out.println("Error: Invalid User Input");
 			}
-		}
+		}*/
 	}
 
 }

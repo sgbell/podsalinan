@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLDownloadSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
@@ -26,7 +27,10 @@ public class StopCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public void execute(String command) {
+	public ReturnCall execute(String command) {
+		return null;
+		
+		/*
 		URLDownload download=null;
 		// Grab the selected download and call the method below
 		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
@@ -55,7 +59,7 @@ public class StopCommand extends CLIOption {
 			((CLDownloadSelectedMenu)mainMenu.findSubmenu("downloadSelected_menu")).printDetails(download,true);
 		} else {
 			System.out.println("Error: Invalid user input.");
-		}
+		}*/
 	}
 
 }

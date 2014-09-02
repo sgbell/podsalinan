@@ -7,6 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLDownloadSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLPodcastSelectedMenu;
+import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
 
@@ -28,9 +29,11 @@ public class RemoveCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public void execute(String command) {
-		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+	public ReturnCall execute(String command) {
+		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
+		return null;
 		
+		/*
 		if (menuInput.equalsIgnoreCase("remove")){
 			if ((menuList.size()>0)&&
 			    (menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedDownload"))){
@@ -152,6 +155,7 @@ public class RemoveCommand extends CLIOption {
 				System.out.println("Error: Invalid user input");
 		} else
 			System.out.println("Error: Invalid user input");
+			*/
 	}
 
 }
