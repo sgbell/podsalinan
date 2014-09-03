@@ -19,25 +19,12 @@
 package com.mimpidev.podsalinan;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
-import java.util.Vector;
-
 import org.tmatesoft.sqljet.core.SqlJetException;
-import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
-import org.tmatesoft.sqljet.core.schema.ISqlJetColumnDef;
-import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
-import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
-import com.mimpidev.dev.debug.Log;
-import com.mimpidev.dev.sql.SqlException;
-import com.mimpidev.dev.sql.TableView;
-import com.mimpidev.podsalinan.data.Episode;
-import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
-import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 
 /**
