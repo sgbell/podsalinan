@@ -26,7 +26,8 @@ public class ShowCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		return null;
+		returnObject = new ReturnCall();
+		
 		/*
 		if (menuInput.equalsIgnoreCase("show menu")){
 			if (!data.getSettings().addSetting("menuVisible", "true"))
@@ -40,6 +41,7 @@ public class ShowCommand extends CLIOption {
 				System.out.println("Error: Invalid User Input");
 			}
 		}*/
+		return returnObject;
 	}
 
 }

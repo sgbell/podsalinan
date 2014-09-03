@@ -21,6 +21,8 @@ public abstract class CLIOption {
 	 * 
 	 */
 	protected Map<String, CLIOption> options;
+	protected ReturnCall returnObject;
+
 	/**
 	 * 
 	 */

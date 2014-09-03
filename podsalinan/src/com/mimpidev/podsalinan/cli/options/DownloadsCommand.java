@@ -26,9 +26,12 @@ public class DownloadsCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		return null;
-		// TODO Auto-generated method stub
-
+		returnObject = new ReturnCall();
+		returnObject.methodCall="podcast";
+		
+		
+		
+		return returnObject;
 	}
 
 }

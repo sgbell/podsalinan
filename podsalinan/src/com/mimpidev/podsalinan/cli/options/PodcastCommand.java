@@ -31,8 +31,22 @@ public class PodcastCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
+		returnObject = new ReturnCall();
+		returnObject.methodCall="podcast";
 		if (options.containsKey(command))
 			options.get(command).execute(command);
-		return null;
+		else{
+			try {
+				// Check if the value is a number and act accordingly
+				Integer.parseInt(command);
+				if (command.equals("9")){
+					returnObject.methodCall="";
+					returnObject.methodParameters="showMenu";
+				}
+			} catch (NumberFormatException e) {
+				
+			}
+		}
+		return returnObject;
 	}
 }

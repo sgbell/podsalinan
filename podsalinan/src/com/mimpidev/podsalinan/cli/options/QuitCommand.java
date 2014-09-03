@@ -21,7 +21,8 @@ public class QuitCommand extends CLIOption {
 	}
 
 	public ReturnCall execute(String command){
+		returnObject = new ReturnCall();
 		data.getSettings().setFinished(true);
-		return null;
+		return returnObject;
 	}
 }

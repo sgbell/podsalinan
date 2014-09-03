@@ -27,6 +27,7 @@ public class ShowMenu extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
+		returnObject = new ReturnCall();
 		System.out.println();
 		int podcastCount=1;
 		
@@ -41,7 +42,7 @@ public class ShowMenu extends CLIOption {
 		System.out.println();
 		System.out.println("9. Return to Main Menu");
 
-		return null;
+		return returnObject;
 	}
 
 }

@@ -231,9 +231,8 @@ public class CLInterface extends CLIOption implements Runnable{
                 	returnValue.methodCall = menuCommand; 
             		returnValue.methodParameters = menuInput;
             		
-            		while (returnValue.execute){
-            			returnValue=options.get(returnValue.methodCall).execute(returnValue.methodParameters);
-                	}
+           			returnValue=options.get(returnValue.methodCall).execute(returnValue.methodParameters);
+           			
             		menuCommand = returnValue.methodCall;
                 }
 			} else {
@@ -366,8 +365,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		while (!data.getSettings().isFinished()){
 			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))))
-				options.get("").execute("showMenu");
-				//mainMenu.printMainMenu();
+				options.get(menuCommand).execute("showMenu");
 			if (!data.getSettings().isFinished())
 				userInput();
 		}
