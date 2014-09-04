@@ -9,6 +9,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.cli.options.podcast.*;
+import com.mimpidev.podsalinan.data.Podcast;
 
 /**
  * @author sbell
@@ -42,9 +43,28 @@ public class PodcastCommand extends CLIOption {
 				if (command.equals("9")){
 					returnObject.methodCall="";
 					returnObject.methodParameters="showMenu";
+				} else {
+					// If the user has entered 8 characters find the right podcast in the list, and the hash happens to
+					// be completely numerical
+					for (int count=0; count<data.getPodcasts().getList().size(); count++){
+						Podcast currentPodcast = data.getPodcasts().getList().get(count);
+						if (currentPodcast.getDatafile().equals(command))
+							returnObject = options.get("<a-zz>").execute(Integer.toString(count));
+					}
 				}
 			} catch (NumberFormatException e) {
-				
+				// 8 characters is the unique identifier we are using for the podcast. So if it is less than 8 numbers
+				// it will be the number in the array
+				if (command.length()<8){
+					returnObject = options.get("<a-zz>").execute(Integer.toString(this.convertCharToNumber(command)));
+				} else {
+					// If the user has entered 8 characters find the right podcast in the list
+					for (int count=0; count<data.getPodcasts().getList().size(); count++){
+						Podcast currentPodcast = data.getPodcasts().getList().get(count);
+						if (currentPodcast.getDatafile().equals(command))
+							returnObject = options.get("<a-zz>").execute(Integer.toString(count));
+					}
+				}
 			}
 		}
 		return returnObject;
