@@ -72,7 +72,10 @@ public abstract class TableDefinition {
 			while (!currentRecord.eof()){
 				Map<String, String> newRecord = new HashMap<String,String>();
 				for (SqlDefinition currentColumn: columnList){
-					newRecord.put(currentColumn.name, currentRecord.getString(currentColumn.name));
+					if (currentRecord.getString(currentColumn.name)!=null)
+						newRecord.put(currentColumn.name, currentRecord.getString(currentColumn.name));
+					else
+						newRecord.put(currentColumn.name, "");
 				}
 				recordSet.add(newRecord);
 				currentRecord.next();

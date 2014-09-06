@@ -36,6 +36,7 @@ import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.data.definition.SqlDefinition;
+import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
@@ -332,7 +333,7 @@ public class TableView {
 			}
 			if (columns!=null){
 				for (ISqlJetColumnDef column : columns){
-					if (column.getName().contentEquals(columnName))
+					if (column.getName().equalsIgnoreCase(columnName))
 						columnFound=true;
 				}
 			} else {

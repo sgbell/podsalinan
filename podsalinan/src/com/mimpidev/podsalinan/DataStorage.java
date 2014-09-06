@@ -50,7 +50,7 @@ public class DataStorage {
 	/**
 	 *  Used to Define the current File system slash.
 	 */
-	private String fileSystemSlash;
+	private String fileSystemSlash = "/";
 	
 	public DataStorage(){
 		podcasts = new PodcastList();
@@ -116,9 +116,14 @@ public class DataStorage {
 							URLDownloadList downloads,
 							ProgSettings settings){
 		
-		File podsalinanDBFile = new File(settingsDir.concat("/podsalinan.db"));
+		File podsalinanDBFile = new File(settingsDir.concat(fileSystemSlash+"podsalinan.db"));
 		if (podsalinanDBFile.exists()){
 			SqlJetDb podsalinanDB = new SqlJetDb(podsalinanDBFile,true);
+			try {
+				podsalinanDB.open();
+			} catch (SqlJetException e) {
+				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			}
 			
 			//TODO: After converting all of the table reads to similar lines as below, add them to an array to do all of them in a smaller bunch of code calls
 			downloads.setdbTable(podsalinanDB);

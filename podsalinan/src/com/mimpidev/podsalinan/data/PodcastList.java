@@ -3,10 +3,14 @@
  */
 package com.mimpidev.podsalinan.data;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+
+import org.tmatesoft.sqljet.core.SqlJetException;
+import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
@@ -23,7 +27,11 @@ public class PodcastList extends TableDefinition {
 	 * 
 	 */
 	private Vector<Podcast> podcasts;
-
+	/**
+	 * 
+	 */
+    private String settingsDir;
+	
 	/**
 	 * 
 	 */
@@ -57,11 +65,24 @@ public class PodcastList extends TableDefinition {
 			Podcast newPodcast = new Podcast(record.get("name"),
 					 						 record.get("url"),
 					 						 record.get("directory"),
-					 						 record.get("localFile").replaceAll("&apos;", "\'"),
-					 						 (Integer.parseInt(record.get("auto_queue"))==1));
+					 						 record.get("localfile").replaceAll("&apos;", "\'"),
+					 						 record.get("auto_queue").equalsIgnoreCase("1"));
 			newPodcast.setAdded(true);
 			podcasts.add(newPodcast);
-			newPodcast.readTable();
+			File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
+			if (podcastFile.exists()){
+				SqlJetDb podcastDB = new SqlJetDb(podcastFile,true);
+				try {
+					podcastDB.open();
+				} catch (SqlJetException e) {
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+				}
+
+				newPodcast.setdbTable(podcastDB);
+				newPodcast.readTable();
+			} else {
+				Podsalinan.debugLog.println("File does not exist");
+			}
 		}
 	}
 

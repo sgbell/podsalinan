@@ -86,10 +86,10 @@ public class Podsalinan {
 		while(!data.getSettings().isFinished()){
 			// List the podcast titles.
 			for (Podcast podcast : data.getPodcasts().getList()){
-				if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
+				/*if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
 					podcast.updateList(data.getSettingsDir());
 					podcast.updateDatabase();
-				}
+				}*/
 				
 				// The following will scan the directory for already downloaded episodes of the podcast and mark them as downloaded
 				podcast.scanDirectory(data);
@@ -97,7 +97,7 @@ public class Podsalinan {
 				/* If autoQueue is set in the program settings to true, or autoQueue is set in the podcast,
 				 * scan the podcast lists for episodes not yet downloaded, and queue them to download. 
 				 */
-				if (((data.getSettings().findSetting("autoQueue")!=null)&&
+				/*if (((data.getSettings().findSetting("autoQueue")!=null)&&
 						 (data.getSettings().findSetting("autoQueue").equalsIgnoreCase("true")))||
 						 (podcast.isAutomaticQueue())){
 						Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Details.NOT_QUEUED);
@@ -106,7 +106,7 @@ public class Podsalinan {
 								episode.setStatus(Details.CURRENTLY_DOWNLOADING);
 								data.getUrlDownloads().addDownload(episode, podcast);
 							}
-					}
+					}*/
 			}
 				
 			// Put this thread to sleep till it is next woken up to check for updates in the podcasts

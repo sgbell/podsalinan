@@ -37,6 +37,7 @@ public class Log {
      * either to the output file, or to the screen
      */
 	private boolean showMeTheDebug=true;
+	private boolean outputToScreen=true;
 
 	private RandomAccessFile fileOutput=null;
 	
@@ -91,6 +92,9 @@ public class Log {
 		} catch (IOException e) {
 			System.err.println("[Error] Problem writing to debug log");
 			e.printStackTrace();
+		}
+		if (outputToScreen){
+			System.out.println(debugLine);
 		}
 	}
 

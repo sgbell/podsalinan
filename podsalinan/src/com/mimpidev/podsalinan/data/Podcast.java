@@ -101,7 +101,7 @@ public class Podcast extends DownloadDetails{
 		df = new SimpleDateFormat(Episode.getDateFormat());
 		tableName = "shows";
 		
-		String[] columnNames = {"id","published","title","url","size","directory","status"};
+		String[] columnNames = {"id","published","title","url","size","description","status"};
 		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT"
 				               ,"TEXT","TEXT","TEXT","INTEGER","TEXT","INTEGER"};
 		createColumnList(columnNames,columnTypes);
