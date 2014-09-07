@@ -137,8 +137,18 @@ public class PodcastList extends TableDefinition {
 					break;
 			}
 			podcast.setSettingsDir(this.getDbFile().getParent());
-			
-			podcast.updateDatabase();
+			File podcastFile = new File(this.getDbFile().getParent()+"/"+podcast.getDatafile()+".pod");
+			if (podcastFile.exists()){
+				SqlJetDb podcastDB = new SqlJetDb(podcastFile,true);
+				try {
+					podcastDB.open();
+				} catch (SqlJetException e) {
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+				}
+
+				podcast.setdbTable(podcastDB);			
+				podcast.updateDatabase();
+			}
 		}
 	}
 }

@@ -421,6 +421,8 @@ public class TableView {
 	private boolean setTable() throws SqlException{
 		if (table==null){
 			try {
+				System.out.println(db.isOpen());
+				System.out.println(name);
 				table = db.getTable(name);
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());

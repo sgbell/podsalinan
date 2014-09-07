@@ -465,9 +465,6 @@ public class Podcast extends DownloadDetails{
 	public void updateDatabase() {
 
 		if (settingsDir!=null){
-			File podcastData = new File(settingsDir.concat("/"+getDatafile()+".pod"));
-			SqlJetDb db = new SqlJetDb(podcastData,true);
-			this.setdbTable(db);
 			for (final Episode episode : episodeList){
 				if (!episode.isAdded()){
 					try {
