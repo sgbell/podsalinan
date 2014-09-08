@@ -29,6 +29,7 @@ import java.util.Vector;
 
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.data.definition.TableDefinition;
+import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
@@ -165,19 +166,23 @@ public class ProgSettings extends TableDefinition{
 	}
 	
 	public void updateDatabase(){
-		purgeTable();
-		
-				
-		for (final Map.Entry<String, String> entry : settings.entrySet()){
-			try {
-				dbTable.insert(new HashMap<String, Object>(){{
-					put("name",entry.getKey());
-					put("value",entry.getValue());
-				}});
-			} catch (SqlException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (dbTable.isDbOpen()){
+			purgeTable();
+			
+			
+			for (final Map.Entry<String, String> entry : settings.entrySet()){
+				try {
+					dbTable.insert(new HashMap<String, Object>(){{
+						put("name",entry.getKey());
+						put("value",entry.getValue());
+					}});
+				} catch (SqlException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+		} else {
+			Podsalinan.debugLog.println("Error db connection is closed");
 		}
 	}
 }

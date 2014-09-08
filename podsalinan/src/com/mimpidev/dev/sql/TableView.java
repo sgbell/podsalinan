@@ -144,6 +144,10 @@ public class TableView {
 		return result;
 	}
 	
+	public void dbCommit() throws SqlJetException{
+		db.commit();
+	}
+	
 	/**
 	 * 
 	 * @return
@@ -363,14 +367,15 @@ public class TableView {
 	 */
 	public ISqlJetCursor selectAll() throws SqlException{
 		if (isDbOpen()){
+			ISqlJetCursor currentLine=null;
 			try {
 				db.beginTransaction(SqlJetTransactionMode.READ_ONLY);
-				ISqlJetCursor currentLine = table.order(table.getPrimaryKeyIndexName());
-				return currentLine;
+				currentLine = table.order(table.getPrimaryKeyIndexName());
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
 			}
+			return currentLine;
 		}
 		throw new SqlException(SqlException.ERROR_DB_FAILURE);
 	}
@@ -432,16 +437,27 @@ public class TableView {
 		return true;
 	}
 	
+	/*TODO: I need to change the layout of the Table. remove the id field, and make sure we just have the text fields
+	 * that way we don't need to reset the table index. 
+	 */
 	public boolean purgeTable() throws SqlException{
 		if (table!=null){
 			try {
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
 			} catch (SqlJetException e) {
-				log.printStackTrace(e.getStackTrace());
-				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
+				e.printStackTrace();
+				//log.printStackTrace(e.getStackTrace());
+				//throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
+			}
+			ISqlJetTable sequenceTable=null;
+			try {
+				sequenceTable = db.getTable("sqlite_sequence");
+			} catch (SqlJetException e) {
+				e.printStackTrace();
+				//log.printStackTrace(e.getStackTrace());
+				//throw new SqlException(SqlException.ERROR_DELETING_RECORD);
 			}
 			try {
-				ISqlJetTable sequenceTable = db.getTable("sqlite_sequence");
 				ISqlJetCursor deleteCursor = sequenceTable.lookup("name", name);
 				while (!deleteCursor.eof()){
 					deleteCursor.delete();
@@ -449,14 +465,16 @@ public class TableView {
 				deleteCursor.close();
 				db.commit();
 			} catch (SqlJetException e) {
-				log.printStackTrace(e.getStackTrace());
-				throw new SqlException(SqlException.ERROR_DELETING_RECORD);
+				e.printStackTrace();
+				//log.printStackTrace(e.getStackTrace());
+				//throw new SqlException(SqlException.ERROR_DELETING_RECORD);
 			}
 			try {
 				table.clear();
 			} catch (SqlJetException e) {
-				log.printStackTrace(e.getStackTrace());
-				throw new SqlException(SqlException.ERROR_PURGE_TABLE);
+				e.printStackTrace();
+				//log.printStackTrace(e.getStackTrace());
+				//throw new SqlException(SqlException.ERROR_PURGE_TABLE);
 			}
 		}
 		

@@ -87,68 +87,72 @@ public class PodcastList extends TableDefinition {
 	}
 
 	public void updateDatabase() {
-		for (final Podcast podcast : podcasts){
-			int sqlType=TableView.NOTHING_CHANGED;
-			if (!podcast.isAdded()){
-				// Used to set the correct flag
-				try {
-					dbTable.insert(new HashMap<String,Object>(){{
-						put("name",podcast.getName());
-						put("localFile",podcast.getDatafile());
-						put("url",podcast.getURL());
-						put("directory",podcast.getDirectory());
-						put("auto_queue",(podcast.isAutomaticQueue()?1:0));
-					}});
-					sqlType=TableView.ITEM_ADDED_TO_DATABASE;
-				} catch (SqlException e) {
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+		if (dbTable.isDbOpen()){
+			for (final Podcast podcast : podcasts){
+				int sqlType=TableView.NOTHING_CHANGED;
+				if (!podcast.isAdded()){
+					// Used to set the correct flag
+					try {
+						dbTable.insert(new HashMap<String,Object>(){{
+							put("name",podcast.getName());
+							put("localFile",podcast.getDatafile());
+							put("url",podcast.getURL());
+							put("directory",podcast.getDirectory());
+							put("auto_queue",(podcast.isAutomaticQueue()?1:0));
+						}});
+						sqlType=TableView.ITEM_ADDED_TO_DATABASE;
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+				} else if (podcast.isRemoved()){
+					try {
+						dbTable.delete(new HashMap<String, Object>(){{
+							put("url",podcast.getURL());
+						}});
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
+				} else if (podcast.isChanged()){
+					try {
+						dbTable.update(new HashMap<String, Object>(){{
+							put("name",podcast.getName());
+							put("directory",podcast.getDirectory());
+							put("url",podcast.getURL());
+							put("auto_queue",(podcast.isAutomaticQueue()?1:0));
+						}}, 
+							new HashMap<String, Object>(){{
+								put("localfile",podcast.getDatafile());
+						}});
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+					sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
 				}
-			} else if (podcast.isRemoved()){
-				try {
-					dbTable.delete(new HashMap<String, Object>(){{
-						put("url",podcast.getURL());
-					}});
-				} catch (SqlException e) {
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+				switch (sqlType){
+					case TableView.ITEM_ADDED_TO_DATABASE:
+						podcasts.get(podcasts.indexOf(podcast)).setAdded(true);
+						break;
+					case TableView.ITEM_UPDATED_IN_DATABASE:
+						podcasts.get(podcasts.indexOf(podcast)).setChanged(false);
+						break;
 				}
-				sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
-			} else if (podcast.isChanged()){
-				try {
-					dbTable.update(new HashMap<String, Object>(){{
-						put("name",podcast.getName());
-						put("directory",podcast.getDirectory());
-						put("url",podcast.getURL());
-						put("auto_queue",(podcast.isAutomaticQueue()?1:0));
-					}}, 
-						new HashMap<String, Object>(){{
-							put("localfile",podcast.getDatafile());
-					}});
-				} catch (SqlException e) {
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-				}
-				sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
-			}
-			switch (sqlType){
-				case TableView.ITEM_ADDED_TO_DATABASE:
-					podcasts.get(podcasts.indexOf(podcast)).setAdded(true);
-					break;
-				case TableView.ITEM_UPDATED_IN_DATABASE:
-					podcasts.get(podcasts.indexOf(podcast)).setChanged(false);
-					break;
-			}
-			podcast.setSettingsDir(this.getDbFile().getParent());
-			File podcastFile = new File(this.getDbFile().getParent()+"/"+podcast.getDatafile()+".pod");
-			if (podcastFile.exists()){
-				SqlJetDb podcastDB = new SqlJetDb(podcastFile,true);
-				try {
-					podcastDB.open();
-				} catch (SqlJetException e) {
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-				}
+				podcast.setSettingsDir(this.getDbFile().getParent());
+				File podcastFile = new File(this.getDbFile().getParent()+"/"+podcast.getDatafile()+".pod");
+				if (podcastFile.exists()){
+					SqlJetDb podcastDB = new SqlJetDb(podcastFile,true);
+					try {
+						podcastDB.open();
+					} catch (SqlJetException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
 
-				podcast.setdbTable(podcastDB);			
-				podcast.updateDatabase();
+					podcast.setdbTable(podcastDB);			
+					podcast.updateDatabase();
+				}
 			}
+		} else {
+			Podsalinan.debugLog.println("Error db connection is closed");
 		}
 	}
 }

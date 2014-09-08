@@ -80,15 +80,21 @@ public abstract class TableDefinition {
 				recordSet.add(newRecord);
 				currentRecord.next();
 			}
-			return recordSet;
 		} catch (SqlException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SqlJetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				dbTable.dbCommit();
+			} catch (SqlJetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return null;
+		return recordSet;
 	}
 	
 	/**

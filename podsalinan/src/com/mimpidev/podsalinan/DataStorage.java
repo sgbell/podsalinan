@@ -133,12 +133,14 @@ public class DataStorage {
 			podcasts.setdbTable(podsalinanDB);
 			podcasts.readTable();
 			
+			/*
 			try {
 				podsalinanDB.close();
 			} catch (SqlJetException e) {
 				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				return -1;
 			}
+			*/
 		}
 		if (!settings.isValidSetting("defaultDirectory")){
 			if (System.getProperty("os.name").startsWith("Windows"))
@@ -166,6 +168,7 @@ public class DataStorage {
 							 URLDownloadList downloads,
 							 ProgSettings settings) {
 
+		/*
 		File podsalinanDBFile = new File(settingsDir.concat(fileSystemSlash+"podsalinan.db"));
 		if (podsalinanDBFile.exists()){
 			SqlJetDb podsalinanDB = new SqlJetDb(podsalinanDBFile,true);
@@ -176,17 +179,20 @@ public class DataStorage {
 			}
 
 			downloads.setdbTable(podsalinanDB);
+			*/
 			downloads.updateDatabase();
-			settings.setdbTable(podsalinanDB);
+			//settings.setdbTable(podsalinanDB);
 			settings.updateDatabase();
-			podcasts.setdbTable(podsalinanDB);
+			//podcasts.setdbTable(podsalinanDB);
 			podcasts.updateDatabase();
+			/*
 			try {
 				podsalinanDB.close();
 			} catch (SqlJetException e) {
 				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 			}
-		}
+			*/
+		//}
 	}
 	
 	/**
