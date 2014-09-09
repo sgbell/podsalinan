@@ -29,6 +29,8 @@ import java.util.Map;
 
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
+import org.tmatesoft.sqljet.core.internal.btree.SqlJetBtree;
+import org.tmatesoft.sqljet.core.internal.schema.SqlJetSchema;
 import org.tmatesoft.sqljet.core.schema.ISqlJetColumnDef;
 import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
 import org.tmatesoft.sqljet.core.table.ISqlJetTable;
@@ -444,32 +446,6 @@ public class TableView {
 		if (table!=null){
 			try {
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
-			} catch (SqlJetException e) {
-				e.printStackTrace();
-				//log.printStackTrace(e.getStackTrace());
-				//throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
-			}
-			ISqlJetTable sequenceTable=null;
-			try {
-				sequenceTable = db.getTable("sqlite_sequence");
-			} catch (SqlJetException e) {
-				e.printStackTrace();
-				//log.printStackTrace(e.getStackTrace());
-				//throw new SqlException(SqlException.ERROR_DELETING_RECORD);
-			}
-			try {
-				ISqlJetCursor deleteCursor = sequenceTable.lookup("name", name);
-				while (!deleteCursor.eof()){
-					deleteCursor.delete();
-				}
-				deleteCursor.close();
-				db.commit();
-			} catch (SqlJetException e) {
-				e.printStackTrace();
-				//log.printStackTrace(e.getStackTrace());
-				//throw new SqlException(SqlException.ERROR_DELETING_RECORD);
-			}
-			try {
 				table.clear();
 			} catch (SqlJetException e) {
 				e.printStackTrace();
