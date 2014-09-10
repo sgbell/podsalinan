@@ -200,11 +200,11 @@ public class TableView {
 		// The following loop checks the data passed in, and copies into the values Map, only columns
 		// that exist in this table.
 		for (int cc=0; cc<columnList.size(); cc++){
-			if (data.containsKey(columnList.get(cc))){
+			if (data.containsKey(columnList.get(cc).name)){
 				values.put(columnList.get(cc).name, data.get(columnList.get(cc).name));
 			}
 		}
-		
+
 		return values;
 	}
 	
@@ -447,6 +447,7 @@ public class TableView {
 			try {
 				db.beginTransaction(SqlJetTransactionMode.WRITE);
 				table.clear();
+				db.commit();
 			} catch (SqlJetException e) {
 				e.printStackTrace();
 				//log.printStackTrace(e.getStackTrace());
