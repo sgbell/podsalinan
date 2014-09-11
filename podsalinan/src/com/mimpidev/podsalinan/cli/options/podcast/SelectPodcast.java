@@ -20,8 +20,23 @@ public class SelectPodcast extends CLIOption {
 
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Auto-generated method stub
-		return null;
+		returnObject = new ReturnCall();
+		returnObject.methodCall = "podcast";
+		returnObject.methodParameters = command.replaceFirst("showMenu ", "");
+		
+		System.out.println();
+		System.out.println("Podcast: "+data.getPodcasts().getList().get(Integer.parseInt(command)).getName()+ " - Selected");
+		System.out.println("1. List Episodes");
+		System.out.println("2. Update List");
+		System.out.println("3. Delete Podcast");
+		System.out.println("4. Change Download Directory");
+		System.out.println("5. Autoqueue Episodes");
+		System.out.println("<AA>. Select Episode");
+		System.out.println();
+		System.out.println("9. Return to List of Podcasts");
+		System.out.println();
+		
+		return returnObject;
 	}
 
 }

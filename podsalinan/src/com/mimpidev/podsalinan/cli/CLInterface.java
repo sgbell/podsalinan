@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
@@ -228,12 +229,20 @@ public class CLInterface extends CLIOption implements Runnable{
                 	ReturnCall returnValue = new ReturnCall();
                 	
                 	returnValue.execute=true;
-                	returnValue.methodCall = menuCommand; 
-            		returnValue.methodParameters = menuInput;
+                	if (menuCommand.length()>0){
+                		returnValue.methodCall = menuCommand.split(" ")[0];
+                		returnValue.methodParameters = menuCommand.substring(menuCommand.split(" ")[0].length())+" "+menuInput;
+                	} else {
+                		returnValue.methodCall = menuCommand;
+            		    returnValue.methodParameters = menuInput;
+                	}
+            		Podsalinan.debugLog.println("methodCall: "+returnValue.methodCall);
+            		Podsalinan.debugLog.println("methodParameters: "+returnValue.methodParameters);
             		
            			returnValue=options.get(returnValue.methodCall).execute(returnValue.methodParameters);
-           			
-            		menuCommand = returnValue.methodCall;
+
+          			menuCommand = returnValue.methodCall+" "+returnValue.methodParameters;
+            		Podsalinan.debugLog.println(menuCommand);
                 }
 			} else {
 				options.get(methodCall).execute(menuInput);
@@ -365,7 +374,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		while (!data.getSettings().isFinished()){
 			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))))
-				options.get(menuCommand).execute("showMenu");
+				options.get(menuCommand.split(" ")[0]).execute("showMenu");
 			if (!data.getSettings().isFinished())
 				userInput();
 		}
