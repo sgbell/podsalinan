@@ -182,7 +182,7 @@ public class ProgSettings extends TableDefinition{
 				}
 			}
 		} else {
-			Podsalinan.debugLog.println("Error db connection is closed");
+			Podsalinan.debugLog.logError("Error db connection is closed");
 		}
 	}
 }

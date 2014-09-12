@@ -40,15 +40,15 @@ public class DumpCommand extends CLIOption {
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 			Date date = new Date();
 				
-			Podsalinan.debugLog.println("--URLDownload Contents - "+dateFormat.format(date)+" --");
-			Podsalinan.debugLog.println("DownladURL,status,destination,podcastid");
+			Podsalinan.debugLog.logInfo("--URLDownload Contents - "+dateFormat.format(date)+" --");
+			Podsalinan.debugLog.logInfo("DownladURL,status,destination,podcastid");
 			for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
-				Podsalinan.debugLog.println(currentDownload.getURL().toString()+
+				Podsalinan.debugLog.logInfo(currentDownload.getURL().toString()+
 						","+currentDownload.getCurrentStatus()+
 						","+currentDownload.getDestination()+
 						","+currentDownload.getPodcastId());
 			}
-			Podsalinan.debugLog.println("-- URLDownload Contents end --");
+			Podsalinan.debugLog.logInfo("-- URLDownload Contents end --");
 		}
 		return null;
 	}

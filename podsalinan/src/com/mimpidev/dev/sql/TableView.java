@@ -136,7 +136,7 @@ public class TableView {
 			try {
 				newResult = addNewColumn(columnList.get(cc).name,columnList.get(cc).type);
 			} catch (SqlException e) {
-	        	log.println("[Table:"+name+"] Error Adding Column:"+columnList.get(cc).name);
+	        	log.logInfo("[Table:"+name+"] Error Adding Column:"+columnList.get(cc).name);
 	        	newResult = -1;
 	        }
 			if (result>=0)
@@ -349,7 +349,7 @@ public class TableView {
 			if (!columnFound){
 				try {
 					db.alterTable("ALTER TABLE "+name+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
-					log.println("[Table:"+name+"] Added Column:"+columnName);
+					log.logInfo("[Table:"+name+"] Added Column:"+columnName);
 					return NEW_COLUMNS_ADDED;
 				} catch (SqlJetException e) {
 					log.printStackTrace(e.getStackTrace());
@@ -428,8 +428,6 @@ public class TableView {
 	private boolean setTable() throws SqlException{
 		if (table==null){
 			try {
-				System.out.println(db.isOpen());
-				System.out.println(name);
 				table = db.getTable(name);
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());

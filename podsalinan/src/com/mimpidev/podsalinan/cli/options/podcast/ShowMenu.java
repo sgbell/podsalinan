@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options.podcast;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.Podcast;
@@ -27,6 +28,7 @@ public class ShowMenu extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
+		Podsalinan.debugLog.logInfo(command);
 		returnObject = new ReturnCall();
 		System.out.println();
 		int podcastCount=1;

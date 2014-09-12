@@ -81,7 +81,7 @@ public class PodcastList extends TableDefinition {
 				newPodcast.setdbTable(podcastDB);
 				newPodcast.readTable();
 			} else {
-				Podsalinan.debugLog.println("File does not exist");
+				Podsalinan.debugLog.logError("File does not exist");
 			}
 		}
 	}
@@ -152,7 +152,7 @@ public class PodcastList extends TableDefinition {
 				}
 			}
 		} else {
-			Podsalinan.debugLog.println("Error db connection is closed");
+			Podsalinan.debugLog.logError("Error db connection is closed");
 		}
 	}
 }

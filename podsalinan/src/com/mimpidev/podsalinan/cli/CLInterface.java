@@ -236,13 +236,16 @@ public class CLInterface extends CLIOption implements Runnable{
                 		returnValue.methodCall = menuCommand;
             		    returnValue.methodParameters = menuInput;
                 	}
-            		Podsalinan.debugLog.println("methodCall: "+returnValue.methodCall);
-            		Podsalinan.debugLog.println("methodParameters: "+returnValue.methodParameters);
+            		Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
+            		Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
             		
            			returnValue=options.get(returnValue.methodCall).execute(returnValue.methodParameters);
-
+           			Podsalinan.debugLog.logInfo("After the methodCall");
+            		Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
+            		Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
+           			
           			menuCommand = returnValue.methodCall+" "+returnValue.methodParameters;
-            		Podsalinan.debugLog.println(menuCommand);
+            		Podsalinan.debugLog.logInfo("menuCommand: "+ menuCommand);
                 }
 			} else {
 				options.get(methodCall).execute(menuInput);

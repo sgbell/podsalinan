@@ -83,7 +83,23 @@ public class Log {
 	 * 
 	 * @param debugLine
 	 */
-	public synchronized void println(String debugLine){
+	public synchronized void logInfo(String debugLine){
+		println ("[Info]"+debugLine);
+	}
+	
+	/**
+	 * 
+	 * @param debugLine
+	 */
+	public synchronized void logError(String debugLine){
+		println ("[Error]"+debugLine);
+	}
+	
+	/**
+	 * 
+	 * @param debugLine
+	 */
+	private synchronized void println(String debugLine){
 		try {
 			if (fileOutput==null)
 				initialise();

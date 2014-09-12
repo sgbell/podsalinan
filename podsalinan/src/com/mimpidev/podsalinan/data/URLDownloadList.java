@@ -457,7 +457,7 @@ public class URLDownloadList extends DownloadDetails {
 				}
 			}
 		} else {
-			Podsalinan.debugLog.println("Error db connection is closed");
+			Podsalinan.debugLog.logError("Error db connection is closed");
 		}
 	}
 }
