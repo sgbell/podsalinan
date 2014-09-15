@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options.podcast;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 
@@ -22,10 +23,11 @@ public class SelectPodcast extends CLIOption {
 	public ReturnCall execute(String command) {
 		returnObject = new ReturnCall();
 		returnObject.methodCall = "podcast";
-		returnObject.methodParameters = command.replaceFirst("showMenu ", "");
+		returnObject.methodParameters = command;
+		Podsalinan.debugLog.logInfo("podcast.SelectPodcast CommandValue:" +command);
 		
 		System.out.println();
-		System.out.println("Podcast: "+data.getPodcasts().getList().get(Integer.parseInt(command)).getName()+ " - Selected");
+		System.out.println("Podcast: "+data.getPodcasts().getList().get(Integer.parseInt(command.split(" ")[0])).getName()+ " - Selected");
 		System.out.println("1. List Episodes");
 		System.out.println("2. Update List");
 		System.out.println("3. Delete Podcast");

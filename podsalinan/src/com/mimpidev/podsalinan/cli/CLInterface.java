@@ -231,11 +231,12 @@ public class CLInterface extends CLIOption implements Runnable{
                 	returnValue.execute=true;
                 	if (menuCommand.length()>0){
                 		returnValue.methodCall = menuCommand.split(" ")[0];
-                		returnValue.methodParameters = menuCommand.substring(menuCommand.split(" ")[0].length())+" "+menuInput;
+                		returnValue.methodParameters = (menuCommand.substring(menuCommand.split(" ")[0].length())+" "+menuInput).trim();
                 	} else {
                 		returnValue.methodCall = menuCommand;
             		    returnValue.methodParameters = menuInput;
                 	}
+           			Podsalinan.debugLog.logInfo("Before the methodCall");
             		Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
             		Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
             		
@@ -376,8 +377,14 @@ public class CLInterface extends CLIOption implements Runnable{
 		System.out.println("----------------------");
 		while (!data.getSettings().isFinished()){
 			if (((data.getSettings().findSetting("menuVisible")==null)||
-				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))))
-				options.get(menuCommand.split(" ")[0]).execute("showMenu");
+				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))){
+				String params;
+				if (menuCommand.split(" ").length>1)
+					params =  menuCommand.split(" ", 2)[1];
+				else
+					params = "";
+				options.get(menuCommand.split(" ")[0]).execute(params);
+			}
 			if (!data.getSettings().isFinished())
 				userInput();
 		}

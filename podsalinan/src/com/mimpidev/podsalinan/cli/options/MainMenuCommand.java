@@ -61,7 +61,8 @@ public class MainMenuCommand extends CLIOption {
 			returnValue = new ReturnCall();
 			
 			returnValue.methodCall=menuCommands.get(command);
-			returnValue.methodParameters="showMenu";
+			returnValue.methodParameters="";
+			//returnValue.methodParameters="showMenu";
 			returnValue.execute=true;
 		} else if (command.length()==0) {
 			options.get("showMenu").execute("");
