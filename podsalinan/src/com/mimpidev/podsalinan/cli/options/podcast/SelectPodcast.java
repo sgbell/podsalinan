@@ -30,7 +30,7 @@ public class SelectPodcast extends CLIOption {
 
 	@Override
 	public ReturnCall execute(String command) {
-		if (command.length()<=2)
+		if (command.length()==8)
 			returnObject = options.get("").execute(command);
 		else {
 			returnObject = options.get(command.split(" ")[1]).execute(command);
