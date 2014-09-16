@@ -24,7 +24,7 @@ public class PodcastCommand extends CLIOption {
 	public PodcastCommand(DataStorage newData) {
 		super(newData);
 		options = new HashMap<String, CLIOption>();
-		options.put("<a-zz>", new SelectPodcast(newData));
+		options.put("<aaaaaaaaa>", new SelectPodcast(newData));
 		options.put("showMenu", new ShowMenu(newData));
 	}
 
@@ -50,7 +50,7 @@ public class PodcastCommand extends CLIOption {
 					for (int count=0; count<data.getPodcasts().getList().size(); count++){
 						Podcast currentPodcast = data.getPodcasts().getList().get(count);
 						if (currentPodcast.getDatafile().equals(command))
-							returnObject = options.get("<a-zz>").execute(Integer.toString(count));
+							returnObject = options.get("<aaaaaaaa>").execute(command);
 					}
 				}
 			} catch (NumberFormatException e) {
@@ -59,15 +59,21 @@ public class PodcastCommand extends CLIOption {
 				// 8 characters is the unique identifier we are using for the podcast. So if it is less than 8 numbers
 				// it will be the number in the array
 				}else if (command.length()<8){
-					if (command.split(" ").length==1)
-						command = Integer.toString(convertCharToNumber(command));
-					returnObject = options.get("<a-zz>").execute(command);
+					if (command.split(" ").length==1){
+						Podsalinan.debugLog.logInfo("Command Value: "+command);
+						if (convertCharToNumber(command)<data.getPodcasts().getList().size()){
+							Podcast currentPodcast = data.getPodcasts().getList().get(convertCharToNumber(command));
+							command = currentPodcast.getDatafile();
+							Podsalinan.debugLog.logInfo("Found podcast: "+command);
+						}
+					}
+					returnObject = options.get("<aaaaaaaaa>").execute(command);
 				} else {
 					// If the user has entered 8 characters find the right podcast in the list
 					for (int count=0; count<data.getPodcasts().getList().size(); count++){
 						Podcast currentPodcast = data.getPodcasts().getList().get(count);
 						if (currentPodcast.getDatafile().equals(command))
-							returnObject = options.get("<a-zz>").execute(Integer.toString(count));
+							returnObject = options.get("<aaaaaaaa>").execute(command);
 					}
 				}
 			}

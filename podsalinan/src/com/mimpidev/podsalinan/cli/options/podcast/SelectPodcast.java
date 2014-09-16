@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
+import java.util.HashMap;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -16,27 +18,23 @@ public class SelectPodcast extends CLIOption {
 
 	public SelectPodcast(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
+		options = new HashMap<String, CLIOption>();
+		options.put("", new ShowSelectedMenu(newData));
+		options.put("1", new ListEpisodes(newData));
+		options.put("2", new UpdatePodcast(newData));
+		options.put("3", new DeletePodcast(newData));
+		options.put("4", new ChangeDownloadDirectory(newData));
+		options.put("5", new AutoQueueEpisodes(newData));
+		options.put("showSelectedMenu", new ShowSelectedMenu(newData));
 	}
 
 	@Override
 	public ReturnCall execute(String command) {
-		returnObject = new ReturnCall();
-		returnObject.methodCall = "podcast";
-		returnObject.methodParameters = command;
-		Podsalinan.debugLog.logInfo("podcast.SelectPodcast CommandValue:" +command);
-		
-		System.out.println();
-		System.out.println("Podcast: "+data.getPodcasts().getList().get(Integer.parseInt(command.split(" ")[0])).getName()+ " - Selected");
-		System.out.println("1. List Episodes");
-		System.out.println("2. Update List");
-		System.out.println("3. Delete Podcast");
-		System.out.println("4. Change Download Directory");
-		System.out.println("5. Autoqueue Episodes");
-		System.out.println("<AA>. Select Episode");
-		System.out.println();
-		System.out.println("9. Return to List of Podcasts");
-		System.out.println();
+		if (command.length()<=2)
+			returnObject = options.get("").execute(command);
+		else {
+			returnObject = options.get(command.split(" ")[1]).execute(command);
+		}
 		
 		return returnObject;
 	}
