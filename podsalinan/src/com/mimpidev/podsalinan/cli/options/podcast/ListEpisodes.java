@@ -24,8 +24,8 @@ public class ListEpisodes extends CLIOption {
 
 	@Override
 	public ReturnCall execute(String command) {
-		Podsalinan.debugLog.logInfo("ListEpisodes Class called");
-		Podsalinan.debugLog.logInfo("Command Value: "+command);
+		if (debug) Podsalinan.debugLog.logInfo("ListEpisodes Class called");
+		if (debug) Podsalinan.debugLog.logInfo("Command Value: "+command);
 		
 		System.out.println ();
 		int epCount=1;

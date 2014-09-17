@@ -24,7 +24,7 @@ public class PodcastCommand extends CLIOption {
 	public PodcastCommand(DataStorage newData) {
 		super(newData);
 		options = new HashMap<String, CLIOption>();
-		options.put("<aaaaaaaaa>", new SelectPodcast(newData));
+		options.put("<aaaaaaaa>", new SelectPodcast(newData));
 		options.put("showMenu", new ShowMenu(newData));
 	}
 
@@ -50,7 +50,7 @@ public class PodcastCommand extends CLIOption {
 					for (int count=0; count<data.getPodcasts().getList().size(); count++){
 						Podcast currentPodcast = data.getPodcasts().getList().get(count);
 						if (currentPodcast.getDatafile().equals(command))
-							returnObject = options.get("<aaaaaaaaa>").execute(command);
+							returnObject = options.get("<aaaaaaaa>").execute(command);
 					}
 				}
 			} catch (NumberFormatException e) {
@@ -67,12 +67,12 @@ public class PodcastCommand extends CLIOption {
 							Podsalinan.debugLog.logInfo("Found podcast: "+command);
 						}
 					}
-					returnObject = options.get("<aaaaaaaaa>").execute(command);
+					returnObject = options.get("<aaaaaaaa>").execute(command);
 				} else {
 					// If the user has entered 8 characters find the right podcast in the list
 					for (int count=0; count<data.getPodcasts().getList().size(); count++){
 						Podcast currentPodcast = data.getPodcasts().getList().get(count);
-						if (currentPodcast.getDatafile().equals(command))
+						if (currentPodcast.getDatafile().equals(command.split(" ")[0]))
 							returnObject = options.get("<aaaaaaaa>").execute(command);
 					}
 				}
