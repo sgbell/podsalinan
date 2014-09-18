@@ -33,7 +33,11 @@ public class SelectPodcast extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
 		if (command.length()==8)
 			returnObject = options.get("").execute(command);
-		else {
+		else if (command.split(" ")[1].equals("9")){
+			returnObject = new ReturnCall();
+			returnObject.methodCall="podcast";
+			returnObject.methodParameters="";
+		} else {
 			returnObject = options.get(command.split(" ")[1]).execute(command);
 		}
 		

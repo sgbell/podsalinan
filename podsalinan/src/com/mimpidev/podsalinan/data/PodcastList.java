@@ -155,4 +155,11 @@ public class PodcastList extends TableDefinition {
 			Podsalinan.debugLog.logError("Error db connection is closed");
 		}
 	}
+
+	public Podcast getPodcastByUid(String podcastUid) {
+		for (Podcast currentPodcast: podcasts)
+			if (currentPodcast.getDatafile().equals(podcastUid))
+			   return currentPodcast;
+		return null;
+	}
 }

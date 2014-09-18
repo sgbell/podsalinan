@@ -6,8 +6,10 @@ package com.mimpidev.podsalinan.cli.options.podcast;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.Episode;
+import com.mimpidev.podsalinan.data.Podcast;
 
 /**
  * @author sbell
@@ -27,9 +29,12 @@ public class ListEpisodes extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo("ListEpisodes Class called");
 		if (debug) Podsalinan.debugLog.logInfo("Command Value: "+command);
 		
+		CLInput input = new CLInput();
+		
 		System.out.println ();
 		int epCount=1;
-/*		synchronized (selectedPodcast.getEpisodes()){
+		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ")[0]);
+		synchronized (selectedPodcast.getEpisodes()){
 			for (Episode episode : selectedPodcast.getEpisodes()){
 				System.out.println (getEncodingFromNumber(epCount)+" - " +
 						episode.getTitle()+" : "+episode.getDate());
@@ -41,9 +46,12 @@ public class ListEpisodes extends CLIOption {
 						break;
 				}
 			}
-		}*/
+		}
+		returnObject = new ReturnCall();
+		returnObject.methodCall = "podcast";
+		returnObject.methodParameters = command.split(" ")[0];
 		
-		return null;
+		return returnObject;
 	}
 
 }
