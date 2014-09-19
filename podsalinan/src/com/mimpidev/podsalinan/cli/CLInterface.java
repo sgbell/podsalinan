@@ -46,18 +46,6 @@ public class CLInterface extends CLIOption implements Runnable{
 	/**
 	 * 
 	 */
-	//private CLMainMenu mainMenu;
-	/**
-	 * 
-	 */
-	//private DataStorage data=null;
-	/**
-	 * 
-	 */
-	//private Map<String, CLIOption> menuOptions=null;
-	/**
-	 * 
-	 */
 	private String menuCommand="";
 
 	public CLInterface(DataStorage newData){
@@ -236,17 +224,21 @@ public class CLInterface extends CLIOption implements Runnable{
                 		returnValue.methodCall = menuCommand;
             		    returnValue.methodParameters = menuInput;
                 	}
-           			Podsalinan.debugLog.logInfo("Before the methodCall");
-            		Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
-            		Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
+           			if (debug) {
+           				Podsalinan.debugLog.logInfo("Before the methodCall");
+               			Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
+               			Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
+           			}
             		
            			returnValue=options.get(returnValue.methodCall).execute(returnValue.methodParameters);
-           			Podsalinan.debugLog.logInfo("After the methodCall");
-            		Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
-            		Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
+           			if (debug){
+           				Podsalinan.debugLog.logInfo("After the methodCall");
+               			Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
+               			Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
+           			}
            			
           			menuCommand = returnValue.methodCall+" "+returnValue.methodParameters;
-            		Podsalinan.debugLog.logInfo("menuCommand: "+ menuCommand);
+          			if (debug) Podsalinan.debugLog.logInfo("menuCommand: "+ menuCommand);
                 }
 			} else {
 				options.get(methodCall).execute(menuInput);
