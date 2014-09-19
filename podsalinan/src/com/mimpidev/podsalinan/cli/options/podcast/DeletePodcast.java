@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options.podcast;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 
@@ -18,7 +19,7 @@ public class DeletePodcast extends CLIOption {
 	 */
 	public DeletePodcast(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
+		debug=true;
 	}
 
 	/* (non-Javadoc)
@@ -26,8 +27,15 @@ public class DeletePodcast extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Auto-generated method stub
-		return null;
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"]+command");
+    	/*
+		if(input.confirmRemoval()){
+    		selectedPodcast.setRemove(true);
+    		setSelectedPodcast(null);
+    		menuList.removeSetting("selectedPodcast");
+    	}*/
+		
+		return returnObject;
 	}
 
 }
