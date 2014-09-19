@@ -237,7 +237,12 @@ public class CLInterface extends CLIOption implements Runnable{
                			Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
            			}
            			
-          			menuCommand = returnValue.methodCall+" "+returnValue.methodParameters;
+                    if (returnValue.methodCall.length()>0){
+                    	menuCommand = returnValue.methodCall;
+                        if (returnValue.methodParameters.length()>0)
+                        	menuCommand +=" "+returnValue.methodParameters;
+                    } else
+                    	menuCommand = "";
           			if (debug) Podsalinan.debugLog.logInfo("menuCommand: "+ menuCommand);
                 }
 			} else {
@@ -375,7 +380,14 @@ public class CLInterface extends CLIOption implements Runnable{
 					params =  menuCommand.split(" ", 2)[1];
 				else
 					params = "";
-				options.get(menuCommand.split(" ")[0]).execute(params);
+				if (debug) {
+					Podsalinan.debugLog.logInfo("["+getClass().getName()+"] menuCommand:"+menuCommand.length());
+					Podsalinan.debugLog.logInfo("["+getClass().getName()+"] menuCommand:'"+menuCommand+"'");
+				}
+				if (menuCommand.length()==0)
+					options.get("").execute(params);
+				else
+					options.get(menuCommand.split(" ")[0]).execute(params);
 			}
 			if (!data.getSettings().isFinished())
 				userInput();

@@ -34,7 +34,6 @@ public class SelectPodcast extends CLIOption {
 		if (command.length()==8)
 			returnObject = options.get("").execute(command);
 		else if (command.split(" ")[1].equals("9")){
-			returnObject = new ReturnCall();
 			returnObject.methodCall="podcast";
 			returnObject.methodParameters="";
 		} else {

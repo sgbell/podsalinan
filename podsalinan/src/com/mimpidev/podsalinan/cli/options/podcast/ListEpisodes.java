@@ -34,16 +34,18 @@ public class ListEpisodes extends CLIOption {
 		System.out.println ();
 		int epCount=1;
 		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ")[0]);
-		synchronized (selectedPodcast.getEpisodes()){
-			for (Episode episode : selectedPodcast.getEpisodes()){
-				System.out.println (getEncodingFromNumber(epCount)+" - " +
-						episode.getTitle()+" : "+episode.getDate());
-				epCount++;
-				if ((epCount%20)==0){
-					System.out.println("-- Press any key to continue, q to quit --");
-					char charInput=input.getSingleCharInput();
-					if (charInput=='q')
-						break;
+		if (selectedPodcast!=null){
+			synchronized (selectedPodcast.getEpisodes()){
+				for (Episode episode : selectedPodcast.getEpisodes()){
+					System.out.println (getEncodingFromNumber(epCount)+" - " +
+							episode.getTitle()+" : "+episode.getDate());
+					epCount++;
+					if ((epCount%20)==0){
+						System.out.println("-- Press any key to continue, q to quit --");
+						char charInput=input.getSingleCharInput();
+						if (charInput=='q')
+							break;
+					}
 				}
 			}
 		}

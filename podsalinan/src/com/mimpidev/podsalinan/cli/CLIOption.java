@@ -30,6 +30,7 @@ public abstract class CLIOption {
 	 */
 	public CLIOption(DataStorage newData) {
 		data=newData;
+		returnObject = new ReturnCall();
 	}
 
 	public abstract ReturnCall execute(String command);

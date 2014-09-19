@@ -33,7 +33,6 @@ public class PodcastCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		returnObject = new ReturnCall();
 		returnObject.methodCall="podcast";
 		if (options.containsKey(command))
 			options.get(command).execute(command);
