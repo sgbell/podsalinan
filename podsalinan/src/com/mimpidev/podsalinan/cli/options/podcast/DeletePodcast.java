@@ -21,7 +21,6 @@ public class DeletePodcast extends CLIOption {
 	 */
 	public DeletePodcast(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
 	/* (non-Javadoc)

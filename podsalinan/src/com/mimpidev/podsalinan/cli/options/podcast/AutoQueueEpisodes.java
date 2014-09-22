@@ -4,8 +4,10 @@
 package com.mimpidev.podsalinan.cli.options.podcast;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.data.Podcast;
 
 /**
  * @author sbell
@@ -18,7 +20,7 @@ public class AutoQueueEpisodes extends CLIOption {
 	 */
 	public AutoQueueEpisodes(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
+		debug=true;
 	}
 
 	/* (non-Javadoc)
@@ -26,8 +28,25 @@ public class AutoQueueEpisodes extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Auto-generated method stub
-		return null;
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		
+		if (command.split(" ").length>1){
+			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ")[0]);
+			if (selectedPodcast!=null){
+				System.out.println ();
+		    	if (selectedPodcast.isAutomaticQueue()){
+		    		selectedPodcast.setAutomaticQueue(false);
+		    		System.out.println(selectedPodcast.getName()+" podcast autoqueue disabled.");
+		    	}else{
+		    		selectedPodcast.setAutomaticQueue(true);
+		    		System.out.println(selectedPodcast.getName()+"podcast autoqeue enabled.");
+		    	}
+				returnObject.methodCall = "Podcast";
+				returnObject.methodParameters = command.split(" ")[0];
+			}
+		}
+		
+		return returnObject;
 	}
 
 }
