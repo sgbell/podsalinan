@@ -10,7 +10,6 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLDownloadSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLEpisodeMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.CLPodcastSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLInterface.MenuPath;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.data.Episode;

@@ -10,8 +10,6 @@ import java.util.Date;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLDownloadMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.CLPodcastMenu;
-import com.mimpidev.podsalinan.cli.CLPodcastSelectedMenu;
 import com.mimpidev.podsalinan.cli.CLPreferencesMenu;
 import com.mimpidev.podsalinan.cli.CLInterface.MenuPath;
 import com.mimpidev.podsalinan.cli.ReturnCall;
