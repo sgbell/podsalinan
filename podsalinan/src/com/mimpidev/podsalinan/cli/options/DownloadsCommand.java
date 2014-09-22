@@ -22,9 +22,11 @@ public class DownloadsCommand extends CLIOption {
 	 */
 	public DownloadsCommand(DataStorage newData) {
 		super(newData);
+		ShowMenu showMenu = new ShowMenu(newData);
 		options = new HashMap<String, CLIOption>();
-		options.put("<aaaaaaaa>", new SelectDownload(newData));
-		options.put("showMenu", new ShowMenu(newData));
+		options.put("<aa>", new SelectDownload(newData));
+		options.put("showMenu", showMenu);
+		options.put("", showMenu);
 	}
 
 	/* (non-Javadoc)
