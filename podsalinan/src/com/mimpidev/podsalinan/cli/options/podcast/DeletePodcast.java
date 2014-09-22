@@ -6,7 +6,9 @@ package com.mimpidev.podsalinan.cli.options.podcast;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.data.Podcast;
 
 /**
  * @author sbell
@@ -27,13 +29,19 @@ public class DeletePodcast extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"]+command");
-    	/*
-		if(input.confirmRemoval()){
-    		selectedPodcast.setRemove(true);
-    		setSelectedPodcast(null);
-    		menuList.removeSetting("selectedPodcast");
-    	}*/
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		
+		if (command.split(" ").length>1){
+			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ")[0]);
+			if (selectedPodcast!=null){
+				CLInput input = new CLInput();
+				if(input.confirmRemoval()){
+		    		selectedPodcast.setRemove(true);
+		    	}
+			}
+			returnObject.methodCall = "Podcast";
+			returnObject.methodParameters = command.split(" ")[0];
+		}
 		
 		return returnObject;
 	}
