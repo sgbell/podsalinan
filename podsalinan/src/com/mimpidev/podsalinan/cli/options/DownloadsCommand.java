@@ -3,9 +3,13 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.HashMap;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.options.downloads.SelectDownload;
+import com.mimpidev.podsalinan.cli.options.downloads.ShowMenu;
 
 /**
  * @author sbell
@@ -18,7 +22,9 @@ public class DownloadsCommand extends CLIOption {
 	 */
 	public DownloadsCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
+		options = new HashMap<String, CLIOption>();
+		options.put("<aaaaaaaa>", new SelectDownload(newData));
+		options.put("showMenu", new ShowMenu(newData));
 	}
 
 	/* (non-Javadoc)
