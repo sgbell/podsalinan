@@ -27,7 +27,7 @@ public class ShowSelectedMenu extends CLIOption {
 	}
 
 	public void printDetails(URLDownload selectedDownload, boolean showDirectory){
-		if (selectedDownload==null){
+		if (selectedDownload!=null){
 			System.out.println("URL: "+selectedDownload.getURL().toString());
 			switch (selectedDownload.getStatus()){
 				case Episode.DOWNLOAD_QUEUED:
