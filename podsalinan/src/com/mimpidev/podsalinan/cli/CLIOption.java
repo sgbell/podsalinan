@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli;
 
+import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -30,6 +32,8 @@ public abstract class CLIOption {
 	 */
 	public CLIOption(DataStorage newData) {
 		data=newData;
+		// Declaring here so it doesn't have to be initialized in the children
+		options = new HashMap<String, CLIOption>();
 		returnObject = new ReturnCall();
 	}
 
@@ -66,5 +70,29 @@ public abstract class CLIOption {
 		number--;
 		
 		return number;
+	}
+
+	protected String humanReadableSize(long fileSize) {
+		String fileSizeModifier="";
+		double newOutputSize;
+		
+		if (fileSize>1073741824){
+			fileSizeModifier=" Gb";
+			newOutputSize = (double)fileSize/1073741824;
+		} else if (fileSize>1048576){
+			fileSizeModifier=" Mb";
+			newOutputSize = (double)fileSize/1048576;
+		} else if (fileSize>1024){
+			fileSizeModifier=" Kb";
+			newOutputSize = (double)fileSize/1024;
+		} else
+			newOutputSize = (double)fileSize;
+
+		newOutputSize=new Double(new DecimalFormat("#.##").format(newOutputSize)).doubleValue();
+		
+        if (newOutputSize==0)
+        	return "0";
+        else
+        	return Double.toString(newOutputSize)+fileSizeModifier;
 	}
 }

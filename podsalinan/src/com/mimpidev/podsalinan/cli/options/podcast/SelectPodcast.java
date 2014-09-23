@@ -18,14 +18,15 @@ public class SelectPodcast extends CLIOption {
 
 	public SelectPodcast(DataStorage newData) {
 		super(newData);
-		options = new HashMap<String, CLIOption>();
-		options.put("", new ShowSelectedMenu(newData));
+		
+		ShowSelectedMenu showMenu = new ShowSelectedMenu(newData);
+		options.put("", showMenu);
 		options.put("1", new ListEpisodes(newData));
 		options.put("2", new UpdatePodcast(newData));
 		options.put("3", new DeletePodcast(newData));
 		options.put("4", new ChangeDownloadDirectory(newData));
 		options.put("5", new AutoQueueEpisodes(newData));
-		options.put("showSelectedMenu", new ShowSelectedMenu(newData));
+		options.put("showSelectedMenu", showMenu);
 	}
 
 	@Override

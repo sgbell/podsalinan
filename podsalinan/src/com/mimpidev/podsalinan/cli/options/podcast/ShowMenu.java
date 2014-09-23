@@ -20,7 +20,7 @@ public class ShowMenu extends CLIOption {
 	 */
 	public ShowMenu(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
+		debug=true;
 	}
 
 	/* (non-Javadoc)
@@ -28,7 +28,7 @@ public class ShowMenu extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		Podsalinan.debugLog.logInfo(command);
+		if (debug) Podsalinan.debugLog.logInfo(command);
 		returnObject = new ReturnCall();
 		System.out.println();
 		int podcastCount=1;

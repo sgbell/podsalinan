@@ -65,7 +65,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	}
 
 	private void initializeMenus() {
-		options = new HashMap<String, CLIOption>();
+		
 		options.put("quit", new QuitCommand(data));
 		options.put("exit", new QuitCommand(data));
 		options.put("http", new URLCommand(data));

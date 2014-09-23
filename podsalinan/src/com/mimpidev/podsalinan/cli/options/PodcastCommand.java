@@ -3,13 +3,10 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
-import java.util.HashMap;
-
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
-import com.mimpidev.podsalinan.cli.options.downloads.ShowMenu;
 import com.mimpidev.podsalinan.cli.options.podcast.*;
 import com.mimpidev.podsalinan.data.Podcast;
 
@@ -24,8 +21,9 @@ public class PodcastCommand extends CLIOption {
 	 */
 	public PodcastCommand(DataStorage newData) {
 		super(newData);
+		// I will declare CLIOptions first that are referenced more than once in the Map
 		ShowMenu showMenu = new ShowMenu(newData);
-		options = new HashMap<String, CLIOption>();
+		
 		options.put("<aaaaaaaa>", new SelectPodcast(newData));
 		options.put("showMenu", showMenu);
 		options.put("", showMenu);
@@ -56,17 +54,15 @@ public class PodcastCommand extends CLIOption {
 					}
 				}
 			} catch (NumberFormatException e) {
-				if (command.length()==0){
-					returnObject = options.get("showMenu").execute("");
 				// 8 characters is the unique identifier we are using for the podcast. So if it is less than 8 numbers
 				// it will be the number in the array
-				}else if (command.length()<8){
+				if (command.length()<8){
 					if (command.split(" ").length==1){
-						Podsalinan.debugLog.logInfo("Command Value: "+command);
+						if (debug) Podsalinan.debugLog.logInfo("Command Value: "+command);
 						if (convertCharToNumber(command)<data.getPodcasts().getList().size()){
 							Podcast currentPodcast = data.getPodcasts().getList().get(convertCharToNumber(command));
 							command = currentPodcast.getDatafile();
-							Podsalinan.debugLog.logInfo("Found podcast: "+command);
+							if (debug) Podsalinan.debugLog.logInfo("Found podcast: "+command);
 						}
 					}
 					returnObject = options.get("<aaaaaaaa>").execute(command);
