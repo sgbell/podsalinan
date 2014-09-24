@@ -20,7 +20,6 @@ public class ShowMenu extends CLIOption {
 	 */
 	public ShowMenu(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
 	public void listDownloads(){

@@ -74,8 +74,8 @@ public class ShowSelectedMenu extends CLIOption {
 	@Override
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
-		
-		int downloadId = Integer.parseInt(command.split(" ")[0]);
+
+		int downloadId = convertCharToNumber(command.split(" ")[0]);
 		int count=0;
 		for (URLDownload currentDownload: data.getUrlDownloads().getDownloads()){
 			if (!currentDownload.isRemoved()){
@@ -92,6 +92,9 @@ public class ShowSelectedMenu extends CLIOption {
 					System.out.println("7. Change Destination");
 					System.out.println();
 					System.out.println("9. Return to Download List");
+					
+					returnObject.methodCall="downloads";
+					returnObject.methodParameters=""+command;
 				}
 				count++;
 			}

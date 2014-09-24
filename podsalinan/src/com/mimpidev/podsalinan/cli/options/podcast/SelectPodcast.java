@@ -3,8 +3,6 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
-import java.util.HashMap;
-
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;

@@ -30,8 +30,6 @@ public class SelectDownload extends CLIOption {
 		options.put("7", new ChangeDestination(newData));
 		options.put("showSelectedMenu", showMenu);
 		options.put("", showMenu);
-		
-		debug=true;
 	}
 
 	/* (non-Javadoc)
@@ -44,7 +42,22 @@ public class SelectDownload extends CLIOption {
 		if (command.length()<=2){
 			returnObject = options.get("").execute(command);
 		} else {
-			
+			try {
+				Integer.parseInt(command);
+				if (command.equals("9")){
+					returnObject.methodCall="";
+					returnObject.methodParameters="";
+				}
+			} catch (NumberFormatException e){
+				if (command.split(" ").length==1){
+					returnObject = options.get("").execute(command);
+				} else if (command.split(" ")[1].equals("9")){
+					returnObject.methodCall="downloads";
+					returnObject.methodParameters="";
+				} else {
+					returnObject = options.get(command.split(" ")[1]).execute(command);
+				}
+			}
 		}
 		return returnObject;
 	}

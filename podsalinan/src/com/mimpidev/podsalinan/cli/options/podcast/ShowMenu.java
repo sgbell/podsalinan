@@ -29,7 +29,6 @@ public class ShowMenu extends CLIOption {
 	@Override
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo(command);
-		returnObject = new ReturnCall();
 		System.out.println();
 		int podcastCount=1;
 		

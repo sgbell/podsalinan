@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options;
 import java.util.HashMap;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.cli.options.downloads.SelectDownload;
@@ -33,7 +34,7 @@ public class DownloadsCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		returnObject = new ReturnCall();
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		returnObject.methodCall="downloads";
 		
 		if (options.containsKey(command))
@@ -46,11 +47,7 @@ public class DownloadsCommand extends CLIOption {
 					returnObject.methodParameters="";
 				}
 			} catch (NumberFormatException e) {
-				if (command.split(" ").length==1){
-					if ((convertCharToNumber(command)<data.getUrlDownloads().visibleSize())&&
-						(convertCharToNumber(command)>0))
-						returnObject = options.get("<aa>").execute(command);
-				}
+				returnObject = options.get("<aa>").execute(command);
 			}
 		}
 		
