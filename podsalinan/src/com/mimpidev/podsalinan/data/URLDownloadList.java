@@ -460,4 +460,8 @@ public class URLDownloadList extends DownloadDetails {
 			Podsalinan.debugLog.logError("Error db connection is closed");
 		}
 	}
+
+	public void deleteActiveDownload(int parseInt) {
+		//TODO:Flesh this out
+	}
 }

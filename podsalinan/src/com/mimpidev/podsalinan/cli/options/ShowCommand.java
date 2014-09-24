@@ -26,7 +26,6 @@ public class ShowCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		returnObject = new ReturnCall();
 		
 		/*
 		if (menuInput.equalsIgnoreCase("show menu")){
