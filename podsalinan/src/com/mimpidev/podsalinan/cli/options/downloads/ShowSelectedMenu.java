@@ -75,30 +75,36 @@ public class ShowSelectedMenu extends CLIOption {
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 
-		int downloadId = convertCharToNumber(command.split(" ")[0]);
-		int count=0;
-		for (URLDownload currentDownload: data.getUrlDownloads().getDownloads()){
-			if (!currentDownload.isRemoved()){
-				if (count==downloadId){
-					System.out.println();
-					printDetails(currentDownload,false);
-					System.out.println();
-					System.out.println("1. Delete Download");
-					System.out.println("2. Restart Download");
-					System.out.println("3. Stop Download");
-					System.out.println("4. Start Download (Add to active Queue)");
-					System.out.println("5. Increase Priority");
-					System.out.println("6. Decrease Priority");
-					System.out.println("7. Change Destination");
-					System.out.println();
-					System.out.println("9. Return to Download List");
-					
-					returnObject.methodCall="downloads";
-					returnObject.methodParameters=""+command;
+		String downloadUid = command.split(" ")[0];
+		if (downloadUid.length()<=2){
+			int downloadId = convertCharToNumber(command.split(" ")[0]);
+			int count=0;
+			for (URLDownload currentDownload: data.getUrlDownloads().getDownloads()){
+				if (!currentDownload.isRemoved()){
+					if (count==downloadId){
+						downloadUid = currentDownload.getUid();
+					}
+					count++;
 				}
-				count++;
 			}
 		}
+		URLDownload currentDownload = data.getUrlDownloads().findDownloadByUid(downloadUid);
+
+		System.out.println();
+		printDetails(currentDownload,false);
+		System.out.println();
+		System.out.println("1. Delete Download");
+		System.out.println("2. Restart Download");
+		System.out.println("3. Stop Download");
+		System.out.println("4. Start Download (Add to active Queue)");
+		System.out.println("5. Increase Priority");
+		System.out.println("6. Decrease Priority");
+		System.out.println("7. Change Destination");
+		System.out.println();
+		System.out.println("9. Return to Download List");
+					
+		returnObject.methodCall="downloads";
+		returnObject.methodParameters=""+downloadUid;
 
 		return returnObject;
 	}

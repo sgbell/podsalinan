@@ -30,7 +30,7 @@ public class DeleteDownload extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 
 		if (command.split(" ").length>1){
-			data.getUrlDownloads().deleteActiveDownload(Integer.parseInt(command.split(" ")[0]));
+			data.getUrlDownloads().deleteActiveDownload(command.split(" ")[0]);
 		}
 		return returnObject;
 	}

@@ -4,7 +4,13 @@
 package com.mimpidev.podsalinan.data;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
@@ -14,6 +20,7 @@ public class URLDownload extends Details {
 	
 	private File destination;
 	private String podcastId;
+	private String uid;
 	
 	public URLDownload(){
 		super();
@@ -53,6 +60,19 @@ public class URLDownload extends Details {
 		setDestination(destination);
 		this.status=status;
 		this.podcastId=podcast;
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] bytesUid = (url+destination).getBytes("UTF-8");
+			md.update(bytesUid, 0, bytesUid.length);
+			uid = new BigInteger(1, md.digest()).toString().substring(0,8);
+		} catch (NoSuchAlgorithmException e) {
+			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+		} catch (UnsupportedEncodingException e) {
+			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+		}
+		
+		
+		//uid = 
 	}
 	
 	public URLDownload(URL url, boolean added){
@@ -99,6 +119,20 @@ public class URLDownload extends Details {
 	
 	public File getDestinationFile(){
 		return destination;
+	}
+
+	/**
+	 * @return the uid
+	 */
+	public String getUid() {
+		return uid;
+	}
+
+	/**
+	 * @param uid the uid to set
+	 */
+	public void setUid(String newUid) {
+		uid = newUid.substring(0,8);
 	}
 
 }

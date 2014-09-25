@@ -35,9 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
-import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Downloader;

@@ -39,7 +39,7 @@ public class SelectDownload extends CLIOption {
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
-		if (command.length()<=2){
+		if (command.split(" ").length==1){
 			returnObject = options.get("").execute(command);
 		} else {
 			try {
@@ -49,9 +49,7 @@ public class SelectDownload extends CLIOption {
 					returnObject.methodParameters="";
 				}
 			} catch (NumberFormatException e){
-				if (command.split(" ").length==1){
-					returnObject = options.get("").execute(command);
-				} else if (command.split(" ")[1].equals("9")){
+				if (command.split(" ")[1].equals("9")){
 					returnObject.methodCall="downloads";
 					returnObject.methodParameters="";
 				} else {

@@ -246,6 +246,19 @@ public class URLDownloadList extends DownloadDetails {
 		downloads.add(download);
 		return true;
 	}
+
+	/**
+	 * deleteActiveDownload will take in a uid for the download, and select the download from the queue.
+	 * @param string
+	 */
+	public boolean deleteActiveDownload(String uid) {
+		for (URLDownload currentDownload: downloads){
+			if (currentDownload.getUid().equals(uid)){
+				return deleteDownload(currentDownload);
+			}
+		}
+		return false;
+	}
 	
 	public boolean restartDownload(int download) {
 		if ((download >=0)&&(download<downloads.size())){
@@ -461,7 +474,16 @@ public class URLDownloadList extends DownloadDetails {
 		}
 	}
 
-	public void deleteActiveDownload(int parseInt) {
-		//TODO:Flesh this out
+	/**
+	 * Adding uids to downloads now, as a way to uniquely identify them
+	 * @param downloadUid
+	 * @return
+	 */
+	public URLDownload findDownloadByUid(String downloadUid) {
+		for (URLDownload currentDownload : downloads)
+			if (currentDownload.getUid().equals(downloadUid))
+				return currentDownload;
+		return null;
 	}
+
 }
