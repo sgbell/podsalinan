@@ -18,7 +18,7 @@ public class StopDownload extends CLIOption {
 	 */
 	public StopDownload(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
+		debug=true;
 	}
 
 	/* (non-Javadoc)
@@ -26,8 +26,9 @@ public class StopDownload extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Auto-generated method stub
-		return null;
+	
+		
+		return returnObject;
 	}
 
 }

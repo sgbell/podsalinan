@@ -486,4 +486,10 @@ public class URLDownloadList extends DownloadDetails {
 		return null;
 	}
 
+	public void restartDownload(String downloadUid) {
+		URLDownload currentDownload = findDownloadByUid(downloadUid);
+		if (currentDownload!=null)
+			restartDownload(currentDownload);
+	}
+
 }
