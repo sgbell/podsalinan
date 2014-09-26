@@ -46,33 +46,19 @@ public class URLDownload extends Details {
 	public URLDownload(String url, boolean added, String destination){
 		super(url, added);
 		setDestination(destination);
+		setUid(url+destination);
 	}
 
 	public URLDownload(String url, String length, boolean added, String destination){
-		super(url, added);
+		this(url, added, destination);
 		setSize(length);
-		setDestination(destination);
 	}
 	
 	public URLDownload(String url, String length, String destination, String podcast, 
 			           int status){
-		super(url, length);
-		setDestination(destination);
+		this(url, length, destination);
 		this.status=status;
 		this.podcastId=podcast;
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] bytesUid = (url+destination).getBytes("UTF-8");
-			md.update(bytesUid, 0, bytesUid.length);
-			uid = new BigInteger(1, md.digest()).toString().substring(0,8);
-		} catch (NoSuchAlgorithmException e) {
-			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-		} catch (UnsupportedEncodingException e) {
-			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-		}
-		
-		
-		//uid = 
 	}
 	
 	public URLDownload(URL url, boolean added){
@@ -132,7 +118,16 @@ public class URLDownload extends Details {
 	 * @param uid the uid to set
 	 */
 	public void setUid(String newUid) {
-		uid = newUid.substring(0,8);
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] bytesUid = (newUid).getBytes("UTF-8");
+			md.update(bytesUid, 0, bytesUid.length);
+			uid = new BigInteger(1, md.digest()).toString().substring(0,8);
+		} catch (NoSuchAlgorithmException e) {
+			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+		} catch (UnsupportedEncodingException e) {
+			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+		}
 	}
 
 }

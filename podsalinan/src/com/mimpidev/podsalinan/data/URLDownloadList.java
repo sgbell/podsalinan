@@ -28,6 +28,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -98,12 +99,17 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public void addDownload(URLDownload newDownload, int priority) {
 		if (findDownload(newDownload.getURL())==-1){
+			// This will ensure each download has a unique id
+			while (findDownloadByUid(newDownload.getUid())!=null){
+				// If the uid already exists, generate a new 1, adding the current time till we get a unique id
+				newDownload.setUid(newDownload.getURL().toString()+newDownload.getDestination()+(new Date().toString()));
+			}
 			// If nothing in the download list, or if priority is equal to the size
 			if ((downloads.size()==0)||
-				(priority>=downloads.size()))
+				(priority>=downloads.size())){
 				downloads.add(newDownload);
 			// if the priority is less then the download size add it to the queue at the position of priority
-			else if (priority<downloads.size()){
+			} else if (priority<downloads.size()){
 				downloads.insertElementAt(newDownload, priority);
 			}
 		} else {
@@ -490,6 +496,25 @@ public class URLDownloadList extends DownloadDetails {
 		URLDownload currentDownload = findDownloadByUid(downloadUid);
 		if (currentDownload!=null)
 			restartDownload(currentDownload);
+	}
+
+	public void cancelDownload(String downloadUid) {
+		URLDownload currentDownload = findDownloadByUid(downloadUid);
+		if (currentDownload!=null)
+			cancelDownload(currentDownload);
+	}
+
+	public void reQueueDownload(String downloadUid) {
+		URLDownload currentDownload = findDownloadByUid(downloadUid);
+		if (currentDownload!=null)
+			reQueueDownload(currentDownload);
+	}
+
+	public void increasePriority(String downloadUid) {
+		URLDownload currentDownload = findDownloadByUid(downloadUid);
+		if (currentDownload!=null){
+			//TODO: Working here
+		}
 	}
 
 }
