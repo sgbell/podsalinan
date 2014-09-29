@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options.downloads;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 
@@ -18,7 +19,7 @@ public class DecreasePriority extends CLIOption {
 	 */
 	public DecreasePriority(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
+		debug=true;
 	}
 
 	/* (non-Javadoc)
@@ -26,8 +27,13 @@ public class DecreasePriority extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Auto-generated method stub
-		return null;
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+
+		if (command.split(" ").length>1){
+			data.getUrlDownloads().decreasePriority(command.split(" ")[0]);
+		}
+		
+		return returnObject;
 	}
 
 }

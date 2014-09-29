@@ -156,6 +156,26 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	/**
+	 * This will move the selected download up the queue 
+	 * @param downloadUid download Unique Identifier
+	 */
+	public boolean increasePriority(String downloadUid) {
+		URLDownload currentDownload = findDownloadByUid(downloadUid);
+		if (currentDownload!=null){
+			int downloadCount=0;
+			boolean found=false;
+			while (!found){
+				if (downloads.get(downloadCount).getUid().equals(downloadUid))
+					found=true;
+				else
+					downloadCount++;
+			}
+			return increasePriority(downloadCount);
+		}
+		return false;
+	}
+	
+	/**
 	 * This will move the selected download down the queue
 	 * @param downloadId
 	 */
@@ -174,6 +194,23 @@ public class URLDownloadList extends DownloadDetails {
 		int downloadId = findDownload(download);
 		
 		return decreasePriority(downloadId);
+	}
+	
+
+	public boolean decreasePriority(String downloadUid) {
+		URLDownload currentDownload = findDownloadByUid(downloadUid);
+		if (currentDownload!=null){
+			int downloadCount=0;
+			boolean found=false;
+			while (!found){
+				if (downloads.get(downloadCount).getUid().equals(downloadUid))
+					found=true;
+				else
+					downloadCount++;
+			}
+			return decreasePriority(downloadCount);
+		}
+		return false;
 	}
 
 	public void checkDownloadSize(URLDownload newFile){
@@ -509,12 +546,4 @@ public class URLDownloadList extends DownloadDetails {
 		if (currentDownload!=null)
 			reQueueDownload(currentDownload);
 	}
-
-	public void increasePriority(String downloadUid) {
-		URLDownload currentDownload = findDownloadByUid(downloadUid);
-		if (currentDownload!=null){
-			//TODO: Working here
-		}
-	}
-
 }
