@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.options.settings.*;
 
 /**
  * @author sbell
@@ -18,7 +19,14 @@ public class SettingsCommand extends CLIOption {
 	 */
 	public SettingsCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
+		ShowMenu showMenu = new ShowMenu(newData);
+		options.put("1", new PodcastUpdateRate(newData));
+		options.put("2", new MaxDownloaders(newData));
+		options.put("3", new DownloadDirectory(newData));
+		options.put("4", new GlobalQueuePodcast(newData));
+		options.put("5", new DownloadSpeedLimit(newData));
+		options.put("", showMenu);
+		options.put("showMenu", showMenu);
 	}
 
 	/* (non-Javadoc)
@@ -26,9 +34,9 @@ public class SettingsCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		return null;
-		// TODO Auto-generated method stub
-
+		
+		
+		return returnObject;
 	}
 
 }
