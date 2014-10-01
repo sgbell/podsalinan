@@ -273,5 +273,44 @@ public class Details {
  * String image
  * boolean changed
  * boolean remove
- * 
+ * boolean added
+ * boolean automaticQueue
+ * Vector<Episode> episodeList
+ * DateFormat df
+ * String settingsDir
+ * String name
+ * String datafile
+ * =============================
+ * methods
+ * =============================
+ * Vector<Episode> getEpisodes()
+ * setURL(String)
+ * String getURL()
+ * setDirectory(String)
+ * String getDirectory()
+ * boolean isChanged()
+ * setChanged(boolean)
+ * boolean isRemoved()
+ * setRemove(boolean)
+ * boolean isAdded()
+ * boolean setAdded()
+ * String getImage()
+ * setImage(String)
+ * updateList(String)
+ * updateList(String, boolean)
+ * int deleteEpisodeFromDrive(int)
+ * int deleteEpisodeFromDrive(Episode)
+ * int addEpisode(Episode)
+ * Episode getEpisodeByURL(String)
+ * Vector<Episode> getEpisodesByDate(Date)
+ * int getEpisodeId(Episode)
+ * Vector<Episode> getEpisodesByStatus(int)
+ * scanDirectory(DataStorage)
+ * boolean isAutomaticQueue()
+ * setAutomaticQueue(boolean)
+ * updateDatabase()
+ * setSettingsDir(String)
+ * readTable()
+ * setDatafile(String)
+ * String getDatafile()
  */ 
