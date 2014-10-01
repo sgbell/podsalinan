@@ -222,95 +222,72 @@ public class Details {
 	}
 }
 /*
- * URLDownload properties
- * ----------------------
- * variables
- * ======================
- * File destination
- * String podcastId
- * String uid
- * Url url
+ * URLDownload properties										Podcast Properties
+ * ----------------------										------------------
+ * variables													variables
+ * ======================										==================
+ * File destination												String directory
+ * String podcastId												
+ * String uid													
+ * Url url														String url
  * String size
- * boolean added
- *         remove
- *         updated
+ * boolean added												boolean added												
+ *         remove												boolean remove
+ *         updated												boolean changed
  * int     status
- * ======================
- * methods
- * ======================
- * String getDestination()
- * setDestination(String)
- * setDestination(File)
- * String getPodcastId()
- * setPodcastId(String)
- * String getFilenameDownload()
- * File getDestinationFile()
- * String getUid()
- * setUid(String)
+ * 																String image
+ * 																boolean automaticQueue
+ * 																Vector<Episode> episodeList
+ *																DateFormat df
+ *																String settingsDir
+ *																String name
+ *																String datafile
+ * ======================										===========================
+ * methods														methods
+ * ======================										===========================
+ * String getDestination()										String getDirectory()
+ * setDestination(String)										setDirectory(String)
+ * setDestination(File)											
+ * setURL(URL)													
+ * setURL(String)												setURL(String)
+ * URL getURL()													String getURL()
+ * String getPodcastId()										
+ * setPodcastId(String)											
+ * String getFilenameDownload()									
+ * File getDestinationFile()									
+ * String getUid()												
+ * setUid(String)												
  * char getCharStatus()
  * String getStatusString(int)
  * String getCurrentStatus()
- * setUpdated(boolean)
- * boolean isUpdated()
+ * setUpdated(boolean)											setChanged(boolean)
+ * boolean isUpdated()											boolean isChanged()
  * setStatus(int)
  * int getStatus()
- * boolean isAdded()
- * setAdded(boolean)
- * boolean isRemoved()
- * setRemoved(boolean)
+ * boolean isAdded()											boolean isAdded()
+ * setAdded(boolean)											setAdded(boolean)
+ * boolean isRemoved()											boolean isRemoved()
+ * setRemoved(boolean)											setRemove(boolean)
  * String getSize()
  * setSize(String)
- * setURL(URL)
- * setURL(String)
- * URL getURL()
- * 
- * Podcast Properties
- * ------------------
- * variables
- * ==================
- * String url
- * String directory
- * String image
- * boolean changed
- * boolean remove
- * boolean added
- * boolean automaticQueue
- * Vector<Episode> episodeList
- * DateFormat df
- * String settingsDir
- * String name
- * String datafile
- * =============================
- * methods
- * =============================
- * Vector<Episode> getEpisodes()
- * setURL(String)
- * String getURL()
- * setDirectory(String)
- * String getDirectory()
- * boolean isChanged()
- * setChanged(boolean)
- * boolean isRemoved()
- * setRemove(boolean)
- * boolean isAdded()
- * boolean setAdded()
- * String getImage()
- * setImage(String)
- * updateList(String)
- * updateList(String, boolean)
- * int deleteEpisodeFromDrive(int)
- * int deleteEpisodeFromDrive(Episode)
- * int addEpisode(Episode)
- * Episode getEpisodeByURL(String)
- * Vector<Episode> getEpisodesByDate(Date)
- * int getEpisodeId(Episode)
- * Vector<Episode> getEpisodesByStatus(int)
- * scanDirectory(DataStorage)
- * boolean isAutomaticQueue()
- * setAutomaticQueue(boolean)
- * updateDatabase()
- * setSettingsDir(String)
- * readTable()
- * setDatafile(String)
- * String getDatafile()
+ * 																Vector<Episode> getEpisodes()
+ * 																String getImage()
+ * 																setImage(String)
+ * 																updateList(String)
+ * 																updateList(String, boolean)
+ * 																int deleteEpisodeFromDrive(int)
+ * 																int deleteEpisodeFromDrive(Episode)
+ * 																int addEpisode(Episode)
+ * 																Episode getEpisodeByURL(String)
+ * 																Vector<Episode> getEpisodesByDate(Date)
+ * 																int getEpisodeId(Episode)
+ * 																Vector<Episode> getEpisodesByStatus(int)
+ * 																scanDirectory(DataStorage)
+ * 																boolean isAutomaticQueue()
+ * 																setAutomaticQueue(boolean)
+ * 																updateDatabase()
+ * 																setSettingsDir(String)
+ * 																readTable()
+ * 																setDatafile(String)
+ * 																String getDatafile()
  */ 
