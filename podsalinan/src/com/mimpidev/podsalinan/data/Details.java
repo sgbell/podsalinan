@@ -221,3 +221,57 @@ public class Details {
 		return status;
 	}
 }
+/*
+ * URLDownload properties
+ * ----------------------
+ * variables
+ * ======================
+ * File destination
+ * String podcastId
+ * String uid
+ * Url url
+ * String size
+ * boolean added
+ *         remove
+ *         updated
+ * int     status
+ * ======================
+ * methods
+ * ======================
+ * String getDestination()
+ * setDestination(String)
+ * setDestination(File)
+ * String getPodcastId()
+ * setPodcastId(String)
+ * String getFilenameDownload()
+ * File getDestinationFile()
+ * String getUid()
+ * setUid(String)
+ * char getCharStatus()
+ * String getStatusString(int)
+ * String getCurrentStatus()
+ * setUpdated(boolean)
+ * boolean isUpdated()
+ * setStatus(int)
+ * int getStatus()
+ * boolean isAdded()
+ * setAdded(boolean)
+ * boolean isRemoved()
+ * setRemoved(boolean)
+ * String getSize()
+ * setSize(String)
+ * setURL(URL)
+ * setURL(String)
+ * URL getURL()
+ * 
+ * Podcast Properties
+ * ------------------
+ * variables
+ * ==================
+ * String url
+ * String directory
+ * String image
+ * boolean changed
+ * boolean remove
+ * 
+ */ 

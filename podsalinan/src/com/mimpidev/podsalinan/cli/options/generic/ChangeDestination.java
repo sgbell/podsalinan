@@ -50,11 +50,15 @@ public class ChangeDestination extends CLIOption {
 				URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(commands[0]);
 				System.out.println("Enter Download Destination ["+selectedDownload.getDestination()+"]: ");
 				String userInput = input.getStringInput();
-				changeDirectory(,userInput);
+				changeDirectory(selectedDownload,userInput);
 	    	}
 	    } 
 		
 		return returnObject;
 	}
 
+	public boolean changeDirectory(Object item, String userInput){
+		
+		return false;
+	}
 }
