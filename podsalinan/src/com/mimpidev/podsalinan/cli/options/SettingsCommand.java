@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.cli.options.settings.*;
@@ -23,7 +24,7 @@ public class SettingsCommand extends CLIOption {
 		options.put("1", new PodcastUpdateRate(newData));
 		options.put("2", new MaxDownloaders(newData));
 		options.put("3", new DownloadDirectory(newData));
-		options.put("4", new GlobalQueuePodcast(newData));
+		options.put("4", new AutoQueueEpisodes(newData));
 		options.put("5", new DownloadSpeedLimit(newData));
 		options.put("", showMenu);
 		options.put("showMenu", showMenu);
@@ -34,7 +35,7 @@ public class SettingsCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
 		return returnObject;
 	}

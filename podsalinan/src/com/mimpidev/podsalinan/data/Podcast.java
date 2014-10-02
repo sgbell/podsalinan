@@ -52,9 +52,9 @@ public class Podcast extends DownloadDetails{
 	 */
 	private String  url;
 	/**
-	 * 
+	 * Directory that files will be downloaded to.
 	 */
-	private String  directory;  // Directory that files will be downloaded to.
+	private String  directory; 
 	/**
 	 * 
 	 */

@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options.settings;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 
@@ -18,7 +19,6 @@ public class MaxDownloaders extends CLIOption {
 	 */
 	public MaxDownloaders(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -26,8 +26,20 @@ public class MaxDownloaders extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Auto-generated method stub
-		return null;
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+
+		System.out.println ();
+		System.out.print ("Enter Number of Simultaneous Downloads["+settings.findSetting("maxDownloaders")+"]: ");
+		/* Take user input.
+		 * Make sure it is between 1 and 30
+		 * If not, get the user to enter it again.
+		 */
+		String numDownloaders = input.getValidNumber(1,30);
+		if (numDownloaders!=null)
+			settings.updateSetting("maxDownloaders",numDownloaders);
+		System.out.println("Simultaneous Downloads: "+settings.findSetting("maxDownloaders"));		
+		
+		return returnObject;
 	}
 
 }
