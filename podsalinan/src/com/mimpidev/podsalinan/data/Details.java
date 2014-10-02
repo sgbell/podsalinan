@@ -222,6 +222,15 @@ public class Details {
 	}
 }
 /*
+ * Changes to make
+ * ===============
+ * 1. Switch data storage to Mapped Variables - This will include upgrading the database from using
+ *    autoincremented primary key to uid primary key for URLDownload and Podcasts
+ * 2. Make URLDownload & Podcast extend a Database Item Object (may even extend an objecxt the extends the db item object)
+ * 3. Have New Classes make the connection to the database, linking URLDownload and Podcast objects to the database
+ * 4. DataStorage will be an array of these new db connection classes
+ * 
+ * 
  * URLDownload properties										Podcast Properties
  * ----------------------										------------------
  * variables													variables
