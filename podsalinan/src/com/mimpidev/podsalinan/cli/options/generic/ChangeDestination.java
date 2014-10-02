@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.generic;
 
+import java.io.File;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -34,31 +36,56 @@ public class ChangeDestination extends CLIOption {
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
+		System.out.println ();
 	    String commands[] = command.split(" ");
-	    if (commands.length==3){
-	    	if (commands[2].equalsIgnoreCase("podcast")){
-				Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(commands[0]);
-				if (selectedPodcast!=null){
-					System.out.println ();
-					System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
-					String userInput=input.getStringInput();
-			    	changeDirectory(selectedPodcast,userInput);
-					returnObject.methodCall = "Podcast";
-					returnObject.methodParameters = command.split(" ")[0];
-				}
-	    	} else if (commands[2].equalsIgnoreCase("download")){
-				URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(commands[0]);
+		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(commands[0]);
+		if (selectedPodcast!=null){
+			System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
+			String userInput=input.getStringInput();
+	    	changeDirectory(selectedPodcast,userInput);
+			returnObject.methodCall = "Podcast";
+			returnObject.methodParameters = command.split(" ")[0];
+    	} else {
+    		URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(commands[0]);
+    		if (selectedDownload!=null){
 				System.out.println("Enter Download Destination ["+selectedDownload.getDestination()+"]: ");
 				String userInput = input.getStringInput();
 				changeDirectory(selectedDownload,userInput);
-	    	}
+    		}
 	    } 
 		
 		return returnObject;
 	}
 
 	public boolean changeDirectory(Object item, String userInput){
-		
+		File newPath=null;
+		boolean setNewPath=false;
+		if ((userInput.length()>0)&&(userInput!=null)){
+			newPath=new File(userInput);
+			if ((newPath!=null)&&(newPath.exists())&&(newPath.isDirectory())){
+				setNewPath=true;
+			} else if ((newPath.getParentFile()!=null)&&((newPath.getParentFile().exists())&&
+					   (newPath.getParentFile().isDirectory()))){
+				System.out.println("Error: Directory does not exist.");
+				if (input.confirmCreation()){
+					newPath.mkdir();
+					System.out.println("Directory Created: "+userInput);
+					setNewPath=true;
+				}
+			} else {
+				System.out.println ("Error: Invalid path");
+			}
+			if (setNewPath){
+				if (item instanceof Podcast){
+					((Podcast)item).setDirectory(userInput);
+					return true;
+				} else if (item instanceof URLDownload){
+					((URLDownload)item).setDestination(userInput);
+					((URLDownload)item).setUpdated(true);
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 }

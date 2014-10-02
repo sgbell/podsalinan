@@ -236,8 +236,6 @@ public class CLDownloadSelectedMenu extends CLMenu {
 				} else {
 					System.out.println ("Error: Invalid path");
 				}
-			} else {
-				System.out.println ("Error: Invalid path");
 			}
 		}
 		return false;
