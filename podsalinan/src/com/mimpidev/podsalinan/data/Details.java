@@ -23,6 +23,12 @@ package com.mimpidev.podsalinan.data;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.mimpidev.podsalinan.data.fields.BooleanType;
+import com.mimpidev.podsalinan.data.fields.FieldDetails;
+import com.mimpidev.podsalinan.data.fields.StringType;
 
 /**
  * @author bugman
@@ -30,12 +36,14 @@ import java.net.URL;
  */
 public class Details {
 
+	private Map<String,FieldDetails> fields;
+	
 	private URL     url;
 	private String 	size;
 	private boolean added=false,		  // Has this podcast been added to the database
 	   			    remove=false, // Does this podcast need to be deleted from the system
 					updated=false;
-	protected int	    status;  	  // This is used to track if the system has already downloaded the file.
+	protected int   status;  	  // This is used to track if the system has already downloaded the file.
 	
 	public static final int NOT_QUEUED=0,
 							DOWNLOAD_QUEUED=1,
@@ -48,10 +56,16 @@ public class Details {
 							DESTINATION_INVALID=8;
 	
 	public Details (){
-		
+		fields=new HashMap<String,FieldDetails>();
+		fields.put("url", new StringType());
+		fields.put("directory", new StringType());
+		fields.put("added", new BooleanType());
+		fields.put("remove", new BooleanType());
+		fields.put("updated", new BooleanType());
 	}
 	
 	public Details (String url){
+		this();
 		try {
 			this.url= new URL(url);
 		} catch (MalformedURLException e) {
@@ -60,6 +74,7 @@ public class Details {
 	}
 	
 	public Details (URL url){
+		this();
 		this.url = url;
 	}
 	
@@ -219,6 +234,20 @@ public class Details {
 	}
 		
 		return status;
+	}
+
+	/**
+	 * @return the fields
+	 */
+	public Map<String,FieldDetails> getFields() {
+		return fields;
+	}
+
+	/**
+	 * @param fields the fields to set
+	 */
+	public void setFields(Map<String,FieldDetails> fields) {
+		this.fields = fields;
 	}
 }
 /*
