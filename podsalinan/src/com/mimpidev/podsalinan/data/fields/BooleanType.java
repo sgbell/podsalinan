@@ -17,17 +17,14 @@ public class BooleanType extends FieldDetails{
 		setFieldType(FieldDetails.BOOLEAN);
 	}
 
-	public boolean getValue(){
-		return (field.getValue().equals("TRUE"));
-	}
 	/**
 	 * 
 	 * @param newValue
 	 */
 	public void setValue(boolean newValue){
 		if (newValue)
-			field.setValue("TRUE");
+			setValue("TRUE");
 		else
-			field.setValue("FALSE");
+			setValue("FALSE");
 	}
 }

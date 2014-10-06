@@ -1,50 +1,18 @@
-/*******************************************************************************
- * Copyright (c) 2011 Sam Bell.
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation, either version 3 of the License,
- * or  any later version.
- * 
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
- * the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * Contributors:
- *     Sam Bell - initial API and implementation
- ******************************************************************************/
 /**
  * 
  */
 package com.mimpidev.podsalinan.data;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.mimpidev.podsalinan.data.fields.BooleanType;
-import com.mimpidev.podsalinan.data.fields.FieldDetails;
-import com.mimpidev.podsalinan.data.fields.StringType;
+import com.mimpidev.podsalinan.data.fields.IntegerType;
 
 /**
- * @author bugman
+ * @author sbell
  *
  */
-public class Details {
+public class Details extends BaseDetails {
 
-	private Map<String,FieldDetails> fields;
-	
-	private URL     url;
-	private String 	size;
-	private boolean added=false,		  // Has this podcast been added to the database
-	   			    remove=false, // Does this podcast need to be deleted from the system
-					updated=false;
-	protected int   status;  	  // This is used to track if the system has already downloaded the file.
-	
 	public static final int NOT_QUEUED=0,
 							DOWNLOAD_QUEUED=1,
 							CURRENTLY_DOWNLOADING=2,
@@ -55,109 +23,45 @@ public class Details {
 							DOWNLOAD_FAULT=7,
 							DESTINATION_INVALID=8;
 	
-	public Details (){
-		fields=new HashMap<String,FieldDetails>();
-		fields.put("url", new StringType());
-		fields.put("directory", new StringType());
-		fields.put("added", new BooleanType());
-		fields.put("remove", new BooleanType());
-		fields.put("updated", new BooleanType());
+	/**
+	 * 
+	 */
+	public Details() {
+		super();
+		fields.put("size", new IntegerType());
+		fields.put("status", new IntegerType());
+	}
+
+	public Details(String url){
+		super(url);
+		setSize("0");
 	}
 	
-	public Details (String url){
-		this();
-		try {
-			this.url= new URL(url);
-		} catch (MalformedURLException e) {
-		}
-		size="0";
-	}
-	
-	public Details (URL url){
-		this();
-		this.url = url;
-	}
-	
-	public Details(String url, String length){
+	public Details (String url, String length){
 		this(url);
-		this.size=length;
+		setSize(length);
 	}
-	
+
 	public Details(URL url, String length){
-		this(url);
-		this.size=length;
-	}
-	
-	public Details(String url, boolean added){
-		this(url);
-		this.added=added;
-	}
-	
-	public Details(URL url, boolean added){
-		this(url);
-		this.added=added;
-	}
-	
-	public URL getURL(){
-		return url;
-	}
-	
-	public void setURL(String url){
-		try {
-			this.url= new URL(url);
-		} catch (MalformedURLException e) {
-		}
-	}
-	
-	public void setURL(URL url){
-		this.url = url;
+		this(url.toString());
+		setSize(length);
 	}
 	
 	public String getSize(){
-		return size;
+		return fields.get("size").getValue();
 	}
 	
 	public void setSize(String size){
-		this.size=size;
-	}
-	
-	public boolean isAdded(){
-		return added;
-	}
-	
-	public void setAdded(boolean added){
-		this.added = added;
-	}
-	
-	public boolean isRemoved(){
-		return remove;
-	}
-	
-	public void setRemoved(boolean removed){
-		remove=removed;
+		fields.get("size").setValue(size);
 	}
 	
 	public int getStatus(){
-		return status;
+		return Integer.parseInt(fields.get("status").getValue());
 	}
 	
 	public void setStatus(int newStatus){
-		status=newStatus;
-		updated=true;
-	}
-
-	/**
-	 * @return the updated
-	 */
-	public boolean isUpdated() {
-		return updated;
-	}
-
-	/**
-	 * @param updated the updated to set
-	 */
-	public void setUpdated(boolean updated) {
-		this.updated = updated;
+		fields.get("status").setValue(""+newStatus);
+		setUpdated(true);
 	}
 	
 	public String getCurrentStatus(){
@@ -203,7 +107,7 @@ public class Details {
 	public char getCharStatus() {
 		char status='\0';
 		
-		switch (this.status){
+		switch (getStatus()){
 		case NOT_QUEUED:
 			status = '\0';
 			break;
@@ -231,101 +135,8 @@ public class Details {
 		case DESTINATION_INVALID:
 			status = '-';
 			break;
-	}
+		}
 		
 		return status;
 	}
-
-	/**
-	 * @return the fields
-	 */
-	public Map<String,FieldDetails> getFields() {
-		return fields;
-	}
-
-	/**
-	 * @param fields the fields to set
-	 */
-	public void setFields(Map<String,FieldDetails> fields) {
-		this.fields = fields;
-	}
 }
-/*
- * Changes to make
- * ===============
- * 1. Switch data storage to Mapped Variables - This will include upgrading the database from using
- *    autoincremented primary key to uid primary key for URLDownload and Podcasts
- * 2. Make URLDownload & Podcast extend a Database Item Object (may even extend an objecxt the extends the db item object)
- * 3. Have New Classes make the connection to the database, linking URLDownload and Podcast objects to the database
- * 4. DataStorage will be an array of these new db connection classes
- * 
- * 
- * URLDownload properties										Podcast Properties
- * ----------------------										------------------
- * variables													variables
- * ======================										==================
- * File destination												String directory
- * String podcastId												
- * String uid													
- * Url url														String url
- * String size
- * boolean added												boolean added												
- *         remove												boolean remove
- *         updated												boolean changed
- * int     status
- * 																String image
- * 																boolean automaticQueue
- * 																Vector<Episode> episodeList
- *																DateFormat df
- *																String settingsDir
- *																String name
- *																String datafile
- * ======================										===========================
- * methods														methods
- * ======================										===========================
- * String getDestination()										String getDirectory()
- * setDestination(String)										setDirectory(String)
- * setDestination(File)											
- * setURL(URL)													
- * setURL(String)												setURL(String)
- * URL getURL()													String getURL()
- * String getPodcastId()										
- * setPodcastId(String)											
- * String getFilenameDownload()									
- * File getDestinationFile()									
- * String getUid()												
- * setUid(String)												
- * char getCharStatus()
- * String getStatusString(int)
- * String getCurrentStatus()
- * setUpdated(boolean)											setChanged(boolean)
- * boolean isUpdated()											boolean isChanged()
- * setStatus(int)
- * int getStatus()
- * boolean isAdded()											boolean isAdded()
- * setAdded(boolean)											setAdded(boolean)
- * boolean isRemoved()											boolean isRemoved()
- * setRemoved(boolean)											setRemove(boolean)
- * String getSize()
- * setSize(String)
- * 																Vector<Episode> getEpisodes()
- * 																String getImage()
- * 																setImage(String)
- * 																updateList(String)
- * 																updateList(String, boolean)
- * 																int deleteEpisodeFromDrive(int)
- * 																int deleteEpisodeFromDrive(Episode)
- * 																int addEpisode(Episode)
- * 																Episode getEpisodeByURL(String)
- * 																Vector<Episode> getEpisodesByDate(Date)
- * 																int getEpisodeId(Episode)
- * 																Vector<Episode> getEpisodesByStatus(int)
- * 																scanDirectory(DataStorage)
- * 																boolean isAutomaticQueue()
- * 																setAutomaticQueue(boolean)
- * 																updateDatabase()
- * 																setSettingsDir(String)
- * 																readTable()
- * 																setDatafile(String)
- * 																String getDatafile()
- */ 

@@ -17,11 +17,8 @@ public class StringType extends FieldDetails {
 		setFieldType(FieldDetails.STRING);
 	}
 
-	public String getValue(){
-		return super.getValue();
-	}
-	
-	public void setValue(String newValue){
-		super.setValue(newValue);
+	public StringType(String newValue) {
+		this();
+		setValue(newValue);
 	}
 }
