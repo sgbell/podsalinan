@@ -45,7 +45,7 @@ public class Episode extends Details {
 		date = published;
 		this.title=title;
 		description=desc;
-		this.status=status;
+		setStatus(status);
 	}
 	
 	public Episode() {
