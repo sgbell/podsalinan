@@ -52,14 +52,6 @@ public class Podcast extends DownloadDetails{
 	/**
 	 * 
 	 */
-	private String  image;
-	/**
-	 * 
-	 */
-	private boolean automaticQueue=false;
-	/**
-	 * 
-	 */
 	private Vector<Episode> episodeList = new Vector<Episode>(); // Used to store the the downloads, seperate from the DownloadList
 	/**
 	 * 
@@ -113,11 +105,11 @@ public class Podcast extends DownloadDetails{
 	}
 	
 	public void setURL(String url){
-		this.url=url;
+		super.setURL(url);
 	}
 	
 	public String getURL(){
-		return url;
+		return super.getURL();
 	}
 
 	public void setDirectory(String directory) {
