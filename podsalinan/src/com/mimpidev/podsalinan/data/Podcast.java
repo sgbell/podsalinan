@@ -40,6 +40,8 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Downloader;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.XmlReader;
+import com.mimpidev.podsalinan.data.fields.BooleanType;
+import com.mimpidev.podsalinan.data.fields.StringType;
 
 /**
  * @author bugman
@@ -50,27 +52,7 @@ public class Podcast extends DownloadDetails{
 	/**
 	 * 
 	 */
-	private String  url;
-	/**
-	 * Directory that files will be downloaded to.
-	 */
-	private String  directory; 
-	/**
-	 * 
-	 */
 	private String  image;
-	/**
-	 * 
-	 */
-	private boolean changed=false;
-	/**
-	 * 
-	 */
-	private boolean remove=false;
-	/**
-	 * 
-	 */
-	private boolean added=false;
 	/**
 	 * 
 	 */
@@ -94,7 +76,9 @@ public class Podcast extends DownloadDetails{
 	 */
 	public Podcast(String newURL){
 		super(null);
-		url = newURL;
+		fields.put("image", new StringType());
+		fields.put("automaticQueue", new BooleanType());
+		
 		df = new SimpleDateFormat(Episode.getDateFormat());
 		tableName = "shows";
 		

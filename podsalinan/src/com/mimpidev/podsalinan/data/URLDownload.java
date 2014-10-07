@@ -57,12 +57,12 @@ public class URLDownload extends Details {
 	public URLDownload(String url, String length, String destination, String podcast, 
 			           int status){
 		this(url, length, destination);
-		this.status=status;
+		setStatus(status);
 		this.podcastId=podcast;
 	}
 	
 	public URLDownload(URL url, boolean added){
-		super(url,added);
+		super(url.toString(),added);
 	}
 	
 	/**

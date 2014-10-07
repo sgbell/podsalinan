@@ -98,7 +98,7 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	public void addDownload(URLDownload newDownload, int priority) {
-		if (findDownload(newDownload.getURL())==-1){
+		if (findDownload(newDownload.getURL().toString())==-1){
 			// This will ensure each download has a unique id
 			while (findDownloadByUid(newDownload.getUid())!=null){
 				// If the uid already exists, generate a new 1, adding the current time till we get a unique id
@@ -216,7 +216,7 @@ public class URLDownloadList extends DownloadDetails {
 	public void checkDownloadSize(URLDownload newFile){
 		if (Long.parseLong(newFile.getSize())==0){
 			try {
-				URLConnection stream = newFile.getURL().openConnection();
+				URLConnection stream = new URL(newFile.getURL()).openConnection();
 				int fileSize=stream.getContentLength();
 				newFile.setSize(Long.toString(fileSize));
 				newFile.setStatus(Details.DOWNLOAD_QUEUED);
@@ -253,7 +253,7 @@ public class URLDownloadList extends DownloadDetails {
 	 * @param url
 	 */
 	public void cancelDownload (URL url){
-		cancelDownload(findDownload(url));
+		cancelDownload(findDownload(url.toString()));
 	}
 
 	/** This is the parent method for all cancelDownload methods
@@ -279,10 +279,6 @@ public class URLDownloadList extends DownloadDetails {
 		return false;
 	}
 
-	public boolean deleteDownload(URL url) {
-		return deleteDownload(findDownload(url));
-	}
-	
 	public boolean deleteDownload(URLDownload download){
 		download.setRemoved(true);
 		downloads.remove(download);
@@ -308,10 +304,6 @@ public class URLDownloadList extends DownloadDetails {
 			return restartDownload(downloads.get(download));
 		}
 		return false;
-	}
-	
-	public boolean restartDownload(URL url){
-		return restartDownload(findDownload(url));
 	}
 	
 	public boolean restartDownload(URLDownload download){
@@ -352,10 +344,10 @@ public class URLDownloadList extends DownloadDetails {
 		return count;
 	}
 
-	public int findDownload(URL url) {
+	public int findDownload(String url) {
 		//System.out.println("Debug: findDownload(URL)"+url.toString());
 		int count=0;
-		URL lastURL=null;
+		String lastURL=null;
 		
 		for (URLDownload download : downloads){
 			//System.out.println("Debug: findDownload(URL) download="+download.getURL().toString());
@@ -368,11 +360,6 @@ public class URLDownloadList extends DownloadDetails {
 
 		for (URLDownload download : downloads){
 			if (download.getURL().toString().equalsIgnoreCase(url.toString())){
-			/*	System.out.println("Debug: URLDownloadList.findDownload(URL) - download(");
-				System.out.println("Debug:     Destination="+download.getDestination());
-				System.out.println("Debug:     PodcastId="+download.getPodcastId());
-				System.out.println("Debug:     Size="+download.getSize());
-				System.out.println("Debug:     URL="+download.getURL()+")");*/
 				return count;
 			}
 			count++;
@@ -415,10 +402,6 @@ public class URLDownloadList extends DownloadDetails {
 		
 		// if item is not found
 		return null;
-	}
-
-	public void reQueueDownload(URL url) {
-		reQueueDownload(downloads.get(findDownload(url)));
 	}
 
 	public void reQueueDownload(URLDownload download) {
@@ -541,6 +524,10 @@ public class URLDownloadList extends DownloadDetails {
 			cancelDownload(currentDownload);
 	}
 
+	/**
+	 * 
+	 * @param downloadUid - Download Uid
+	 */
 	public void reQueueDownload(String downloadUid) {
 		URLDownload currentDownload = findDownloadByUid(downloadUid);
 		if (currentDownload!=null)

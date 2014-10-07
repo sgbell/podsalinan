@@ -22,40 +22,39 @@
 
 package com.mimpidev.podsalinan.data;
 
-import com.mimpidev.dev.sql.data.definition.TableDefinition;
+import com.mimpidev.podsalinan.data.fields.StringType;
 
 /**
  * 
  * @author bugman
  *
  */
-public class DownloadDetails extends TableDefinition{
+public class DownloadDetails extends BaseDetails{
 
-	/** Podcast name, or just URL for url list
-	 */
-	private String name;
-	/** Path to the datafile
-	 */
-	private String datafile;
-	
+	public DownloadDetails(){
+		super();
+		fields.put("name", new StringType());
+		fields.put("datafile", new StringType());
+	}
 	
 	public DownloadDetails(String name){
-		this.name = name;
+		this();
+		setName(name);
 	}
 	
 	public void setName(String name) {
-		this.name = name;
+		fields.get("name").setValue(name);
 	}
 
 	public String getName() {
-		return name;
+		return fields.get("name").getValue();
 	}
 	
 	public void setDatafile(String newDatafile){
-		datafile = newDatafile;
+		fields.get("datafile").setValue(newDatafile);
 	}
 	
 	public String getDatafile(){
-		return datafile;
+		return fields.get("datafile").getValue();
 	}
 }

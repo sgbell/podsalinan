@@ -47,6 +47,10 @@ public class Details extends BaseDetails {
 		setSize(length);
 	}
 	
+	public Details(String url, boolean added){
+		super(url,added);
+	}
+	
 	public String getSize(){
 		return fields.get("size").getValue();
 	}
