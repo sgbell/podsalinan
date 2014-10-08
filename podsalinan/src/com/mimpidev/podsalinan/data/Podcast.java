@@ -97,7 +97,7 @@ public class Podcast extends DownloadDetails{
 	
 	public Podcast(String newName, String newURL, String newDirectory, String newDatastore, boolean autoDownload){
 		this(newName,newURL,newDirectory,newDatastore);
-		automaticQueue=autoDownload;
+		setAutomaticQueue(autoDownload);
 	}
 	
 	public Vector<Episode> getEpisodes(){
@@ -113,68 +113,41 @@ public class Podcast extends DownloadDetails{
 	}
 
 	public void setDirectory(String directory) {
-		this.directory = directory;
+		fields.get("directory").setValue(directory);
 	}
 
 	public String getDirectory() {
-		return directory;
-	}
-	
-	/**
-	 * @return the changed
-	 */
-	public boolean isChanged() {
-		return changed;
-	}
-
-	/**
-	 * @param changed the changed to set
-	 */
-	public void setChanged(boolean changed) {
-		this.changed = changed;
-	}
-
-	/**
-	 * @return the remove
-	 */
-	public boolean isRemoved() {
-		return remove;
-	}
-
-	/**
-	 * @param remove the remove to set
-	 */
-	public void setRemove(boolean remove) {
-		this.remove = remove;
-	}
-
-	/**
-	 * @return the added
-	 */
-	public boolean isAdded() {
-		return added;
-	}
-
-	/**
-	 * @param added the added to set
-	 */
-	public void setAdded(boolean added) {
-		this.added = added;
+		return fields.get("directory").getValue();
 	}
 
 	/**
 	 * @return the image
 	 */
 	public String getImage() {
-		return image;
+		return fields.get("image").getValue();
 	}
 
 	/**
 	 * @param image the image to set
 	 */
 	public void setImage(String image) {
-		this.image = image;
+		fields.get("image").setValue(image);
 	}
+
+
+	/**
+	 * @return the automaticQueue
+	 */
+	public boolean isAutomaticQueue() {
+		return fields.get("automaticQueue").equals("TRUE");
+	}
+
+	/**
+	 * @param automaticQueue the automaticQueue to set
+	 */
+	public void setAutomaticQueue(boolean automaticQueue) {
+		fields.get("automaticQueue").setValue((automaticQueue?"TRUE":"FALSE"));
+	}	
 	
 	/**
 	 * This method calls updateList(String,boolean), but automatically sets manualUpdate to false so
@@ -416,20 +389,6 @@ public class Podcast extends DownloadDetails{
 				if (found)
 					filesInDir.remove(file);
 			}
-	}
-
-	/**
-	 * @return the automaticQueue
-	 */
-	public boolean isAutomaticQueue() {
-		return automaticQueue;
-	}
-
-	/**
-	 * @param automaticQueue the automaticQueue to set
-	 */
-	public void setAutomaticQueue(boolean automaticQueue) {
-		this.automaticQueue = automaticQueue;
 	}
 
 	/**
