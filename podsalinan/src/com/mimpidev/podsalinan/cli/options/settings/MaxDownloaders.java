@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options.settings;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 
 /**
@@ -14,6 +15,7 @@ import com.mimpidev.podsalinan.cli.ReturnCall;
  */
 public class MaxDownloaders extends CLIOption {
 
+	private CLInput input = new CLInput();
 	/**
 	 * @param newData
 	 */
@@ -29,15 +31,15 @@ public class MaxDownloaders extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 
 		System.out.println ();
-		System.out.print ("Enter Number of Simultaneous Downloads["+settings.findSetting("maxDownloaders")+"]: ");
+		System.out.print ("Enter Number of Simultaneous Downloads["+data.getSettings().findSetting("maxDownloaders")+"]: ");
 		/* Take user input.
 		 * Make sure it is between 1 and 30
 		 * If not, get the user to enter it again.
 		 */
 		String numDownloaders = input.getValidNumber(1,30);
 		if (numDownloaders!=null)
-			settings.updateSetting("maxDownloaders",numDownloaders);
-		System.out.println("Simultaneous Downloads: "+settings.findSetting("maxDownloaders"));		
+			data.getSettings().updateSetting("maxDownloaders",numDownloaders);
+		System.out.println("Simultaneous Downloads: "+data.getSettings().findSetting("maxDownloaders"));		
 		
 		return returnObject;
 	}

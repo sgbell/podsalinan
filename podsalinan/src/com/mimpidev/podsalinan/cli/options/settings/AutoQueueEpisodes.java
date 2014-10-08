@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options.settings;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 
 /**
@@ -14,6 +15,8 @@ import com.mimpidev.podsalinan.cli.ReturnCall;
  */
 public class AutoQueueEpisodes extends CLIOption {
 
+	
+	private CLInput input = new CLInput();
 	/**
 	 * @param newData
 	 */
@@ -29,35 +32,35 @@ public class AutoQueueEpisodes extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
 		System.out.println ();
-		if (!settings.isValidSetting("autoQueue"))
-			settings.addSetting("autoQueue", "false");
+		if (!data.getSettings().isValidSetting("autoQueue"))
+			data.getSettings().addSetting("autoQueue", "false");
 		System.out.print ("Do you want new episodes Automatically Queued to Download? (Y/N) ["+
-				          settings.findSetting("autoQueue")+"]: ");
+				          data.getSettings().findSetting("autoQueue")+"]: ");
 		String autoDownloadResponse = input.getStringInput();
 		if (autoDownloadResponse.length()==1){
 			switch (autoDownloadResponse.charAt(0)){
 				case 'Y':
 				case 'y':
-					settings.updateSetting("autoQueue","true");
-					settings.getWaitObject().notify();
+					data.getSettings().updateSetting("autoQueue","true");
+					data.getSettings().getWaitObject().notify();
 					break;
 				case 'N':
 				case 'n':
-					settings.updateSetting("autoQueue","false");
+					data.getSettings().updateSetting("autoQueue","false");
 					break;
 				default:
-					System.err.println ("Error: User entered Value is invalid. No change made");
+					System.out.println ("Error: User entered Value is invalid. No change made");
 					break;
 			}
 		} else if (autoDownloadResponse.length()>1) {
 			if (autoDownloadResponse.equalsIgnoreCase("yes"))
-				settings.updateSetting("autoQueue","true");
+				data.getSettings().updateSetting("autoQueue","true");
 			else if (autoDownloadResponse.equalsIgnoreCase("no"))
-				settings.updateSetting("autoQueue","false");
+				data.getSettings().updateSetting("autoQueue","false");
 			else if (autoDownloadResponse.equalsIgnoreCase("no"))
-				System.err.println ("Error: User entered Value is invalid. No change made");
+				System.out.println ("Error: User entered Value is invalid. No change made");
 		}
-		System.out.println("Auto Queue Downloads: "+settings.findSetting("autoQueue"));
+		System.out.println("Auto Queue Downloads: "+data.getSettings().findSetting("autoQueue"));
 		
 		return returnObject;
 	}

@@ -72,12 +72,12 @@ public class Podcast extends DownloadDetails{
 		fields.put("automaticQueue", new BooleanType());
 		
 		df = new SimpleDateFormat(Episode.getDateFormat());
-		tableName = "shows";
+		/*tableName = "shows";
 		
 		String[] columnNames = {"id","published","title","url","size","description","status"};
 		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT"
 				               ,"TEXT","TEXT","TEXT","INTEGER","TEXT","INTEGER"};
-		createColumnList(columnNames,columnTypes);
+		createColumnList(columnNames,columnTypes);*/
 	}
 	
 	/** Used to create a Podcast from the information in the systems database. 
@@ -134,6 +134,13 @@ public class Podcast extends DownloadDetails{
 		fields.get("image").setValue(image);
 	}
 
+	/**
+	 * 
+	 * @param string
+	 */
+	public void setSettingsDir(String newSettingsDir) {
+		settingsDir = newSettingsDir;
+	}
 
 	/**
 	 * @return the automaticQueue
@@ -181,7 +188,7 @@ public class Podcast extends DownloadDetails{
 			 */
 			if (!outputFile.exists()){
 				try {
-					Downloader downloader = new Downloader(new URL(url), outputFile);
+					Downloader downloader = new Downloader(new URL(fields.get("url").getValue()), outputFile);
 					int result = downloader.getFile();
 					if (result==Downloader.DOWNLOAD_COMPLETE){
 						XmlReader xmlfile = new XmlReader();
@@ -250,10 +257,15 @@ public class Podcast extends DownloadDetails{
 		if (selectedEpisode!=null)
 			synchronized(selectedEpisode){
 				File destinationFile=null;
-				if (System.getProperty("os.name").equalsIgnoreCase("linux"))
-					destinationFile = new File(getDirectory()+"/"+selectedEpisode.getURL().getFile());
-				else if (System.getProperty("os.name").startsWith("Windows"))
-					destinationFile = new File(getDirectory()+"\\"+selectedEpisode.getURL().getFile());
+				try{
+					if (System.getProperty("os.name").equalsIgnoreCase("linux"))
+						destinationFile = new File(getDirectory()+"/"+selectedEpisode.getFilename());
+					else if (System.getProperty("os.name").startsWith("Windows"))
+						destinationFile = new File(getDirectory()+"\\"+selectedEpisode.getFilename());
+				} catch (MalformedURLException e){
+					Podsalinan.debugLog.logError("Invalid URL");
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+				}
 				if (destinationFile!=null){
 					if (destinationFile.exists()){
 						destinationFile.delete();
@@ -350,10 +362,11 @@ public class Podcast extends DownloadDetails{
 		ArrayList<File> filesInDir = new ArrayList<File>();
         //int count=0;
 		String directoryToScan;
+		String directory = fields.get("directory").getValue();
 		try {
 			directoryToScan=directory.substring(0, directory.indexOf("Download"));
 		} catch (StringIndexOutOfBoundsException e){
-			directoryToScan = this.directory;
+			directoryToScan = directory;
 		}
 		File directoryFile = new File (directoryToScan);
 		data.scanDirectory(directoryFile, filesInDir);
@@ -430,14 +443,6 @@ public class Podcast extends DownloadDetails{
 				}
 			}
 		}
-	}
-
-	/**
-	 * 
-	 * @param string
-	 */
-	public void setSettingsDir(String newSettingsDir) {
-		settingsDir = newSettingsDir;
 	}
 
 	/**

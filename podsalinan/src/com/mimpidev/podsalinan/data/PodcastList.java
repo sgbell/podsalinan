@@ -38,11 +38,12 @@ public class PodcastList extends TableDefinition {
 	public PodcastList() {
 		podcasts = new Vector<Podcast>();
 		
+		/*
 		tableName = "podcasts";
 		String[] columnNames = {"id","name","localfile","url","directory","auto_queue"};
 		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT"
 				               ,"TEXT","TEXT","TEXT","TEXT","INTEGER"};
-		createColumnList(columnNames,columnTypes);
+		createColumnList(columnNames,columnTypes);*/
 	}
 
 	public void add(Podcast newPodcast) {

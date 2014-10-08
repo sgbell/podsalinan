@@ -55,12 +55,12 @@ public class URLDownloadList extends DownloadDetails {
 	public URLDownloadList(){
 		super("Downloads");
 		downloads = new Vector<URLDownload>();
-		tableName = "downloads";
+		/*tableName = "downloads";
 		
 		String[] columnNames = {"id","url","size","destination","priority","podcastSource","status"};
 		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT",
 				                "TEXT","TEXT","TEXT","INTEGER","TEXT","INTEGER"};
-		createColumnList(columnNames,columnTypes);
+		createColumnList(columnNames,columnTypes);*/
 	}
 	
 	public URLDownloadList(Vector<Podcast> podcastList){

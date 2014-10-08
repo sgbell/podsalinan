@@ -8,6 +8,7 @@ import java.io.File;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 
 /**
@@ -16,6 +17,7 @@ import com.mimpidev.podsalinan.cli.ReturnCall;
  */
 public class DownloadDirectory extends CLIOption {
 
+	private CLInput input = new CLInput();
 	/**
 	 * @param newData
 	 */
@@ -32,7 +34,7 @@ public class DownloadDirectory extends CLIOption {
 		
 		File newPath;
 		System.out.println ();
-		System.out.print ("Enter Default Directory["+settings.findSetting("defaultDirectory")+"]: ");
+		System.out.print ("Enter Default Directory["+data.getSettings().findSetting("defaultDirectory")+"]: ");
 		/* Take user input.
 		 * Create File object to test if directory exists.
 		 * If directory exists set defaultDirectory to file Input
@@ -42,12 +44,12 @@ public class DownloadDirectory extends CLIOption {
 		if ((userInput.length()>0)&&(userInput!=null)){
 			newPath=new File(userInput);
 			if ((newPath.exists())&&(newPath.isDirectory())){
-				settings.updateSetting("defaultDirectory",userInput);
+				data.getSettings().updateSetting("defaultDirectory",userInput);
 			} else {
 				System.out.println ("Error: User Input invalid");
 			}
 		}
-		System.out.println("Default Directory: "+settings.findSetting("defaultDirectory"));
+		System.out.println("Default Directory: "+data.getSettings().findSetting("defaultDirectory"));
 		
 		return returnObject;
 	}
