@@ -41,9 +41,9 @@ public class BaseDetails {
 		fields=new HashMap<String,FieldDetails>();
 		fields.put("url", new StringType());
 		fields.put("directory", new StringType());
-		fields.put("added", new BooleanType());
-		fields.put("remove", new BooleanType());
-		fields.put("updated", new BooleanType());
+		fields.put("added", new BooleanType(false));
+		fields.put("remove", new BooleanType(false));
+		fields.put("updated", new BooleanType(false));
 	}
 	
 	public BaseDetails (String url){

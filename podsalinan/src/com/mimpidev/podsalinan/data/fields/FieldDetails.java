@@ -17,17 +17,44 @@ public class FieldDetails {
 	 * 
 	 */
 	private int fieldType;
+	/**
+	 * 
+	 */
 	public static final int NULL = 0;
+	/**
+	 * 
+	 */
 	public static final int STRING = 1;
+	/**
+	 * 
+	 */
 	public static final int URL = 2;
+	/**
+	 * 
+	 */
 	public static final int BOOLEAN = 3;
+	/**
+	 * 
+	 */
 	public static final int INTEGER = 4;
+	/**
+	 * This variable defines if it will be stored in the database
+	 */
+	private boolean persistant=true;
 	/**
 	 * 
 	 */
 	public FieldDetails(){
 		value=new String();
 		fieldType=0;
+	}
+	/**
+	 * 
+	 * @param persistantState
+	 */
+	public FieldDetails(boolean persistantState){
+		this();
+		setPersistent(persistantState);
 	}
 	/**
 	 * @return the value
@@ -52,5 +79,35 @@ public class FieldDetails {
 	 */
 	public void setFieldType(int fieldType) {
 		this.fieldType = fieldType;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isPersistent(){
+		return persistant;
+	}
+	/**
+	 * 
+	 * @param persistantState
+	 */
+	public void setPersistent(boolean persistantState){
+		persistant = persistantState;
+	}
+	/**
+	 * @return the dbFieldType
+	 */
+	public String getDbFieldType() {
+		switch (fieldType){
+		    case STRING:
+		    case URL:
+		    	return "TEXT";
+		    case BOOLEAN:
+		    case INTEGER:
+		    	return "INTEGER";
+		    case NULL:
+		    default:
+		    	return null;
+		}
 	}
 }
