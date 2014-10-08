@@ -101,6 +101,21 @@ public class BaseDetails {
 	public void setUpdated(boolean updated) {
 		fields.get("updated").setValue((updated?"TRUE":"FALSE"));;
 	}
+	/**
+	 * 
+	 * @param newDirectory
+	 */
+	public void setDirectory(String newDirectory){
+		fields.get("directory").setValue(newDirectory);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getDirectory(){
+		return fields.get("directory").getValue();
+	}
 
 	/**
 	 * @return the fields

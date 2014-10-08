@@ -21,6 +21,8 @@
  */
 package com.mimpidev.podsalinan.data;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -106,6 +108,9 @@ public class Episode extends Details {
 		title=newTitle;
 	}
 
+	public String getFilename() throws MalformedURLException {
+		return (new URL(fields.get("url").getValue())).getFile();
+	}
 	public boolean dateEquals(Date searchDate) {
 		DateFormat df = new SimpleDateFormat(originalDateFormat);
 		try {
@@ -125,4 +130,5 @@ public class Episode extends Details {
 		
 		return false;
 	}
+
 }
