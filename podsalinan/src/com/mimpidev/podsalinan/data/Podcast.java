@@ -67,11 +67,12 @@ public class Podcast extends DownloadDetails{
 	 * @param newURL
 	 */
 	public Podcast(String newURL){
-		super(null);
+		super();
 		fields.put("image", new StringType());
 		fields.put("automaticQueue", new BooleanType());
 		
 		df = new SimpleDateFormat(Episode.getDateFormat());
+		this.setURL(newURL);
 		/*tableName = "shows";
 		
 		String[] columnNames = {"id","published","title","url","size","description","status"};

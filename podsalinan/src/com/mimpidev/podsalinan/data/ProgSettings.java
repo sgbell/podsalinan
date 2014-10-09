@@ -35,7 +35,7 @@ import com.mimpidev.podsalinan.Podsalinan;
  * @author bugman
  *
  */
-public class ProgSettings extends TableDefinition{
+public class ProgSettings{
 
 	private Map<String, String> settings;
 	private boolean finished;
@@ -44,12 +44,12 @@ public class ProgSettings extends TableDefinition{
 	public ProgSettings (){
 		settings = new HashMap<String, String>();
 		finished=false;
-		tableName = "settings";
+		/*tableName = "settings";
 		
 		String[] columnNames = {"id","name","value"};
 		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT",
 				                "TEXT","TEXT"};
-		createColumnList (columnNames, columnTypes);
+		createColumnList (columnNames, columnTypes);*/
 	}
 	/**
 	 * Loop through the array of settings and return the value for the requested setting

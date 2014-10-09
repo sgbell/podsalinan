@@ -21,7 +21,7 @@ import com.mimpidev.podsalinan.Podsalinan;
  * @author bugman
  *
  */
-public class PodcastList extends TableDefinition {
+public class PodcastList {
 
 	/**
 	 * 
