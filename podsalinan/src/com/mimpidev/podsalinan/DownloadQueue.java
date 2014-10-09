@@ -23,7 +23,7 @@ package com.mimpidev.podsalinan;
 
 import java.util.Vector;
 
-import com.mimpidev.podsalinan.data.Details;
+import com.mimpidev.podsalinan.data.URLDetails;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
 
@@ -66,7 +66,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 						 * Assign the download to multiple downloaders.
 						 */
 						//System.out.println("Adding to Download System: "+download.getURL().toString());
-						download.setStatus(Details.CURRENTLY_DOWNLOADING);
+						download.setStatus(URLDetails.CURRENTLY_DOWNLOADING);
 						Downloader newDownloader = new Downloader(download,data.getFileSystemSlash());
 						startDownload(newDownloader);
 					}
@@ -97,11 +97,11 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			   (!foundQueuedItem)){
 			URLDownload download =data.getUrlDownloads().getDownloads().get(downloadCount);
 			// If download is set to incomplete set it to queued for next start
-			if ((download.getStatus()==Details.INCOMPLETE_DOWNLOAD)||
-				(download.getStatus()==Details.CURRENTLY_DOWNLOADING))
-				download.setStatus(Details.DOWNLOAD_QUEUED);
+			if ((download.getStatus()==URLDetails.INCOMPLETE_DOWNLOAD)||
+				(download.getStatus()==URLDetails.CURRENTLY_DOWNLOADING))
+				download.setStatus(URLDetails.DOWNLOAD_QUEUED);
 			// If Queued, exit the while loop
-			if (download.getStatus()==Details.DOWNLOAD_QUEUED)
+			if (download.getStatus()==URLDetails.DOWNLOAD_QUEUED)
 				foundQueuedItem=true;
 			downloadCount++;
 		}			
@@ -124,7 +124,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		Thread downloadThread = new Thread(newDownloader,"Downloader");
 		downloadThread.start();
 		URLDownload download = newDownloader.getURLDownload();
-		updatePodcastEpisodeStatus(download.getPodcastId(),download.getURL().toString(),Details.CURRENTLY_DOWNLOADING);
+		updatePodcastEpisodeStatus(download.getPodcastId(),download.getURL().toString(),URLDetails.CURRENTLY_DOWNLOADING);
 	}
 	
 	public boolean updatePodcastEpisodeStatus(String podcastId, String url, int newStatus){
@@ -157,11 +157,11 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		int percentage = (int)((double)download.getDestinationFile().length()/(Double.parseDouble(download.getSize()))*100);
 		
 		if (percentage==100){
-			download.setStatus(Details.FINISHED);
+			download.setStatus(URLDetails.FINISHED);
 			if (download.getPodcastId().length()>0)
 				data.getUrlDownloads().deleteDownload(download);
 			downloaders.remove(downloader);
-		} else if ((percentage<100)&&(download.getStatus()!=Details.DESTINATION_INVALID)){
+		} else if ((percentage<100)&&(download.getStatus()!=URLDetails.DESTINATION_INVALID)){
 			downloaders.remove(downloader);
 			synchronized(download){
 				try {
@@ -170,7 +170,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				}
 			}
 			data.getUrlDownloads().decreasePriority(download);
-			download.setStatus(Details.DOWNLOAD_QUEUED);
+			download.setStatus(URLDetails.DOWNLOAD_QUEUED);
 		} else if ((!download.getDestinationFile().isFile())||
 				   (!download.getDestinationFile().exists())){
 			downloaders.remove(downloader);
@@ -181,7 +181,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				}
 			}
 			data.getUrlDownloads().decreasePriority(download);
-			download.setStatus(Details.DESTINATION_INVALID);
+			download.setStatus(URLDetails.DESTINATION_INVALID);
 		} else if (percentage>100){
 			downloaders.remove(downloader);
 			synchronized(download){
@@ -191,16 +191,16 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				}
 			}
 			data.getUrlDownloads().decreasePriority(download);
-			download.setStatus(Details.DOWNLOAD_FAULT);
+			download.setStatus(URLDetails.DOWNLOAD_FAULT);
 		}
 		int newEpisodeStatus=0;
 		switch (download.getStatus()){
-			case Details.FINISHED:
-			case Details.DOWNLOAD_QUEUED:
+			case URLDetails.FINISHED:
+			case URLDetails.DOWNLOAD_QUEUED:
 				newEpisodeStatus=download.getStatus();
 				break;
-			case Details.DOWNLOAD_FAULT:
-				newEpisodeStatus=Details.DOWNLOAD_QUEUED;
+			case URLDetails.DOWNLOAD_FAULT:
+				newEpisodeStatus=URLDetails.DOWNLOAD_QUEUED;
 		}
 		updatePodcastEpisodeStatus(download.getPodcastId(),download.getURL().toString(), newEpisodeStatus);
 

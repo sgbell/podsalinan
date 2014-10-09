@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.mimpidev.podsalinan.data.Details;
+import com.mimpidev.podsalinan.data.URLDetails;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.ProgSettings;
@@ -91,7 +91,7 @@ public class CLEpisodeMenu extends CLMenu {
 	}
 
 	public void downloadEpisode() {
-		episode.setStatus(Details.CURRENTLY_DOWNLOADING);
+		episode.setStatus(URLDetails.CURRENTLY_DOWNLOADING);
 		urlDownloads.addDownload(episode, podcast);
 	}
 

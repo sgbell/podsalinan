@@ -33,7 +33,7 @@ import java.util.Date;
  * @author bugman
  *
  */
-public class Episode extends Details {
+public class Episode extends URLDetails {
 	private String date,
 				   title,
 				   description;

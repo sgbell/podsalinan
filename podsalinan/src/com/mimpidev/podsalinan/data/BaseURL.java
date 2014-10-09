@@ -22,45 +22,38 @@
 package com.mimpidev.podsalinan.data;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
-import com.mimpidev.podsalinan.data.fields.BooleanType;
-import com.mimpidev.podsalinan.data.fields.FieldDetails;
-import com.mimpidev.podsalinan.data.fields.StringType;
+import com.mimpidev.dev.sql.data.definition.DataRecord;
+import com.mimpidev.dev.sql.data.definition.field.FieldDetails;
+import com.mimpidev.dev.sql.data.definition.field.StringType;
 
 /**
  * @author bugman
  *
  */
-public class BaseDetails {
+public class BaseURL extends DataRecord{
 
-	protected Map<String,FieldDetails> fields;
-	
-	public BaseDetails (){
-		fields=new HashMap<String,FieldDetails>();
+	public BaseURL (){
 		fields.put("url", new StringType());
 		fields.put("directory", new StringType());
-		fields.put("added", new BooleanType(false));
-		fields.put("remove", new BooleanType(false));
-		fields.put("updated", new BooleanType(false));
 	}
 	
-	public BaseDetails (String url){
+	public BaseURL (String url){
 		this();
 		setURL(url);
 	}
 	
-	public BaseDetails (URL url){
+	public BaseURL (URL url){
 		this(url.toString());
 	}
 	
-	public BaseDetails(String url, boolean added){
+	public BaseURL(String url, boolean added){
 		this(url);
 		setAdded(added);
 	}
 	
-	public BaseDetails(URL url, boolean added){
+	public BaseURL(URL url, boolean added){
 		this(url.toString(),added);
 	}
 	
@@ -72,35 +65,6 @@ public class BaseDetails {
 		fields.get("url").setValue(url);
 	}
 	
-	public boolean isAdded(){
-		return (fields.get("added").getValue().equals("TRUE"));
-	}
-	
-	public void setAdded(boolean added){
-		fields.get("added").setValue((added?"TRUE":"FALSE"));
-	}
-	
-	public boolean isRemoved(){
-		return (fields.get("remove").getValue().equals("TRUE"));
-	}
-	
-	public void setRemoved(boolean removed){
-		fields.get("remove").setValue((removed?"TRUE":"FALSE"));
-	}
-	
-	/**
-	 * @return the updated
-	 */
-	public boolean isUpdated() {
-		return (fields.get("updated").getValue().equals("TRUE"));
-	}
-
-	/**
-	 * @param updated the updated to set
-	 */
-	public void setUpdated(boolean updated) {
-		fields.get("updated").setValue((updated?"TRUE":"FALSE"));;
-	}
 	/**
 	 * 
 	 * @param newDirectory

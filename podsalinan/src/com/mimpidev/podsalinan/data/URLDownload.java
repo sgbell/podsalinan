@@ -16,7 +16,7 @@ import com.mimpidev.podsalinan.Podsalinan;
  * @author bugman
  *
  */
-public class URLDownload extends Details {
+public class URLDownload extends URLDetails {
 	
 	private File destination;
 	private String podcastId;

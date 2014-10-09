@@ -36,12 +36,12 @@ import java.util.Map;
 import java.util.Vector;
 
 import com.mimpidev.dev.sql.SqlException;
+import com.mimpidev.dev.sql.data.definition.field.BooleanType;
+import com.mimpidev.dev.sql.data.definition.field.StringType;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Downloader;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.XmlReader;
-import com.mimpidev.podsalinan.data.fields.BooleanType;
-import com.mimpidev.podsalinan.data.fields.StringType;
 
 /**
  * @author bugman
@@ -372,7 +372,7 @@ public class Podcast extends DownloadDetails{
 		File directoryFile = new File (directoryToScan);
 		data.scanDirectory(directoryFile, filesInDir);
 		for (Episode episode : episodeList)
-			if (episode.getStatus()==Details.FINISHED){
+			if (episode.getStatus()==URLDetails.FINISHED){
 				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
 				boolean found=false;
 				int fileCount=0;
@@ -384,8 +384,8 @@ public class Podcast extends DownloadDetails{
 					fileCount++;
 				}
 				if (!found)
-					episode.setStatus(Details.NOT_QUEUED);
-			} else if (episode.getStatus()!=Details.FINISHED){
+					episode.setStatus(URLDetails.NOT_QUEUED);
+			} else if (episode.getStatus()!=URLDetails.FINISHED){
 				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
 				boolean found=false;
 				int fileCount=0;
@@ -394,7 +394,7 @@ public class Podcast extends DownloadDetails{
 					file = filesInDir.get(fileCount);
 					if ((file.getName().equalsIgnoreCase(filename))&&
 						(file.length()>=Long.parseLong(episode.getSize()))){
-						episode.setStatus(Details.FINISHED);
+						episode.setStatus(URLDetails.FINISHED);
 						found=true;
 					} else
 						fileCount++;

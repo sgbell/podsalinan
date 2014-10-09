@@ -124,7 +124,7 @@ public class URLDownloadList extends DownloadDetails {
 			URLDownload newFile = new URLDownload(episode.getURL(),false);
 			newFile.setDestination(podcast.getDirectory());
 			newFile.setPodcastId(podcast.getDatafile());
-			newFile.setStatus(Details.DOWNLOAD_QUEUED);
+			newFile.setStatus(URLDetails.DOWNLOAD_QUEUED);
 			//System.out.println("Debug: URLDownloadList.addDownload(Episode, Podcast) - podcastID="+podcast.getDatafile());
 			if (episode.getSize()!="-1")
 				newFile.setSize(episode.getSize());
@@ -135,7 +135,7 @@ public class URLDownloadList extends DownloadDetails {
 			URLDownload download = getDownloads().get(position);
 			if ((download!=null)&&
 				(download.getPodcastId()==null)){
-				episode.setStatus(Details.DOWNLOAD_QUEUED);
+				episode.setStatus(URLDetails.DOWNLOAD_QUEUED);
 				download.setPodcastId(podcast.getDatafile());
 			}
 		}
@@ -219,7 +219,7 @@ public class URLDownloadList extends DownloadDetails {
 				URLConnection stream = new URL(newFile.getURL()).openConnection();
 				int fileSize=stream.getContentLength();
 				newFile.setSize(Long.toString(fileSize));
-				newFile.setStatus(Details.DOWNLOAD_QUEUED);
+				newFile.setStatus(URLDetails.DOWNLOAD_QUEUED);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -230,9 +230,9 @@ public class URLDownloadList extends DownloadDetails {
 		File localFile = new File(filename);
 		if (localFile.exists())
 			if (localFile.length() < Long.parseLong(newFile.getSize())){
-				newFile.setStatus(Details.INCOMPLETE_DOWNLOAD);
+				newFile.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
 			} else if (localFile.length() >= Long.parseLong(newFile.getSize())){
-				newFile.setStatus(Details.FINISHED);					
+				newFile.setStatus(URLDetails.FINISHED);					
 			}
 	}
 
@@ -266,10 +266,10 @@ public class URLDownloadList extends DownloadDetails {
 					download.setRemoved(true);
 					Episode selectedEpisode = currentPodcast.getEpisodeByURL(download.getURL().toString());
 					if (selectedEpisode!=null)
-						selectedEpisode.setStatus(Details.DOWNLOAD_CANCELLED);
+						selectedEpisode.setStatus(URLDetails.DOWNLOAD_CANCELLED);
 				}
 		}
-		download.setStatus(Details.DOWNLOAD_CANCELLED);
+		download.setStatus(URLDetails.DOWNLOAD_CANCELLED);
 	}
 	
 	public boolean deleteDownload(int download) {
@@ -308,7 +308,7 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public boolean restartDownload(URLDownload download){
 		if (deleteFile(download)){
-			download.setStatus(Details.DOWNLOAD_QUEUED);
+			download.setStatus(URLDetails.DOWNLOAD_QUEUED);
 			return true;
 		}
 		return false;
@@ -384,7 +384,7 @@ public class URLDownloadList extends DownloadDetails {
 		
 		synchronized (downloads){
 			for (URLDownload download : downloads)
-				if (download.getStatus()==Details.DOWNLOAD_QUEUED)
+				if (download.getStatus()==URLDetails.DOWNLOAD_QUEUED)
 					numberofQueuedItems++;
 		}
 		
@@ -397,7 +397,7 @@ public class URLDownloadList extends DownloadDetails {
 	 */
 	public URLDownload getHighestQueuedItem(){
 		for (URLDownload download : downloads)
-			if (download.getStatus()==Details.DOWNLOAD_QUEUED)
+			if (download.getStatus()==URLDetails.DOWNLOAD_QUEUED)
 				return download;
 		
 		// if item is not found
@@ -406,7 +406,7 @@ public class URLDownloadList extends DownloadDetails {
 
 	public void reQueueDownload(URLDownload download) {
 		if (download!=null)
-			download.setStatus(Details.DOWNLOAD_QUEUED);
+			download.setStatus(URLDetails.DOWNLOAD_QUEUED);
 	}
 	
 	public void setPodcasts(Vector<Podcast> newPodcasts){

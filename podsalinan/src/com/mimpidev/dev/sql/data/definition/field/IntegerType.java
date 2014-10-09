@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan.data.fields;
+package com.mimpidev.dev.sql.data.definition.field;
 
 /**
  * @author sbell

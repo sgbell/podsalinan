@@ -5,13 +5,13 @@ package com.mimpidev.podsalinan.data;
 
 import java.net.URL;
 
-import com.mimpidev.podsalinan.data.fields.IntegerType;
+import com.mimpidev.dev.sql.data.definition.field.IntegerType;
 
 /**
  * @author sbell
  *
  */
-public class Details extends BaseDetails {
+public class URLDetails extends BaseURL {
 
 	public static final int NOT_QUEUED=0,
 							DOWNLOAD_QUEUED=1,
@@ -26,28 +26,28 @@ public class Details extends BaseDetails {
 	/**
 	 * 
 	 */
-	public Details() {
+	public URLDetails() {
 		super();
 		fields.put("size", new IntegerType());
 		fields.put("status", new IntegerType());
 	}
 
-	public Details(String url){
+	public URLDetails(String url){
 		super(url);
 		setSize("0");
 	}
 	
-	public Details (String url, String length){
+	public URLDetails (String url, String length){
 		this(url);
 		setSize(length);
 	}
 
-	public Details(URL url, String length){
+	public URLDetails(URL url, String length){
 		this(url.toString());
 		setSize(length);
 	}
 	
-	public Details(String url, boolean added){
+	public URLDetails(String url, boolean added){
 		super(url,added);
 	}
 	

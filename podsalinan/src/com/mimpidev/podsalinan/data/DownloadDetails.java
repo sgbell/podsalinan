@@ -22,14 +22,14 @@
 
 package com.mimpidev.podsalinan.data;
 
-import com.mimpidev.podsalinan.data.fields.StringType;
+import com.mimpidev.dev.sql.data.definition.field.StringType;
 
 /**
  * 
  * @author bugman
  *
  */
-public class DownloadDetails extends BaseDetails{
+public class DownloadDetails extends BaseURL{
 
 	public DownloadDetails(){
 		super();

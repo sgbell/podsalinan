@@ -31,7 +31,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.List;
-import com.mimpidev.podsalinan.data.Details;
+import com.mimpidev.podsalinan.data.URLDetails;
 import com.mimpidev.podsalinan.data.URLDownload;
 
 
@@ -99,7 +99,7 @@ public class Downloader extends NotifyingRunnable{
 		downloadItem = new URLDownload();
 		downloadItem.setURL(urlDownload);
 		downloadItem.setDestination(outputFile);
-		downloadItem.setStatus(Details.CURRENTLY_DOWNLOADING);
+		downloadItem.setStatus(URLDetails.CURRENTLY_DOWNLOADING);
 		try {
 			downloadURL = new URL(urlDownload.toString());
 		} catch (MalformedURLException e1) {
@@ -225,7 +225,7 @@ public class Downloader extends NotifyingRunnable{
 							downloadItem.setDestination(outputFile);
 						}
 					} else if ((!destinationFile.exists())&&(!destinationFile.getParentFile().exists())){
-						downloadItem.setStatus(Details.DESTINATION_INVALID);
+						downloadItem.setStatus(URLDetails.DESTINATION_INVALID);
 						return DESTINATION_INVALID;
 					}
 					/*
@@ -307,7 +307,7 @@ public class Downloader extends NotifyingRunnable{
 						//System.out.println("before the download while");
 						while (((byteRead = inStream.read(buf)) > 0)
 								&&(!stopDownload)
-								&&(downloadItem.getStatus()==Details.CURRENTLY_DOWNLOADING)){
+								&&(downloadItem.getStatus()==URLDetails.CURRENTLY_DOWNLOADING)){
 							//System.out.println("Downloading....");
 							outStream.write(buf, 0, byteRead);
 							saved+=byteRead;
@@ -330,24 +330,24 @@ public class Downloader extends NotifyingRunnable{
 					}
 					
 					if (saved==Long.parseLong(downloadItem.getSize())){
-						downloadItem.setStatus(Details.FINISHED);
+						downloadItem.setStatus(URLDetails.FINISHED);
 						result = DOWNLOAD_COMPLETE;
 					} else if (saved<Long.parseLong(downloadItem.getSize())){
-						downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
+						downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
 						result = DOWNLOAD_INCOMPLETE;
 					} else if ((saved>Long.parseLong(downloadItem.getSize()))&&
 							    (Long.parseLong(downloadItem.getSize())>0)){
-						downloadItem.setStatus(Details.DOWNLOAD_FAULT);
+						downloadItem.setStatus(URLDetails.DOWNLOAD_FAULT);
 						result = DOWNLOAD_ERROR;
 					} else if ((Long.parseLong(downloadItem.getSize())==-1)&&saved>0){
-						downloadItem.setStatus(Details.FINISHED);
+						downloadItem.setStatus(URLDetails.FINISHED);
 						result = DOWNLOAD_COMPLETE;
 					}
 				} catch (UnknownHostException e){
-					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
+					downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
 					result = CONNECTION_FAILED;
 				} catch (IOException e) {
-					downloadItem.setStatus(Details.INCOMPLETE_DOWNLOAD);
+					downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
 					result = CONNECTION_FAILED;
 				}
 			}

@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLInterface;
-import com.mimpidev.podsalinan.data.Details;
+import com.mimpidev.podsalinan.data.URLDetails;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 
