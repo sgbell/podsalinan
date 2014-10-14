@@ -61,15 +61,20 @@ public class Podcast extends DownloadDetails{
 	 * 
 	 */
 	private String settingsDir = null;
-	
+	/**
+	 * 
+	 */
+	public Podcast() {
+		super();
+		fields.put("image", new StringType());
+		fields.put("automaticQueue", new BooleanType());
+	}
 	/**This is used to create a new Podcast with only a url.
 	 * 
 	 * @param newURL
 	 */
 	public Podcast(String newURL){
-		super();
-		fields.put("image", new StringType());
-		fields.put("automaticQueue", new BooleanType());
+		this();
 		
 		df = new SimpleDateFormat(Episode.getDateFormat());
 		this.setURL(newURL);

@@ -21,10 +21,8 @@
  */
 package com.mimpidev.podsalinan.data.loader;
 
-import java.util.Map;
 import java.util.Vector;
 
-import com.mimpidev.dev.sql.data.definition.field.FieldDetails;
 import com.mimpidev.podsalinan.data.Podcast;
 
 /**
