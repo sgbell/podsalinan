@@ -21,6 +21,12 @@
  */
 package com.mimpidev.podsalinan.data.loader;
 
+import java.util.Map;
+import java.util.Vector;
+
+import com.mimpidev.dev.sql.data.definition.field.FieldDetails;
+import com.mimpidev.podsalinan.data.Podcast;
+
 /**
  * @author bugman
  *
@@ -30,8 +36,13 @@ public class PodcastLoader extends TableLoader {
 	/**
 	 * 
 	 */
-	public PodcastLoader() {
-		// TODO Auto-generated constructor stub
+	private Vector<Podcast> podcastList;
+	/**
+	 * 
+	 */
+	public PodcastLoader(Vector<Podcast> podcasts) {
+		podcastList = podcasts;
+		tableName = "podcasts";
+		createColumnList(new Podcast().getDatabaseRecord());
 	}
-
 }

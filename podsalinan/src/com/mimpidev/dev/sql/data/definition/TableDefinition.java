@@ -15,6 +15,7 @@ import org.tmatesoft.sqljet.core.table.SqlJetDb;
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
+import com.mimpidev.dev.sql.data.definition.field.FieldDetails;
 import com.mimpidev.podsalinan.Podsalinan;
 
 /**
@@ -51,6 +52,10 @@ public abstract class TableDefinition {
 		for (int count=0; count<columnNames.length; count++){
 			columnList.add(new SqlDefinition(columnNames[count],columnTypes[count]));
 		}
+	}
+	
+	public void createColumnList(Map<String,FieldDetails> columnDetails){
+		
 	}
 	
 	public void setdbTable(SqlJetDb dbConnection, Log log) {

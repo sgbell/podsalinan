@@ -4,7 +4,9 @@
 package com.mimpidev.dev.sql.data.definition;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.mimpidev.dev.sql.data.definition.field.BooleanType;
 import com.mimpidev.dev.sql.data.definition.field.FieldDetails;
@@ -64,5 +66,19 @@ public class DataRecord {
 	 */
 	public void setUpdated(boolean updated) {
 		fields.get("updated").setValue((updated?"TRUE":"FALSE"));;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<String,FieldDetails> getDatabaseRecord(){
+		Map<String,FieldDetails> databaseRecord = new HashMap<String,FieldDetails>();
+		Iterator<Entry<String, FieldDetails>> it=fields.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry pairs = (Map.Entry)it.next();
+			if (((FieldDetails)pairs.getValue()).isPersistent())
+				databaseRecord.put((String)pairs.getKey(), (FieldDetails)pairs.getValue());
+		}
+		return databaseRecord;
 	}
 }
