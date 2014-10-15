@@ -26,22 +26,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
-
-import org.tmatesoft.sqljet.core.SqlJetException;
-import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
-import com.mimpidev.dev.debug.Log;
-import com.mimpidev.dev.sql.SqlException;
-import com.mimpidev.dev.sql.TableView;
-import com.mimpidev.dev.sql.data.definition.SqlDefinition;
-import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
@@ -55,12 +42,6 @@ public class URLDownloadList extends DownloadDetails {
 	public URLDownloadList(){
 		super("Downloads");
 		downloads = new Vector<URLDownload>();
-		/*tableName = "downloads";
-		
-		String[] columnNames = {"id","url","size","destination","priority","podcastSource","status"};
-		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT",
-				                "TEXT","TEXT","TEXT","INTEGER","TEXT","INTEGER"};
-		createColumnList(columnNames,columnTypes);*/
 	}
 	
 	public URLDownloadList(Vector<Podcast> podcastList){
@@ -415,89 +396,6 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public Vector<Podcast> getPodcastArray(){
 		return podcasts;
-	}
-
-	/**
-	 * 
-	 */
-	public void readTable() {
-		ArrayList<Map<String,String>> recordSet = readFromTable();
-		
-		if ((recordSet!=null)&&(recordSet.size()>0))
-		for (Map<String,String> record: recordSet){
-			// Create a new URLDownload and add to the downloads Vector
-			URLDownload newDownload = new URLDownload(record.get("url"),
-													  record.get("size"),
-													  record.get("destination"),
-													  record.get("podcastSource"),
-													  Integer.parseInt(record.get("status")));
-			newDownload.setAdded(true);
-			addDownload(newDownload, Integer.parseInt(record.get("priority")));
-		}
-	}
-
-	/**
-	 * 
-	 */
-	public void updateDatabase(){
-		
-		if (dbTable.isDbOpen()){
-			// Need to figure out how to increment downloadCount
-			final Integer downloadCount= new Integer(0);
-			for (final URLDownload download : downloads){
-				int sqlType=TableView.NOTHING_CHANGED;
-				if (!download.isAdded()){
-					// Used to set the correct flag
-					try {
-						dbTable.insert(new HashMap<String,Object>(){{
-							put("url",download.getURL().toString());
-							put("size",Long.parseLong(download.getSize()));
-							put("destination",download.getDestination());
-							put("podcastSource",download.getPodcastId());
-							put("status",download.getStatus());
-						}});
-						sqlType=TableView.ITEM_ADDED_TO_DATABASE;
-					} catch (SqlException e) {
-						e.printStackTrace();
-					}
-				} else if (download.isRemoved()){
-					try {
-						dbTable.delete(new HashMap<String, Object>(){{
-							put("url",download.getURL().toString());
-						}});
-					} catch (SqlException e) {
-						e.printStackTrace();
-					}
-					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
-				} else if (download.isUpdated()){
-					try {
-						dbTable.update(new HashMap<String, Object>(){{
-							put("size",Long.parseLong(download.getSize()));
-							put("destination",download.getDestination());
-							put("podcastSource",download.getPodcastId());
-							put("status",download.getStatus());
-							put("priority",downloadCount.intValue());
-						}}, 
-							new HashMap<String, Object>(){{
-								put("url",download.getURL().toString());
-						}});
-					} catch (SqlException e) {
-						e.printStackTrace();
-					}
-					sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
-				}
-				switch (sqlType){
-					case TableView.ITEM_ADDED_TO_DATABASE:
-						downloads.get(downloads.indexOf(download)).setAdded(true);
-						break;
-					case TableView.ITEM_UPDATED_IN_DATABASE:
-						downloads.get(downloads.indexOf(download)).setUpdated(true);
-						break;
-				}
-			}
-		} else {
-			Podsalinan.debugLog.logError("Error db connection is closed");
-		}
 	}
 
 	/**

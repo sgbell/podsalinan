@@ -27,13 +27,19 @@ import com.mimpidev.dev.sql.data.definition.TableDefinition;
  * @author bugman
  *
  */
-public class TableLoader extends TableDefinition {
+public abstract class TableLoader extends TableDefinition {
 
 	/**
 	 * 
 	 */
 	public TableLoader() {
-		// TODO Auto-generated constructor stub
 	}
-
+	/**
+	 * 
+	 */
+	public abstract void readTable();
+	/**
+	 * 
+	 */
+	public abstract void updateDatabase();
 }

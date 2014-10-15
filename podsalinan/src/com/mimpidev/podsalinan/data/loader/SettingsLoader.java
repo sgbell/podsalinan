@@ -21,6 +21,10 @@
  */
 package com.mimpidev.podsalinan.data.loader;
 
+import org.tmatesoft.sqljet.core.table.SqlJetDb;
+
+import com.mimpidev.podsalinan.data.ProgSettings;
+
 /**
  * @author bugman
  *
@@ -28,10 +32,24 @@ package com.mimpidev.podsalinan.data.loader;
 public class SettingsLoader extends TableLoader {
 
 	/**
+	 * @param podsalinanDB 
 	 * 
 	 */
-	public SettingsLoader() {
+	public SettingsLoader(ProgSettings settings, SqlJetDb dbConnection) {
 		// TODO Auto-generated constructor stub
+		setdbTable(dbConnection);
+	}
+
+	@Override
+	public void readTable() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateDatabase() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

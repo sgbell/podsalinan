@@ -20,12 +20,16 @@ package com.mimpidev.podsalinan;
 
 import java.io.File;
 import java.util.List;
+
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
+import com.mimpidev.podsalinan.data.loader.DownloadsLoader;
+import com.mimpidev.podsalinan.data.loader.PodcastLoader;
+import com.mimpidev.podsalinan.data.loader.SettingsLoader;
 
 /**
  * @author bugman
@@ -125,13 +129,13 @@ public class DataStorage {
 				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 			}
 			
+			PodcastLoader podcastHandler = new PodcastLoader(podcasts,podsalinanDB);
+			DownloadsLoader downloadHandler = new DownloadsLoader(downloads,podsalinanDB);
+			SettingsLoader settingsHandler = new SettingsLoader(settings,podsalinanDB);
 			//TODO: After converting all of the table reads to similar lines as below, add them to an array to do all of them in a smaller bunch of code calls
-			downloads.setdbTable(podsalinanDB);
-			downloads.readTable();
-			settings.setdbTable(podsalinanDB);
-			settings.readTable();
-			podcasts.setdbTable(podsalinanDB);
-			podcasts.readTable();
+			downloadHandler.readTable();
+			settingsHandler.readTable();
+			podcastHandler.readTable();
 			
 			/*
 			try {
