@@ -21,8 +21,14 @@
  */
 package com.mimpidev.podsalinan.data.loader;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
+import com.mimpidev.dev.sql.SqlException;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.data.ProgSettings;
 
 /**
@@ -31,25 +37,52 @@ import com.mimpidev.podsalinan.data.ProgSettings;
  */
 public class SettingsLoader extends TableLoader {
 
+	private ProgSettings settings;
 	/**
 	 * @param podsalinanDB 
 	 * 
 	 */
-	public SettingsLoader(ProgSettings settings, SqlJetDb dbConnection) {
-		// TODO Auto-generated constructor stub
+	public SettingsLoader(ProgSettings newSettings, SqlJetDb dbConnection) {
 		setdbTable(dbConnection);
+		tableName = "settings";
+		settings=newSettings;
+
+		String[] columnNames = {"id","name","value"};
+		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT",
+				                "TEXT","TEXT"};
+		createColumnList (columnNames, columnTypes);
 	}
 
 	@Override
 	public void readTable() {
-		// TODO Auto-generated method stub
+		ArrayList<Map<String,String>> recordSet = readFromTable();
 		
+		if ((recordSet!=null)&&(recordSet.size()>0))
+		for (Map<String,String> record: recordSet){
+			settings.getMap().put(record.get("name"),record.get("value"));
+		}
 	}
 
 	@Override
 	public void updateDatabase() {
-		// TODO Auto-generated method stub
-		
+		if (dbTable.isDbOpen()){
+			purgeTable();
+			
+			
+			for (final Map.Entry<String, String> entry : settings.getMap().entrySet()){
+				try {
+					dbTable.insert(new HashMap<String, Object>(){{
+						put("name",entry.getKey());
+						put("value",entry.getValue());
+					}});
+				} catch (SqlException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} else {
+			Podsalinan.debugLog.logError("Error db connection is closed");
+		}
 	}
 
 }

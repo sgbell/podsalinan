@@ -19,6 +19,7 @@
 package com.mimpidev.podsalinan;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.tmatesoft.sqljet.core.SqlJetException;
@@ -30,6 +31,7 @@ import com.mimpidev.podsalinan.data.URLDownloadList;
 import com.mimpidev.podsalinan.data.loader.DownloadsLoader;
 import com.mimpidev.podsalinan.data.loader.PodcastLoader;
 import com.mimpidev.podsalinan.data.loader.SettingsLoader;
+import com.mimpidev.podsalinan.data.loader.TableLoader;
 
 /**
  * @author bugman
@@ -50,7 +52,10 @@ public class DataStorage {
 	private ProgSettings settings;
 	private String settingsDir;
 	private Object finishWait= new Object();
-
+	/**
+	 * 
+	 */
+	private ArrayList<TableLoader> tableLoaders;
 	/**
 	 *  Used to Define the current File system slash.
 	 */
@@ -60,6 +65,7 @@ public class DataStorage {
 		podcasts = new PodcastList();
 		urlDownloads = new URLDownloadList(podcasts);
 		settings = new ProgSettings();
+		tableLoaders = new ArrayList<TableLoader>();
 		
 		checkSettingsDirectory();
 	}
@@ -70,6 +76,7 @@ public class DataStorage {
 		setUrlDownloads(urlDownloads);
 		urlDownloads.setPodcasts(podcasts.getList());
 		setSettings(settings);
+		tableLoaders = new ArrayList<TableLoader>();
 		
 		checkSettingsDirectory();
 	}
@@ -132,10 +139,13 @@ public class DataStorage {
 			PodcastLoader podcastHandler = new PodcastLoader(podcasts,podsalinanDB);
 			DownloadsLoader downloadHandler = new DownloadsLoader(downloads,podsalinanDB);
 			SettingsLoader settingsHandler = new SettingsLoader(settings,podsalinanDB);
-			//TODO: After converting all of the table reads to similar lines as below, add them to an array to do all of them in a smaller bunch of code calls
-			downloadHandler.readTable();
-			settingsHandler.readTable();
-			podcastHandler.readTable();
+			tableLoaders.add(podcastHandler);
+			tableLoaders.add(downloadHandler);
+			tableLoaders.add(settingsHandler);
+			
+			for (TableLoader loader : tableLoaders){
+				loader.readTable();
+			}
 			
 			/*
 			try {
@@ -184,11 +194,11 @@ public class DataStorage {
 
 			downloads.setdbTable(podsalinanDB);
 			*/
-			downloads.updateDatabase();
+		    for (TableLoader loader : tableLoaders){
+		    	loader.updateDatabase();
+		    }
 			//settings.setdbTable(podsalinanDB);
-			settings.updateDatabase();
 			//podcasts.setdbTable(podsalinanDB);
-			podcasts.updateDatabase();
 			/*
 			try {
 				podsalinanDB.close();

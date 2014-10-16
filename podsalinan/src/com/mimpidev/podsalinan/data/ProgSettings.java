@@ -21,15 +21,8 @@
  */
 package com.mimpidev.podsalinan.data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
-
-import com.mimpidev.dev.sql.SqlException;
-import com.mimpidev.dev.sql.data.definition.TableDefinition;
-import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
@@ -151,38 +144,5 @@ public class ProgSettings{
 	}
 	public String findSetting(String key) {
 		return settings.get(key);
-	}
-	
-	/**
-	 * 
-	 */
-	public void readTable(){
-		ArrayList<Map<String,String>> recordSet = readFromTable();
-		
-		if ((recordSet!=null)&&(recordSet.size()>0))
-		for (Map<String,String> record: recordSet){
-			settings.put(record.get("name"),record.get("value"));
-		}
-	}
-	
-	public void updateDatabase(){
-		if (dbTable.isDbOpen()){
-			purgeTable();
-			
-			
-			for (final Map.Entry<String, String> entry : settings.entrySet()){
-				try {
-					dbTable.insert(new HashMap<String, Object>(){{
-						put("name",entry.getKey());
-						put("value",entry.getValue());
-					}});
-				} catch (SqlException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		} else {
-			Podsalinan.debugLog.logError("Error db connection is closed");
-		}
 	}
 }
