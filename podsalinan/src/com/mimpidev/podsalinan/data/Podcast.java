@@ -147,6 +147,10 @@ public class Podcast extends DownloadDetails{
 	public void setSettingsDir(String newSettingsDir) {
 		settingsDir = newSettingsDir;
 	}
+	
+	public String getSettingsDir() {
+		return settingsDir;
+	}
 
 	/**
 	 * @return the automaticQueue
@@ -409,66 +413,5 @@ public class Podcast extends DownloadDetails{
 					filesInDir.remove(file);
 			}
 	}
-
-	/**
-	 * 
-	 */
-	public void updateDatabase() {
-
-		if (settingsDir!=null){
-			for (final Episode episode : episodeList){
-				if (!episode.isAdded()){
-					try {
-						dbTable.insert(new HashMap<String,Object>(){{
-							put("published",episode.getOriginalDate());
-							put("title",episode.getTitle().replaceAll("\'", "&apos;"));
-							put("url",episode.getURL().toString().replaceAll("\'", "&apos;"));
-							put("size",episode.getSize());
-							put("description",episode.getDescription().replaceAll("\'", "&apos;"));
-							put("status",episode.getStatus());
-						}});
-						episode.setAdded(true);
-					} catch (SqlException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-					}					
-				} else if (episode.isUpdated()){
-					try {
-						dbTable.update(new HashMap<String,Object>(){{
-							put("status",episode.getStatus());
-							put("description",episode.getDescription().replaceAll("\'", "&apos;"));
-							put("size",episode.getSize());
-							put("published",episode.getOriginalDate());
-						}}, 
-								       new HashMap<String, Object>(){{
-											put("url",episode.getURL().toString().replaceAll("\'", "&apos;"));
-								       }});
-						episode.setUpdated(false);
-					} catch (SqlException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * 
-	 */
-	public void readTable() {
-		ArrayList<Map<String,String>> recordSet = readFromTable();
-		
-		if ((recordSet!=null)&&(recordSet.size()>0))
-			for (Map<String,String> record: recordSet){
-				Episode newEpisode = new Episode(
-						record.get("published"),
-						record.get("title").replaceAll("&apos;", "\'"),
-						record.get("url").replaceAll("&apos;", "\'"),
-						record.get("size"),
-						record.get("description").replaceAll("&apos;", "\'"),
-						Integer.parseInt(record.get("status")));
-				newEpisode.setAdded(true);
-				newEpisode.setUpdated(false);
-				addEpisode(newEpisode);
-			}
-	}	
+	
 }

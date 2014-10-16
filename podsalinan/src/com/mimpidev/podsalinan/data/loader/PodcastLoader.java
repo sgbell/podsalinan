@@ -42,6 +42,10 @@ public class PodcastLoader extends TableLoader {
 	/**
 	 * 
 	 */
+	private ArrayList<EpisodeLoader> episodeLoaders;
+	/**
+	 * 
+	 */
 	private PodcastList podcastList;
 	/**
 	 * @param podsalinanDB 
@@ -52,6 +56,7 @@ public class PodcastLoader extends TableLoader {
 		tableName = "podcasts";
 		createColumnList(new Podcast().getDatabaseRecord());
 		setdbTable(dbConnection);
+		episodeLoaders = new ArrayList<EpisodeLoader>();
 	}
 	/**
 	 * @return the podcastList
@@ -88,8 +93,9 @@ public class PodcastLoader extends TableLoader {
 					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				}
 
-				newPodcast.setdbTable(podcastDB);
-				newPodcast.readTable();
+				EpisodeLoader episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
+				episodeLoader.readTable();
+				episodeLoaders.add(episodeLoader);
 			} else {
 				Podsalinan.debugLog.logError("File does not exist");
 			}
