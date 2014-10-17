@@ -64,7 +64,7 @@ public class Downloader extends NotifyingRunnable{
 	
 	public Downloader(URL urlDownload, String outputFile, String size){
 		downloadItem = new URLDownload();
-		downloadItem.setURL(urlDownload);
+		downloadItem.setURL(urlDownload.toString());
 		downloadItem.setSize(size);
 		try {
 			downloadURL = new URL(urlDownload.toString());
@@ -75,7 +75,7 @@ public class Downloader extends NotifyingRunnable{
 	
 	public Downloader(URL urlDownload, String outputFile) {
 		downloadItem = new URLDownload();
-		downloadItem.setURL(urlDownload);
+		downloadItem.setURL(urlDownload.toString());
 		try {
 			downloadURL = new URL(urlDownload.toString());
 		} catch (MalformedURLException e1) {
@@ -97,7 +97,7 @@ public class Downloader extends NotifyingRunnable{
 	
 	public Downloader(URL urlDownload, File outputFile){
 		downloadItem = new URLDownload();
-		downloadItem.setURL(urlDownload);
+		downloadItem.setURL(urlDownload.toString());
 		downloadItem.setDestination(outputFile);
 		downloadItem.setStatus(URLDetails.CURRENTLY_DOWNLOADING);
 		try {
@@ -184,7 +184,7 @@ public class Downloader extends NotifyingRunnable{
 					&&(!stopDownload)){
 				//System.out.println("Inside first while");
 				try {
-					checkURLRedirect(downloadItem.getURL());
+					checkURLRedirect(new URL(downloadItem.getURL()));
 					
 					conn = downloadURL.openConnection();
 					/* The following line gets the file size of the Download. had to do it this 

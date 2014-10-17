@@ -23,12 +23,15 @@ package com.mimpidev.podsalinan.data.loader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
+import com.mimpidev.dev.sql.SqlException;
+import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.PodcastList;
@@ -101,8 +104,76 @@ public class PodcastLoader extends TableLoader {
 			}
 		}		
 	}
-	
+	/**
+	 * 
+	 */
 	public void updateDatabase(){
-		
+		if (dbTable.isDbOpen()){
+			for (final Podcast podcast : podcastList.getList()){
+				int sqlType=TableView.NOTHING_CHANGED;
+				if (!podcast.isAdded()){
+					// Used to set the correct flag
+					try {
+						dbTable.insert(new HashMap<String,Object>(){{
+							put("name",podcast.getName());
+							put("localFile",podcast.getDatafile());
+							put("url",podcast.getURL());
+							put("directory",podcast.getDirectory());
+							put("auto_queue",(podcast.isAutomaticQueue()?1:0));
+						}});
+						sqlType=TableView.ITEM_ADDED_TO_DATABASE;
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+				} else if (podcast.isRemoved()){
+					try {
+						dbTable.delete(new HashMap<String, Object>(){{
+							put("url",podcast.getURL());
+						}});
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
+				} else if (podcast.isUpdated()){
+					try {
+						dbTable.update(new HashMap<String, Object>(){{
+							put("name",podcast.getName());
+							put("directory",podcast.getDirectory());
+							put("url",podcast.getURL());
+							put("auto_queue",(podcast.isAutomaticQueue()?1:0));
+						}}, 
+							new HashMap<String, Object>(){{
+								put("localfile",podcast.getDatafile());
+						}});
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+					sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
+				}
+				switch (sqlType){
+					case TableView.ITEM_ADDED_TO_DATABASE:
+						podcastList.getList().get(podcastList.getList().indexOf(podcast)).setAdded(true);
+						break;
+					case TableView.ITEM_UPDATED_IN_DATABASE:
+						podcastList.getList().get(podcastList.getList().indexOf(podcast)).setUpdated(false);
+						break;
+				}
+				podcast.setSettingsDir(this.getDbFile().getParent());
+				File podcastFile = new File(this.getDbFile().getParent()+"/"+podcast.getDatafile()+".pod");
+				if (podcastFile.exists()){
+					SqlJetDb podcastDB = new SqlJetDb(podcastFile,true);
+					try {
+						podcastDB.open();
+					} catch (SqlJetException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+
+					podcast.setdbTable(podcastDB);			
+					podcast.updateDatabase();
+				}
+			}
+		} else {
+			Podsalinan.debugLog.logError("Error db connection is closed");
+		}
 	}
 }
