@@ -6,7 +6,6 @@ package com.mimpidev.podsalinan.cli;
 import java.util.ArrayList;
 
 import com.mimpidev.podsalinan.cli.CLInterface.MenuPath;
-import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 

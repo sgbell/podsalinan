@@ -3,13 +3,11 @@
  */
 package com.mimpidev.podsalinan.cli;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import com.mimpidev.podsalinan.data.URLDetails;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
-import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 
 /**

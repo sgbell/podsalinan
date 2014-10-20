@@ -25,8 +25,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
-
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
@@ -158,18 +156,8 @@ public class PodcastLoader extends TableLoader {
 						podcastList.getList().get(podcastList.getList().indexOf(podcast)).setUpdated(false);
 						break;
 				}
-				podcast.setSettingsDir(this.getDbFile().getParent());
-				File podcastFile = new File(this.getDbFile().getParent()+"/"+podcast.getDatafile()+".pod");
-				if (podcastFile.exists()){
-					SqlJetDb podcastDB = new SqlJetDb(podcastFile,true);
-					try {
-						podcastDB.open();
-					} catch (SqlJetException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-					}
-
-					podcast.setdbTable(podcastDB);			
-					podcast.updateDatabase();
+				for (EpisodeLoader currentLoader : episodeLoaders){
+					currentLoader.updateDatabase();
 				}
 			}
 		} else {

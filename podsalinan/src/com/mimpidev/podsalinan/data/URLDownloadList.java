@@ -352,7 +352,7 @@ public class URLDownloadList extends DownloadDetails {
 		int count=0;
 		boolean found=false;
 		
-		while ((count<downloads.size())){
+		while ((!found)&&(count<downloads.size())){
 			if (downloads.get(count).equals(download))
 				found=true;
 			count++;

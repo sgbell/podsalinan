@@ -3,19 +3,7 @@
  */
 package com.mimpidev.podsalinan.data;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
-
-import org.tmatesoft.sqljet.core.SqlJetException;
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
-import com.mimpidev.dev.sql.SqlException;
-import com.mimpidev.dev.sql.TableView;
-import com.mimpidev.dev.sql.data.definition.TableDefinition;
-import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
@@ -52,5 +40,19 @@ public class PodcastList {
 			if (currentPodcast.getDatafile().equals(podcastUid))
 			   return currentPodcast;
 		return null;
+	}
+
+	/**
+	 * @return the settingsDir
+	 */
+	public String getSettingsDir() {
+		return settingsDir;
+	}
+
+	/**
+	 * @param settingsDir the settingsDir to set
+	 */
+	public void setSettingsDir(String settingsDir) {
+		this.settingsDir = settingsDir;
 	}
 }

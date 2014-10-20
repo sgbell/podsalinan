@@ -4,11 +4,7 @@
 package com.mimpidev.podsalinan.cli;
 
 import java.util.ArrayList;
-import java.util.Vector;
-
-import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.PodcastList;
-import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 
 /**

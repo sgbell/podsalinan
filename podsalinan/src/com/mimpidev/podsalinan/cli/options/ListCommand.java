@@ -3,18 +3,9 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.cli.CLDownloadMenu;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.CLPreferencesMenu;
-import com.mimpidev.podsalinan.cli.CLInterface.MenuPath;
 import com.mimpidev.podsalinan.cli.ReturnCall;
-import com.mimpidev.podsalinan.data.Episode;
-import com.mimpidev.podsalinan.data.Podcast;
 
 /**
  * @author sbell

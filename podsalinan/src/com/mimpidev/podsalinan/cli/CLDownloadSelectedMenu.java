@@ -4,13 +4,11 @@
 package com.mimpidev.podsalinan.cli;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.mimpidev.podsalinan.cli.CLInterface.MenuPath;
 import com.mimpidev.podsalinan.data.Episode;
-import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 

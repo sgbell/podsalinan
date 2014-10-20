@@ -28,16 +28,11 @@
  */
 package com.mimpidev.podsalinan;
 
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLInterface;
-import com.mimpidev.podsalinan.data.URLDetails;
-import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 
 public class Podsalinan {
