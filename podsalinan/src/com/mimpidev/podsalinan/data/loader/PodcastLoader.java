@@ -81,7 +81,7 @@ public class PodcastLoader extends TableLoader {
 			Podcast newPodcast = new Podcast(record.get("name"),
 					 						 record.get("url"),
 					 						 record.get("directory"),
-					 						 record.get("localfile").replaceAll("&apos;", "\'"),
+					 						 record.get("localFile").replaceAll("&apos;", "\'"),
 					 						 record.get("auto_queue").equalsIgnoreCase("1"));
 			newPodcast.setAdded(true);
 			podcastList.add(newPodcast);
