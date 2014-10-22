@@ -38,19 +38,16 @@ import com.mimpidev.podsalinan.data.ProgSettings;
 public class SettingsLoader extends TableLoader {
 
 	private ProgSettings settings;
-	/**
-	 * @param podsalinanDB 
-	 * 
-	 */
-	public SettingsLoader(ProgSettings newSettings, SqlJetDb dbConnection) {
-		setdbTable(dbConnection);
-		tableName = "settings";
-		settings=newSettings;
 
+	public SettingsLoader(ProgSettings newSettings, SqlJetDb dbConnection) {
+		tableName = "settings";
 		String[] columnNames = {"id","name","value"};
 		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT",
 				                "TEXT","TEXT"};
 		createColumnList (columnNames, columnTypes);
+		setdbTable(dbConnection);
+		settings=newSettings;
+
 	}
 
 	@Override
