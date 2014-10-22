@@ -55,7 +55,7 @@ public class PodcastLoader extends TableLoader {
 	public PodcastLoader(PodcastList podcasts, SqlJetDb dbConnection) {
 		setPodcastList(podcasts);
 		tableName = "podcasts";
-		createColumnList(new Podcast().getDatabaseRecord());
+		createColumnList(new Podcast().getDatabaseRecord()); // make sure this is getting set
 		setdbTable(dbConnection);
 		episodeLoaders = new ArrayList<EpisodeLoader>();
 	}
@@ -78,6 +78,9 @@ public class PodcastLoader extends TableLoader {
 		if ((recordSet!=null)&&(recordSet.size()>0))
 		for (Map<String,String> record: recordSet){
 			// Traverse the Map and create a podcast object
+			for (final Map.Entry<String, String> entry : record.entrySet()){
+				Podsalinan.debugLog.logError(entry.getKey()+" - "+entry.getValue());
+			}
 			Podcast newPodcast = new Podcast(record.get("name"),
 					 						 record.get("url"),
 					 						 record.get("directory"),
