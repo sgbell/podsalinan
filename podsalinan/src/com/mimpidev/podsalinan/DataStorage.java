@@ -182,31 +182,9 @@ public class DataStorage {
 							 URLDownloadList downloads,
 							 ProgSettings settings) {
 
-		/*
-		File podsalinanDBFile = new File(settingsDir.concat(fileSystemSlash+"podsalinan.db"));
-		if (podsalinanDBFile.exists()){
-			SqlJetDb podsalinanDB = new SqlJetDb(podsalinanDBFile,true);
-			try {
-				podsalinanDB.open();
-			} catch (SqlJetException e) {
-				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-			}
-
-			downloads.setdbTable(podsalinanDB);
-			*/
-		    for (TableLoader loader : tableLoaders){
-		    	loader.updateDatabase();
-		    }
-			//settings.setdbTable(podsalinanDB);
-			//podcasts.setdbTable(podsalinanDB);
-			/*
-			try {
-				podsalinanDB.close();
-			} catch (SqlJetException e) {
-				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-			}
-			*/
-		//}
+	    for (TableLoader loader : tableLoaders){
+	    	loader.updateDatabase();
+	    }
 	}
 	
 	/**

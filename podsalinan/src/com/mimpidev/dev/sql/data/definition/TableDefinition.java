@@ -31,17 +31,16 @@ public abstract class TableDefinition {
 	/**
 	 * 
 	 */
-	protected final ArrayList<SqlDefinition> columnList = new ArrayList<SqlDefinition>();
-	/**
-	 * 
-	 */
 	protected TableView dbTable=null;
 	
 	public TableDefinition() {
 	}
 	
-	public ArrayList<SqlDefinition> getColumnList(){
-		return columnList;
+	public Map<String,String> getColumnList() throws DataDefinitionException{
+		if (dbTable!=null)
+			return dbTable.getColumnList();
+		else
+			throw new DataDefinitionException("TableView not set");
 	}
 	
 	public String getName(){
@@ -50,20 +49,25 @@ public abstract class TableDefinition {
 	
 	public void createColumnList(String[] columnNames, String[] columnTypes){
 		for (int count=0; count<columnNames.length; count++){
-			columnList.add(new SqlDefinition(columnNames[count],columnTypes[count]));
+			try {
+				getColumnList().put(columnNames[count], columnTypes[count]);
+			} catch (DataDefinitionException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public void createColumnList(Map<String,FieldDetails> columnDetails){
-		
+		//TODO: traverse columnDetails map and set columnList 
 	}
 	
 	public void setdbTable(SqlJetDb dbConnection, Log log) {
-		dbTable = new TableView(dbConnection,getColumnList(),tableName,log);
+		// Need to re-arrange the startup so that we dont have to store the columns more than once.
+		dbTable = new TableView(dbConnection,tableName,log);
 	}
 	
 	public void setdbTable(SqlJetDb dbConnection){
-		dbTable = new TableView(dbConnection,getColumnList(),tableName,Podsalinan.debugLog);
+		dbTable = new TableView(dbConnection,tableName,Podsalinan.debugLog);
 	}
 	
 	/**

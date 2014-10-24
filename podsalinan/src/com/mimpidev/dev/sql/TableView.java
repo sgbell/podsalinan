@@ -50,7 +50,7 @@ public class TableView {
 	/**
 	 * The list of columns in the database table
 	 */
-	private ArrayList<SqlDefinition> columnList;
+	private Map<String,String> columnList;
 	/**
 	 * The log.
 	 */
@@ -84,30 +84,30 @@ public class TableView {
 	public static final int ITEM_UPDATED_IN_DATABASE = 3;
 	
 	public TableView(File databaseFile, String tableName, Log debugLog){
-		this (new ArrayList<SqlDefinition>(), tableName, debugLog);
+		this (new HashMap<String,String>(), tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
 		initializeTable();
 	}
 	
-	private TableView(ArrayList<SqlDefinition> newColumnList, String tableName, Log debugLog){
+	private TableView(Map<String,String> newColumnList, String tableName, Log debugLog){
 		columnList = newColumnList;
 		log = debugLog;
 		name=tableName;
 	}
 	
-	public TableView(File databaseFile, ArrayList<SqlDefinition> newColumnList, String tableName, Log debugLog){
+	public TableView(File databaseFile, Map<String,String> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
 		initializeTable();
 	}
 	
-	public TableView(SqlJetDb newDb, ArrayList<SqlDefinition> newColumnList, String tableName, Log debugLog){
+	public TableView(SqlJetDb newDb, Map<String,String> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = newDb;
 		initializeTable();
 	}
 
-    /**
+	/**
      * 
      */
 	public void initializeTable(){
@@ -128,6 +128,7 @@ public class TableView {
      */
 	public int checkColumns(){
 		int result=0;
+		//TODO:Convert this for loop to traversing the columnList map
 		for (int cc=0; cc<columnList.size(); cc++){
 			int newResult=0;
 			try {
@@ -451,5 +452,9 @@ public class TableView {
 		}
 		
 		return true;
+	}
+
+	public Map<String, String> getColumnList() {
+		return columnList;
 	}
 }
