@@ -38,6 +38,7 @@ import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.field.FieldDetails;
+import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
@@ -86,7 +87,7 @@ public class TableView {
 	public static final int ITEM_UPDATED_IN_DATABASE = 3;
 	
 	public TableView(){
-		
+		log = Podsalinan.debugLog;
 	}
 	
 	public TableView(File databaseFile, String tableName, Log debugLog){
@@ -138,6 +139,7 @@ public class TableView {
 		while (it.hasNext()){
 			int newResult=0;
 			Map.Entry<String,String> pairs = (Map.Entry<String,String>)it.next();
+			log.logInfo("[TableView]"+(String)pairs.getKey()+","+(String)pairs.getValue());
 			try {
 				newResult = addNewColumn((String)pairs.getKey(),(String)pairs.getValue());
 			} catch (SqlException e) {
@@ -166,6 +168,8 @@ public class TableView {
 		while (it.hasNext()){
 			Map.Entry<String, FieldDetails> pair = (Map.Entry<String, FieldDetails>)it.next();
 			try {
+				if (columnList==null)
+					columnList=new HashMap<String,String>();
 				getColumnList().put(pair.getKey(), pair.getValue().getDbFieldType());
 			} catch (DataDefinitionException e) {
 				e.printStackTrace();
@@ -493,12 +497,13 @@ public class TableView {
 		if (table==null){
 			try {
 				table = db.getTable(name);
+				return true;
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_SET_TABLE);
 			}
 		}
-		return true;
+		return false;
 	}
 	
 	/*TODO: I need to change the layout of the Table. remove the id field, and make sure we just have the text fields
