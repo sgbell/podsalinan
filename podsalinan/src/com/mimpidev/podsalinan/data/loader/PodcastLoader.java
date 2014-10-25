@@ -54,7 +54,7 @@ public class PodcastLoader extends TableLoader {
 	 */
 	public PodcastLoader(PodcastList podcasts, SqlJetDb dbConnection) {
 		setPodcastList(podcasts);
-		tableName = "podcasts";
+		setTableName("podcasts");
 		createColumnList(new Podcast().getDatabaseRecord()); // make sure this is getting set
 		setdbTable(dbConnection);
 		episodeLoaders = new ArrayList<EpisodeLoader>();

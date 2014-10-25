@@ -415,13 +415,19 @@ public class TableView {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * @return the name
 	 */
-	public String getTableName (){
+	public String getTableName() {
 		return name;
 	}
-	
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setTableName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * @return the table
 	 */

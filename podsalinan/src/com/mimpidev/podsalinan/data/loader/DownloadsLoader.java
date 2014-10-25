@@ -46,7 +46,7 @@ public class DownloadsLoader extends TableLoader {
 	 */
 	public DownloadsLoader(URLDownloadList downloadList, SqlJetDb dbConnection) {
 		setDownloads(downloadList);
-		tableName = "downloads";
+		setTableName("downloads");
 		createColumnList(new URLDownload().getDatabaseRecord());
 		setdbTable(dbConnection);
 	}

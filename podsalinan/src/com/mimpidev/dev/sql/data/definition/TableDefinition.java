@@ -6,7 +6,9 @@ package com.mimpidev.dev.sql.data.definition;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
@@ -16,7 +18,6 @@ import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.data.definition.field.FieldDetails;
-import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author sbell
@@ -33,15 +34,6 @@ public abstract class TableDefinition extends TableView{
 		super(newDb, newColumnList, tableName, debugLog);
 	}
 
-	/**
-	 * 
-	 */
-	protected String tableName = "";
-	
-	public String getName(){
-		return tableName;
-	}
-	
 	public void createColumnList(String[] columnNames, String[] columnTypes){
 		for (int count=0; count<columnNames.length; count++){
 			try {
@@ -53,7 +45,15 @@ public abstract class TableDefinition extends TableView{
 	}
 	
 	public void createColumnList(Map<String,FieldDetails> columnDetails){
-		//TODO: traverse columnDetails map and set columnList 
+		Iterator<Entry<String, FieldDetails>> it = columnDetails.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<String, FieldDetails> pair = (Map.Entry<String, FieldDetails>)it.next();
+			try {
+				getColumnList().put(pair.getKey(), pair.getValue().getDbFieldType());
+			} catch (DataDefinitionException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void setdbTable(SqlJetDb dbConnection, Log log) {

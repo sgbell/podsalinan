@@ -40,7 +40,7 @@ public class SettingsLoader extends TableLoader {
 	private ProgSettings settings;
 
 	public SettingsLoader(ProgSettings newSettings, SqlJetDb dbConnection) {
-		tableName = "settings";
+		setTableName("settings");
 		String[] columnNames = {"id","name","value"};
 		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT",
 				                "TEXT","TEXT"};
