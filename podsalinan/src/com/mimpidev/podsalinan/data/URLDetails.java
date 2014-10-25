@@ -5,7 +5,7 @@ package com.mimpidev.podsalinan.data;
 
 import java.net.URL;
 
-import com.mimpidev.dev.sql.data.definition.field.IntegerType;
+import com.mimpidev.dev.sql.field.IntegerType;
 
 /**
  * @author sbell

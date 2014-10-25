@@ -22,6 +22,7 @@
 package com.mimpidev.dev.sql;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +37,7 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
-import com.mimpidev.dev.sql.data.definition.DataDefinitionException;
+import com.mimpidev.dev.sql.field.FieldDetails;
 
 /**
  * @author bugman
@@ -149,7 +150,57 @@ public class TableView {
 		
 		return result;
 	}
+
+	public void createColumnList(String[] columnNames, String[] columnTypes){
+		for (int count=0; count<columnNames.length; count++){
+			try {
+				getColumnList().put(columnNames[count], columnTypes[count]);
+			} catch (DataDefinitionException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
+	public void createColumnList(Map<String,FieldDetails> columnDetails){
+		Iterator<Entry<String, FieldDetails>> it = columnDetails.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<String, FieldDetails> pair = (Map.Entry<String, FieldDetails>)it.next();
+			try {
+				getColumnList().put(pair.getKey(), pair.getValue().getDbFieldType());
+			} catch (DataDefinitionException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param newDb
+	 */
+	public void setdbTable(SqlJetDb newDb){
+		db = newDb;
+		try {
+			if ((getColumnList().size()>0)&&(name!=null)&&(name.length()>0)){
+				initializeTable();
+			}
+		} catch (DataDefinitionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 * @param newDbFile
+	 */
+	public void setdbTable(File newDbFile){
+		setdbTable(new SqlJetDb(newDbFile,true));
+	}
+	
+	/**
+	 * 
+	 * @throws SqlJetException
+	 */
 	public void dbCommit() throws SqlJetException{
 		db.commit();
 	}
@@ -474,5 +525,41 @@ public class TableView {
 			return columnList;
 		else
 			throw new DataDefinitionException("Column List is not set");
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	protected ArrayList<Map<String,String>> readFromTable(){
+		ArrayList<Map<String,String>> recordSet = new ArrayList<Map<String,String>>();
+		try {
+			ISqlJetCursor currentRecord = selectAll();
+			while (!currentRecord.eof()){
+				Map<String, String> newRecord = new HashMap<String,String>();
+				
+				recordSet.add(newRecord);
+				currentRecord.next();
+			}
+		} catch (SqlException e) {
+			e.printStackTrace();
+		} catch (SqlJetException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				dbCommit();
+			} catch (SqlJetException e) {
+				e.printStackTrace();
+			}
+		}
+		return recordSet;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public File getDbFile(){
+		return getTable().getDataBase().getFile();
 	}
 }

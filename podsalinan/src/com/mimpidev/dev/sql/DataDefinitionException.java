@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.mimpidev.dev.sql.data.definition;
+package com.mimpidev.dev.sql;
 
 /**
  * @author bugman

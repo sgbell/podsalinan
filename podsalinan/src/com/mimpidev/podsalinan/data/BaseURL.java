@@ -24,9 +24,9 @@ package com.mimpidev.podsalinan.data;
 import java.net.URL;
 import java.util.Map;
 
-import com.mimpidev.dev.sql.data.definition.DataRecord;
-import com.mimpidev.dev.sql.data.definition.field.FieldDetails;
-import com.mimpidev.dev.sql.data.definition.field.StringType;
+import com.mimpidev.dev.sql.DataRecord;
+import com.mimpidev.dev.sql.field.FieldDetails;
+import com.mimpidev.dev.sql.field.StringType;
 
 /**
  * @author bugman

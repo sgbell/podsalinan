@@ -63,7 +63,11 @@ public class SettingsLoader extends TableLoader {
 	@Override
 	public void updateDatabase() {
 		if (isDbOpen()){
-			purgeTable();
+			try {
+				purgeTable();
+			} catch (SqlException e) {
+				e.printStackTrace();
+			}
 			
 			
 			for (final Map.Entry<String, String> entry : settings.getMap().entrySet()){

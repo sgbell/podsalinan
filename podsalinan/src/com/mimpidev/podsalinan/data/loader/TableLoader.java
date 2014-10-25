@@ -26,13 +26,13 @@ import java.util.Map;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
-import com.mimpidev.dev.sql.data.definition.TableDefinition;
+import com.mimpidev.dev.sql.TableView;
 
 /**
  * @author bugman
  *
  */
-public abstract class TableLoader extends TableDefinition {
+public abstract class TableLoader extends TableView {
 
 	public TableLoader(){
 		

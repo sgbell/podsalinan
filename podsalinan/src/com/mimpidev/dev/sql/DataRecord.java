@@ -1,15 +1,15 @@
 /**
  * 
  */
-package com.mimpidev.dev.sql.data.definition;
+package com.mimpidev.dev.sql;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.mimpidev.dev.sql.data.definition.field.BooleanType;
-import com.mimpidev.dev.sql.data.definition.field.FieldDetails;
+import com.mimpidev.dev.sql.field.BooleanType;
+import com.mimpidev.dev.sql.field.FieldDetails;
 
 /**
  * @author bugman

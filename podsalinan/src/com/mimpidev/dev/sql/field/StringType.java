@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.dev.sql.data.definition.field;
+package com.mimpidev.dev.sql.field;
 
 
 /**

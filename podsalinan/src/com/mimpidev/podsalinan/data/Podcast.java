@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
-import com.mimpidev.dev.sql.data.definition.field.BooleanType;
-import com.mimpidev.dev.sql.data.definition.field.StringType;
+import com.mimpidev.dev.sql.field.BooleanType;
+import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Downloader;
 import com.mimpidev.podsalinan.Podsalinan;

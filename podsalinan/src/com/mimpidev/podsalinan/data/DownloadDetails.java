@@ -22,7 +22,7 @@
 
 package com.mimpidev.podsalinan.data;
 
-import com.mimpidev.dev.sql.data.definition.field.StringType;
+import com.mimpidev.dev.sql.field.StringType;
 
 /**
  * 
