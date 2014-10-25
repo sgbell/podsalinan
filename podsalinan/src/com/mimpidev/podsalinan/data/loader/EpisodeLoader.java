@@ -41,7 +41,7 @@ public class EpisodeLoader extends TableLoader {
 			for (final Episode episode : podcast.getEpisodes()){
 				if (!episode.isAdded()){
 					try {
-						dbTable.insert(new HashMap<String,Object>(){{
+						insert(new HashMap<String,Object>(){{
 							put("published",episode.getOriginalDate());
 							put("title",episode.getTitle().replaceAll("\'", "&apos;"));
 							put("url",episode.getURL().toString().replaceAll("\'", "&apos;"));
@@ -55,7 +55,7 @@ public class EpisodeLoader extends TableLoader {
 					}					
 				} else if (episode.isUpdated()){
 					try {
-						dbTable.update(new HashMap<String,Object>(){{
+						update(new HashMap<String,Object>(){{
 							put("status",episode.getStatus());
 							put("description",episode.getDescription().replaceAll("\'", "&apos;"));
 							put("size",episode.getSize());

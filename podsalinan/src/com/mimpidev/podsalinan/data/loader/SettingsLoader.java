@@ -62,13 +62,13 @@ public class SettingsLoader extends TableLoader {
 
 	@Override
 	public void updateDatabase() {
-		if (dbTable.isDbOpen()){
+		if (isDbOpen()){
 			purgeTable();
 			
 			
 			for (final Map.Entry<String, String> entry : settings.getMap().entrySet()){
 				try {
-					dbTable.insert(new HashMap<String, Object>(){{
+					insert(new HashMap<String, Object>(){{
 						put("name",entry.getKey());
 						put("value",entry.getValue());
 					}});

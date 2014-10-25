@@ -22,26 +22,21 @@ import com.mimpidev.podsalinan.Podsalinan;
  * @author sbell
  *
  */
-public abstract class TableDefinition {
+public abstract class TableDefinition extends TableView{
+
+	public TableDefinition(){
+		
+	}
+	
+	public TableDefinition(SqlJetDb newDb, Map<String, String> newColumnList,
+			String tableName, Log debugLog) {
+		super(newDb, newColumnList, tableName, debugLog);
+	}
 
 	/**
 	 * 
 	 */
 	protected String tableName = "";
-	/**
-	 * 
-	 */
-	protected TableView dbTable=null;
-	
-	public TableDefinition() {
-	}
-	
-	public Map<String,String> getColumnList() throws DataDefinitionException{
-		if (dbTable!=null)
-			return dbTable.getColumnList();
-		else
-			throw new DataDefinitionException("TableView not set");
-	}
 	
 	public String getName(){
 		return tableName;
@@ -62,12 +57,9 @@ public abstract class TableDefinition {
 	}
 	
 	public void setdbTable(SqlJetDb dbConnection, Log log) {
-		// Need to re-arrange the startup so that we dont have to store the columns more than once.
-		dbTable = new TableView(dbConnection,tableName,log);
 	}
 	
 	public void setdbTable(SqlJetDb dbConnection){
-		dbTable = new TableView(dbConnection,tableName,Podsalinan.debugLog);
 	}
 	
 	/**
@@ -77,29 +69,21 @@ public abstract class TableDefinition {
 	protected ArrayList<Map<String,String>> readFromTable(){
 		ArrayList<Map<String,String>> recordSet = new ArrayList<Map<String,String>>();
 		try {
-			ISqlJetCursor currentRecord = dbTable.selectAll();
+			ISqlJetCursor currentRecord = selectAll();
 			while (!currentRecord.eof()){
 				Map<String, String> newRecord = new HashMap<String,String>();
-				for (SqlDefinition currentColumn: columnList){
-					if (currentRecord.getString(currentColumn.name)!=null)
-						newRecord.put(currentColumn.name, currentRecord.getString(currentColumn.name));
-					else
-						newRecord.put(currentColumn.name, "");
-				}
+				
 				recordSet.add(newRecord);
 				currentRecord.next();
 			}
 		} catch (SqlException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SqlJetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
-				dbTable.dbCommit();
+				dbCommit();
 			} catch (SqlJetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -107,15 +91,17 @@ public abstract class TableDefinition {
 	}
 	
 	/**
+	 * @return 
 	 * 
 	 */
-	public void purgeTable(){
+	public boolean purgeTable(){
         try {
-			dbTable.purgeTable();
+			super.purgeTable();
+			return true;
 		} catch (SqlException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	/**
@@ -123,6 +109,6 @@ public abstract class TableDefinition {
 	 * @return
 	 */
 	public File getDbFile(){
-		return dbTable.getTable().getDataBase().getFile();
+		return getTable().getDataBase().getFile();
 	}
 }

@@ -109,13 +109,13 @@ public class PodcastLoader extends TableLoader {
 	 * 
 	 */
 	public void updateDatabase(){
-		if (dbTable.isDbOpen()){
+		if (isDbOpen()){
 			for (final Podcast podcast : podcastList.getList()){
 				int sqlType=TableView.NOTHING_CHANGED;
 				if (!podcast.isAdded()){
 					// Used to set the correct flag
 					try {
-						dbTable.insert(new HashMap<String,Object>(){{
+						insert(new HashMap<String,Object>(){{
 							put("name",podcast.getName());
 							put("localFile",podcast.getDatafile());
 							put("url",podcast.getURL());
@@ -128,7 +128,7 @@ public class PodcastLoader extends TableLoader {
 					}
 				} else if (podcast.isRemoved()){
 					try {
-						dbTable.delete(new HashMap<String, Object>(){{
+						delete(new HashMap<String, Object>(){{
 							put("url",podcast.getURL());
 						}});
 					} catch (SqlException e) {
@@ -137,7 +137,7 @@ public class PodcastLoader extends TableLoader {
 					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
 				} else if (podcast.isUpdated()){
 					try {
-						dbTable.update(new HashMap<String, Object>(){{
+						update(new HashMap<String, Object>(){{
 							put("name",podcast.getName());
 							put("directory",podcast.getDirectory());
 							put("url",podcast.getURL());

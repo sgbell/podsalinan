@@ -70,7 +70,7 @@ public class DownloadsLoader extends TableLoader {
 
 	@Override
 	public void updateDatabase() {
-		if (dbTable.isDbOpen()){
+		if (isDbOpen()){
 			// Need to figure out how to increment downloadCount
 			final Integer downloadCount= new Integer(0);
 			for (final URLDownload download : downloads.getDownloads()){
@@ -78,7 +78,7 @@ public class DownloadsLoader extends TableLoader {
 				if (!download.isAdded()){
 					// Used to set the correct flag
 					try {
-						dbTable.insert(new HashMap<String,Object>(){{
+						insert(new HashMap<String,Object>(){{
 							put("url",download.getURL().toString());
 							put("size",Long.parseLong(download.getSize()));
 							put("destination",download.getDestination());
@@ -91,7 +91,7 @@ public class DownloadsLoader extends TableLoader {
 					}
 				} else if (download.isRemoved()){
 					try {
-						dbTable.delete(new HashMap<String, Object>(){{
+						delete(new HashMap<String, Object>(){{
 							put("url",download.getURL().toString());
 						}});
 					} catch (SqlException e) {
@@ -100,7 +100,7 @@ public class DownloadsLoader extends TableLoader {
 					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
 				} else if (download.isUpdated()){
 					try {
-						dbTable.update(new HashMap<String, Object>(){{
+						update(new HashMap<String, Object>(){{
 							put("size",Long.parseLong(download.getSize()));
 							put("destination",download.getDestination());
 							put("podcastSource",download.getPodcastId());

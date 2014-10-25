@@ -22,10 +22,11 @@
 package com.mimpidev.dev.sql;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
@@ -35,7 +36,7 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
-import com.mimpidev.dev.sql.data.definition.SqlDefinition;
+import com.mimpidev.dev.sql.data.definition.DataDefinitionException;
 
 /**
  * @author bugman
@@ -83,6 +84,10 @@ public class TableView {
 	 */
 	public static final int ITEM_UPDATED_IN_DATABASE = 3;
 	
+	public TableView(){
+		
+	}
+	
 	public TableView(File databaseFile, String tableName, Log debugLog){
 		this (new HashMap<String,String>(), tableName, debugLog);
 		db = new SqlJetDb(databaseFile,true);
@@ -128,15 +133,16 @@ public class TableView {
      */
 	public int checkColumns(){
 		int result=0;
-		//TODO:Convert this for loop to traversing the columnList map
-		for (int cc=0; cc<columnList.size(); cc++){
+		Iterator<Entry<String, String>> it = columnList.entrySet().iterator();
+		while (it.hasNext()){
 			int newResult=0;
+			Map.Entry<String,String> pairs = (Map.Entry<String,String>)it.next();
 			try {
-				newResult = addNewColumn(columnList.get(cc).name,columnList.get(cc).type);
+				newResult = addNewColumn((String)pairs.getKey(),(String)pairs.getValue());
 			} catch (SqlException e) {
-	        	log.logInfo("[Table:"+name+"] Error Adding Column:"+columnList.get(cc).name);
+	        	log.logInfo("[Table:"+name+"] Error Adding Column:"+(String)pairs.getKey());
 	        	newResult = -1;
-	        }
+			}
 			if (result>=0)
 				result=newResult;
 		}
@@ -167,8 +173,10 @@ public class TableView {
 			(columnList.size()>0)){
 			String sql = "CREATE TABLE IF NOT EXISTS "+name+" (";
 			// Do a for loop to go through each of the columns in columnList, and add them to the sql string
-			for (int cc=0; cc<columnList.size(); cc++){
-				sql.concat(columnList.get(cc).name+" "+columnList.get(cc).type);
+			Iterator<Entry<String, String>> it = columnList.entrySet().iterator();
+			while (it.hasNext()){
+				Map.Entry<String,String> pairs = (Map.Entry<String,String>)it.next();
+				sql.concat((String)pairs.getKey()+" "+(String)pairs.getValue());
 			}
 			
 			sql.concat(");");
@@ -197,10 +205,11 @@ public class TableView {
 		Map<String, Object> values = new HashMap<String,Object>();
 		// The following loop checks the data passed in, and copies into the values Map, only columns
 		// that exist in this table.
-		for (int cc=0; cc<columnList.size(); cc++){
-			if (data.containsKey(columnList.get(cc).name)){
-				values.put(columnList.get(cc).name, data.get(columnList.get(cc).name));
-			}
+		Iterator<Entry<String, String>> it = columnList.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<String,String> pairs = (Map.Entry<String,String>)it.next();
+			if (data.containsKey((String)pairs.getKey()))
+				values.put((String)pairs.getKey(), data.get((String)pairs.getKey()));
 		}
 
 		return values;
@@ -454,7 +463,10 @@ public class TableView {
 		return true;
 	}
 
-	public Map<String, String> getColumnList() {
-		return columnList;
+	public Map<String, String> getColumnList() throws DataDefinitionException {
+		if (columnList!=null)
+			return columnList;
+		else
+			throw new DataDefinitionException("Column List is not set");
 	}
 }

@@ -21,6 +21,11 @@
  */
 package com.mimpidev.podsalinan.data.loader;
 
+import java.util.Map;
+
+import org.tmatesoft.sqljet.core.table.SqlJetDb;
+
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.data.definition.TableDefinition;
 
 /**
@@ -29,10 +34,13 @@ import com.mimpidev.dev.sql.data.definition.TableDefinition;
  */
 public abstract class TableLoader extends TableDefinition {
 
-	/**
-	 * 
-	 */
-	public TableLoader() {
+	public TableLoader(){
+		
+	}
+	
+	public TableLoader(SqlJetDb newDb, Map<String, String> newColumnList,
+			String tableName, Log debugLog) {
+		super(newDb, newColumnList, tableName, debugLog);
 	}
 	/**
 	 * 
