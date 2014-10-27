@@ -82,6 +82,7 @@ public class PodcastLoader extends TableLoader {
 				Podsalinan.debugLog.logError(entry.getKey()+" - "+entry.getValue());
 			}
 			Podcast newPodcast = new Podcast(record);
+			//TODO: go into data file and change columns so datafile will have the right information in the right place
 			newPodcast.setAdded(true);
 			podcastList.add(newPodcast);
 			File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
