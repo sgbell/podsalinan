@@ -81,11 +81,7 @@ public class PodcastLoader extends TableLoader {
 			for (final Map.Entry<String, String> entry : record.entrySet()){
 				Podsalinan.debugLog.logError(entry.getKey()+" - "+entry.getValue());
 			}
-			Podcast newPodcast = new Podcast(record.get("name"),
-					 						 record.get("url"),
-					 						 record.get("directory"),
-					 						 record.get("localFile").replaceAll("&apos;", "\'"),
-					 						 record.get("auto_queue").equalsIgnoreCase("1"));
+			Podcast newPodcast = new Podcast(record);
 			newPodcast.setAdded(true);
 			podcastList.add(newPodcast);
 			File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");

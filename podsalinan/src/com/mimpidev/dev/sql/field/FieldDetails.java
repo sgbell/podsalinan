@@ -41,6 +41,8 @@ public class FieldDetails {
 	 * This variable defines if it will be stored in the database
 	 */
 	private boolean persistant=true;
+	
+	private boolean isPrimaryKey=false;
 	/**
 	 * 
 	 */
@@ -93,6 +95,18 @@ public class FieldDetails {
 	 */
 	public void setPersistent(boolean persistantState){
 		persistant = persistantState;
+	}
+	/**
+	 * @return the isprimaryKey
+	 */
+	public boolean isIsprimaryKey() {
+		return isPrimaryKey;
+	}
+	/**
+	 * @param isprimaryKey the isprimaryKey to set
+	 */
+	public void setPrimaryKey(boolean primaryKey) {
+		isPrimaryKey = primaryKey;
 	}
 	/**
 	 * @return the dbFieldType

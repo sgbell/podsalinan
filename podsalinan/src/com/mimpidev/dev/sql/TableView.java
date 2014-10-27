@@ -156,6 +156,8 @@ public class TableView {
 	public void createColumnList(String[] columnNames, String[] columnTypes){
 		for (int count=0; count<columnNames.length; count++){
 			try {
+				if (columnList==null)
+					columnList=new HashMap<String,String>();
 				getColumnList().put(columnNames[count], columnTypes[count]);
 			} catch (DataDefinitionException e) {
 				e.printStackTrace();

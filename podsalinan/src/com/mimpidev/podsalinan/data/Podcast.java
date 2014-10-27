@@ -31,9 +31,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import com.mimpidev.dev.sql.field.BooleanType;
+import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Downloader;
@@ -101,6 +106,23 @@ public class Podcast extends DownloadDetails{
 	public Podcast(String newName, String newURL, String newDirectory, String newDatastore, boolean autoDownload){
 		this(newName,newURL,newDirectory,newDatastore);
 		setAutomaticQueue(autoDownload);
+	}
+	/**
+	 * This constructor will take the map array of values, and
+	 * create a new Podcast object with those values
+	 * @param record
+	 */
+	public Podcast(Map<String, String> record) {
+		Iterator<Entry<String, FieldDetails>> it = getDatabaseRecord().entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<String, FieldDetails> pairs = (Map.Entry<String,FieldDetails>)it.next();
+			if (record.containsKey(pairs.getKey())){
+				if (pairs.getValue().getFieldType()==FieldDetails.BOOLEAN)
+					((BooleanType)pairs.getValue()).setValue(record.get(pairs.getKey()).equalsIgnoreCase("1"));
+				else
+					pairs.getValue().setValue(record.get(pairs.getKey()).replaceAll("&apos;", "\'"));
+			}
+		}
 	}
 	
 	public Vector<Episode> getEpisodes(){
