@@ -28,6 +28,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author bugman
@@ -51,6 +52,10 @@ public class Episode extends URLDetails {
 	}
 	
 	public Episode() {
+	}
+
+	public Episode(Map<String, String> record) {
+		// TODO Auto-generated constructor stub
 	}
 
 	public String getDate(){
