@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -544,7 +545,9 @@ public class TableView {
 			ISqlJetCursor currentRecord = selectAll();
 			while (!currentRecord.eof()){
 				Map<String, String> newRecord = new HashMap<String,String>();
-				
+				for (ISqlJetColumnDef column: table.getDefinition().getColumns()){
+					newRecord.put(column.getName(), currentRecord.getString(column.getName()));
+				}				
 				recordSet.add(newRecord);
 				currentRecord.next();
 			}
