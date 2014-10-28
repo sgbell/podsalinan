@@ -28,6 +28,8 @@ public class EpisodeLoader extends TableLoader {
 	 * 
 	 */
 	public EpisodeLoader(Podcast newPodcast, SqlJetDb dbConnection) {
+		setTableName("shows");
+		createColumnList(new Episode().getDatabaseRecord());
 		setdbTable(dbConnection);
 		podcast = newPodcast;
 	}
