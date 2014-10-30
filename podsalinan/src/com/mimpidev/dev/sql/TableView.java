@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -140,7 +139,7 @@ public class TableView {
 		while (it.hasNext()){
 			int newResult=0;
 			Map.Entry<String,String> pairs = (Map.Entry<String,String>)it.next();
-			log.logInfo("[TableView]"+(String)pairs.getKey()+","+(String)pairs.getValue());
+			//log.logInfo("[TableView]"+(String)pairs.getKey()+","+(String)pairs.getValue());
 			try {
 				newResult = addNewColumn((String)pairs.getKey(),(String)pairs.getValue());
 			} catch (SqlException e) {
