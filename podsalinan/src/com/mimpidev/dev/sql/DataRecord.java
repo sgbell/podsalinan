@@ -31,7 +31,7 @@ public class DataRecord {
 	 * 
 	 * @param record
 	 */
-	public DataRecord(Map<String, String> record){
+	public void populateFromRecord(Map<String, String> record){
 		Iterator<Entry<String, FieldDetails>> it = getDatabaseRecord().entrySet().iterator();
 		while (it.hasNext()){
 			Map.Entry<String, FieldDetails> pairs = (Map.Entry<String,FieldDetails>)it.next();

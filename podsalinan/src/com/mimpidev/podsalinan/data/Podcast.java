@@ -31,14 +31,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.Vector;
 
 import com.mimpidev.dev.sql.field.BooleanType;
-import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Downloader;
@@ -113,7 +109,8 @@ public class Podcast extends DownloadDetails{
 	 * @param record
 	 */
 	public Podcast(Map<String, String> record) {
-		super(record);
+		this();
+		populateFromRecord(record);
 		if ((!getDatabaseRecord().containsKey("localFile"))&&
 				(record.containsKey("localFile"))&&
 				(fields.get("datafile").getValue().equals("")||fields.get("datafile").getValue()!=null))

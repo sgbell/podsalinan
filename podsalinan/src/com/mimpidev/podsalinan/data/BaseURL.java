@@ -38,13 +38,6 @@ public class BaseURL extends DataRecord{
 		fields.put("url", new StringType());
 		fields.put("directory", new StringType());
 	}
-	/**
-	 * 
-	 * @param record
-	 */
-	public BaseURL(Map<String,String> record){
-		super(record);
-	}
 	
 	public BaseURL (String url){
 		this();

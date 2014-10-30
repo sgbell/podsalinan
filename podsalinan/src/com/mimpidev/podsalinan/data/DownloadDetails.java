@@ -39,10 +39,6 @@ public class DownloadDetails extends BaseURL{
 		fields.put("datafile", new StringType());
 	}
 	
-	public DownloadDetails(Map<String,String> record){
-		super(record);
-	}
-	
 	public DownloadDetails(String name){
 		this();
 		setName(name);

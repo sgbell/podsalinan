@@ -32,10 +32,6 @@ public class URLDetails extends BaseURL {
 		fields.put("size", new IntegerType());
 		fields.put("status", new IntegerType());
 	}
-
-	public URLDetails(Map<String,String> record){
-		super(record);
-	}
 	
 	public URLDetails(String url){
 		super(url);
