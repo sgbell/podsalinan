@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.data;
 
 import java.net.URL;
+import java.util.Map;
 
 import com.mimpidev.dev.sql.field.IntegerType;
 
@@ -32,6 +33,10 @@ public class URLDetails extends BaseURL {
 		fields.put("status", new IntegerType());
 	}
 
+	public URLDetails(Map<String,String> record){
+		super(record);
+	}
+	
 	public URLDetails(String url){
 		super(url);
 		setSize("0");

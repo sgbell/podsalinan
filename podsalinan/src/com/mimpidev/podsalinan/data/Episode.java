@@ -55,7 +55,7 @@ public class Episode extends URLDetails {
 	}
 
 	public Episode(Map<String, String> record) {
-		// TODO Auto-generated constructor stub
+		super(record);
 	}
 
 	public String getDate(){

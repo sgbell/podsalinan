@@ -113,24 +113,11 @@ public class Podcast extends DownloadDetails{
 	 * @param record
 	 */
 	public Podcast(Map<String, String> record) {
-		Iterator<Entry<String, FieldDetails>> it = getDatabaseRecord().entrySet().iterator();
-		while (it.hasNext()){
-			Map.Entry<String, FieldDetails> pairs = (Map.Entry<String,FieldDetails>)it.next();
-			if (record.containsKey(pairs.getKey())){
-				if (pairs.getValue().getFieldType()==FieldDetails.BOOLEAN)
-					if (record.get(pairs.getKey())!=null)
-						((BooleanType)pairs.getValue()).setValue(record.get(pairs.getKey()).equalsIgnoreCase("1"));
-					else
-						((BooleanType)pairs.getValue()).setValue(false);
-				else
-					if (record.get(pairs.getKey())!=null)
-						pairs.getValue().setValue(record.get(pairs.getKey()).replaceAll("&apos;", "\'"));
-			}
-			if ((!getDatabaseRecord().containsKey("localFile"))&&
+		super(record);
+		if ((!getDatabaseRecord().containsKey("localFile"))&&
 				(record.containsKey("localFile"))&&
 				(fields.get("datafile").getValue().equals("")||fields.get("datafile").getValue()!=null))
 				fields.get("datafile").setValue(record.get("localFile"));
-		}
 	}
 	
 	public Vector<Episode> getEpisodes(){

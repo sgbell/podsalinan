@@ -83,13 +83,6 @@ public class EpisodeLoader extends TableLoader {
 		
 		if ((recordSet!=null)&&(recordSet.size()>0))
 			for (Map<String,String> record: recordSet){
-				/*Episode newEpisode = new Episode(
-						record.get("published"),
-						record.get("title").replaceAll("&apos;", "\'"),
-						record.get("url").replaceAll("&apos;", "\'"),
-						record.get("size"),
-						record.get("description").replaceAll("&apos;", "\'"),
-						Integer.parseInt(record.get("status")));*/
 				Episode newEpisode = new Episode(record);
 				newEpisode.setAdded(true);
 				newEpisode.setUpdated(false);

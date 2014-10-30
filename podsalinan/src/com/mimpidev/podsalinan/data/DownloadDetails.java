@@ -22,6 +22,8 @@
 
 package com.mimpidev.podsalinan.data;
 
+import java.util.Map;
+
 import com.mimpidev.dev.sql.field.StringType;
 
 /**
@@ -35,6 +37,10 @@ public class DownloadDetails extends BaseURL{
 		super();
 		fields.put("name", new StringType());
 		fields.put("datafile", new StringType());
+	}
+	
+	public DownloadDetails(Map<String,String> record){
+		super(record);
 	}
 	
 	public DownloadDetails(String name){
