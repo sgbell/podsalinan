@@ -37,11 +37,6 @@ import com.mimpidev.dev.sql.field.StringType;
  *
  */
 public class Episode extends URLDetails {
-/*	private String date,
-				   title,
-				   description;*/
-	
-	//TODO: Convert storage of date,title,description to fields values
 	
 	private static final String dateFormat="EEE, dd-MMM-yyy HH:mm:ss";
 	private static final String originalDateFormat="EEE, dd MMM yyy HH:mm:ss zzz";
@@ -64,7 +59,7 @@ public class Episode extends URLDetails {
 	
 	public Episode(Map<String,String> record){
 		this();
-		
+		populateFromRecord(record);
 	}
 
 	public String getDate(){
