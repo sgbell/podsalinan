@@ -58,11 +58,7 @@ public class DownloadsLoader extends TableLoader {
 		if ((recordSet!=null)&&(recordSet.size()>0))
 		for (Map<String,String> record: recordSet){
 			// Create a new URLDownload and add to the downloads Vector
-			URLDownload newDownload = new URLDownload(record.get("url"),
-													  record.get("size"),
-													  record.get("destination"),
-													  record.get("podcastSource"),
-													  Integer.parseInt(record.get("status")));
+			URLDownload newDownload = new URLDownload(record);
 			newDownload.setAdded(true);
 			downloads.addDownload(newDownload, Integer.parseInt(record.get("priority")));
 		}
@@ -82,7 +78,7 @@ public class DownloadsLoader extends TableLoader {
 							put("url",download.getURL().toString());
 							put("size",Long.parseLong(download.getSize()));
 							put("destination",download.getDestination());
-							put("podcastSource",download.getPodcastId());
+							put("podcastSource",download.getPodcastSource());
 							put("status",download.getStatus());
 						}});
 						sqlType=TableView.ITEM_ADDED_TO_DATABASE;
@@ -103,7 +99,7 @@ public class DownloadsLoader extends TableLoader {
 						update(new HashMap<String, Object>(){{
 							put("size",Long.parseLong(download.getSize()));
 							put("destination",download.getDestination());
-							put("podcastSource",download.getPodcastId());
+							put("podcastSource",download.getPodcastSource());
 							put("status",download.getStatus());
 							put("priority",downloadCount.intValue());
 						}}, 
