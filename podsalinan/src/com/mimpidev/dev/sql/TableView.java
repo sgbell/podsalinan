@@ -327,6 +327,8 @@ public class TableView {
 				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
 			}
 			try{
+				//TODO: Make sure records marked for update in Podcast & Episode class when moving data to new columns
+				//TODO: Fix updating issue here
 				ISqlJetCursor updateCursor = table.lookup((String)condition.keySet().toArray()[0], condition.get((String)condition.keySet().toArray()[0]));
 				updateCursor.updateByFieldNames(values);
 				updateCursor.close();
