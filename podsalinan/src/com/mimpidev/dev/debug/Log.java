@@ -86,6 +86,10 @@ public class Log {
 		println ("[Info]"+debugLine);
 	}
 	
+	public synchronized void logInfo(Class classDetails, String debugLine){
+		println ("[Info]["+classDetails.getName()+"] "+debugLine);
+	}
+	
 	/**
 	 * 
 	 * @param debugLine

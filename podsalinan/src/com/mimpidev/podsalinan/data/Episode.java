@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.mimpidev.dev.sql.field.StringType;
+import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
@@ -60,6 +61,12 @@ public class Episode extends URLDetails {
 	public Episode(Map<String,String> record){
 		this();
 		populateFromRecord(record);
+		if ((!getDatabaseRecord().containsKey("published"))&&
+			(record.containsKey("published"))&&
+			(fields.get("date").getValue().equals("")||fields.get("date").getValue()!=null))
+			fields.get("date").setValue(record.get("published"));
+		Podsalinan.debugLog.logInfo(getClass(),"published :"+record.get("published"));
+		Podsalinan.debugLog.logInfo(getClass(),"date :"+fields.get("date").getValue());
 	}
 
 	public String getDate(){

@@ -66,6 +66,7 @@ public class Podcast extends DownloadDetails{
 		super();
 		fields.put("image", new StringType());
 		fields.put("automaticQueue", new BooleanType());
+		df = new SimpleDateFormat(Episode.getDateFormat());
 	}
 	/**This is used to create a new Podcast with only a url.
 	 * 
@@ -74,14 +75,7 @@ public class Podcast extends DownloadDetails{
 	public Podcast(String newURL){
 		this();
 		
-		df = new SimpleDateFormat(Episode.getDateFormat());
 		this.setURL(newURL);
-		/*tableName = "shows";
-		
-		String[] columnNames = {"id","published","title","url","size","description","status"};
-		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT"
-				               ,"TEXT","TEXT","TEXT","INTEGER","TEXT","INTEGER"};
-		createColumnList(columnNames,columnTypes);*/
 	}
 	
 	/** Used to create a Podcast from the information in the systems database. 
@@ -310,6 +304,7 @@ public class Podcast extends DownloadDetails{
 			synchronized(episodeList){
 				if (episodeList.size()>0){
 					try {
+						Podsalinan.debugLog.logInfo(getClass(),"Date in new episode: "+newEpisode.getDate());
 						Date newEpisodeDate = df.parse(newEpisode.getDate());
 						boolean found=false;
 						int epCount=0;
