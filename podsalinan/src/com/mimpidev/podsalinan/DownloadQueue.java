@@ -124,7 +124,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		Thread downloadThread = new Thread(newDownloader,"Downloader");
 		downloadThread.start();
 		URLDownload download = newDownloader.getURLDownload();
-		updatePodcastEpisodeStatus(download.getPodcastId(),download.getURL().toString(),URLDetails.CURRENTLY_DOWNLOADING);
+		updatePodcastEpisodeStatus(download.getPodcastSource(),download.getURL().toString(),URLDetails.CURRENTLY_DOWNLOADING);
 	}
 	
 	public boolean updatePodcastEpisodeStatus(String podcastId, String url, int newStatus){
@@ -158,7 +158,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		
 		if (percentage==100){
 			download.setStatus(URLDetails.FINISHED);
-			if (download.getPodcastId().length()>0)
+			if (download.getPodcastSource().length()>0)
 				data.getUrlDownloads().deleteDownload(download);
 			downloaders.remove(downloader);
 		} else if ((percentage<100)&&(download.getStatus()!=URLDetails.DESTINATION_INVALID)){
@@ -202,7 +202,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			case URLDetails.DOWNLOAD_FAULT:
 				newEpisodeStatus=URLDetails.DOWNLOAD_QUEUED;
 		}
-		updatePodcastEpisodeStatus(download.getPodcastId(),download.getURL().toString(), newEpisodeStatus);
+		updatePodcastEpisodeStatus(download.getPodcastSource(),download.getURL().toString(), newEpisodeStatus);
 
 	}
 		

@@ -104,7 +104,7 @@ public class URLDownloadList extends DownloadDetails {
 		if (position<0){
 			URLDownload newFile = new URLDownload(episode.getURL(),false);
 			newFile.setDestination(podcast.getDirectory());
-			newFile.setPodcastId(podcast.getDatafile());
+			newFile.setPodcastSource(podcast.getDatafile());
 			newFile.setStatus(URLDetails.DOWNLOAD_QUEUED);
 			//System.out.println("Debug: URLDownloadList.addDownload(Episode, Podcast) - podcastID="+podcast.getDatafile());
 			if (episode.getSize()!="-1")
@@ -115,9 +115,9 @@ public class URLDownloadList extends DownloadDetails {
 		} else {
 			URLDownload download = getDownloads().get(position);
 			if ((download!=null)&&
-				(download.getPodcastId()==null)){
+				(download.getPodcastSource()==null)){
 				episode.setStatus(URLDetails.DOWNLOAD_QUEUED);
-				download.setPodcastId(podcast.getDatafile());
+				download.setPodcastSource(podcast.getDatafile());
 			}
 		}
 	}
@@ -241,9 +241,9 @@ public class URLDownloadList extends DownloadDetails {
 	 * @param download
 	 */
 	public void cancelDownload (URLDownload download){
-		if (download.getPodcastId()!=""){
+		if (download.getPodcastSource()!=""){
 			for (Podcast currentPodcast : podcasts)
-				if (currentPodcast.getDatafile().equalsIgnoreCase(download.getPodcastId())){
+				if (currentPodcast.getDatafile().equalsIgnoreCase(download.getPodcastSource())){
 					download.setRemoved(true);
 					Episode selectedEpisode = currentPodcast.getEpisodeByURL(download.getURL().toString());
 					if (selectedEpisode!=null)

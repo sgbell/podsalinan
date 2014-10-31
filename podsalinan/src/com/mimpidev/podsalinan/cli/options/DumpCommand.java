@@ -46,7 +46,7 @@ public class DumpCommand extends CLIOption {
 				Podsalinan.debugLog.logInfo(currentDownload.getURL().toString()+
 						","+currentDownload.getCurrentStatus()+
 						","+currentDownload.getDestination()+
-						","+currentDownload.getPodcastId());
+						","+currentDownload.getPodcastSource());
 			}
 			Podsalinan.debugLog.logInfo("-- URLDownload Contents end --");
 		}

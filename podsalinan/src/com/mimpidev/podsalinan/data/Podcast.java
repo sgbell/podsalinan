@@ -304,7 +304,7 @@ public class Podcast extends DownloadDetails{
 			synchronized(episodeList){
 				if (episodeList.size()>0){
 					try {
-						Podsalinan.debugLog.logInfo(getClass(),"Date in new episode: "+newEpisode.getDate());
+						if (debug) Podsalinan.debugLog.logInfo(getClass(),"Date in new episode: "+newEpisode.getDate());
 						Date newEpisodeDate = df.parse(newEpisode.getDate());
 						boolean found=false;
 						int epCount=0;

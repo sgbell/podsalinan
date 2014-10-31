@@ -17,7 +17,11 @@ import com.mimpidev.dev.sql.field.FieldDetails;
  */
 public class DataRecord {
 
+	/**
+	 * 
+	 */
 	protected Map<String,FieldDetails> fields;
+	protected boolean debug=false;
 	/**
 	 * 
 	 */

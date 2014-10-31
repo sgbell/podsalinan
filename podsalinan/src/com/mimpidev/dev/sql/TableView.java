@@ -46,7 +46,8 @@ import com.mimpidev.podsalinan.Podsalinan;
  */
 public class TableView {
 
-    /**
+    protected boolean debug = false;
+	/**
      * The database Connection
      */
 	private SqlJetDb db;
@@ -413,7 +414,7 @@ public class TableView {
 			if (!columnFound){
 				try {
 					db.alterTable("ALTER TABLE "+name+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
-					log.logInfo("[Table:"+name+"] Added Column:"+columnName);
+					if (debug) log.logInfo("[Table:"+name+"] Added Column:"+columnName);
 					return NEW_COLUMNS_ADDED;
 				} catch (SqlJetException e) {
 					log.printStackTrace(e.getStackTrace());
