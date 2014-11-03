@@ -63,8 +63,10 @@ public class Episode extends URLDetails {
 		populateFromRecord(record);
 		if ((!getDatabaseRecord().containsKey("published"))&&
 			(record.containsKey("published"))&&
-			(fields.get("date").getValue().equals("")||fields.get("date").getValue()!=null))
+			(fields.get("date").getValue().equals("")||fields.get("date").getValue()!=null)){
 			fields.get("date").setValue(record.get("published"));
+		    setUpdated(true);
+		}
 		if (debug) {
 			Podsalinan.debugLog.logInfo(getClass(),"published :"+record.get("published"));
 			Podsalinan.debugLog.logInfo(getClass(),"date :"+fields.get("date").getValue());

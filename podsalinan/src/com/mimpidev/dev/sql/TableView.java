@@ -34,6 +34,7 @@ import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
 import org.tmatesoft.sqljet.core.schema.ISqlJetColumnDef;
 import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
 import org.tmatesoft.sqljet.core.table.ISqlJetTable;
+import org.tmatesoft.sqljet.core.table.ISqlJetTransaction;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
@@ -314,7 +315,8 @@ public class TableView {
      * @throws SqlException
      */
 	public boolean update(Map<String, Object> data, Map<String, Object> condition) throws SqlException{
-		Map<String, Object> values = confirmColumns(data);
+		final Map<String, Object> values = confirmColumns(data);
+		final Map<String, Object> conditions = confirmColumns(condition);
 		setTable();
 		/* Search through table for condition (column, value)
 		 * When found, update the values with the values stored in data
@@ -327,13 +329,16 @@ public class TableView {
 				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
 			}
 			try{
-				//TODO: Make sure records marked for update in Podcast & Episode class when moving data to new columns
-				//TODO: Fix updating issue here
-				ISqlJetCursor updateCursor = table.lookup((String)condition.keySet().toArray()[0], condition.get((String)condition.keySet().toArray()[0]));
-				updateCursor.updateByFieldNames(values);
-				updateCursor.close();
-				db.commit();
-				return true;
+				db.runWriteTransaction(new ISqlJetTransaction(){
+					public Object run(SqlJetDb db) throws SqlJetException{
+						//TODO: Working here
+						ISqlJetCursor updateCursor = table.open();
+						updateCursor=null; // just incase I try to run it right now, dont want to corrupt my data
+						updateCursor.updateByFieldNames(values);
+						updateCursor.close();
+						return true;
+					}
+				});
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_UPDATING_RECORD);

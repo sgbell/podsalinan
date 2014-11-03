@@ -107,8 +107,10 @@ public class Podcast extends DownloadDetails{
 		populateFromRecord(record);
 		if ((!getDatabaseRecord().containsKey("localFile"))&&
 				(record.containsKey("localFile"))&&
-				(fields.get("datafile").getValue().equals("")||fields.get("datafile").getValue()!=null))
+				(fields.get("datafile").getValue().equals("")||fields.get("datafile").getValue()!=null)){
 				fields.get("datafile").setValue(record.get("localFile"));
+				setUpdated(true);
+		}
 	}
 	
 	public Vector<Episode> getEpisodes(){
