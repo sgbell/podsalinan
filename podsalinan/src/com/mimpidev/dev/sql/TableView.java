@@ -329,11 +329,10 @@ public class TableView {
 				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
 			}
 			try{
+				//TODO: Working here
+				final ISqlJetCursor updateCursor = selectByField(conditions);
 				db.runWriteTransaction(new ISqlJetTransaction(){
 					public Object run(SqlJetDb db) throws SqlJetException{
-						//TODO: Working here
-						ISqlJetCursor updateCursor = table.open();
-						updateCursor=null; // just incase I try to run it right now, dont want to corrupt my data
 						updateCursor.updateByFieldNames(values);
 						updateCursor.close();
 						return true;
