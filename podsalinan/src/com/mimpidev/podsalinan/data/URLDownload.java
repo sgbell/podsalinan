@@ -6,11 +6,9 @@ package com.mimpidev.podsalinan.data;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Map;
 
 import com.mimpidev.dev.sql.field.StringType;

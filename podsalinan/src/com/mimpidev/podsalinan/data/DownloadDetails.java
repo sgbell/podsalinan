@@ -22,8 +22,6 @@
 
 package com.mimpidev.podsalinan.data;
 
-import java.util.Map;
-
 import com.mimpidev.dev.sql.field.StringType;
 
 /**

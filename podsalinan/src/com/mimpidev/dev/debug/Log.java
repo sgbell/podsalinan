@@ -88,11 +88,11 @@ public class Log {
 	 * @param debugLine
 	 */
 	public synchronized void logInfo(String debugLine){
-		println ("[Info]"+debugLine);
+		println ("[Info] "+debugLine);
 	}
 	
-	public synchronized void logInfo(Class classDetails, String debugLine){
-		println ("[Info]["+classDetails.getName()+"] "+debugLine);
+	public synchronized void logInfo(Object object, String debugLine){
+		println ("[Info]["+getShortClassName(object.getClass().getName())+"] "+debugLine);
 	}
 	
 	/**
@@ -100,9 +100,12 @@ public class Log {
 	 * @param debugLine
 	 */
 	public synchronized void logError(String debugLine){
-		println ("[Error]"+debugLine);
+		println ("[Error] "+debugLine);
 	}
 	
+	public synchronized void logError (Object object, String debugLine){
+		println ("[Error]["+getShortClassName(object.getClass().getName())+"] "+debugLine);
+	}
 	/**
 	 * 
 	 * @param debugLine
@@ -175,9 +178,13 @@ public class Log {
 		println("----------------");
 		while (it.hasNext()){
 			Map.Entry<String, FieldDetails> pair = (Map.Entry<String, FieldDetails>)it.next();
-			println((String)pair.getKey());
+			println((String)pair.getKey()+" = "+(String)pair.getValue().getValue());
 		}
 		println("----------------");
 		println("End Map Key List");
+	}
+	
+	protected String getShortClassName(String className){
+		return className.substring(className.lastIndexOf(".")+1).trim();
 	}
 }

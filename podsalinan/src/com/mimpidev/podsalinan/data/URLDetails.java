@@ -4,7 +4,6 @@
 package com.mimpidev.podsalinan.data;
 
 import java.net.URL;
-import java.util.Map;
 
 import com.mimpidev.dev.sql.field.IntegerType;
 

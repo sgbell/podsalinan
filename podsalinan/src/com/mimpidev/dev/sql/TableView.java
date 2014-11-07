@@ -34,7 +34,6 @@ import org.tmatesoft.sqljet.core.SqlJetTransactionMode;
 import org.tmatesoft.sqljet.core.schema.ISqlJetColumnDef;
 import org.tmatesoft.sqljet.core.table.ISqlJetCursor;
 import org.tmatesoft.sqljet.core.table.ISqlJetTable;
-import org.tmatesoft.sqljet.core.table.ISqlJetTransaction;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
@@ -477,9 +476,14 @@ public class TableView {
 	}
 	
 	private ISqlJetCursor findItemsWithCondition(Map<String, FieldDetails> conditions) throws SqlException{
+		debug=true;
 		Map<String, Object> values = confirmColumns(conditions);
 		if ((isDbOpen())&&(values.size()>0)){
 			try {
+				if (debug){
+					log.logMap(conditions);
+					log.logError(this,(String)values.keySet().toArray()[0]);
+				}
 				ISqlJetCursor recordResults = table.scope((String) values.keySet().toArray()[0], new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
 				return recordResults;
 			} catch (SqlJetException e) {

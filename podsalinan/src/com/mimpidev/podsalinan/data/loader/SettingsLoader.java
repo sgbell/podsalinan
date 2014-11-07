@@ -28,6 +28,8 @@ import java.util.Map;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.sql.SqlException;
+import com.mimpidev.dev.sql.field.FieldDetails;
+import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.data.ProgSettings;
 
@@ -72,9 +74,9 @@ public class SettingsLoader extends TableLoader {
 			
 			for (final Map.Entry<String, String> entry : settings.getMap().entrySet()){
 				try {
-					insert(new HashMap<String, Object>(){{
-						put("name",entry.getKey());
-						put("value",entry.getValue());
+					insert(new HashMap<String, FieldDetails>(){{
+						put("name",new StringType(entry.getKey()));
+						put("value",new StringType(entry.getValue()));
 					}});
 				} catch (SqlException e) {
 					// TODO Auto-generated catch block
