@@ -257,18 +257,18 @@ public class TableView {
 	
 	/**
 	 * This function is used to output a Map object of only the columns found in the currently loaded table 
-	 * @param data
+	 * @param map
 	 * @return
 	 */
-	public Map<String, Object> confirmColumns(Map<String, Object> data) {
+	public Map<String, Object> confirmColumns(Map<String, FieldDetails> map) {
 		Map<String, Object> values = new HashMap<String,Object>();
 		// The following loop checks the data passed in, and copies into the values Map, only columns
 		// that exist in this table.
 		Iterator<Entry<String, String>> it = columnList.entrySet().iterator();
 		while (it.hasNext()){
 			Map.Entry<String,String> pairs = (Map.Entry<String,String>)it.next();
-			if (data.containsKey((String)pairs.getKey()))
-				values.put((String)pairs.getKey(), data.get((String)pairs.getKey()));
+			if (map.containsKey((String)pairs.getKey()))
+				values.put((String)pairs.getKey(), map.get((String)pairs.getKey()));
 		}
 
 		return values;
@@ -276,12 +276,12 @@ public class TableView {
 	
 	/**
 	 * 
-	 * @param data
+	 * @param map
 	 * @return
 	 * @throws SqlException
 	 */
-	public boolean insert(Map<String,Object> data) throws SqlException{
-		Map<String, Object> values = confirmColumns(data);
+	public boolean insert(Map<String, FieldDetails> map) throws SqlException{
+		Map<String, Object> values = confirmColumns(map);
 		// always call setTable
 		setTable();
 		if ((isDbOpen())&&(values.size()>0)){
@@ -309,14 +309,13 @@ public class TableView {
 	
     /**
      * 
-     * @param data
+     * @param map
      * @param condition
      * @return
      * @throws SqlException
      */
-	public boolean update(Map<String, Object> data, Map<String, Object> condition) throws SqlException{
-		final Map<String, Object> values = confirmColumns(data);
-		final Map<String, Object> conditions = confirmColumns(condition);
+	public boolean update(Map<String, FieldDetails> map, Map<String, FieldDetails> condition) throws SqlException{
+		final Map<String, Object> values = confirmColumns(map);
 		setTable();
 		/* Search through table for condition (column, value)
 		 * When found, update the values with the values stored in data
@@ -329,15 +328,18 @@ public class TableView {
 				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
 			}
 			try{
-				//TODO: Working here
-				final ISqlJetCursor updateCursor = selectByField(conditions);
-				db.runWriteTransaction(new ISqlJetTransaction(){
+				final ISqlJetCursor updateCursor = findItemsWithCondition(condition);
+				while (!updateCursor.eof()){
+					System.out.println(updateCursor.getString("url"));
+					updateCursor.next();
+				}
+				/*db.runWriteTransaction(new ISqlJetTransaction(){
 					public Object run(SqlJetDb db) throws SqlJetException{
 						updateCursor.updateByFieldNames(values);
 						updateCursor.close();
 						return true;
 					}
-				});
+				});*/
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_UPDATING_RECORD);
@@ -356,7 +358,7 @@ public class TableView {
 	 * @param condition
 	 * @return
 	 */
-	public boolean delete(Map<String, Object> condition) throws SqlException{
+	public boolean delete(Map<String, FieldDetails> condition) throws SqlException{
 		Map<String, Object> values = confirmColumns(condition);
 		setTable();
 		if ((isDbOpen())&&(values.size()>0)){
@@ -366,7 +368,7 @@ public class TableView {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
 			}
-			try {
+			/*try {
 				ISqlJetCursor deleteCursor = table.lookup((String)condition.keySet().toArray()[0], condition.get((String)condition.keySet().toArray()[0]));
 				deleteCursor.delete();
 				deleteCursor.close();
@@ -374,7 +376,7 @@ public class TableView {
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_DELETING_RECORD);
-			}
+			}*/
 		} else if (!isDbOpen()){
 			throw new SqlException(SqlException.ERROR_DB_FAILURE);
 		} else if (values.size()==0) {
@@ -453,9 +455,8 @@ public class TableView {
 		throw new SqlException(SqlException.ERROR_DB_FAILURE);
 	}
 	
-	public ISqlJetCursor selectByField(Map<String, Object> conditions) throws SqlException{
-		Map<String, Object> values = confirmColumns(conditions);
-		if ((isDbOpen())&&(values.size()>0)){
+	public ISqlJetCursor selectByField(Map<String, FieldDetails> conditions) throws SqlException{
+		if (isDbOpen()){
 			try {
 				db.beginTransaction(SqlJetTransactionMode.READ_ONLY);
 			} catch (SqlJetException e){
@@ -463,18 +464,34 @@ public class TableView {
 				throw new SqlException(SqlException.ERROR_SET_TRANSACTION_MODE);
 			}
 			try {
-				ISqlJetCursor currentLine = table.scope((String) values.keySet().toArray()[0],new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
-				return currentLine;
-			} catch (SqlJetException e) {
+				return findItemsWithCondition(conditions);
+			} catch (SqlException e) {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
 			}
 		} else if (!isDbOpen()){
 			throw new SqlException(SqlException.ERROR_DB_FAILURE);
-		} else if (values.size()==0) {
-			throw new SqlException(SqlException.ERROR_INVALID_TABLE);
 		}
 		
+		return null;
+	}
+	
+	private ISqlJetCursor findItemsWithCondition(Map<String, FieldDetails> conditions) throws SqlException{
+		Map<String, Object> values = confirmColumns(conditions);
+		if ((isDbOpen())&&(values.size()>0)){
+			try {
+				ISqlJetCursor recordResults = table.scope((String) values.keySet().toArray()[0], new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
+				return recordResults;
+			} catch (SqlJetException e) {
+				throw new SqlException(SqlException.FAILED_READING_RECORDS);
+			}
+		} else if (!isDbOpen()){
+			throw new SqlException(SqlException.ERROR_DB_FAILURE);
+		} else if (values.size()==0) {
+			log.logMap(conditions);
+			log.logInfo(getClass(), "validated values: 0");
+			throw new SqlException(SqlException.ERROR_INVALID_TABLE);
+		}
 		return null;
 	}
 	

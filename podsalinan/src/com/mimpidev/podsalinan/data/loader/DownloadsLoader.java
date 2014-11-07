@@ -29,6 +29,8 @@ import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
+import com.mimpidev.dev.sql.field.FieldDetails;
+import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -74,21 +76,15 @@ public class DownloadsLoader extends TableLoader {
 				if (!download.isAdded()){
 					// Used to set the correct flag
 					try {
-						insert(new HashMap<String,Object>(){{
-							put("url",download.getURL().toString());
-							put("size",Long.parseLong(download.getSize()));
-							put("destination",download.getDestination());
-							put("podcastSource",download.getPodcastSource());
-							put("status",download.getStatus());
-						}});
+						insert(download.getDatabaseRecord());
 						sqlType=TableView.ITEM_ADDED_TO_DATABASE;
 					} catch (SqlException e) {
 						e.printStackTrace();
 					}
 				} else if (download.isRemoved()){
 					try {
-						delete(new HashMap<String, Object>(){{
-							put("url",download.getURL().toString());
+						delete(new HashMap<String, FieldDetails>(){{
+							put("url",new StringType(download.getURL().toString()));
 						}});
 					} catch (SqlException e) {
 						e.printStackTrace();
@@ -96,15 +92,9 @@ public class DownloadsLoader extends TableLoader {
 					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
 				} else if (download.isUpdated()){
 					try {
-						update(new HashMap<String, Object>(){{
-							put("size",Long.parseLong(download.getSize()));
-							put("destination",download.getDestination());
-							put("podcastSource",download.getPodcastSource());
-							put("status",download.getStatus());
-							put("priority",downloadCount.intValue());
-						}}, 
-							new HashMap<String, Object>(){{
-								put("url",download.getURL().toString());
+						update(download.getDatabaseRecord(), 
+							new HashMap<String, FieldDetails>(){{
+								put("url",new StringType(download.getURL().toString()));
 						}});
 					} catch (SqlException e) {
 						e.printStackTrace();

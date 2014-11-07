@@ -24,6 +24,11 @@ package com.mimpidev.dev.debug;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.mimpidev.dev.sql.field.FieldDetails;
 
 /**
  * @author bugman
@@ -161,5 +166,18 @@ public class Log {
 			return true;
 		}
 		return false;
+	}
+	
+	public void logMap(Map<String,FieldDetails> mapObject){
+		Iterator<Entry<String, FieldDetails>> it = mapObject.entrySet().iterator();
+		
+		println("Map Object Debug");
+		println("----------------");
+		while (it.hasNext()){
+			Map.Entry<String, FieldDetails> pair = (Map.Entry<String, FieldDetails>)it.next();
+			println((String)pair.getKey());
+		}
+		println("----------------");
+		println("End Map Key List");
 	}
 }

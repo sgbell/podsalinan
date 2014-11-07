@@ -25,11 +25,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
+import com.mimpidev.dev.sql.field.FieldDetails;
+import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.PodcastList;
@@ -113,21 +116,15 @@ public class PodcastLoader extends TableLoader {
 				if (!podcast.isAdded()){
 					// Used to set the correct flag
 					try {
-						insert(new HashMap<String,Object>(){{
-							put("name",podcast.getName());
-							put("localFile",podcast.getDatafile());
-							put("url",podcast.getURL());
-							put("directory",podcast.getDirectory());
-							put("auto_queue",(podcast.isAutomaticQueue()?1:0));
-						}});
+						insert(podcast.getDatabaseRecord());
 						sqlType=TableView.ITEM_ADDED_TO_DATABASE;
 					} catch (SqlException e) {
 						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 					}
 				} else if (podcast.isRemoved()){
 					try {
-						delete(new HashMap<String, Object>(){{
-							put("url",podcast.getURL());
+						delete(new HashMap<String, FieldDetails>(){{
+							put("url",new StringType(podcast.getURL()));
 						}});
 					} catch (SqlException e) {
 						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
@@ -135,14 +132,9 @@ public class PodcastLoader extends TableLoader {
 					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
 				} else if (podcast.isUpdated()){
 					try {
-						update(new HashMap<String, Object>(){{
-							put("name",podcast.getName());
-							put("directory",podcast.getDirectory());
-							put("url",podcast.getURL());
-							put("auto_queue",(podcast.isAutomaticQueue()?1:0));
-						}}, 
-							new HashMap<String, Object>(){{
-								put("localfile",podcast.getDatafile());
+						update(podcast.getDatabaseRecord(), 
+							new HashMap<String, FieldDetails>(){{
+								put("datafile",new StringType(podcast.getDatafile()));
 						}});
 					} catch (SqlException e) {
 						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
