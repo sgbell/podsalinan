@@ -281,6 +281,7 @@ public class TableView {
 	 */
 	public boolean insert(Map<String, FieldDetails> map) throws SqlException{
 		Map<String, Object> values = confirmColumns(map);
+		//TODO: Need to get this working next
 		// always call setTable
 		setTable();
 		if ((isDbOpen())&&(values.size()>0)){
@@ -329,7 +330,7 @@ public class TableView {
 			try{
 				final ISqlJetCursor updateCursor = findItemsWithCondition(condition);
 				while (!updateCursor.eof()){
-					System.out.println(updateCursor.getString("url"));
+					System.out.println("Items with Condition:"+ updateCursor.getString("url"));
 					updateCursor.next();
 				}
 				/*db.runWriteTransaction(new ISqlJetTransaction(){
@@ -484,7 +485,8 @@ public class TableView {
 					log.logMap(conditions);
 					log.logError(this,(String)values.keySet().toArray()[0]);
 				}
-				ISqlJetCursor recordResults = table.scope((String) values.keySet().toArray()[0], new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
+				//ISqlJetCursor recordResults = table.scope((String) values.keySet().toArray()[0], new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
+				ISqlJetCursor recordResults = table.scope(table.getPrimaryKeyIndexName(), new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
 				return recordResults;
 			} catch (SqlJetException e) {
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
