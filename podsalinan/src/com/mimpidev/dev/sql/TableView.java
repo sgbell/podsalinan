@@ -38,6 +38,7 @@ import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.field.FieldDetails;
+import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.Podsalinan;
 
 /**
@@ -329,9 +330,11 @@ public class TableView {
 			}
 			try{
 				final ISqlJetCursor updateCursor = findItemsWithCondition(condition);
+				int count=0;
 				while (!updateCursor.eof()){
-					System.out.println("Items with Condition:"+ updateCursor.getString("url"));
+					System.out.println("["+count+"]Items with Condition: "+ updateCursor.getString("url"));
 					updateCursor.next();
+					count++;
 				}
 				/*db.runWriteTransaction(new ISqlJetTransaction(){
 					public Object run(SqlJetDb db) throws SqlJetException{
@@ -483,7 +486,7 @@ public class TableView {
 			try {
 				if (debug){
 					log.logMap(conditions);
-					log.logError(this,(String)values.keySet().toArray()[0]);
+					log.logError(this,(String)values.keySet().toArray()[0]+" = "+((StringType)values.get(values.keySet().toArray()[0])).getValue());
 				}
 				//ISqlJetCursor recordResults = table.scope((String) values.keySet().toArray()[0], new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
 				ISqlJetCursor recordResults = table.scope(table.getPrimaryKeyIndexName(), new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
