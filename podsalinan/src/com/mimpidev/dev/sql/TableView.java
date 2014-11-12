@@ -37,6 +37,8 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.dev.sql.SqlJet.SqlJetScopeConditional;
+import com.mimpidev.dev.sql.field.FieldCondition;
 import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.Podsalinan;
@@ -481,15 +483,16 @@ public class TableView {
 	
 	private ISqlJetCursor findItemsWithCondition(Map<String, FieldDetails> conditions) throws SqlException{
 		debug=true;
-		Map<String, Object> values = confirmColumns(conditions);
+		Map<String, FieldCondition> values = createWhereClause(conditions);
 		if ((isDbOpen())&&(values.size()>0)){
 			try {
 				if (debug){
 					log.logMap(conditions);
-					log.logError(this,(String)values.keySet().toArray()[0]+" = "+((StringType)values.get(values.keySet().toArray()[0])).getValue());
+					//log.logError(this,(String)values.keySet().toArray()[0]+" = "+((StringType)values.get(values.keySet().toArray()[0])).getValue());
 				}
 				//ISqlJetCursor recordResults = table.scope((String) values.keySet().toArray()[0], new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
-				ISqlJetCursor recordResults = table.scope(table.getPrimaryKeyIndexName(), new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
+				//ISqlJetCursor recordResults = table.scope(table.getPrimaryKeyIndexName(), new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
+				ISqlJetCursor recordResults = new SqlJetScopeConditional(table,db,values).getCursor();
 				return recordResults;
 			} catch (SqlJetException e) {
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
@@ -504,6 +507,11 @@ public class TableView {
 		return null;
 	}
 	
+	private Map<String, FieldCondition> createWhereClause(
+			Map<String, FieldDetails> conditions) {
+		return null;
+	}
+
 	/**
 	 * @return the name
 	 */
