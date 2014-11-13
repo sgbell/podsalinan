@@ -42,9 +42,9 @@ public class SqlJetScopeConditional extends SqlJetTableDataCursor implements ISq
 	 * @param values
 	 */
 	public SqlJetScopeConditional(ISqlJetTable table, SqlJetDb db,
-			Map<String, FieldCondition> values) {
+			Map<String, FieldCondition> conditions) {
 		//TODO:need to do the correct creation here
-		super(new ISqlJetBtreeDataTable(), db);
+		this(new ISqlJetBtreeDataTable(), db, conditions);
 	}
 
 	/**
