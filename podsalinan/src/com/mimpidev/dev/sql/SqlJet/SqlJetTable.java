@@ -48,6 +48,8 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTransaction;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 import org.tmatesoft.sqljet.core.table.SqlJetScope;
 
+import com.mimpidev.dev.sql.field.FieldCondition;
+
 
 /**
  * Implementation of {@link ISqlJetTable}.
@@ -165,6 +167,21 @@ public class SqlJetTable implements ISqlJetTable {
                 return new SqlJetIndexScopeCursor(table, db, indexName, k, k);
             }
         });
+    }
+    
+    /**
+     * This method has been added to customize SqlJet codebase, so I can do a select by where 
+     * @param conditions
+     * @return
+     * @throws SqlJetException
+     */
+    public ISqlJetCursor lookupByWhere(final Map<String, FieldCondition> conditions) throws SqlJetException {
+    	return (ISqlJetCursor) db.runWithLock(new ISqlJetRunnableWithLock() {
+			public Object runWithLock(SqlJetDb db) throws SqlJetException {
+				final SqlJetBtreeDataTable table = new SqlJetBtreeDataTable(btree, tableName, write);
+				return new SqlJetScopeConditional(table, db, conditions);
+			}
+    	});
     }
 
     private Object runWriteTransaction(final ISqlJetTableRun op) throws SqlJetException {

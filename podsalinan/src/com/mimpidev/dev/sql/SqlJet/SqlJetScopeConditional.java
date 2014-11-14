@@ -5,6 +5,7 @@ package com.mimpidev.dev.sql.SqlJet;
 
 import java.util.Map;
 
+import org.tmatesoft.sqljet.core.SqlJetErrorCode;
 import org.tmatesoft.sqljet.core.SqlJetException;
 import org.tmatesoft.sqljet.core.internal.table.ISqlJetBtreeDataTable;
 import org.tmatesoft.sqljet.core.internal.table.SqlJetTableDataCursor;
@@ -23,6 +24,11 @@ public class SqlJetScopeConditional extends SqlJetTableDataCursor implements ISq
 
 	
 	Map<String,FieldCondition> conditions;
+	private long rowsCount;
+    private long currentRowNum;
+    private long currentRowId;
+    private boolean internalMove;
+    
 	/**
 	 * @param table
 	 * @param db
@@ -33,18 +39,6 @@ public class SqlJetScopeConditional extends SqlJetTableDataCursor implements ISq
 		super(table, db);
 		this.conditions=conditions;
 		first();
-	}
-
-	/**
-	 * 
-	 * @param table
-	 * @param db
-	 * @param values
-	 */
-	public SqlJetScopeConditional(ISqlJetTable table, SqlJetDb db,
-			Map<String, FieldCondition> conditions) {
-		//TODO:need to do the correct creation here
-		this(new ISqlJetBtreeDataTable(), db, conditions);
 	}
 
 	/**
@@ -71,6 +65,95 @@ public class SqlJetScopeConditional extends SqlJetTableDataCursor implements ISq
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public long getRowCount() throws SqlJetException {
+		if (rowsCount <0) {
+			computeRows(false);
+		}
+		
+		return rowsCount;
+	}
+	
+    /**
+     * @throws SqlJetException
+     */
+    protected void computeRows(final boolean current) throws SqlJetException {
+        db.runReadTransaction(new ISqlJetTransaction() {
+            public Object run(SqlJetDb db) throws SqlJetException {
+                try {
+
+                    internalMove = true;
+
+                    currentRowId = getRowIdSafe();
+                    rowsCount = 0;
+                    currentRowNum = -1;
+
+                    for (first(); !eof(); next()) {
+                    	if (equalsConditions())
+                           rowsCount++;
+                        if (currentRowId == getRowIdSafe()) {
+                            currentRowNum = rowsCount;
+                            if (current) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (currentRowNum < 0) {
+                        currentRowNum = rowsCount;
+                    }
+
+                    if (currentRowId > 0) {
+                        goTo(currentRowId);
+                    }
+
+                } finally {
+                    internalMove = false;
+                }
+                return null;
+            }
+        });
+    }
+    
+    private long getRowIdSafe() throws SqlJetException {
+        return super.eof() ? 0 : getRowId();
+    }
+    
+    /**
+     * This function will test to see if the current record meets the requested conditions
+     * @return True if the record matches the conditions
+     * @throws SqlJetException
+     */
+    private boolean equalsConditions() throws SqlJetException{
+    	if (conditions.size()>0){
+        	return (Boolean) db.runReadTransaction(new ISqlJetTransaction() {
+    			public Object run(SqlJetDb db) throws SqlJetException {
+    				/*TODO: Working here, need to travel through the map of conditions to see if
+    				 *      the current record matches the conditions (initially we will make all fields
+    				 *      "LIKE") Need to tally a score, and if it meets conditions, return a true
+    				 */
+    	    		return getBtreeDataTable().getString(getFieldSafe("test")).equals("test");
+    			}
+        	});
+    	} else
+    	   return false;
+    }
+    
+    private int getFieldSafe(String fieldName) throws SqlJetException {
+        final ISqlJetBtreeDataTable table = getBtreeDataTable();
+        if (eof()) {
+            throw new SqlJetException(SqlJetErrorCode.MISUSE,
+                    "Table is empty or the current record doesn't point to a data row");
+        }
+        if (fieldName == null) {
+            throw new SqlJetException(SqlJetErrorCode.MISUSE, "Field name is null");
+        }
+        final int field = table.getDefinition().getColumnNumber(fieldName);
+        if (field < 0) {
+            throw new SqlJetException(SqlJetErrorCode.MISUSE, "Field not found: " + fieldName);
+        }
+        return field;
+    }
 }
 
 /**

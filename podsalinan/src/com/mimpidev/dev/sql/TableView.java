@@ -37,7 +37,9 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.dev.sql.SqlJet.SqlJetDbWrapper;
 import com.mimpidev.dev.sql.SqlJet.SqlJetScopeConditional;
+import com.mimpidev.dev.sql.SqlJet.SqlJetTable;
 import com.mimpidev.dev.sql.field.FieldCondition;
 import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
@@ -53,7 +55,7 @@ public class TableView {
 	/**
      * The database Connection
      */
-	private SqlJetDb db;
+	private SqlJetDbWrapper db;
 	/**
 	 * The list of columns in the database table
 	 */
@@ -69,7 +71,7 @@ public class TableView {
 	/**
 	 * 
 	 */
-	private ISqlJetTable table;
+	private SqlJetTable table;
 	/**
 	 * Status for when columns are added to the table 
 	 */
@@ -96,7 +98,7 @@ public class TableView {
 	
 	public TableView(File databaseFile, String tableName, Log debugLog){
 		this (new HashMap<String,String>(), tableName, debugLog);
-		db = new SqlJetDb(databaseFile,true);
+		db = new SqlJetDbWrapper(databaseFile,true);
 		initializeTable();
 	}
 	
@@ -108,11 +110,11 @@ public class TableView {
 	
 	public TableView(File databaseFile, Map<String,String> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
-		db = new SqlJetDb(databaseFile,true);
+		db = new SqlJetDbWrapper(databaseFile,true);
 		initializeTable();
 	}
 	
-	public TableView(SqlJetDb newDb, Map<String,String> newColumnList, String tableName, Log debugLog){
+	public TableView(SqlJetDbWrapper newDb, Map<String,String> newColumnList, String tableName, Log debugLog){
 		this(newColumnList, tableName, debugLog);
 		db = newDb;
 		initializeTable();
@@ -187,7 +189,7 @@ public class TableView {
 	 * 
 	 * @param newDb
 	 */
-	public void setdbTable(SqlJetDb newDb){
+	public void setdbTable(SqlJetDbWrapper newDb){
 		db = newDb;
 		try {
 			if ((getColumnList().size()>0)&&(name!=null)&&(name.length()>0)){
@@ -204,7 +206,7 @@ public class TableView {
 	 * @param newDbFile
 	 */
 	public void setdbTable(File newDbFile){
-		setdbTable(new SqlJetDb(newDbFile,true));
+		setdbTable(new SqlJetDbWrapper(newDbFile,true));
 	}
 	
 	/**
@@ -492,7 +494,7 @@ public class TableView {
 				}
 				//ISqlJetCursor recordResults = table.scope((String) values.keySet().toArray()[0], new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
 				//ISqlJetCursor recordResults = table.scope(table.getPrimaryKeyIndexName(), new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
-				ISqlJetCursor recordResults = new SqlJetScopeConditional(table,db,values).getCursor();
+				ISqlJetCursor recordResults = table.lookupByWhere(values);
 				return recordResults;
 			} catch (SqlJetException e) {
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
@@ -539,7 +541,7 @@ public class TableView {
 	private boolean setTable() throws SqlException{
 		if (table==null){
 			try {
-				table = db.getTable(name);
+				table = (SqlJetTable)db.getTable(name);
 				return true;
 			} catch (SqlJetException e) {
 				log.printStackTrace(e.getStackTrace());

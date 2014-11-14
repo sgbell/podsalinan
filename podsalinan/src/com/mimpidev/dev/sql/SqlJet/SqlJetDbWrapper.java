@@ -132,8 +132,8 @@ public class SqlJetDbWrapper extends SqlJetDb {
      * @throws SqlJetException
      *             if any trouble with access to file or database format.
      */
-    public static SqlJetDb open(File file, boolean write) throws SqlJetException {
-        final SqlJetDb db = new SqlJetDb(file, write);
+    public static SqlJetDbWrapper open(File file, boolean write) throws SqlJetException {
+        final SqlJetDbWrapper db = new SqlJetDbWrapper(file, write);
         db.open();
         return db;
     }
@@ -145,8 +145,8 @@ public class SqlJetDbWrapper extends SqlJetDb {
      * @return SqlJetDb object for opened database
      * @throws SqlJetException
      */
-    public static SqlJetDb open(File file, boolean write, final ISqlJetFileSystem fs) throws SqlJetException {
-        final SqlJetDb db = new SqlJetDb(file, write, fs);
+    public static SqlJetDbWrapper open(File file, boolean write, final ISqlJetFileSystem fs) throws SqlJetException {
+        final SqlJetDbWrapper db = new SqlJetDbWrapper(file, write, fs);
         db.open();
         return db;
     }
@@ -158,39 +158,10 @@ public class SqlJetDbWrapper extends SqlJetDb {
      * @return SqlJetDb object for opened database
      * @throws SqlJetException
      */
-    public static SqlJetDb open(File file, boolean write, final String fsName) throws SqlJetException {
-        final SqlJetDb db = new SqlJetDb(file, write, fsName);
+    public static SqlJetDbWrapper open(File file, boolean write, final String fsName) throws SqlJetException {
+        final SqlJetDbWrapper db = new SqlJetDbWrapper(file, write, fsName);
         db.open();
         return db;
-    }
-
-    /**
-     * Do some actions with locking database's internal threads synchronization
-     * mutex. It is related only with synchronization of access to one
-     * connection from multiple threads. It is not related with transactions and
-     * locks of database file. For concurrent access to database from threads or
-     * processes use transactions.
-     * 
-     * @param op operation to run
-     * @return result of the {@link ISqlJetRunnableWithLock#runWithLock(SqlJetDb)} call.
-     *  
-     * @throws SqlJetException in case operation fails to run.
-     */
-    public Object runWithLock(final ISqlJetRunnableWithLock op) throws SqlJetException {
-        return runSynchronized(new ISqlJetEngineSynchronized() {
-            public Object runSynchronized(SqlJetEngine db) throws SqlJetException {
-                return op.runWithLock((SqlJetDb)SqlJetDbWrapper.this);
-            }
-        });
-    }
-
-    /**
-     * Get database schema.
-     * 
-     * @return database schema.
-     */
-    public ISqlJetSchema getSchema() throws SqlJetException {
-        return getSchemaInternal();
     }
 
     /**
@@ -267,170 +238,12 @@ public class SqlJetDbWrapper extends SqlJetDb {
     }
 
     /**
-     * Create table from SQL clause.
-     * 
-     * @param sql
-     *            CREATE TABLE ... sentence.
-     * @return definition of create table.
-     */
-    public ISqlJetTableDef createTable(final String sql) throws SqlJetException {
-        checkOpen();
-        return (ISqlJetTableDef) runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                return getSchemaInternal().createTable(sql);
-            }
-        });
-    }
-
-    /**
-     * Create index from SQL clause.
-     * 
-     * @param sql
-     *            CREATE INDEX ... sentence.
-     * @return definition of created index.
-     */
-    public ISqlJetIndexDef createIndex(final String sql) throws SqlJetException {
-        checkOpen();
-        return (ISqlJetIndexDef) runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                return getSchemaInternal().createIndex(sql);
-            }
-        });
-    }
-
-    /**
-     * Drop table.
-     * 
-     * @param tableName name of table to drop.
-     */
-    public void dropTable(final String tableName) throws SqlJetException {
-        checkOpen();
-        runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                getSchemaInternal().dropTable(tableName);
-                return null;
-            }
-        });
-    }
-
-    /**
-     * Drop index.
-     * 
-     * @param indexName name of the index to drop.
-     */
-    public void dropIndex(final String indexName) throws SqlJetException {
-        checkOpen();
-        runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                getSchemaInternal().dropIndex(indexName);
-                return null;
-            }
-        });
-    }
-
-    /**
-     * Drop view.
-     * 
-     * @param viewName name of the view to drop.
-     */
-    public void dropView(final String viewName) throws SqlJetException {
-        checkOpen();
-        runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                getSchemaInternal().dropView(viewName);
-                return null;
-            }
-        });
-    }
-    
-    /**
-     * Drop trigger.
-     * 
-     * @param triggerName name of the trigger to drop.
-     */
-    public void dropTrigger(final String triggerName) throws SqlJetException {
-        checkOpen();
-        runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                getSchemaInternal().dropTrigger(triggerName);
-                return null;
-            }
-        });
-    }
-
-    /**
-     * Alters table.
-     * 
-     * @param sql
-     *            ALTER TABLE ... sentence.
-     * @return altered table schema definition.
-     */
-    public ISqlJetTableDef alterTable(final String sql) throws SqlJetException {
-        checkOpen();
-        return (ISqlJetTableDef) runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                return getSchemaInternal().alterTable(sql);
-            }
-        });
-
-    }
-
-    /**
-     * Creates virtual table from SQL clause.
-     * 
-     * @param sql
-     *            CREATE VIRTUAL TABLE ... sentence.
-     * @return definition of create virtual table.
-     */
-    public ISqlJetVirtualTableDef createVirtualTable(final String sql) throws SqlJetException {
-        checkOpen();
-        return (ISqlJetVirtualTableDef) runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                return getSchemaInternal().createVirtualTable(sql, 0);
-            }
-        });
-    }
-    
-    /**
-     * Creates view from SQL clause.
-     * 
-     * @param sql
-     *            CREATE VIEW X AS SELECT ... sentence.
-     * @return definition of the view being created.
-     */
-    public ISqlJetViewDef createView(final String sql) throws SqlJetException {
-        checkOpen();
-        return (ISqlJetViewDef) runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                return getSchemaInternal().createView(sql);
-            }
-        });
-    }
-
-    
-    /**
-     * Creates trigger from SQL clause.
-     * 
-     * @param sql
-     *            CREATE TRIGGER ... sentence.
-     * @return definition of the trigger being created.
-     */
-    public ISqlJetTriggerDef createTrigger(final String sql) throws SqlJetException {
-        checkOpen();
-        return (ISqlJetTriggerDef) runWriteTransaction(new ISqlJetTransaction() {
-            public Object run(SqlJetDb db) throws SqlJetException {
-                return getSchemaInternal().createTrigger(sql);
-            }
-        });
-    }
-
-    /**
      * @see #getTemporaryDatabase(boolean)
      * 
      * @return SqlJetDb object for temporary database
      * @throws SqlJetException
      */
-    public SqlJetDb getTemporaryDatabase() throws SqlJetException {
+    public SqlJetDbWrapper getTemporaryDatabase() throws SqlJetException {
         return getTemporaryDatabase(false);
     }
     
@@ -450,15 +263,15 @@ public class SqlJetDbWrapper extends SqlJetDb {
      * @return temporary database being created or existing temporary database.
      * @throws SqlJetException
      */
-    public SqlJetDb getTemporaryDatabase(final boolean inMemory) throws SqlJetException {
+    public SqlJetDbWrapper getTemporaryDatabase(final boolean inMemory) throws SqlJetException {
         checkOpen();        
-        return (SqlJetDb) runWithLock(new ISqlJetRunnableWithLock() {
+        return (SqlJetDbWrapper) runWithLock(new ISqlJetRunnableWithLock() {
             public Object runWithLock(SqlJetDb db) throws SqlJetException {
                 if (temporaryDb == null || !temporaryDb.isOpen()) {
                     closeTemporaryDatabase();
                     final File tmpDbFile = getTemporaryDatabaseFile(inMemory);
                     if (tmpDbFile != null) {
-                        temporaryDb = SqlJetDb.open(tmpDbFile, true);
+                        temporaryDb = SqlJetDbWrapper.open(tmpDbFile, true);
                     }
                 }
                 return temporaryDb;
