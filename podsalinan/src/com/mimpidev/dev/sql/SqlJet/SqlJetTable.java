@@ -48,7 +48,7 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTransaction;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 import org.tmatesoft.sqljet.core.table.SqlJetScope;
 
-import com.mimpidev.dev.sql.field.FieldCondition;
+import com.mimpidev.dev.sql.field.condition.FieldCondition;
 
 
 /**

@@ -40,9 +40,9 @@ import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.SqlJet.SqlJetDbWrapper;
 import com.mimpidev.dev.sql.SqlJet.SqlJetScopeConditional;
 import com.mimpidev.dev.sql.SqlJet.SqlJetTable;
-import com.mimpidev.dev.sql.field.FieldCondition;
 import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
+import com.mimpidev.dev.sql.field.condition.FieldCondition;
 import com.mimpidev.podsalinan.Podsalinan;
 
 /**
