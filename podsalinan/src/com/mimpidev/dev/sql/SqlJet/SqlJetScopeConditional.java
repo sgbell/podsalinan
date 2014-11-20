@@ -14,6 +14,8 @@ import org.tmatesoft.sqljet.core.table.ISqlJetTable;
 import org.tmatesoft.sqljet.core.table.ISqlJetTransaction;
 import org.tmatesoft.sqljet.core.table.SqlJetDb;
 
+import com.mimpidev.dev.sql.field.condition.BaseCondition;
+import com.mimpidev.dev.sql.field.condition.Condition;
 import com.mimpidev.dev.sql.field.condition.FieldCondition;
 
 /**
@@ -23,7 +25,7 @@ import com.mimpidev.dev.sql.field.condition.FieldCondition;
 public class SqlJetScopeConditional extends SqlJetTableDataCursor implements ISqlJetCursor {
 
 	
-	Map<String,FieldCondition> conditions;
+	private Condition condition;
 	private long rowsCount;
     private long currentRowNum;
     private long currentRowId;
@@ -34,10 +36,10 @@ public class SqlJetScopeConditional extends SqlJetTableDataCursor implements ISq
 	 * @param db
 	 * @throws SqlJetException
 	 */
-	public SqlJetScopeConditional(ISqlJetBtreeDataTable table, SqlJetDb db, Map<String,FieldCondition> conditions)
+	public SqlJetScopeConditional(ISqlJetBtreeDataTable table, SqlJetDb db, String conditions)
 			throws SqlJetException {
 		super(table, db);
-		this.conditions=conditions;
+		condition=new Condition(conditions);
 		first();
 	}
 
