@@ -7,16 +7,16 @@ package com.mimpidev.dev.sql.field.condition;
  * @author sbell
  *
  */
-public class Condition extends BaseCondition {
+public class SqlCondition extends BaseCondition {
 
 	/**
 	 * 
 	 */
-	public Condition() {
+	public SqlCondition() {
 		super();
 	}
 
-	public Condition(String conditions) {
+	public SqlCondition(String conditions) {
 		String key="";
 		String value="";
 		String currentText="";
