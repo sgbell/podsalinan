@@ -41,4 +41,15 @@ public class BaseCondition {
 		this.child = child;
 	}
 
+	public void add(BaseCondition fieldCondition) {
+		end().add(fieldCondition);
+	}
+	
+	public BaseCondition end() {
+		BaseCondition position = this;
+		while (position.next!=null){
+			position=position.next;
+		}
+		return position;
+	}
 }

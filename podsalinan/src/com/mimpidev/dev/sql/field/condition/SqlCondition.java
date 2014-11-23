@@ -3,12 +3,8 @@
  */
 package com.mimpidev.dev.sql.field.condition;
 
-/**
- * @author sbell
- *
- */
-public class SqlCondition extends BaseCondition {
-
+public class SqlCondition extends BaseCondition{
+	private BaseCondition conditionList;
 	/**
 	 * 
 	 */
@@ -24,7 +20,6 @@ public class SqlCondition extends BaseCondition {
 		for (int stringPosition=0; stringPosition<conditions.length(); stringPosition++){
 			if ((conditions.charAt(stringPosition)=='(')||
 				(conditions.charAt(stringPosition)==')')||
-				(conditions.charAt(stringPosition)=='\'')||
 				(conditions.charAt(stringPosition)=='"')){
 				System.out.println("Current Text:"+currentText);
 			} else if (conditions.charAt(stringPosition)=='=') {
@@ -34,11 +29,21 @@ public class SqlCondition extends BaseCondition {
 			} else if (conditions.charAt(stringPosition)==' '){
 				value=currentText;
 				System.out.println("value: "+value);
+				if (key.length()>0){
+					//conditionMap.put(key,value);
+					if (conditionList == null)
+						conditionList = new FieldCondition(key,value);
+					else
+						conditionList.add(new FieldCondition(key,value));
+					key = "";
+				} else if (key.length()==0){
+					System.out.println(value);
+				}
+				value="";
 				currentText="";
-			} else {
+			} else if (conditions.charAt(stringPosition)!='\''){
 				currentText+=conditions.charAt(stringPosition);
 			}
 		}
 	}
-
 }

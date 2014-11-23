@@ -18,4 +18,10 @@ public class FieldCondition extends BaseCondition {
 	public FieldCondition() {
 		super();
 	}
+	
+	public FieldCondition(String key, String newValue) {
+		this();
+		field = key;
+		value = newValue;
+	}
 }
