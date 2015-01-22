@@ -22,9 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.tmatesoft.sqljet.core.SqlJetException;
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -32,6 +29,8 @@ import com.mimpidev.podsalinan.data.loader.DownloadsLoader;
 import com.mimpidev.podsalinan.data.loader.PodcastLoader;
 import com.mimpidev.podsalinan.data.loader.SettingsLoader;
 import com.mimpidev.podsalinan.data.loader.TableLoader;
+import com.mimpidev.sql.sqlitejdbc.Database;
+import com.mimpidev.sql.sqlitejdbc.exceptions.SqliteException;
 
 /**
  * @author bugman
@@ -129,10 +128,10 @@ public class DataStorage {
 		
 		File podsalinanDBFile = new File(settingsDir.concat(fileSystemSlash+"podsalinan.db"));
 		if (podsalinanDBFile.exists()){
-			SqlJetDb podsalinanDB = new SqlJetDb(podsalinanDBFile,true);
+			Database podsalinanDB;
 			try {
-				podsalinanDB.open();
-			} catch (SqlJetException e) {
+				podsalinanDB = new Database(podsalinanDBFile.getAbsolutePath());
+			} catch (SqliteException e) {
 				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 			}
 			

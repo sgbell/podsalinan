@@ -34,6 +34,7 @@ import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
+import com.mimpidev.sql.sqlitejdbc.Database;
 
 /**
  * @author bugman
@@ -46,7 +47,8 @@ public class DownloadsLoader extends TableLoader {
 	 * @param podsalinanDB 
 	 * 
 	 */
-	public DownloadsLoader(URLDownloadList downloadList, SqlJetDb dbConnection) {
+	public DownloadsLoader(URLDownloadList downloadList, Database dbConnection) {
+		super(dbConnection);
 		setDownloads(downloadList);
 		setTableName("downloads");
 		createColumnList(new URLDownload().getDatabaseRecord());

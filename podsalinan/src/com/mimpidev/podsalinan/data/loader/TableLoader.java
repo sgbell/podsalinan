@@ -23,22 +23,17 @@ package com.mimpidev.podsalinan.data.loader;
 
 import java.util.Map;
 
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
 import com.mimpidev.dev.debug.Log;
-import com.mimpidev.dev.sql.TableView;
+import com.mimpidev.sql.sqlitejdbc.Database;
+import com.mimpidev.sql.sqlitejdbc.Table;
 
 /**
  * @author bugman
  *
  */
-public abstract class TableLoader extends TableView {
+public abstract class TableLoader extends Table {
 
-	public TableLoader(){
-		
-	}
-	
-	public TableLoader(SqlJetDb newDb, Map<String, String> newColumnList,
+	public TableLoader(Database newDb, Map<String, String> newColumnList,
 			String tableName, Log debugLog) {
 		super(newColumnList, tableName, debugLog);
 	}

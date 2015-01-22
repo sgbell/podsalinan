@@ -81,7 +81,7 @@ public class PodcastLoader extends TableLoader {
 		if ((recordSet!=null)&&(recordSet.size()>0))
 		for (Map<String,String> record: recordSet){
 			// Traverse the Map and create a podcast object
-			if (debug)
+			if (isDebug())
 				for (final Map.Entry<String, String> entry : record.entrySet()){
 					Podsalinan.debugLog.logError(entry.getKey()+" - "+entry.getValue());
 				}

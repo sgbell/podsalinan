@@ -37,7 +37,7 @@ public class EpisodeLoader extends TableLoader {
 		podcast = newPodcast;
 	}
 
-	public EpisodeLoader(Podcast newPodcast, SqlJetDb podcastDB) {
+	public EpisodeLoader(Podcast newPodcast, Database podcastDB) {
 		// TODO Auto-generated constructor stub
 	}
 

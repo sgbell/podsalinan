@@ -3,6 +3,9 @@
  */
 package com.mimpidev.sql.sqlitejdbc;
 
+import java.util.Map;
+
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.sql.sqlitejdbc.exceptions.SqliteException;
 import com.mimpidev.sql.sqlitejdbc.schema.SqliteTable;
 
@@ -15,6 +18,7 @@ public class Table {
 	private String tableName = "";
 	private final Database database;
 	private SqliteTable tableDefinition;
+	protected boolean debug = false;
 
     /**
      * 
@@ -25,6 +29,11 @@ public class Table {
 	public Table(String newTableName, Database newDatabase) throws ClassNotFoundException{
 		database = newDatabase;
 		setTableName(newTableName);
+	}
+	public Table(Map<String, String> newColumnList, String tableName,
+			Log debugLog, Database newDatabase) {
+		database = newDatabase;
+		setTableName(tableName);
 	}
 	/**
 	 * @return the databaseConnection
@@ -63,5 +72,17 @@ public class Table {
 	 */
 	public void setTableDefinition(SqliteTable tableDefinition) {
 		this.tableDefinition = tableDefinition;
+	}
+	/**
+	 * @return the debug
+	 */
+	public boolean isDebug() {
+		return debug;
+	}
+	/**
+	 * @param debug the debug to set
+	 */
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 }
