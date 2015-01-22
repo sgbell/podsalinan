@@ -40,7 +40,7 @@ public abstract class TableLoader extends TableView {
 	
 	public TableLoader(SqlJetDb newDb, Map<String, String> newColumnList,
 			String tableName, Log debugLog) {
-		super(newDb, newColumnList, tableName, debugLog);
+		super(newColumnList, tableName, debugLog);
 	}
 	/**
 	 * 

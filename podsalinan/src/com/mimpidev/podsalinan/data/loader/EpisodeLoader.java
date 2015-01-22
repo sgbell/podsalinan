@@ -3,6 +3,7 @@
  */
 package com.mimpidev.podsalinan.data.loader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +30,20 @@ public class EpisodeLoader extends TableLoader {
 	/**
 	 * 
 	 */
-	public EpisodeLoader(Podcast newPodcast, SqlJetDb dbConnection) {
+	public EpisodeLoader(Podcast newPodcast, File dbConnection) {
 		setTableName("shows");
 		createColumnList(new Episode().getDatabaseRecord());
 		setdbTable(dbConnection);
 		podcast = newPodcast;
+	}
+
+	public EpisodeLoader(Podcast newPodcast, SqlJetDb podcastDB) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void setdbTable(File dbConnection) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**

@@ -102,7 +102,7 @@ public class TableView {
 		initializeTable();
 	}
 	
-	private TableView(Map<String,String> newColumnList, String tableName, Log debugLog){
+	protected TableView(Map<String,String> newColumnList, String tableName, Log debugLog){
 		columnList = newColumnList;
 		log = debugLog;
 		name=tableName;
@@ -187,10 +187,10 @@ public class TableView {
 	
 	/**
 	 * 
-	 * @param newDb
+	 * @param dbConnection
 	 */
-	public void setdbTable(SqlJetDbWrapper newDb){
-		db = newDb;
+	public void setdbTable(SqlJetDb dbConnection){
+		db = (SqlJetDbWrapper) dbConnection;
 		try {
 			if ((getColumnList().size()>0)&&(name!=null)&&(name.length()>0)){
 				initializeTable();
