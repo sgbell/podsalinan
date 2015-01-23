@@ -160,7 +160,7 @@ public class SqliteTable {
 	 * @return
 	 * @throws SqliteException
 	 */
-	public SqliteCursor lookupByWhere(final Map<String, String> whereClause) throws SqliteException{
+	public SqliteCursor lookupByWhere(final Map<String, Object> whereClause) throws SqliteException{
 		String conditions="";
 		for (Object key : whereClause.keySet()){
 			if (conditions.length()>0)

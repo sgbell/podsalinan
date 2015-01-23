@@ -24,6 +24,7 @@ package com.mimpidev.podsalinan.data.loader;
 import java.util.Map;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.sql.sqlitejdbc.Database;
 import com.mimpidev.sql.sqlitejdbc.Table;
 
@@ -31,12 +32,12 @@ import com.mimpidev.sql.sqlitejdbc.Table;
  * @author bugman
  *
  */
-public abstract class TableLoader extends Table {
+public abstract class TableLoader extends TableView {
 
-	public TableLoader(Database newDb, Map<String, String> newColumnList,
-			String tableName, Log debugLog) {
-		super(newColumnList, tableName, debugLog);
+	public TableLoader(String tableName, Database newDb) throws ClassNotFoundException{
+		super(tableName,newDb);
 	}
+	
 	/**
 	 * 
 	 */

@@ -4,6 +4,7 @@
  */
 package com.mimpidev.sql.sqlitejdbc;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -147,5 +148,15 @@ public class Database {
 	 */
 	public void setConnection(Connection connection) {
 		this.connection = connection;
+	}
+
+	public boolean isOpen() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public File getFile() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -26,9 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.tmatesoft.sqljet.core.SqlJetException;
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.field.FieldDetails;
@@ -36,6 +33,8 @@ import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.PodcastList;
+import com.mimpidev.sql.sqlitejdbc.Database;
+import com.mimpidev.sql.sqlitejdbc.exceptions.SqliteException;
 
 /**
  * @author bugman
@@ -53,13 +52,14 @@ public class PodcastLoader extends TableLoader {
 	private PodcastList podcastList;
 	/**
 	 * @param podsalinanDB 
+	 * @throws ClassNotFoundException 
 	 * 
 	 */
-	public PodcastLoader(PodcastList podcasts, SqlJetDb dbConnection) {
+	public PodcastLoader(PodcastList podcasts, Database dbConnection) throws ClassNotFoundException {
+		super("podcasts",dbConnection);
 		setPodcastList(podcasts);
 		setTableName("podcasts");
 		createColumnList(new Podcast().getDatabaseRecord()); // make sure this is getting set
-		setdbTable(dbConnection);
 		episodeLoaders = new ArrayList<EpisodeLoader>();
 	}
 	/**
@@ -91,21 +91,24 @@ public class PodcastLoader extends TableLoader {
 			podcastList.add(newPodcast);
 			File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
 			if (podcastFile.exists()){
-				SqlJetDb podcastDB = new SqlJetDb(podcastFile,true);
+				Database podcastDB=null;
 				try {
-					podcastDB.open();
-				} catch (SqlJetException e) {
+					podcastDB = new Database(podcastFile.getAbsolutePath());
+				} catch (SqliteException e) {
 					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				}
 
-				EpisodeLoader episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
-				episodeLoader.readTable();
-				episodeLoaders.add(episodeLoader);
+				if (podcastDB!=null){
+					EpisodeLoader episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
+					episodeLoader.readTable();
+					episodeLoaders.add(episodeLoader);
+				}
 			} else {
 				Podsalinan.debugLog.logError("File does not exist");
 			}
 		}		
 	}
+
 	/**
 	 * 
 	 */

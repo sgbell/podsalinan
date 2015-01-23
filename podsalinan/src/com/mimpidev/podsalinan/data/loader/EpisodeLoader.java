@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
