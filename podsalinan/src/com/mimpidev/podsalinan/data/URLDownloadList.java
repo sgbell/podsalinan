@@ -79,7 +79,7 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	public void addDownload(URLDownload newDownload, int priority) {
-		if (findDownload(newDownload.getURL().toString())==-1){
+		if (findDownload(newDownload.getURL().toString(), newDownload.getDestination())==-1){
 			// This will ensure each download has a unique id
 			while (findDownloadByUid(newDownload.getUid())!=null){
 				// If the uid already exists, generate a new 1, adding the current time till we get a unique id
@@ -325,27 +325,38 @@ public class URLDownloadList extends DownloadDetails {
 		return count;
 	}
 
-	public int findDownload(String url) {
-		//System.out.println("Debug: findDownload(URL)"+url.toString());
+	public int findDownload(String url, String destination) {
 		int count=0;
-		String lastURL=null;
-		
+		String lastUrl = null,
+			   lastDestination = null; 
+
+		/* The following loop is for double checking the system to make sure
+		 *  we dont have double ups of downloads in the system
+		 */
 		for (URLDownload download : downloads){
-			//System.out.println("Debug: findDownload(URL) download="+download.getURL().toString());
-			if ((lastURL!=null)&&(download.getURL().toString().equalsIgnoreCase(lastURL.toString()))){
+			if ((lastUrl!=null)&&
+				(download.getURL().toString().equalsIgnoreCase(lastUrl))&&
+				((lastDestination!=null) &&(download.getDirectory().equalsIgnoreCase(lastDestination)))){
 				download.setRemoved(true);
 			} else {
-				lastURL = download.getURL();
+				lastUrl = download.getURL();
+				lastDestination = download.getDirectory();
 			}
 		}
-
+		
 		for (URLDownload download : downloads){
-			if (download.getURL().toString().equalsIgnoreCase(url.toString())){
+			if ((download.getURL().toString().equalsIgnoreCase(url))&&
+				((destination!=null)&&(download.getDirectory().toString().equalsIgnoreCase(destination)))){
 				return count;
 			}
-			count++;
+			count ++;
 		}
+		
 		return -1;
+	}
+
+	public int findDownload(String url) {
+		return findDownload(url,null);
 	}
 
 	private int findDownload(URLDownload download) {

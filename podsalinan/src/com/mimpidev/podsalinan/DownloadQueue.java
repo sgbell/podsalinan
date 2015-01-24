@@ -57,8 +57,15 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				 *  
 				 *  sleep
 				 */
+				int maxDownloaders;
+				try {
+					maxDownloaders=Integer.parseInt(data.getSettings().getSettingValue("maxDownloaders"));
+				} catch (NumberFormatException e){
+					maxDownloaders=3;
+				}
+				
 				if ((data.getUrlDownloads().getNumberOfQueuedDownloads()>0)&&
-					(downloaders.size()<Integer.parseInt(data.getSettings().getSettingValue("maxDownloaders")))){
+					(downloaders.size()<maxDownloaders)){
 					//search downloadList for next queued item.
 					URLDownload download = data.getUrlDownloads().getHighestQueuedItem();
 					if (download!=null){
