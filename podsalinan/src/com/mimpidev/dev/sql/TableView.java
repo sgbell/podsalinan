@@ -31,12 +31,11 @@ import java.util.Map.Entry;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.field.FieldDetails;
-import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.dev.sql.field.condition.FieldCondition;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.sql.sqlitejdbc.Database;
-import com.mimpidev.sql.sqlitejdbc.Table;
 import com.mimpidev.sql.sqlitejdbc.cursors.SqliteCursor;
+import com.mimpidev.sql.sqlitejdbc.cursors.internal.SqliteResult;
 import com.mimpidev.sql.sqlitejdbc.exceptions.SqliteException;
 import com.mimpidev.sql.sqlitejdbc.schema.SqliteColumnDef;
 import com.mimpidev.sql.sqlitejdbc.schema.SqliteTable;
@@ -67,7 +66,7 @@ public class TableView {
 	/**
 	 * 
 	 */
-	private Table table;
+	private SqliteTable table;
 	/**
 	 * Status for when columns are added to the table 
 	 */
@@ -96,6 +95,7 @@ public class TableView {
 		this (new HashMap<String,String>(), tableName, debugLog);
 		db = new Database(databaseFile);
 		initializeTable();
+		log = debugLog;
 	}
 	
 	private TableView(Map<String,String> newColumnList, String tableName, Log debugLog){
@@ -114,6 +114,13 @@ public class TableView {
 		this(newColumnList, tableName, debugLog);
 		db = newDb;
 		initializeTable();
+	}
+
+	public TableView(String tableName, Database newDb) {
+		db = newDb;
+		name = tableName;
+		columnList = new HashMap<String,String>();
+		log = Podsalinan.debugLog;
 	}
 
 	/**
@@ -179,6 +186,7 @@ public class TableView {
 				e.printStackTrace();
 			}
 		}
+		initializeTable();
 	}
 	
 	/**
@@ -279,7 +287,7 @@ public class TableView {
 		setTable();
 		if ((isDbOpen())&&(values.size()>0)){
 			try{
-				table.getTableDefinition().insert(values);
+				table.insert(values);
 				return true;
 			} catch (SqliteException e) {
 				log.printStackTrace(e.getStackTrace());
@@ -393,7 +401,7 @@ public class TableView {
 		if (isDbOpen()){
 			SqliteCursor currentLine=null;
 			try {
-				currentLine = table.getTableDefinition().order(table.getTableDefinition().getPrimaryKeyName());
+				currentLine = table.order(table.getDefinition().getPrimaryKeyName());
 			} catch (SqliteException e) {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
@@ -429,7 +437,7 @@ public class TableView {
 				}
 				//ISqlJetCursor recordResults = table.scope((String) values.keySet().toArray()[0], new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
 				//ISqlJetCursor recordResults = table.scope(table.getPrimaryKeyIndexName(), new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
-				SqliteCursor recordResults = table.getTableDefinition().lookupByWhere(values);
+				SqliteCursor recordResults = table.lookupByWhere(values);
 				return recordResults;
 			} catch (SqliteException e) {
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
@@ -466,7 +474,7 @@ public class TableView {
 	/**
 	 * @return the table
 	 */
-	public Table getTable() {
+	public SqliteTable getTable() {
 		return table;
 	}
 
@@ -492,7 +500,7 @@ public class TableView {
 	public boolean purgeTable() throws SqlException{
 		if (table!=null){
 			try {
-				table.getTableDefinition().clear();
+				table.clear();
 			} catch (SqliteException e) {
 				e.printStackTrace();
 				//log.printStackTrace(e.getStackTrace());
@@ -517,14 +525,13 @@ public class TableView {
 	protected ArrayList<Map<String,String>> readFromTable(){
 		ArrayList<Map<String,String>> recordSet = new ArrayList<Map<String,String>>();
 		try {
-			SqliteCursor currentRecord = selectAll();
-			while (!currentRecord.eof()){
+			SqliteCursor records = selectAll();
+			for (SqliteResult row : records.getResults()){
 				Map<String, String> newRecord = new HashMap<String,String>();
-				for (ISqlJetColumnDef column: table.getTableDefinition().getColumns()){
-					newRecord.put(column.getName(), currentRecord.getString(column.getName()));
+				for (SqliteColumnDef column: table.getDefinition().getColumns()){
+					newRecord.put(column.getName(), row.getValues().get(column.getName()));
 				}				
 				recordSet.add(newRecord);
-				currentRecord.next();
 			}
 		} catch (SqlException e) {
 			e.printStackTrace();

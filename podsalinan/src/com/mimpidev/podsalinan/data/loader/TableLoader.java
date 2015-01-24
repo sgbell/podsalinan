@@ -21,12 +21,8 @@
  */
 package com.mimpidev.podsalinan.data.loader;
 
-import java.util.Map;
-
-import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.sql.sqlitejdbc.Database;
-import com.mimpidev.sql.sqlitejdbc.Table;
 
 /**
  * @author bugman
@@ -39,9 +35,10 @@ public abstract class TableLoader extends TableView {
 	}
 	
 	/**
+	 * @throws ClassNotFoundException 
 	 * 
 	 */
-	public abstract void readTable();
+	public abstract void readTable() throws ClassNotFoundException;
 	/**
 	 * 
 	 */

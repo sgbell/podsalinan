@@ -48,10 +48,11 @@ public class SqliteTableDef {
 	public String getPrimaryKeyName() {
 		String primaryKey="";
 		for (SqliteColumnDef column: columns){
-			if (column.isPrimaryKey())
+			if (column.isPrimaryKey()){
 				if (primaryKey.length()>0)
 					primaryKey+=" ";
 			    primaryKey+=column.getName();
+			}
 		}
 		return primaryKey;
 	}

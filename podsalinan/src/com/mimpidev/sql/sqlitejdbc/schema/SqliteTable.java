@@ -5,18 +5,14 @@ package com.mimpidev.sql.sqlitejdbc.schema;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
 import com.mimpidev.sql.sqlitejdbc.Database;
 import com.mimpidev.sql.sqlitejdbc.SqliteDataTable;
-import com.mimpidev.sql.sqlitejdbc.SqliteTableRun;
 import com.mimpidev.sql.sqlitejdbc.cursors.SqliteCursor;
 import com.mimpidev.sql.sqlitejdbc.cursors.SqliteIndexScopeCursor;
 import com.mimpidev.sql.sqlitejdbc.cursors.SqliteOrderCursor;
 import com.mimpidev.sql.sqlitejdbc.cursors.SqliteScopeConditional;
 import com.mimpidev.sql.sqlitejdbc.cursors.SqliteTableDataCursor;
 import com.mimpidev.sql.sqlitejdbc.exceptions.SqliteException;
-import com.mimpidev.sql.sqlitejdbc.internal.ISqliteTransaction;
 import com.mimpidev.sql.sqlitejdbc.internal.SqliteRunnableWithLock;
 
 /**
@@ -160,7 +156,7 @@ public class SqliteTable {
 	 * @return
 	 * @throws SqliteException
 	 */
-	public SqliteCursor lookupByWhere(final Map<String, Object> whereClause) throws SqliteException{
+	public SqliteCursor lookupByWhere(final Map whereClause) throws SqliteException{
 		String conditions="";
 		for (Object key : whereClause.keySet()){
 			if (conditions.length()>0)

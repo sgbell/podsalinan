@@ -14,6 +14,7 @@ import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.sql.sqlitejdbc.Database;
 
 /**
  * @author sbell
@@ -26,22 +27,14 @@ public class EpisodeLoader extends TableLoader {
 	 */
 	private Podcast podcast;
 	/**
+	 * @throws ClassNotFoundException 
 	 * 
 	 */
-	public EpisodeLoader(Podcast newPodcast, File dbConnection) {
+	public EpisodeLoader(Podcast newPodcast, Database dbConnection) throws ClassNotFoundException {
+		super("shows",dbConnection);
 		setTableName("shows");
 		createColumnList(new Episode().getDatabaseRecord());
-		setdbTable(dbConnection);
 		podcast = newPodcast;
-	}
-
-	public EpisodeLoader(Podcast newPodcast, Database podcastDB) {
-		// TODO Auto-generated constructor stub
-	}
-
-	public void setdbTable(File dbConnection) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**

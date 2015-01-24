@@ -128,23 +128,39 @@ public class DataStorage {
 		
 		File podsalinanDBFile = new File(settingsDir.concat(fileSystemSlash+"podsalinan.db"));
 		if (podsalinanDBFile.exists()){
-			Database podsalinanDB;
+			Database podsalinanDB=null;
 			try {
 				podsalinanDB = new Database(podsalinanDBFile.getAbsolutePath());
 			} catch (SqliteException e) {
 				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			} catch (ClassNotFoundException e) {
+				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 			}
 			
-			PodcastLoader podcastHandler = new PodcastLoader(podcasts,podsalinanDB);
-			DownloadsLoader downloadHandler = new DownloadsLoader(downloads,podsalinanDB);
-			SettingsLoader settingsHandler = new SettingsLoader(settings,podsalinanDB);
-			tableLoaders.add(podcastHandler);
-			tableLoaders.add(downloadHandler);
-			tableLoaders.add(settingsHandler);
-			
-			for (TableLoader loader : tableLoaders){
-				loader.readTable();
+			PodcastLoader podcastHandler=null;
+			DownloadsLoader downloadHandler=null;
+			SettingsLoader settingsHandler=null;
+			if (podsalinanDB!=null){
+				try {
+					podcastHandler = new PodcastLoader(podcasts,podsalinanDB);
+					downloadHandler = new DownloadsLoader(downloads,podsalinanDB);
+					settingsHandler = new SettingsLoader(settings,podsalinanDB);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				tableLoaders.add(podcastHandler);
+				tableLoaders.add(downloadHandler);
+				tableLoaders.add(settingsHandler);
+				for (TableLoader loader : tableLoaders){
+					try {
+						loader.readTable();
+					} catch (ClassNotFoundException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+				}
 			}
+
 			
 			/*
 			try {

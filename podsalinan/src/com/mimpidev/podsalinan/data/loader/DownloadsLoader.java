@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.field.FieldDetails;
@@ -45,12 +43,12 @@ public class DownloadsLoader extends TableLoader {
 	private URLDownloadList downloads;
 	/**
 	 * @param podsalinanDB 
+	 * @throws ClassNotFoundException 
 	 * 
 	 */
-	public DownloadsLoader(URLDownloadList downloadList, Database dbConnection) {
-		super(dbConnection);
+	public DownloadsLoader(URLDownloadList downloadList, Database dbConnection) throws ClassNotFoundException {
+		super("downloads",dbConnection);
 		setDownloads(downloadList);
-		setTableName("downloads");
 		createColumnList(new URLDownload().getDatabaseRecord());
 		setdbTable(dbConnection);
 	}
@@ -64,7 +62,14 @@ public class DownloadsLoader extends TableLoader {
 			// Create a new URLDownload and add to the downloads Vector
 			URLDownload newDownload = new URLDownload(record);
 			newDownload.setAdded(true);
-			downloads.addDownload(newDownload, Integer.parseInt(record.get("priority")));
+			int priority;
+			try {
+				priority=Integer.parseInt(record.get("priority"));
+			} catch (NumberFormatException e){
+				priority=downloads.visibleSize()+1;
+			}
+				
+			downloads.addDownload(newDownload, priority);
 		}
 	}
 

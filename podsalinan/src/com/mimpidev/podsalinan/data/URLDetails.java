@@ -21,7 +21,8 @@ public class URLDetails extends BaseURL {
 							DO_NOT_DOWNLOAD=5,
 							INCOMPLETE_DOWNLOAD=6,
 							DOWNLOAD_FAULT=7,
-							DESTINATION_INVALID=8;
+							DESTINATION_INVALID=8,
+							UNKNOWN_STATUS=9;
 	
 	/**
 	 * 
@@ -60,7 +61,13 @@ public class URLDetails extends BaseURL {
 	}
 	
 	public int getStatus(){
-		return Integer.parseInt(fields.get("status").getValue());
+		int status;
+		try {
+			status = Integer.parseInt(fields.get("status").getValue());
+		} catch (NumberFormatException e){
+			status = UNKNOWN_STATUS;
+		}
+		return status; 
 	}
 	
 	public void setStatus(int newStatus){

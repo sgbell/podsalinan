@@ -102,6 +102,7 @@ public class SqliteCursor {
 				}
 				return tableData;
 			} catch (SQLException e) {
+				System.err.println(sqlString);
 				throw new SqliteException("Problem executing sql statement on table: "+table.getName(),sqlString);
 			}
 		}

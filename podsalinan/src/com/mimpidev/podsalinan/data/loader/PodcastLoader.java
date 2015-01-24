@@ -75,38 +75,40 @@ public class PodcastLoader extends TableLoader {
 		this.podcastList = podcastList;
 	}
 	
-	public void readTable(){
+	public void readTable() throws ClassNotFoundException{
 		ArrayList<Map<String,String>> recordSet = readFromTable();
 		
-		if ((recordSet!=null)&&(recordSet.size()>0))
-		for (Map<String,String> record: recordSet){
-			// Traverse the Map and create a podcast object
-			if (isDebug())
-				for (final Map.Entry<String, String> entry : record.entrySet()){
-					Podsalinan.debugLog.logError(entry.getKey()+" - "+entry.getValue());
-				}
-			Podcast newPodcast = new Podcast(record);
-			//TODO: go into data file and change columns so datafile will have the right information in the right place
-			newPodcast.setAdded(true);
-			podcastList.add(newPodcast);
-			File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
-			if (podcastFile.exists()){
-				Database podcastDB=null;
-				try {
-					podcastDB = new Database(podcastFile.getAbsolutePath());
-				} catch (SqliteException e) {
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-				}
+		if ((recordSet!=null)&&(recordSet.size()>0)){
+			for (Map<String,String> record: recordSet){
+				// Traverse the Map and create a podcast object
+				if (isDebug())
+					for (final Map.Entry<String, String> entry : record.entrySet()){
+						Podsalinan.debugLog.logError(entry.getKey()+" - "+entry.getValue());
+					}
+				Podcast newPodcast = new Podcast(record);
+				newPodcast.setAdded(true);
+				podcastList.add(newPodcast);
+				File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
+				if (podcastFile.exists()){
+					Database podcastDB=null;
+					try {
+						podcastDB = new Database(podcastFile.getAbsolutePath());
+					} catch (SqliteException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
 
-				if (podcastDB!=null){
-					EpisodeLoader episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
-					episodeLoader.readTable();
-					episodeLoaders.add(episodeLoader);
+					if (podcastDB!=null){
+						EpisodeLoader episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
+						episodeLoader.readTable();
+						episodeLoaders.add(episodeLoader);
+					}
+				} else {
+					Podsalinan.debugLog.logError("File does not exist");
 				}
-			} else {
-				Podsalinan.debugLog.logError("File does not exist");
-			}
-		}		
+			}		
+		} else {
+			Podsalinan.debugLog.logError("Error reading from Podcast Table");
+		}
 	}
 
 	/**

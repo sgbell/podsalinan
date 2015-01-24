@@ -25,13 +25,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.tmatesoft.sqljet.core.table.SqlJetDb;
-
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.data.ProgSettings;
+import com.mimpidev.sql.sqlitejdbc.Database;
 
 /**
  * @author bugman
@@ -41,8 +40,8 @@ public class SettingsLoader extends TableLoader {
 
 	private ProgSettings settings;
 
-	public SettingsLoader(ProgSettings newSettings, SqlJetDb dbConnection) {
-		setTableName("settings");
+	public SettingsLoader(ProgSettings newSettings, Database dbConnection) throws ClassNotFoundException {
+		super("settings",dbConnection);
 		String[] columnNames = {"id","name","value"};
 		String[] columnTypes = {"INTEGER PRIMARY KEY AUTOINCREMENT",
 				                "TEXT","TEXT"};

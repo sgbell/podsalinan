@@ -24,21 +24,17 @@ public class Database {
 
 	private Connection connection = null;
 	private SqliteSchema schema = null;
+	private String fileName = null;
 	/**
 	 * 
 	 */
 	public Database() throws ClassNotFoundException{
         Class.forName("org.sqlite.JDBC");
-        
 	}
 
 	public Database(String filename) throws ClassNotFoundException, SqliteException{
 		this();
-		try {
-			setConnection(DriverManager.getConnection("jdbc:sqlite:"+filename));
-		} catch (SQLException e) {
-			throw new SqliteException("Failed to open database.");
-		}
+		setFileName(filename);
 	}
 	
 	public Object runTransaction(ISqliteTransaction operation) throws SqliteException {
@@ -139,7 +135,6 @@ public class Database {
 	 * @return the connection
 	 */
 	public Connection getConnection() {
-		//TODO: check if connection object can be used for a lock
 		return connection;
 	}
 
@@ -151,12 +146,39 @@ public class Database {
 	}
 
 	public boolean isOpen() {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			if (connection!=null)
+				return !connection.isClosed();
+			else
+				return false;
+		} catch (SQLException e) {
+			System.err.println("Error connecting to database");
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	/**
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * @param fileName the fileName to set
+	 * @throws SqliteException 
+	 */
+	public void setFileName(String fileName) throws SqliteException {
+		this.fileName = fileName;
+		try {
+			setConnection(DriverManager.getConnection("jdbc:sqlite:"+fileName));
+		} catch (SQLException e) {
+			throw new SqliteException("Failed to open database.");
+		}
 	}
 
 	public File getFile() {
-		// TODO Auto-generated method stub
-		return null;
+		return new File(fileName);
 	}
 }
