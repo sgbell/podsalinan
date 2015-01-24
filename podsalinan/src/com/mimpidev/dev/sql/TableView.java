@@ -267,8 +267,10 @@ public class TableView {
 		Iterator<Entry<String, String>> it = columnList.entrySet().iterator();
 		while (it.hasNext()){
 			Map.Entry<String,String> pairs = (Map.Entry<String,String>)it.next();
-			if (map.containsKey((String)pairs.getKey()))
-				values.put((String)pairs.getKey(), map.get((String)pairs.getKey()));
+			if (map.containsKey((String)pairs.getKey())){
+				values.put((String)pairs.getKey(), map.get((String)pairs.getKey()).getValue());
+				
+			}
 		}
 
 		return values;

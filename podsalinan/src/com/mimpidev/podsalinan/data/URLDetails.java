@@ -110,6 +110,9 @@ public class URLDetails extends BaseURL {
 			case DESTINATION_INVALID:
 				status = "Destination Invalid";
 				break;
+			case UNKNOWN_STATUS:
+				status = "Unknown Error";
+				break;
 		}
 		
 		return status;
@@ -145,6 +148,9 @@ public class URLDetails extends BaseURL {
 			break;
 		case DESTINATION_INVALID:
 			status = '-';
+			break;
+		case UNKNOWN_STATUS:
+			status = 'U';
 			break;
 		}
 		

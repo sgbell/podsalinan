@@ -63,7 +63,14 @@ public class ShowSelectedMenu extends CLIOption {
 			}
 
 			// Need to make these sizes human readable
-			System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(new Long(selectedDownload.getSize()).longValue()));
+			long fullSize=0;
+			try {
+				fullSize = new Long(selectedDownload.getSize()).longValue();
+			} catch (NumberFormatException e){
+				fullSize = -1;
+			}
+			
+			System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(fullSize));
 		}
 	}
 
