@@ -160,7 +160,7 @@ public class SqliteTable {
 		String conditions="";
 		for (Object key : whereClause.keySet()){
 			if (conditions.length()>0)
-				conditions+=" ";
+				conditions+=" AND ";
 			conditions+=(String)key+" LIKE '%"+(String)whereClause.get(key)+"%'";
 		}
 		return lookupByWhere(conditions);
@@ -218,7 +218,7 @@ public class SqliteTable {
 	 * @return
 	 * @throws SqliteException
 	 */
-	public Object update(final HashMap<String, Object> datafields, final String where) throws SqliteException{
+	public Object update(final Map datafields, final String where) throws SqliteException{
 		return (Long) db.runWithLock(new SqliteRunnableWithLock(){
 			public Object runWithLock(Database db) throws SqliteException {
 				final SqliteDataTable dataTable = new SqliteDataTable(db,getName());

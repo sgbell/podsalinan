@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.field.FieldDetails;
@@ -284,7 +285,6 @@ public class TableView {
 	 */
 	public boolean insert(Map<String, FieldDetails> map) throws SqlException{
 		Map<String, Object> values = confirmColumns(map);
-		//TODO: Need to get this working next
 		// always call setTable
 		setTable();
 		if ((isDbOpen())&&(values.size()>0)){
@@ -307,18 +307,19 @@ public class TableView {
      * 
      * @param map
      * @param condition
-     * @return
+     * @return true if the update command has succeeded
      * @throws SqlException
      */
 	public boolean update(Map<String, FieldDetails> map, Map<String, FieldDetails> condition) throws SqlException{
 		final Map<String, Object> values = confirmColumns(map);
+		final String where = createWhereClause(condition);
+		System.out.println(where);
 		setTable();
-		/* Search through table for condition (column, value)
-		 * When found, update the values with the values stored in data
+		/* Update the record with the values stored in data
 		 */
 		if ((isDbOpen())&&(values.size()>0)){
 			try{
-				//TODO: write code for updating values
+				table.update(values, where);
 				throw new SqliteException("just a place holder");
 			} catch (SqliteException e) {
 				log.printStackTrace(e.getStackTrace());
@@ -332,7 +333,7 @@ public class TableView {
 		
 		return false;
 	}
-	
+
 	/**
 	 * 
 	 * @param condition
@@ -430,23 +431,20 @@ public class TableView {
 	
 	private SqliteCursor findItemsWithCondition(Map<String, FieldDetails> conditions) throws SqlException{
 		debug=true;
-		Map<String, FieldCondition> values = createWhereClause(conditions);
-		if ((isDbOpen())&&(values.size()>0)){
+		String where = createWhereClause(conditions);
+		if ((isDbOpen())&&(where.length()>0)){
 			try {
 				if (debug){
 					log.logMap(conditions);
-					//log.logError(this,(String)values.keySet().toArray()[0]+" = "+((StringType)values.get(values.keySet().toArray()[0])).getValue());
 				}
-				//ISqlJetCursor recordResults = table.scope((String) values.keySet().toArray()[0], new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
-				//ISqlJetCursor recordResults = table.scope(table.getPrimaryKeyIndexName(), new Object[] {null}, new Object[] {values.get(values.keySet().toArray()[0])});
-				SqliteCursor recordResults = table.lookupByWhere(values);
+				SqliteCursor recordResults = table.lookupByWhere(where);
 				return recordResults;
 			} catch (SqliteException e) {
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
 			}
 		} else if (!isDbOpen()){
 			throw new SqlException(SqlException.ERROR_DB_FAILURE);
-		} else if (values.size()==0) {
+		} else if (where.length()==0) {
 			log.logMap(conditions);
 			log.logInfo(getClass(), "validated values: 0");
 			throw new SqlException(SqlException.ERROR_INVALID_TABLE);
@@ -454,9 +452,21 @@ public class TableView {
 		return null;
 	}
 	
-	private Map<String, FieldCondition> createWhereClause(
-			Map<String, FieldDetails> conditions) {
-		return null;
+	private String createWhereClause(
+			Map conditions) {
+		String where="";
+		conditions=confirmColumns(conditions);
+		Set<String> fieldNames = conditions.keySet();
+		for (String field : fieldNames){
+			if (where.length()>0)
+				where+=" AND ";
+			where+=field+"=";
+			/*TODO: test if value is number or string and make where
+			 * string value appropriate 
+			 */
+				conditions.get(field);
+		}
+		return where;
 	}
 
 	/**

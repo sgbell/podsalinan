@@ -123,20 +123,20 @@ public class SqliteDataTable {
 	 * @return
 	 * @throws SqliteException 
 	 */
-	public Object update(HashMap<String, Object> values, String where) throws SqliteException {
+	public Object update(Map datafields, String where) throws SqliteException {
 		Statement sql;
 		String setString="";
-		Set<String> keys = values.keySet();
+		Set<String> keys = datafields.keySet();
 		for (String key : keys){
 			if (setString.length()>0){
 				setString+=", ";
 			}
 			setString+=key.toLowerCase()+"=";
 			try {
-				Double.parseDouble((String)values.get(key));
-				setString+=(String)values.get(key);
+				Double.parseDouble((String)datafields.get(key));
+				setString+=(String)datafields.get(key);
 			} catch (NumberFormatException e) {
-				setString+="'"+(String)values.get(key)+"'";
+				setString+="'"+(String)datafields.get(key)+"'";
 			}
 		}
 		String updateCommand="UPDATE "+getName()+" SET "+setString+" WHERE "+where+";";
