@@ -134,7 +134,9 @@ public class DataStorage {
 			} catch (SqliteException e) {
 				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 			} catch (ClassNotFoundException e) {
-				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+				Podsalinan.debugLog.logError("JDBC library not found. Exiting");
+				System.exit(1);
+				//Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 			}
 			
 			PodcastLoader podcastHandler=null;

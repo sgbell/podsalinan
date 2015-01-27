@@ -313,14 +313,12 @@ public class TableView {
 	public boolean update(Map<String, FieldDetails> map, Map<String, FieldDetails> condition) throws SqlException{
 		final Map<String, Object> values = confirmColumns(map);
 		final String where = createWhereClause(condition);
-		System.out.println(where);
 		setTable();
 		/* Update the record with the values stored in data
 		 */
 		if ((isDbOpen())&&(values.size()>0)){
 			try{
 				table.update(values, where);
-				throw new SqliteException("just a place holder");
 			} catch (SqliteException e) {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_UPDATING_RECORD);
@@ -461,10 +459,12 @@ public class TableView {
 			if (where.length()>0)
 				where+=" AND ";
 			where+=field+"=";
-			/*TODO: test if value is number or string and make where
-			 * string value appropriate 
-			 */
-				conditions.get(field);
+			try {
+				Double.parseDouble((String)conditions.get(field));
+				where+=conditions.get(field);
+			}catch (NumberFormatException e){
+				where+="'"+conditions.get(field)+"'";
+			}
 		}
 		return where;
 	}
