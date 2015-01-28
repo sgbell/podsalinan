@@ -85,7 +85,19 @@ public class PodcastLoader extends TableLoader {
 					for (final Map.Entry<String, String> entry : record.entrySet()){
 						Podsalinan.debugLog.logError(entry.getKey()+" - "+entry.getValue());
 					}
-				Podcast newPodcast = new Podcast(record);
+				final Podcast newPodcast = new Podcast(record);
+				// If we are working with an older version of the database, bring the value of localFile over to datafile
+				if ((!newPodcast.getDatabaseRecord().containsKey("localFile"))&&
+						(record.containsKey("localFile"))&&
+						(newPodcast.getDatafile().equals("")||newPodcast.getDatafile()!=null)){
+					    newPodcast.setDatafile(record.get("localFile"));
+					    try {
+							update(newPodcast.getDatabaseRecord(), 
+								"localFile="+newPodcast.getDatafile());
+						} catch (SqlException e) {
+							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						}
+				}
 				newPodcast.setAdded(true);
 				podcastList.add(newPodcast);
 				File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");

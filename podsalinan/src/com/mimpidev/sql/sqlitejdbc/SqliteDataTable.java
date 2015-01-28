@@ -146,6 +146,7 @@ public class SqliteDataTable {
 				return Long.valueOf((long)sql.executeUpdate(updateCommand));
 			}
 		} catch (SQLException e) {
+			System.err.println(updateCommand);
 			throw new SqliteException("Error inserting record into table: "+name,updateCommand);
 		}
 	}

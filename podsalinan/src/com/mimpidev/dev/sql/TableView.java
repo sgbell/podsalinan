@@ -302,17 +302,16 @@ public class TableView {
 		}
 		return false;	
 	}
-	
-    /**
-     * 
-     * @param map
-     * @param condition
-     * @return true if the update command has succeeded
-     * @throws SqlException
-     */
-	public boolean update(Map<String, FieldDetails> map, Map<String, FieldDetails> condition) throws SqlException{
+
+	/**
+	 * 
+	 * @param map
+	 * @param condition
+	 * @return
+	 * @throws SqlException
+	 */
+	public boolean update(Map<String, FieldDetails> map, String where) throws SqlException{
 		final Map<String, Object> values = confirmColumns(map);
-		final String where = createWhereClause(condition);
 		setTable();
 		/* Update the record with the values stored in data
 		 */
@@ -330,6 +329,18 @@ public class TableView {
 		}
 		
 		return false;
+	}
+	
+    /**
+     * 
+     * @param map
+     * @param condition
+     * @return true if the update command has succeeded
+     * @throws SqlException
+     */
+	public boolean update(Map<String, FieldDetails> map, Map<String, FieldDetails> condition) throws SqlException{
+		final String where = createWhereClause(condition);
+		return update(map,where);
 	}
 
 	/**

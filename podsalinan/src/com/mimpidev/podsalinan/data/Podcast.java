@@ -105,16 +105,12 @@ public class Podcast extends DownloadDetails{
 	public Podcast(Map<String, String> record) {
 		this();
 		populateFromRecord(record);
-		Podsalinan.debugLog.logInfo("datafile="+fields.get("datafile").getValue());
+		/*Podsalinan.debugLog.logInfo("datafile="+fields.get("datafile").getValue());
 		if ((!getDatabaseRecord().containsKey("localFile"))&&
 				(record.containsKey("localFile"))&&
 				(fields.get("datafile").getValue().equals("")||fields.get("datafile").getValue()!=null)){
 				fields.get("datafile").setValue(record.get("localFile"));
-				setUpdated(true);
-				/*TODO: need to handle upgrade of record, from using localFile to datafile, as the update statement is always
-				 *  failing at the moment, because datafile is null in the database.
-				 */
-		}
+		}*/
 	}
 	
 	public Vector<Episode> getEpisodes(){
