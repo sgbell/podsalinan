@@ -32,6 +32,8 @@ public class DeleteDownload extends CLIOption {
 		if (command.split(" ").length>1){
 			data.getUrlDownloads().deleteActiveDownload(command.split(" ")[0]);
 		}
+		
+		returnObject
 		return returnObject;
 	}
 

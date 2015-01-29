@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
 
+import com.mimpidev.podsalinan.Podsalinan;
+
 /**
  * @author bugman
  *
@@ -274,6 +276,7 @@ public class URLDownloadList extends DownloadDetails {
 	public boolean deleteActiveDownload(String uid) {
 		for (URLDownload currentDownload: downloads){
 			if (currentDownload.getUid().equals(uid)){
+				Podsalinan.debugLog.logInfo("Deleting Download:"+uid);
 				return deleteDownload(currentDownload);
 			}
 		}

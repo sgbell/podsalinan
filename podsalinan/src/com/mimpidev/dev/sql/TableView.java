@@ -349,13 +349,17 @@ public class TableView {
 	 * @return
 	 */
 	public boolean delete(Map<String, FieldDetails> condition) throws SqlException{
-		Map<String, Object> values = confirmColumns(condition);
+		String where = createWhereClause(condition);
 		setTable();
-		if ((isDbOpen())&&(values.size()>0)){
-			//TODO: write delete code here
+		if ((isDbOpen())&&(where.length()>0)){
+			try {
+				table.delete(where);
+			} catch (SqliteException e) {
+				throw new SqlException(SqlException.ERROR_DELETING_RECORD);
+			}
 		} else if (!isDbOpen()){
 			throw new SqlException(SqlException.ERROR_DB_FAILURE);
-		} else if (values.size()==0) {
+		} else if (where.length()==0) {
 			throw new SqlException(SqlException.ERROR_INVALID_TABLE);
 		}
 		return false;

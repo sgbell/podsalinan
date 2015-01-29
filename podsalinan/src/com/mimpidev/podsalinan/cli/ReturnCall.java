@@ -31,11 +31,11 @@ public class ReturnCall {
 	/**
 	 * The method to be called
 	 */
-	public String methodCall;
+	public String methodCall="";
 	/**
 	 * The parameters to be passed to the method
 	 */
-	public String methodParameters;
+	public String methodParameters="";
 	/**
 	 * If the system needs to continue looping
 	 */

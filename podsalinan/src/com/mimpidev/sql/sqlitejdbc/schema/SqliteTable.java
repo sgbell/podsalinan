@@ -233,11 +233,11 @@ public class SqliteTable {
 	 * @return
 	 * @throws SqliteException
 	 */
-	public Object delete(final HashMap<String, Object> conditions) throws SqliteException {
+	public Object delete(final String where) throws SqliteException {
 		return (Long) db.runWithLock(new SqliteRunnableWithLock(){
 			public Object runWithLock(Database db) throws SqliteException {
 				final SqliteDataTable dataTable = new SqliteDataTable(db,getName());
-				return dataTable.delete(conditions);
+				return dataTable.delete(where);
 			}
 		});
 	}
