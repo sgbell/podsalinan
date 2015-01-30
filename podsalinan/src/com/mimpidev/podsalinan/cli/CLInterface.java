@@ -227,7 +227,7 @@ public class CLInterface extends CLIOption implements Runnable{
                			Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
            			}
             		
-           			returnValue=options.get(returnValue.methodCall).execute(returnValue.methodParameters);
+           			returnValue=options.get(returnValue.methodCall.toLowerCase()).execute(returnValue.methodParameters);
            			if (debug){
            				Podsalinan.debugLog.logInfo("After the methodCall");
                			Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
@@ -384,7 +384,7 @@ public class CLInterface extends CLIOption implements Runnable{
 				if (menuCommand.length()==0)
 					options.get("").execute(params);
 				else
-					options.get(menuCommand.split(" ")[0]).execute(params);
+					options.get((menuCommand.split(" ")[0]).toLowerCase()).execute(params);
 			}
 			if (!data.getSettings().isFinished())
 				userInput();

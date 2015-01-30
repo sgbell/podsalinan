@@ -33,7 +33,8 @@ public class DeleteDownload extends CLIOption {
 			data.getUrlDownloads().deleteActiveDownload(command.split(" ")[0]);
 		}
 		
-		returnObject
+        returnObject.methodCall="Downloads";
+        returnObject.methodParameters="";
 		return returnObject;
 	}
 

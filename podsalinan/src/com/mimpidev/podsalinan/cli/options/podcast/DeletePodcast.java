@@ -39,7 +39,7 @@ public class DeletePodcast extends CLIOption {
 		    	}
 			}
 			returnObject.methodCall = "Podcast";
-			returnObject.methodParameters = command.split(" ")[0];
+			returnObject.methodParameters = "";
 		}
 		
 		return returnObject;
