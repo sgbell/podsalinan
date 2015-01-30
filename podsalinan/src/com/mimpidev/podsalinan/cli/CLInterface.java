@@ -201,6 +201,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	 */
 
 	public void userInput(){
+		debug=true;
 		System.out.print("->");
 		String menuInput=input.getStringInput();
 		String methodCall="";
@@ -243,7 +244,9 @@ public class CLInterface extends CLIOption implements Runnable{
           			if (debug) Podsalinan.debugLog.logInfo("menuCommand: "+ menuCommand);
                 }
 			} else {
-				options.get(methodCall).execute(menuInput);
+				/*TODO: need to strip out the command call from the execute, as it may be causing problems
+				 * might be worht looking at HelpCommand to overcome the problem */
+				options.get(methodCall.toLowerCase()).execute(menuInput);
 			}
 			
                 	/**
