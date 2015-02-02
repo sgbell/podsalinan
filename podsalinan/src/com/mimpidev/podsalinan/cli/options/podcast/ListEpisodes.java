@@ -22,6 +22,7 @@ public class ListEpisodes extends CLIOption {
 	 */
 	public ListEpisodes(DataStorage newData) {
 		super(newData);
+		debug=true;
 	}
 
 	@Override

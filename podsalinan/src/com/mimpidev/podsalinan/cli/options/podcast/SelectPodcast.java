@@ -17,6 +17,7 @@ public class SelectPodcast extends CLIOption {
 
 	public SelectPodcast(DataStorage newData) {
 		super(newData);
+		debug=true;
 		
 		ShowSelectedMenu showMenu = new ShowSelectedMenu(newData);
 		options.put("", showMenu);

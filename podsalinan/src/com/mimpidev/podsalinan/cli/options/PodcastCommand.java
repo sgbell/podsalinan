@@ -25,7 +25,7 @@ public class PodcastCommand extends CLIOption {
 		ShowMenu showMenu = new ShowMenu(newData);
 		
 		options.put("<aaaaaaaa>", new SelectPodcast(newData));
-		options.put("showMenu", showMenu);
+		options.put("showmenu", showMenu);
 		options.put("", showMenu);
 	}
 
@@ -37,8 +37,7 @@ public class PodcastCommand extends CLIOption {
 		debug=true;
 		returnObject.methodCall="podcast";
 
-		
-		if (options.containsKey(command))
+		if (options.containsKey(command.toLowerCase()))
 			options.get(command).execute(command);
 		else{
 			try {

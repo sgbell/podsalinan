@@ -42,7 +42,7 @@ public class MainMenuCommand extends CLIOption {
 	public MainMenuCommand(DataStorage newData) {
 		super(newData);
 		options = new HashMap<String, CLIOption>();
-		options.put("showMenu", new ShowMenu(newData));
+		options.put("showmenu", new ShowMenu(newData));
 		
 		menuCommands = new HashMap<String,String>();
 		menuCommands.put("1","podcast");
@@ -65,7 +65,7 @@ public class MainMenuCommand extends CLIOption {
 			//returnValue.methodParameters="showMenu";
 			returnValue.execute=true;
 		} else if (command.length()==0) {
-			options.get("showMenu").execute("");
+			options.get("showmenu").execute("");
 		} else {
 			System.out.println("Error: Invalid User Command");
 		}

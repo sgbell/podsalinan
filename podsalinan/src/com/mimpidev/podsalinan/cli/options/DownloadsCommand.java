@@ -23,7 +23,7 @@ public class DownloadsCommand extends CLIOption {
 		super(newData);
 		ShowMenu showMenu = new ShowMenu(newData);
 		options.put("<aa>", new SelectDownload(newData));
-		options.put("showMenu", showMenu);
+		options.put("showmenu", showMenu);
 		options.put("", showMenu);
 	}
 
