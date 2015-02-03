@@ -244,7 +244,7 @@ public class CLInterface extends CLIOption implements Runnable{
           			if (debug) Podsalinan.debugLog.logInfo("menuCommand: "+ menuCommand);
                 }
 			} else {
-				options.get(methodCall.toLowerCase()).execute(menuInput.split(" ",2)[1]);
+				options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
 			}
 			
                 	/**

@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.cli.options.List.ListDetails;
@@ -29,9 +30,13 @@ public class ListCommand extends CLIOption {
 
 	@Override
 	public ReturnCall execute(String command) {
-		/*TODO: flesh out ListCommand, and List children classes
-		 * 
-		 */
+		if (debug) Podsalinan.debugLog.logInfo(this,command);
+		
+		if (options.containsKey(command.toLowerCase())){
+			options.get(command).execute(command);
+		} else {
+			
+		}
 		/*String menuInput = command.replaceAll("(?i)list ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){
 			menuList.clear();
@@ -71,7 +76,7 @@ public class ListCommand extends CLIOption {
 			//((CLPreferencesMenu)mainMenu.findSubmenu("preferences")).printList();
 		} else
 			System.out.println("Error: Invalid user input.");*/
-		return null;
+		return returnObject;
 
 	}
 

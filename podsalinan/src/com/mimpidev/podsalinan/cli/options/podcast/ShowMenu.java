@@ -7,6 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.options.List.ListPodcasts;
 import com.mimpidev.podsalinan.data.Podcast;
 
 /**
@@ -32,11 +33,8 @@ public class ShowMenu extends CLIOption {
 		System.out.println();
 		int podcastCount=1;
 		
-		for (Podcast podcast : data.getPodcasts().getList()){
-			if (!podcast.isRemoved())
-				System.out.println(getEncodingFromNumber(podcastCount)+". "+podcast.getName());
-			podcastCount++;
-		}
+		ListPodcasts list = new ListPodcasts(data);
+		list.printList(true);
 
 		System.out.println();
 		System.out.println("(A-Z) Enter Podcast letter to select Podcast.");
