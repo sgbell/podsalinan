@@ -34,7 +34,7 @@ public class ShowMenu extends CLIOption {
 		int podcastCount=1;
 		
 		ListPodcasts list = new ListPodcasts(data);
-		list.printList(true);
+		list.execute("showCount");
 
 		System.out.println();
 		System.out.println("(A-Z) Enter Podcast letter to select Podcast.");

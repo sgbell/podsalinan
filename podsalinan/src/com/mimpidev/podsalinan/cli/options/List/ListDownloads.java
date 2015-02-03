@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options.List;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
  * @author sbell
@@ -18,7 +19,6 @@ public class ListDownloads extends CLIOption {
 	 */
 	public ListDownloads(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -26,8 +26,18 @@ public class ListDownloads extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		debug=true;
+		
 
+		int downloadCount=1;
+			
+		for (URLDownload download : data.getUrlDownloads().getDownloads()){
+			if (!download.isRemoved()){
+				System.out.println(getEncodingFromNumber(downloadCount)+". ("+download.getCharStatus()+") "+download.getURL().toString());
+				downloadCount++;
+			}
+		}
+		
+		return returnObject;
+	}
 }

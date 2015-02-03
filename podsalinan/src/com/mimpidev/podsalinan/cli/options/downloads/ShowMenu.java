@@ -7,6 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.options.List.ListDownloads;
 import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
@@ -22,16 +23,6 @@ public class ShowMenu extends CLIOption {
 		super(newData);
 	}
 
-	public void listDownloads(){
-		int downloadCount=1;
-		
-		for (URLDownload download : data.getUrlDownloads().getDownloads()){
-			if (!download.isRemoved()){
-				System.out.println(getEncodingFromNumber(downloadCount)+". ("+download.getCharStatus()+") "+download.getURL().toString());
-				downloadCount++;
-			}
-		}
-	}
 	
 	/* (non-Javadoc)
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
@@ -40,7 +31,9 @@ public class ShowMenu extends CLIOption {
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
-		listDownloads();
+		ListDownloads listDownloads = new ListDownloads(data);
+		
+		listDownloads.execute(command);
 		System.out.println();
 		System.out.println("(A-ZZ) Enter Download letter to select Download.");
 		System.out.println("To add a new download to the queue just enter the the url to be downloaded.");

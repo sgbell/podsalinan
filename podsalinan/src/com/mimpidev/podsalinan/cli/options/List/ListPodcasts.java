@@ -29,23 +29,21 @@ public class ListPodcasts extends CLIOption {
 	public ReturnCall execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,command);
-		
-		printList(false);
-		
-		return returnObject;
-	}
-
-	public void printList(boolean showCount){
 		int podcastCount=1;
 		
 		for (Podcast podcast : data.getPodcasts().getList()){
 			if (!podcast.isRemoved())
-				if (showCount)
+				if (command.split(" ")[command.split(" ").length-1].equalsIgnoreCase("showCount"))
 					System.out.print(getEncodingFromNumber(podcastCount));
 				else
 					System.out.print(podcast.getDatafile());
 				System.out.println(". "+podcast.getName());
 			podcastCount++;
 		}
+		
+		return returnObject;
+	}
+
+	public void printList(boolean showCount){
 	}
 }
