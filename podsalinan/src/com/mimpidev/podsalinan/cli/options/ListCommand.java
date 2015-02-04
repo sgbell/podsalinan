@@ -32,10 +32,9 @@ public class ListCommand extends CLIOption {
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo(this,command);
 		
-		if (options.containsKey(command.toLowerCase())){
-			options.get(command).execute(command);
+		if (options.containsKey(command.toLowerCase().split(" ")[0])){
+			options.get(command.toLowerCase().split(" ")[0]).execute((command.split(" ", 2).length>1?command.split(" ",2)[1]:command));
 		} else {
-			
 		}
 		/*String menuInput = command.replaceAll("(?i)list ", "");
 		if (menuInput.toLowerCase().startsWith("podcast")){

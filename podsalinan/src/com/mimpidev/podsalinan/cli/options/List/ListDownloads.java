@@ -26,8 +26,6 @@ public class ListDownloads extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
-		debug=true;
-		
 
 		int downloadCount=1;
 			

@@ -3,7 +3,10 @@
  */
 package com.mimpidev.podsalinan.cli.options.List;
 
+import java.util.Set;
+
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 
@@ -18,16 +21,20 @@ public class ListPreferences extends CLIOption {
 	 */
 	public ListPreferences(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Auto-generated method stub
-		return null;
+		debug=true;
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] Size of Preferences: "+data.getSettings().getMap().size());
+		Set<String> settings = data.getSettings().getMap().keySet();
+		for (String setting : settings){
+			System.out.println("Settings");
+			System.out.println("--------");
+			System.out.println(setting+":"+data.getSettings().findSetting(setting));
+		}
+		return returnObject;
 	}
 
 }

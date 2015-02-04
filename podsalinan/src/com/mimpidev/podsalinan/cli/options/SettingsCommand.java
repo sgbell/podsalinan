@@ -36,6 +36,13 @@ public class SettingsCommand extends CLIOption {
 	@Override
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		returnObject.methodCall="settings";
+		
+		if (options.containsKey(command.toLowerCase())){
+			options.get(command).execute(command);
+		} else {
+			
+		}
 		
 		return returnObject;
 	}

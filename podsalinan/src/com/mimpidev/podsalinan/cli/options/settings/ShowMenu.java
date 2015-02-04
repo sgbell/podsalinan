@@ -26,6 +26,7 @@ public class ShowMenu extends CLIOption {
 	 */
 	@Override
 	public ReturnCall execute(String command) {
+		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 
 		System.out.println();
