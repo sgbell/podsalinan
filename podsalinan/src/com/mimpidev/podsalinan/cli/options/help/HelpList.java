@@ -18,12 +18,8 @@ public class HelpList extends CLIOption {
 	 */
 	public HelpList(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
 		// If user enters "help list"
@@ -36,6 +32,6 @@ public class HelpList extends CLIOption {
 		System.out.println("   list preferences       show list of preferences to the screen");
 		System.out.println("   list select            show list of current selection made to the screen");
 		System.out.println("   list details           show details about currently selected item to the screen");
-		return null;
+		return returnObject;
 	}
 }

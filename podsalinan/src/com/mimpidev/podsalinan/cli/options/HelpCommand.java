@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 import com.mimpidev.podsalinan.cli.options.help.*;
@@ -17,13 +18,12 @@ import com.mimpidev.podsalinan.cli.options.help.*;
  */
 public class HelpCommand extends CLIOption {
 
-	private Map<String, CLIOption> options;
 	/**
 	 * @param newData
 	 */
 	public HelpCommand(DataStorage newData) {
 		super(newData);
-		options = new HashMap<String, CLIOption>();
+
 		options.put("", new Help(newData));
 		options.put("select", new HelpSelect(newData));
 		options.put("list", new HelpList(newData));
@@ -32,6 +32,10 @@ public class HelpCommand extends CLIOption {
 
 	@Override
 	public ReturnCall execute(String command) {
+		debug=true;
+
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		
 		System.out.println("");
 		String subOption;
         if (command.split(" ").length>1)
@@ -40,16 +44,16 @@ public class HelpCommand extends CLIOption {
         	subOption="";
         
 		
-		if (!options.containsKey(subOption)){
+		if (!options.containsKey(subOption.toLowerCase())){
             System.out.println("Error: Invalid Help request.");
     		System.out.println("");
-			((CLIOption)options.get("")).execute(command);
+			options.get("").execute(command);
 		} else {
-		    ((CLIOption)options.get(subOption)).execute(command);
+		    options.get(subOption.toLowerCase()).execute(command);
 		}
 		
 		System.out.println("");
 		System.out.println("");
-		return null;
+		return returnObject;
 	}
 }

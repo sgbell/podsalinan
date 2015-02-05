@@ -58,7 +58,6 @@ public class SettingsLoader extends TableLoader {
 		if ((recordSet!=null)&&(recordSet.size()>0))
 		for (Map<String,String> record: recordSet){
 			settings.getMap().put(record.get("name"),record.get("value"));
-			Podsalinan.debugLog.logInfo(this, record.get("name")+" = "+record.get("value"));
 		}
 	}
 

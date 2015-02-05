@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options.List;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
 
@@ -18,16 +19,16 @@ public class ListDetails extends CLIOption {
 	 */
 	public ListDetails(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Auto-generated method stub
-		return null;
+		debug=true;
+
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		
+		
+		return returnObject;
 	}
 
 }
