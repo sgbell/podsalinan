@@ -41,12 +41,18 @@ public class AutoQueueEpisodes extends CLIOption {
 			switch (autoDownloadResponse.charAt(0)){
 				case 'Y':
 				case 'y':
-					data.getSettings().updateSetting("autoQueue","true");
-					data.getSettings().getWaitObject().notify();
+					if (!data.getSettings().updateSetting("autoQueue","true"))
+						data.getSettings().addSetting("autoQueue","true");
+					try {
+						data.getSettings().getWaitObject().notify();
+					} catch (IllegalMonitorStateException e){
+						// Just catching an error, incase nothing is waiting to do an update
+					}
 					break;
 				case 'N':
 				case 'n':
-					data.getSettings().updateSetting("autoQueue","false");
+					if (!data.getSettings().updateSetting("autoQueue","false"))
+						data.getSettings().addSetting("autoQueue","false");
 					break;
 				default:
 					System.out.println ("Error: User entered Value is invalid. No change made");

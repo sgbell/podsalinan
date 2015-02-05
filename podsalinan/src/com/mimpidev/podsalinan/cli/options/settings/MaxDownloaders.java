@@ -37,8 +37,10 @@ public class MaxDownloaders extends CLIOption {
 		 * If not, get the user to enter it again.
 		 */
 		String numDownloaders = input.getValidNumber(1,30);
+		if (debug) Podsalinan.debugLog.logInfo("Number of downloaders:"+numDownloaders);
 		if (numDownloaders!=null)
-			data.getSettings().updateSetting("maxDownloaders",numDownloaders);
+			if(!data.getSettings().updateSetting("maxDownloaders",numDownloaders))
+				data.getSettings().addSetting("maxDownloaders",numDownloaders);
 		System.out.println("Simultaneous Downloads: "+data.getSettings().findSetting("maxDownloaders"));		
 		
 		return returnObject;

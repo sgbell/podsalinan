@@ -41,7 +41,15 @@ public class SettingsCommand extends CLIOption {
 		if (options.containsKey(command.toLowerCase())){
 			options.get(command).execute(command);
 		} else {
-			
+			try {
+				Integer.parseInt(command);
+				if (command.equals("9")){
+					returnObject.methodCall="";
+					returnObject.methodParameters="";
+				}
+			} catch (NumberFormatException e){
+				
+			}
 		}
 		
 		return returnObject;

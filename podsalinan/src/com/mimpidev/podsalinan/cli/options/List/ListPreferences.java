@@ -29,12 +29,11 @@ public class ListPreferences extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] Size of Preferences: "+data.getSettings().getMap().size());
 		Set<String> settings = data.getSettings().getMap().keySet();
+		System.out.println("Settings");
+		System.out.println("--------");
 		for (String setting : settings){
-			System.out.println("Settings");
-			System.out.println("--------");
 			System.out.println(setting+":"+data.getSettings().findSetting(setting));
 		}
 		return returnObject;
 	}
-
 }
