@@ -7,8 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
-import com.mimpidev.podsalinan.cli.options.List.ListPodcasts;
-import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.cli.options.list.ListPodcasts;
 
 /**
  * @author sbell
@@ -31,7 +30,6 @@ public class ShowMenu extends CLIOption {
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo(command);
 		System.out.println();
-		int podcastCount=1;
 		
 		ListPodcasts list = new ListPodcasts(data);
 		list.execute("showCount");

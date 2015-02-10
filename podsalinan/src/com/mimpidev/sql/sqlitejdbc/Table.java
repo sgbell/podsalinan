@@ -6,6 +6,7 @@ package com.mimpidev.sql.sqlitejdbc;
 import java.util.Map;
 
 import com.mimpidev.dev.debug.Log;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.sql.sqlitejdbc.exceptions.SqliteException;
 import com.mimpidev.sql.sqlitejdbc.schema.SqliteTable;
 
@@ -56,8 +57,9 @@ public class Table {
 		try {
 			tableDefinition = new SqliteTable(database,tableName);
 		} catch (SqliteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Podsalinan.debugLog.logError(this, "Error opening database");
+			Podsalinan.debugLog.logError(this, e.getMessage());
+			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 		}
 	}
 

@@ -148,8 +148,9 @@ public class DataStorage {
 					downloadHandler = new DownloadsLoader(downloads,podsalinanDB);
 					settingsHandler = new SettingsLoader(settings,podsalinanDB);
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Podsalinan.debugLog.logError(this, "Error opening database");
+					Podsalinan.debugLog.logError(this, e.getMessage());
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				}
 				tableLoaders.add(podcastHandler);
 				tableLoaders.add(downloadHandler);

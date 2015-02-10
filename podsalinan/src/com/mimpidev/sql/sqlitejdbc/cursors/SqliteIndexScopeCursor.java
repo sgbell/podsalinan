@@ -30,9 +30,10 @@ import com.mimpidev.sql.sqlitejdbc.SqliteDataTable;
  */
 public class SqliteIndexScopeCursor {
 
+	//TODO: flesh out this class if needed
 	public SqliteIndexScopeCursor(SqliteDataTable table, Database db,
 			String fieldName, Object value) {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

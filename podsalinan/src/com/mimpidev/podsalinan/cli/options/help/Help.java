@@ -18,12 +18,8 @@ public class Help extends CLIOption {
 	 */
 	public Help(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
 		// Main help text

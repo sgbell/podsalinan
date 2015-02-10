@@ -21,12 +21,8 @@ public class DownloadSpeedLimit extends CLIOption {
 	 */
 	public DownloadSpeedLimit(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);

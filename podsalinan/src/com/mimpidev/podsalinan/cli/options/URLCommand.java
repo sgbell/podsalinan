@@ -18,11 +18,11 @@ public class URLCommand extends CLIOption {
 	 */
 	public URLCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public ReturnCall execute(String command) {
+		//TODO: check what addDownload will do if command is not a url
 		data.getUrlDownloads().addDownload(command,data.getSettings().getSettingValue("defaultDirectory"),"-1",false);
 		return null;
 	}

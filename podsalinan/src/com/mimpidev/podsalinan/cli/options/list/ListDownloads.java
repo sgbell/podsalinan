@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan.cli.options.List;
+package com.mimpidev.podsalinan.cli.options.list;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;

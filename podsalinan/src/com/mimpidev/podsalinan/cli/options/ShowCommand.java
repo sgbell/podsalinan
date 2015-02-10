@@ -18,15 +18,13 @@ public class ShowCommand extends CLIOption {
 	 */
 	public ShowCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
-		
+		/*TODO: flesh out ShowCommand
+		 * 
+		 */
 		/*
 		if (menuInput.equalsIgnoreCase("show menu")){
 			if (!data.getSettings().addSetting("menuVisible", "true"))

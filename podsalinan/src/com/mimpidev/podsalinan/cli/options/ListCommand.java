@@ -7,10 +7,10 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
-import com.mimpidev.podsalinan.cli.options.List.ListDetails;
-import com.mimpidev.podsalinan.cli.options.List.ListDownloads;
-import com.mimpidev.podsalinan.cli.options.List.ListPodcasts;
-import com.mimpidev.podsalinan.cli.options.List.ListPreferences;
+import com.mimpidev.podsalinan.cli.options.list.ListDetails;
+import com.mimpidev.podsalinan.cli.options.list.ListDownloads;
+import com.mimpidev.podsalinan.cli.options.list.ListPodcasts;
+import com.mimpidev.podsalinan.cli.options.list.ListPreferences;
 import com.mimpidev.podsalinan.cli.options.podcast.ListEpisodes;
 
 /**

@@ -15,7 +15,6 @@ public class HelpSelect extends CLIOption {
 
 	public HelpSelect(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

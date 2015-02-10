@@ -18,14 +18,13 @@ public class IncreaseCommand extends CLIOption {
 	 */
 	public IncreaseCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
+		/*TODO: may need to make sure this command is working, and delete old code no longer needed
+		 * 
+		 */
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
 
 		if (menuInput.equalsIgnoreCase("increase")){

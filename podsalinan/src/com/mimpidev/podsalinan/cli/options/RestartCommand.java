@@ -18,14 +18,13 @@ public class RestartCommand extends CLIOption {
 	 */
 	public RestartCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
+		/*TODO: flesh out RestartCommand
+		 * 
+		 */
 		/*menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		if (((menuInput.equalsIgnoreCase("delete"))||(menuInput.equalsIgnoreCase("episode")))&&
 			(menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedEpisode"))){

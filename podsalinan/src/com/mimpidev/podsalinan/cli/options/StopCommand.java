@@ -18,14 +18,11 @@ public class StopCommand extends CLIOption {
 	 */
 	public StopCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
+		//TODO: Flesh out StopCommand
 		return null;
 		
 		/*

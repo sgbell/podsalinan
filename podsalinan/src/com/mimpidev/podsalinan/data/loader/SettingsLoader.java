@@ -78,8 +78,9 @@ public class SettingsLoader extends TableLoader {
 						put("value",new StringType(entry.getValue()));
 					}});
 				} catch (SqlException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Podsalinan.debugLog.logError(this, "Error inserting record into settings table");
+					Podsalinan.debugLog.logError(this, e.getMessage());
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				}
 			}
 		} else {

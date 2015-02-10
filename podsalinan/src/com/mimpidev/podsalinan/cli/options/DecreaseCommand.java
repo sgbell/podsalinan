@@ -18,12 +18,8 @@ public class DecreaseCommand extends CLIOption {
 	 */
 	public DecreaseCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");

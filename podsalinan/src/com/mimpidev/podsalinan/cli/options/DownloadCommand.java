@@ -18,11 +18,14 @@ public class DownloadCommand extends CLIOption {
 
 	public DownloadCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public ReturnCall execute(String command) {
+		/*TODO: Finish converting this code from the old system to the current system
+		 * of execution
+		 */
+		
 		boolean downloading=false;
 		String menuInput= command.replaceFirst(command.split(" ")[0]+" ","");
 		if ((menuInput.toLowerCase().contentEquals("download"))||

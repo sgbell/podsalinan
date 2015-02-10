@@ -201,8 +201,9 @@ public class TableView {
 				initializeTable();
 			}
 		} catch (DataDefinitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Podsalinan.debugLog.logError(this, "Error connecting to table");
+			Podsalinan.debugLog.logError(this, e.getMessage());
+			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 		}
 	}
 	

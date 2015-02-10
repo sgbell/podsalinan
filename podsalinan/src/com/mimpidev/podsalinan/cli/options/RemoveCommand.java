@@ -18,14 +18,13 @@ public class RemoveCommand extends CLIOption {
 	 */
 	public RemoveCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
+		/*TODO: flesh out the Remove command
+		 * 
+		 */
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
 		return null;
 		

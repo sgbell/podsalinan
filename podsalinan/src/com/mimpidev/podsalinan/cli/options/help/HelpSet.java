@@ -18,12 +18,8 @@ public class HelpSet extends CLIOption {
 	 */
 	public HelpSet(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnCall execute(String command) {
 		// If the user enters "help set"

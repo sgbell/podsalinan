@@ -18,14 +18,15 @@ public class SetCommand extends CLIOption {
 	 */
 	public SetCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public ReturnCall execute(String command) {
+		/*TODO: flesh out SetCommand
+		 *
+		 */
 		return null;
-		/*
-		menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
+		/*menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
 		if (menuInput.toLowerCase().startsWith("updateinterval")){
 			String name = menuInput.split(" ")[0];

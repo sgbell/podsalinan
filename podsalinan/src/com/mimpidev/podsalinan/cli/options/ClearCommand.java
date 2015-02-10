@@ -18,7 +18,6 @@ public class ClearCommand extends CLIOption {
 	 */
 	public ClearCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan.cli.options.List;
+package com.mimpidev.podsalinan.cli.options.list;
 
 import java.util.Set;
 

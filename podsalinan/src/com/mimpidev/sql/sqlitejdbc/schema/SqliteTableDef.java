@@ -38,7 +38,7 @@ public class SqliteTableDef {
 	
 	public SqliteTableDef(Database database, String tableName,
 			HashMap<String, Object> hashMap) {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
 	public SqliteTableDef() {
