@@ -15,7 +15,8 @@ public class SelectCommand extends CLIOption {
 
 	public SelectCommand(DataStorage newData) {
 		super(newData);
-		// TODO Auto-generated constructor stub
+		options.put("episode", new SelectEpisode(newData));
+		
 	}
 
 	@Override
