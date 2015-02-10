@@ -7,7 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnCall;
-import com.mimpidev.podsalinan.cli.options.SelectEpisode;
+import com.mimpidev.podsalinan.cli.options.episode.SelectEpisode;
 import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
 
 /**
@@ -37,13 +37,21 @@ public class SelectPodcast extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
 		if (command.length()==8)
 			returnObject = options.get("").execute(command);
-		else if (command.split(" ")[1].equals("9")){
-			returnObject.methodCall="podcast";
-			returnObject.methodParameters="";
+		else if (command.split(" ").length>1){
+			if (command.split(" ")[1].equals("9")){
+				returnObject.methodCall="podcast";
+				returnObject.methodParameters="";
+			} else {
+				if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command.split(" ")[1]);
+				//TODO: work here. to call selectEpisode
+				if (convertCharToNumber(command.split(" ")[1])>0){
+					returnObject = options.get("<aa>").execute(command);
+				} else {
+					returnObject = options.get("").execute(command);
+				}
+			}
 		} else {
-			if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command.split(" ")[1]);
-			//TODO: work here. to call selectepisode
-			returnObject = options.get(command.split(" ")[1]).execute(command);
+			returnObject = options.get("").execute(command);
 		}
 		
 		return returnObject;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan.cli.options;
+package com.mimpidev.podsalinan.cli.options.episode;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -19,7 +19,7 @@ public class SelectEpisode extends CLIOption {
 
 	@Override
 	public ReturnCall execute(String command) {
-		// TODO Flesh out Select Episode option
+		// TODO Flesh out SelectEpisode option
 		return returnObject;
 	}
 
