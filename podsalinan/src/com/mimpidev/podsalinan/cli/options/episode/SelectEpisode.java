@@ -19,6 +19,10 @@ public class SelectEpisode extends CLIOption {
 		ShowSelectedMenu showMenu = new ShowSelectedMenu(newData);
 		options.put("", showMenu);
 		options.put("showmenu", showMenu);
+		options.put("1", new DownloadEpisode(data));
+		options.put("2", new DeleteEpisodeFromDrive(data));
+		options.put("3", new CancelDownload(data));
+		options.put("4", new ChangeStatus(data));
 	}
 
 	@Override
