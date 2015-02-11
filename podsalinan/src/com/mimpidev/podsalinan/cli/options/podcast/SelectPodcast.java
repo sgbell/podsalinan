@@ -33,7 +33,6 @@ public class SelectPodcast extends CLIOption {
 
 	@Override
 	public ReturnCall execute(String command) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
 		if (command.length()==8)
 			returnObject = options.get("").execute(command);
@@ -43,8 +42,8 @@ public class SelectPodcast extends CLIOption {
 				returnObject.methodParameters="";
 			} else {
 				if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command.split(" ")[1]);
-				//TODO: work here. to call selectEpisode
-				if (convertCharToNumber(command.split(" ")[1])>0){
+				if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+convertCharToNumber(command.split(" ")[1]));
+				if (convertCharToNumber(command.split(" ")[1])>=0){
 					returnObject = options.get("<aa>").execute(command);
 				} else {
 					returnObject = options.get("").execute(command);
