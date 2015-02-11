@@ -8,7 +8,7 @@ import java.io.File;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.URLDownload;
 
@@ -79,7 +79,7 @@ public class ShowSelectedMenu extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 
 		String downloadUid = command.split(" ")[0];

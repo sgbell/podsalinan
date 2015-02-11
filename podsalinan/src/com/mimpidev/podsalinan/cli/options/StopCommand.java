@@ -5,7 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 
 /**
  * @author sbell
@@ -15,13 +15,14 @@ public class StopCommand extends CLIOption {
 
 	/**
 	 * @param newData
+	 * @param returnObject 
 	 */
-	public StopCommand(DataStorage newData) {
-		super(newData);
+	public StopCommand(DataStorage newData, ObjectCall returnObject) {
+		super(newData,returnObject);
 	}
 
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		//TODO: Flesh out StopCommand
 		return null;
 		

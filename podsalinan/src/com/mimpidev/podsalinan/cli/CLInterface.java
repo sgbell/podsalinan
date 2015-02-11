@@ -63,11 +63,12 @@ public class CLInterface extends CLIOption implements Runnable{
 
 	private void initializeMenus() {
 		
-		options.put("quit", new QuitCommand(data));
-		options.put("exit", new QuitCommand(data));
-		options.put("http", new URLCommand(data));
-		options.put("ftp", new URLCommand(data));
-		options.put("help", new HelpCommand(data));
+        URLCommand urlCommand =new URLCommand(data,returnObject); 
+		options.put("quit", new QuitCommand(data,returnObject));
+		options.put("exit", new QuitCommand(data,returnObject));
+		options.put("http", urlCommand);
+		options.put("ftp", urlCommand);
+		options.put("help", new HelpCommand(data,returnObject));
 		/** help commands
 		 *  =============
 		 *  help
@@ -75,14 +76,14 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  help select
 		 *  help set
 		 */
-		options.put("select", new SelectCommand(data));
+		options.put("select", new SelectCommand(data,returnObject));
 		/** select commands
 		 *  ===============
 		 *  select podcast
 		 *  select episode
 		 *  select download
 		 */
-		options.put("set", new SetCommand(data));
+		options.put("set", new SetCommand(data,returnObject));
 		/** set commands
 		 *  ============
 		 *  set updateinterval
@@ -95,7 +96,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  set podcast directory
 		 *  set directory
 		 */
-		options.put("list", new ListCommand(data));
+		options.put("list", new ListCommand(data,returnObject));
 		/** list commands
 		 *  =============
 		 *  list podcast
@@ -105,36 +106,36 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  list downloads
 		 *  list preferences
 		 */
-		options.put("show", new ShowCommand(data));
+		options.put("show", new ShowCommand(data,returnObject));
 		/** show commands
 		 *  =============
 		 *  show menu
 		 */
-		options.put("hide", new HideCommand(data));
+		options.put("hide", new HideCommand(data,returnObject));
 		/** hide commands
 		 *  =============
 		 *  hide menu
 		 */
-		options.put("download", new DownloadCommand(data));
+		options.put("download", new DownloadCommand(data,returnObject));
 		/** download commands
 		 *  =================
 		 *  download episode
 		 *  download <url>
 		 */
-		options.put("restart", new RestartCommand(data));
+		options.put("restart", new RestartCommand(data,returnObject));
 		/** restart commands
 		 *  ================
 		 *  restart episode
 		 *  restart downloads
 		 */
-		options.put("stop", new StopCommand(data));
+		options.put("stop", new StopCommand(data,returnObject));
 		/** stop commands
 		 *  =============
 		 *  stop
 		 *  stop download
 		 *  stop <downloadId>
 		 */
-		options.put("remove", new RemoveCommand(data));
+		options.put("remove", new RemoveCommand(data,returnObject));
 		/** remove commands
 		 *  ===============
 		 *  remove
@@ -142,46 +143,46 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  remove podcast
 		 *  remove <downloadId>
 		 */
-		options.put("clear", new ClearCommand(data));
+		options.put("clear", new ClearCommand(data,returnObject));
 		/** clear commands
 		 *  ==============
 		 *  clear
 		 */
-		options.put("increase", new IncreaseCommand(data));
+		options.put("increase", new IncreaseCommand(data,returnObject));
 		/** increase commands
 		 *  =================
 		 *  increase
 		 *  increase download <downloadId>
 		 */
-		options.put("decrease", new DecreaseCommand(data));
+		options.put("decrease", new DecreaseCommand(data,returnObject));
 		/** decrease commands
 		 *  =================
 		 *  decrease
 		 *  decrease download <downloadId>
 		 */
-		options.put("dump", new DumpCommand(data));
+		options.put("dump", new DumpCommand(data,returnObject));
 		/** dump commands
 		 *  =============
 		 *  dump
 		 *  dump urldownloads
 		 */
-		options.put("podcast", new PodcastCommand(data));
+		options.put("podcast", new PodcastCommand(data,returnObject));
 		/** podcast commands
 		 *  ==================
 		 *  <a-zzz>           - Select Podcast
 		 *  9                 - Quit to Main Menu
 		 */
-		options.put("downloads", new DownloadsCommand(data));
+		options.put("downloads", new DownloadsCommand(data,returnObject));
 		/** downloads commands
 		 *  ==================
 		 *  <a-zzz>           - Select Download
 		 *  9                 - Quit to Main Menu
 		 */
-		options.put("settings", new SettingsCommand(data));
+		options.put("settings", new SettingsCommand(data,returnObject));
 		/** settings commands
 		 *  =================
 		 */
-		options.put("", new MainMenuCommand(data));
+		options.put("", new MainMenuCommand(data,returnObject));
 		/** mainmenu commands
 		 *  =================
 		 *  1                - Podcast Menu
@@ -216,7 +217,7 @@ public class CLInterface extends CLIOption implements Runnable{
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
                 	// The reason for the return call is so that we can check mainMenu to transform the call,
                 	// and then have the called method call another one if it needs to.
-                	ReturnCall returnValue = new ReturnCall();
+                	ObjectCall returnValue = new ObjectCall();
                 	
                 	returnValue.execute=true;
                 	if (menuCommand.length()>0){
@@ -453,7 +454,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	}
 	
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		return null;
 	}
 	

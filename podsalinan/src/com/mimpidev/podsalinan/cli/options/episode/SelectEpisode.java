@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.episode;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 
 /**
  * @author sbell
@@ -26,7 +26,7 @@ public class SelectEpisode extends CLIOption {
 	}
 
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
 		String[] commandOptions = command.split(" ");

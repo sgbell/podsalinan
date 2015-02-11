@@ -5,7 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 import com.mimpidev.podsalinan.cli.options.episode.SelectEpisode;
 
 /**
@@ -14,14 +14,14 @@ import com.mimpidev.podsalinan.cli.options.episode.SelectEpisode;
  */
 public class SelectCommand extends CLIOption {
 
-	public SelectCommand(DataStorage newData) {
-		super(newData);
+	public SelectCommand(DataStorage newData, ObjectCall returnObject) {
+		super(newData,returnObject);
 		options.put("episode", new SelectEpisode(newData));
 		
 	}
 
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		return null;
 		/*
 		menuInput = menuInput.replaceAll("(?i)select ", "");

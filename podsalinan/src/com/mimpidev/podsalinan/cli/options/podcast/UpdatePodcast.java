@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.podcast;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 import com.mimpidev.podsalinan.data.Podcast;
 
 /**
@@ -26,7 +26,7 @@ public class UpdatePodcast extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"]");
 		
 		String tempDir=data.getSettingsDir();
@@ -35,7 +35,7 @@ public class UpdatePodcast extends CLIOption {
 			if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] updating Podcast");
 			selectedPodcast.updateList(tempDir, true);
 		}
-		returnObject = new ReturnCall();
+		returnObject = new ObjectCall();
 		returnObject.methodCall = "podcast";
 		returnObject.methodParameters = command.split(" ")[0];
 		

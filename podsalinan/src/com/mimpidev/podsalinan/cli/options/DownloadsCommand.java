@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 import com.mimpidev.podsalinan.cli.options.downloads.SelectDownload;
 import com.mimpidev.podsalinan.cli.options.downloads.ShowMenu;
 
@@ -18,9 +18,10 @@ public class DownloadsCommand extends CLIOption {
 
 	/**
 	 * @param newData
+	 * @param returnObject 
 	 */
-	public DownloadsCommand(DataStorage newData) {
-		super(newData);
+	public DownloadsCommand(DataStorage newData, ObjectCall returnObject) {
+		super(newData,returnObject);
 		ShowMenu showMenu = new ShowMenu(newData);
 		options.put("<aa>", new SelectDownload(newData));
 		options.put("showmenu", showMenu);
@@ -31,7 +32,7 @@ public class DownloadsCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		returnObject.methodCall="downloads";
 		

@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 import com.mimpidev.podsalinan.cli.options.podcast.*;
 import com.mimpidev.podsalinan.data.Podcast;
 
@@ -18,9 +18,10 @@ public class PodcastCommand extends CLIOption {
 
 	/**
 	 * @param newData
+	 * @param returnObject 
 	 */
-	public PodcastCommand(DataStorage newData) {
-		super(newData);
+	public PodcastCommand(DataStorage newData, ObjectCall returnObject) {
+		super(newData, returnObject);
 		// I will declare CLIOptions first that are referenced more than once in the Map
 		ShowMenu showMenu = new ShowMenu(newData);
 		
@@ -33,7 +34,7 @@ public class PodcastCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		debug=true;
 		returnObject.methodCall="podcast";
 

@@ -9,7 +9,7 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 import com.mimpidev.podsalinan.cli.options.help.*;
 
 /**
@@ -20,9 +20,10 @@ public class HelpCommand extends CLIOption {
 
 	/**
 	 * @param newData
+	 * @param returnObject 
 	 */
-	public HelpCommand(DataStorage newData) {
-		super(newData);
+	public HelpCommand(DataStorage newData, ObjectCall returnObject) {
+		super(newData,returnObject);
 
 		options.put("", new Help(newData));
 		options.put("select", new HelpSelect(newData));
@@ -31,7 +32,7 @@ public class HelpCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		debug=true;
 
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);

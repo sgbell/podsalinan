@@ -8,7 +8,7 @@ import java.net.URL;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 
 /**
  * @author sbell
@@ -16,12 +16,12 @@ import com.mimpidev.podsalinan.cli.ReturnCall;
  */
 public class DownloadCommand extends CLIOption {
 
-	public DownloadCommand(DataStorage newData) {
-		super(newData);
+	public DownloadCommand(DataStorage newData, ObjectCall returnObject) {
+		super(newData,returnObject);
 	}
 
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		/*TODO: Finish converting this code from the old system to the current system
 		 * of execution
 		 */

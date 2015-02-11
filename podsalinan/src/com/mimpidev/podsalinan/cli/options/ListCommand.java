@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnCall;
+import com.mimpidev.podsalinan.cli.ObjectCall;
 import com.mimpidev.podsalinan.cli.options.list.ListDetails;
 import com.mimpidev.podsalinan.cli.options.list.ListDownloads;
 import com.mimpidev.podsalinan.cli.options.list.ListPodcasts;
@@ -19,8 +19,8 @@ import com.mimpidev.podsalinan.cli.options.podcast.ListEpisodes;
  */
 public class ListCommand extends CLIOption {
 
-	public ListCommand(DataStorage newData) {
-		super(newData);
+	public ListCommand(DataStorage newData, ObjectCall returnObject) {
+		super(newData,returnObject);
 		options.put("podcasts",new ListPodcasts(newData));
 		options.put("episodes",new ListEpisodes(newData));
 		options.put("downloads",new ListDownloads(newData));
@@ -29,7 +29,7 @@ public class ListCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnCall execute(String command) {
+	public ObjectCall execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo(this,command);
 		
 		if (options.containsKey(command.toLowerCase().split(" ")[0])){

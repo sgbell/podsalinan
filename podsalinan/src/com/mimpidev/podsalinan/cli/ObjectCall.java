@@ -17,7 +17,7 @@
  *     Sam Bell - initial API and implementation
  ******************************************************************************/
 /**
- *  ReturnCall is a way of handling methodCalls in the system, to loop through calls,
+ *  ObjectCall is a way of handling methodCalls in the system, to loop through calls,
  *  even calls through different parts of the menu system
  */
 package com.mimpidev.podsalinan.cli;
@@ -26,7 +26,7 @@ package com.mimpidev.podsalinan.cli;
  * @author bugman
  *
  */
-public class ReturnCall {
+public class ObjectCall {
 
 	/**
 	 * The method to be called
