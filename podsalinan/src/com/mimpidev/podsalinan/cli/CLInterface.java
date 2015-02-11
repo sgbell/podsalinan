@@ -200,6 +200,10 @@ public class CLInterface extends CLIOption implements Runnable{
 	 *   or list options.
 	 */
 
+	/* TODO: Work here at next lunch break. Need to devise a better way to store the currently selected item
+	 * and then to access it. Might be best to work with a static variable in this class, or create something
+	 * that will be passed through all CLIOption classes for access to it.
+	 */
 	public void userInput(){
 		debug=true;
 		System.out.print("->");

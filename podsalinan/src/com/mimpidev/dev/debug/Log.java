@@ -42,6 +42,7 @@ public class Log {
      */
 	private boolean showMeTheDebug=true;
 	private boolean outputToScreen=true;
+	private boolean showShortName=true;
 
 	private RandomAccessFile fileOutput=null;
 	
@@ -185,6 +186,9 @@ public class Log {
 	}
 	
 	protected String getShortClassName(String className){
-		return className.substring(className.lastIndexOf(".")+1).trim();
+		if (showShortName)
+			return className.substring(className.lastIndexOf(".")+1).trim();
+		else
+			return className;
 	}
 }

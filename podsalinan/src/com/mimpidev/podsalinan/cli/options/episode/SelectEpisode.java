@@ -27,11 +27,37 @@ public class SelectEpisode extends CLIOption {
 
 	@Override
 	public ReturnCall execute(String command) {
+		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
 		String[] commandOptions = command.split(" ");
-		if (commandOptions.length>1){
-			returnObject = options.get("showmenu").execute(command);
-		}
+        switch (commandOptions.length){
+        	case 3:
+        		if (commandOptions[2].equals("9")){
+        			returnObject.methodCall="podcast";
+        			returnObject.methodParameters=commandOptions[0];
+        		} else {
+            		try {
+            			Integer.parseInt(commandOptions[2]);
+            			if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
+            			if (options.containsKey(commandOptions[2]))
+            				returnObject = options.get(commandOptions[2]).execute(command);
+            			else{
+                			System.out.println("Error: Invalid option selected");
+                			returnObject.methodCall="podcast";
+                			returnObject.methodParameters=commandOptions[0]+" "+commandOptions[1];
+            			}
+            		} catch (NumberFormatException e){
+            			System.out.println("Error: Invalid option selected");
+            			returnObject.methodCall="podcast";
+            			returnObject.methodParameters=commandOptions[0]+" "+commandOptions[1];
+            		}
+        		}
+        		break;
+        	case 2:
+    			returnObject = options.get("showmenu").execute(command);
+        		break;
+        	default:
+        }
 		
 		return returnObject;
 	}
