@@ -7,7 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
-import com.mimpidev.podsalinan.cli.ReturnObjcet;
+import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 
@@ -26,7 +26,7 @@ public class ListEpisodes extends CLIOption {
 	}
 
 	@Override
-	public ReturnObjcet execute(String command) {
+	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("ListEpisodes Class called");
 		if (debug) Podsalinan.debugLog.logInfo("Command Value: "+command);
 		
@@ -50,7 +50,7 @@ public class ListEpisodes extends CLIOption {
 				}
 			}
 		}
-		returnObject = new ReturnObjcet();
+		returnObject = new ReturnObject();
 		returnObject.methodCall = "podcast";
 		returnObject.methodParameters = command.split(" ")[0];
 		

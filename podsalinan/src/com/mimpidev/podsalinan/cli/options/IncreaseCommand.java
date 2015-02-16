@@ -5,7 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnObjcet;
+import com.mimpidev.podsalinan.cli.ReturnObject;
 
 /**
  * @author sbell
@@ -15,14 +15,13 @@ public class IncreaseCommand extends CLIOption {
 
 	/**
 	 * @param newData
-	 * @param returnObject 
 	 */
-	public IncreaseCommand(DataStorage newData, ReturnObjcet returnObject) {
-		super(newData,returnObject);
+	public IncreaseCommand(DataStorage newData) {
+		super(newData);
 	}
 
 	@Override
-	public ReturnObjcet execute(String command) {
+	public ReturnObject execute(String command) {
 		/*TODO: may need to make sure this command is working, and delete old code no longer needed
 		 * 
 		 */

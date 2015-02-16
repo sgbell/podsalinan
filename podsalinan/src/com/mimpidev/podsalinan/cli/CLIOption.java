@@ -25,7 +25,7 @@ public abstract class CLIOption {
 	 * 
 	 */
 	protected Map<String, CLIOption> options;
-	protected ReturnObjcet returnObject;
+	protected ReturnObject returnObject;
 
 	/**
 	 * 
@@ -34,15 +34,15 @@ public abstract class CLIOption {
 		data=newData;
 		// Declaring here so it doesn't have to be initialized in the children
 		options = new HashMap<String, CLIOption>();
-		returnObject = new ReturnObjcet();
+		returnObject = new ReturnObject();
 	}
 	
-	public CLIOption(DataStorage newData, ReturnObjcet parentObject) {
+	public CLIOption(DataStorage newData, ReturnObject parentObject) {
 		this(newData);
 		returnObject=parentObject;
 	}
 
-	public abstract ReturnObjcet execute(String command);
+	public abstract ReturnObject execute(String command);
 	
 	public String getCharForNumber(int i){
 		return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;

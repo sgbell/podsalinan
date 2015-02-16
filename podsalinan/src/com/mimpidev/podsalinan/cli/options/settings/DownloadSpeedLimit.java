@@ -7,7 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
-import com.mimpidev.podsalinan.cli.ReturnObjcet;
+import com.mimpidev.podsalinan.cli.ReturnObject;
 
 /**
  * @author sbell
@@ -24,7 +24,7 @@ public class DownloadSpeedLimit extends CLIOption {
 	}
 
 	@Override
-	public ReturnObjcet execute(String command) {
+	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
 		System.out.println();

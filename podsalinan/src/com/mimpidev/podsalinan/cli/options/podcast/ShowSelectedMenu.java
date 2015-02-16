@@ -5,7 +5,7 @@ package com.mimpidev.podsalinan.cli.options.podcast;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnObjcet;
+import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Podcast;
 
 /**
@@ -19,8 +19,8 @@ public class ShowSelectedMenu extends CLIOption {
 	}
 
 	@Override
-	public ReturnObjcet execute(String command) {
-		returnObject = new ReturnObjcet();
+	public ReturnObject execute(String command) {
+		returnObject = new ReturnObject();
 		
 		String podcastId = command.split(" ")[0];
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);

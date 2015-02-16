@@ -10,7 +10,7 @@ import java.util.Date;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ReturnObjcet;
+import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
@@ -21,14 +21,13 @@ public class DumpCommand extends CLIOption {
 
 	/**
 	 * @param newData
-	 * @param returnObject 
 	 */
-	public DumpCommand(DataStorage newData, ReturnObjcet returnObject) {
-		super(newData, returnObject);
+	public DumpCommand(DataStorage newData) {
+		super(newData);
 	}
 
 	@Override
-	public ReturnObjcet execute(String command) {
+	public ReturnObject execute(String command) {
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
 		
 		if ((menuInput.equalsIgnoreCase("dump"))||

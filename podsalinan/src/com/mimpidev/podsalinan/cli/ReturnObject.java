@@ -26,7 +26,7 @@ package com.mimpidev.podsalinan.cli;
  * @author bugman
  *
  */
-public class ReturnObjcet {
+public class ReturnObject {
 
 	/**
 	 * The method to be called
