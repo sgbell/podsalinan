@@ -26,7 +26,7 @@ import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 import com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu;
 
 /**
@@ -40,7 +40,7 @@ public class MainMenuCommand extends CLIOption {
 	 * @param newData
 	 * @param returnObject 
 	 */
-	public MainMenuCommand(DataStorage newData, ObjectCall returnObject) {
+	public MainMenuCommand(DataStorage newData, ReturnObjcet returnObject) {
 		super(newData, returnObject);
 		options = new HashMap<String, CLIOption>();
 		options.put("showmenu", new ShowMenu(newData));
@@ -53,13 +53,13 @@ public class MainMenuCommand extends CLIOption {
 	}
 
 	@Override
-	public ObjectCall execute(String command) {
-		ObjectCall returnValue=null;
+	public ReturnObjcet execute(String command) {
+		ReturnObjcet returnValue=null;
 
 		if (options.containsKey(command))
 			options.get(command).execute(command);
 		else if (menuCommands.containsKey(command)){
-			returnValue = new ObjectCall();
+			returnValue = new ReturnObjcet();
 			
 			returnValue.methodCall=menuCommands.get(command);
 			returnValue.methodParameters="";

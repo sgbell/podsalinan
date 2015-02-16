@@ -5,7 +5,7 @@ package com.mimpidev.podsalinan.cli.options.list;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
@@ -25,7 +25,7 @@ public class ListDownloads extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 
 		int downloadCount=1;
 			

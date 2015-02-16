@@ -5,7 +5,7 @@ package com.mimpidev.podsalinan.cli.options.help;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 
 /**
  * @author sbell
@@ -21,7 +21,7 @@ public class HelpList extends CLIOption {
 	}
 
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 		// If user enters "help list"
 	    // Show sub commands for list command
 		System.out.println("list can have the following parameters");

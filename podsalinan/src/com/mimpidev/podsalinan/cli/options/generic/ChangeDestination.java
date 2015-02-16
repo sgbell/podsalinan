@@ -9,7 +9,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
 
@@ -33,7 +33,7 @@ public class ChangeDestination extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
 		System.out.println ();

@@ -24,7 +24,7 @@ package com.mimpidev.podsalinan.cli.options.episode;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 
 /**
  * @author bugman
@@ -40,7 +40,7 @@ public class DeleteEpisodeFromDrive extends CLIOption {
 	}
 
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
 		// TODO: flesh out DeleteEpisodeFromDrive

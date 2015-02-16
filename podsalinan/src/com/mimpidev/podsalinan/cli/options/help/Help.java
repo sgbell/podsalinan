@@ -5,7 +5,7 @@ package com.mimpidev.podsalinan.cli.options.help;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 
 /**
  * @author sbell
@@ -21,7 +21,7 @@ public class Help extends CLIOption {
 	}
 
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 		// Main help text
 		System.out.println("A url is accepted at almost any time to add it to the download queue.");
 		System.out.println("It will have to start with (http/https/ftp):// for the system to download it.");

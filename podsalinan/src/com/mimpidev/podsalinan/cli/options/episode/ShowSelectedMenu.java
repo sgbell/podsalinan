@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.episode;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 
@@ -21,7 +21,7 @@ public class ShowSelectedMenu extends CLIOption {
 	}
 
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
 		String[] commandOptions = command.split(" ");
 		if (commandOptions.length>1){

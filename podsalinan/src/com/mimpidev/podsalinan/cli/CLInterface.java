@@ -217,7 +217,7 @@ public class CLInterface extends CLIOption implements Runnable{
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
                 	// The reason for the return call is so that we can check mainMenu to transform the call,
                 	// and then have the called method call another one if it needs to.
-                	ObjectCall returnValue = new ObjectCall();
+                	ReturnObjcet returnValue = new ReturnObjcet();
                 	
                 	returnValue.execute=true;
                 	if (menuCommand.length()>0){
@@ -454,7 +454,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	}
 	
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 		return null;
 	}
 	

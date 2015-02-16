@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 import com.mimpidev.podsalinan.cli.options.settings.*;
 
 /**
@@ -19,7 +19,7 @@ public class SettingsCommand extends CLIOption {
 	 * @param newData
 	 * @param returnObject 
 	 */
-	public SettingsCommand(DataStorage newData, ObjectCall returnObject) {
+	public SettingsCommand(DataStorage newData, ReturnObjcet returnObject) {
 		super(newData, returnObject);
 		ShowMenu showMenu = new ShowMenu(newData);
 		options.put("1", new PodcastUpdateRate(newData));
@@ -35,7 +35,7 @@ public class SettingsCommand extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		returnObject.methodCall="settings";
 		

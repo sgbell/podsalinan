@@ -8,7 +8,7 @@ import java.util.Set;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 
 /**
  * @author sbell
@@ -24,7 +24,7 @@ public class ListPreferences extends CLIOption {
 	}
 
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] Size of Preferences: "+data.getSettings().getMap().size());

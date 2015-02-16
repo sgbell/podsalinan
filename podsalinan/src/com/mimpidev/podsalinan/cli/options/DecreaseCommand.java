@@ -5,7 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.ObjectCall;
+import com.mimpidev.podsalinan.cli.ReturnObjcet;
 
 /**
  * @author sbell
@@ -17,12 +17,12 @@ public class DecreaseCommand extends CLIOption {
 	 * @param newData
 	 * @param returnObject 
 	 */
-	public DecreaseCommand(DataStorage newData, ObjectCall returnObject) {
+	public DecreaseCommand(DataStorage newData, ReturnObjcet returnObject) {
 		super(newData, returnObject);
 	}
 
 	@Override
-	public ObjectCall execute(String command) {
+	public ReturnObjcet execute(String command) {
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
 
 		if (menuInput.equalsIgnoreCase("decrease")){
