@@ -25,6 +25,8 @@ public class ShowSelectedMenu extends CLIOption {
 		String podcastId = command.split(" ")[0];
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){
+				globalSelection.clear();
+				globalSelection.put("podcast", podcastId);
 				System.out.println();
 				System.out.println("Podcast: "+currentPodcast.getName()+ " - Selected");
 				System.out.println("1. List Episodes");

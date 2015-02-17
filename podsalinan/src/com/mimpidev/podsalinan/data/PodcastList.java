@@ -41,6 +41,23 @@ public class PodcastList {
 			   return currentPodcast;
 		return null;
 	}
+	
+	/**
+	 * 
+	 * @param podcastName
+	 * @return
+	 */
+	public Vector<Podcast> getPodcastListByName(String podcastName){
+		Vector<Podcast> results = new Vector<Podcast>();
+		
+		for (Podcast currentPodcast: podcasts){
+			if ((currentPodcast.getName().toLowerCase().contains(podcastName.toLowerCase()))&&
+				(!currentPodcast.isRemoved())){
+				results.add(currentPodcast);
+			}
+		}
+		return results;
+	}
 
 	/**
 	 * @return the settingsDir

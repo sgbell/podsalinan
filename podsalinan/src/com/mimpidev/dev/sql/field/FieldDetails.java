@@ -124,4 +124,8 @@ public class FieldDetails {
 		    	return null;
 		}
 	}
+	
+	public String toString(){
+		return value;
+	}
 }

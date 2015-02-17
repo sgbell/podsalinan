@@ -25,8 +25,9 @@ public class ClearCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnObject execute(String command) {
+		globalSelection.clear();
 		System.out.println("Selection Cleared.");
-		return null;
+		return returnObject;
 	}
 
 }

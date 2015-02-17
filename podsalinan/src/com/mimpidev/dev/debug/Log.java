@@ -42,7 +42,7 @@ public class Log {
      */
 	private boolean showMeTheDebug=true;
 	private boolean outputToScreen=true;
-	private boolean showShortName=true;
+	private boolean showShortName=false;
 
 	private RandomAccessFile fileOutput=null;
 	
@@ -172,14 +172,14 @@ public class Log {
 		return false;
 	}
 	
-	public void logMap(Map<String,FieldDetails> mapObject){
-		Iterator<Entry<String, FieldDetails>> it = mapObject.entrySet().iterator();
+	public void logMap(Map mapObject){
+		Iterator<Entry> it = mapObject.entrySet().iterator();
 		
 		println("Map Object Debug");
 		println("----------------");
 		while (it.hasNext()){
-			Map.Entry<String, FieldDetails> pair = (Map.Entry<String, FieldDetails>)it.next();
-			println((String)pair.getKey()+" = "+(String)pair.getValue().getValue());
+			Map.Entry pair = (Map.Entry)it.next();
+			println((String)pair.getKey()+" = "+(String)pair.getValue().toString());
 		}
 		println("----------------");
 		println("End Map Key List");

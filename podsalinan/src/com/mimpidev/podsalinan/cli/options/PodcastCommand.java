@@ -35,6 +35,8 @@ public class PodcastCommand extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		debug=true;
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+
 		returnObject.methodCall="podcast";
 
 		if (options.containsKey(command.toLowerCase()))
@@ -44,6 +46,7 @@ public class PodcastCommand extends CLIOption {
 				// Check if the value is a number and act accordingly
 				Integer.parseInt(command);
 				if (command.equals("9")){
+					globalSelection.clear();
 					returnObject.methodCall="";
 					returnObject.methodParameters="";
 				} else {
