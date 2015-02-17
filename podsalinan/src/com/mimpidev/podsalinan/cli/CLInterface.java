@@ -24,6 +24,10 @@ package com.mimpidev.podsalinan.cli;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
@@ -53,7 +57,6 @@ public class CLInterface extends CLIOption implements Runnable{
 	
 	public CLInterface(PodcastList podcasts, URLDownloadList urlDownloads, ProgSettings settings){
 		super(new DataStorage());
-		data = new DataStorage();
 		data.setPodcasts(podcasts);
 		data.setUrlDownloads(urlDownloads);
 		data.setSettings(settings);
@@ -191,6 +194,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  3                - Settings Menu
 		 *  4                - Quit
 		 */
+		setGlobalSelection(new HashMap<String,String>());
 	}
 
 	/* TODO: Rewrite user input to allow command line completion. Current thoughts on how to

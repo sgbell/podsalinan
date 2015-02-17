@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -26,6 +27,13 @@ public abstract class CLIOption {
 	 */
 	protected Map<String, CLIOption> options;
 	protected ReturnObject returnObject;
+	
+	/**
+	 *  selection is a way for me to keep hold of what is currently selected in the system, which will be
+	 *  passed through all of the CLIOption classes to alter when appropriate.
+	 *   
+	 */
+	protected Map<String,String> globalSelection; 
 
 	/**
 	 * 
@@ -99,5 +107,24 @@ public abstract class CLIOption {
         	return "0";
         else
         	return Double.toString(newOutputSize)+fileSizeModifier;
+	}
+
+	/**
+	 * @return the globalSelection
+	 */
+	public Map<String,String> getGlobalSelection() {
+		return globalSelection;
+	}
+
+	/**
+	 * @param globalSelection the globalSelection to set
+	 */
+	public void setGlobalSelection(Map<String,String> globalSelection) {
+		Iterator<CLIOption> it = options.values().iterator();
+		while (it.hasNext()){
+			CLIOption currentOption = it.next();
+			currentOption.setGlobalSelection(globalSelection);
+		}
+		this.globalSelection = globalSelection;
 	}
 }

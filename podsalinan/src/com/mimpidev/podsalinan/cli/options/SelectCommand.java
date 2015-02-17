@@ -29,6 +29,8 @@ public class SelectCommand extends CLIOption {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
+		//TODO: start working here. Need to call the right option, and then let it handle globalSelection
+		//TODO: need to go through the menu, and make sure the other classes set globalSelection
 		return returnObject;
 		/*
 		menuInput = menuInput.replaceAll("(?i)select ", "");
