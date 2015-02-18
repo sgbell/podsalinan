@@ -63,7 +63,7 @@ public class PodcastCommand extends CLIOption {
 				// it will be the number in the array
 				if (command.length()<8){
 					if (command.split(" ").length==1){
-						if (debug) Podsalinan.debugLog.logInfo("Command Value: "+command);
+						if (debug) Podsalinan.debugLog.logInfo(this,"Command Value: "+command);
 						if (convertCharToNumber(command)<data.getPodcasts().getList().size()){
 							Podcast currentPodcast = data.getPodcasts().getList().get(convertCharToNumber(command));
 							command = currentPodcast.getDatafile();

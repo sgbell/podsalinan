@@ -27,7 +27,6 @@ public class ListPodcasts extends CLIOption {
 	 */
 	@Override
 	public ReturnObject execute(String command) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,command);
 		int podcastCount=1;
 		

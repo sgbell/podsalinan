@@ -238,7 +238,20 @@ public class CLInterface extends CLIOption implements Runnable{
                			Podsalinan.debugLog.logInfo(this,"methodCall: "+returnValue.methodCall);
                			Podsalinan.debugLog.logInfo(this,"methodParameters: "+returnValue.methodParameters);
            			}
-            		
+    				/*TODO: Working here. need to redesign this section to work with globalSelection, so it will traverse the
+    				 * menu better
+    				 *
+    				String[] keys = {"episode","podcast","download"};
+    				boolean validKey=false;
+    				int keyCount=0;
+    				while (!validKey){
+    					if (globalSelection.containsKey(keys[keyCount])){
+    						if (debug) Podsalinan.debugLog.logInfo(this, "Global Selection Found:"+keys[keyCount]);
+    						returnValue=options.get(keys[keyCount]).execute(menuInput);
+    						validKey=true;
+    					}
+    					keyCount++;
+    				} */           		
            			returnValue=options.get(returnValue.methodCall.toLowerCase()).execute(returnValue.methodParameters);
            			if (debug){
            				Podsalinan.debugLog.logInfo("After the methodCall");
@@ -255,20 +268,7 @@ public class CLInterface extends CLIOption implements Runnable{
           			if (debug) Podsalinan.debugLog.logInfo("menuCommand: "+ menuCommand);
                 }
 			} else {
-				/*TODO: Working here. need to redesign this section to work with globalSelection, so it will traverse the
-				 * menu better
-				 */
-				String[] keys = {"episode","podcast","download"};
-				boolean validKey=false;
-				int keyCount=0;
-				while (!validKey){
-					if (globalSelection.containsKey(keys[keyCount])){
-						options.get(keys[keyCount]).execute(menuInput);
-						validKey=true;
-					}
-					keyCount++;
-				}
-				//options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
+				options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
 			}
 			
                 	/**
