@@ -35,7 +35,7 @@ public class PodcastCommand extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this,"Line: 38, command: "+command);
 
 		returnObject.methodCall="podcast";
 

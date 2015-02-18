@@ -38,9 +38,9 @@ public class SelectPodcast extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this,"Command :"+command);
+		if (debug) Podsalinan.debugLog.logInfo(this,"Line:41, Command :"+command);
 		
-		if (command.split(" ").length==1){
+		if (command.split(" ").length==1 && command.length()==1){
 			if (command.equals("9") && globalSelection.size()>0){
 				globalSelection.clear();
 				command="";
@@ -49,9 +49,11 @@ public class SelectPodcast extends CLIOption {
 			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command);
 			if (selectedPodcast==null){
 				Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(command);
+				if (debug) Podsalinan.debugLog.logInfo(this, "Line:52, PodcastList.size="+podcastList.size());
 				if (podcastList.size()==1){
 					globalSelection.clear();
 					globalSelection.put("podcast",podcastList.get(0).getDatafile());
+					selectedPodcast=podcastList.get(0);
 				} else if (podcastList.size()>1){
 					int podcastCount=1;
 					// If too many podcasts with text found

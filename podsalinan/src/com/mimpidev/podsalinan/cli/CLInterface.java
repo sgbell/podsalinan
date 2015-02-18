@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
@@ -233,9 +234,9 @@ public class CLInterface extends CLIOption implements Runnable{
             		    returnValue.methodParameters = menuInput;
                 	}
            			if (debug) {
-           				Podsalinan.debugLog.logInfo("Before the methodCall");
-               			Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
-               			Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
+           				Podsalinan.debugLog.logInfo(this,"Before the methodCall");
+               			Podsalinan.debugLog.logInfo(this,"methodCall: "+returnValue.methodCall);
+               			Podsalinan.debugLog.logInfo(this,"methodParameters: "+returnValue.methodParameters);
            			}
             		
            			returnValue=options.get(returnValue.methodCall.toLowerCase()).execute(returnValue.methodParameters);
@@ -254,7 +255,20 @@ public class CLInterface extends CLIOption implements Runnable{
           			if (debug) Podsalinan.debugLog.logInfo("menuCommand: "+ menuCommand);
                 }
 			} else {
-				options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
+				/*TODO: Working here. need to redesign this section to work with globalSelection, so it will traverse the
+				 * menu better
+				 */
+				String[] keys = {"episode","podcast","download"};
+				boolean validKey=false;
+				int keyCount=0;
+				while (!validKey){
+					if (globalSelection.containsKey(keys[keyCount])){
+						options.get(keys[keyCount]).execute(menuInput);
+						validKey=true;
+					}
+					keyCount++;
+				}
+				//options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
 			}
 			
                 	/**
@@ -389,8 +403,8 @@ public class CLInterface extends CLIOption implements Runnable{
 				else
 					params = "";
 				if (debug) {
-					Podsalinan.debugLog.logInfo("["+getClass().getName()+"] menuCommand:"+menuCommand.length());
-					Podsalinan.debugLog.logInfo("["+getClass().getName()+"] menuCommand:'"+menuCommand+"'");
+					Podsalinan.debugLog.logInfo(this," menuCommand:"+menuCommand.length());
+					Podsalinan.debugLog.logInfo(this," menuCommand:'"+menuCommand+"'");
 				}
 				if (menuCommand.length()==0)
 					if (globalSelection.size()>0){
