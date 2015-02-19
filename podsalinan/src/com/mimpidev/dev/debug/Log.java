@@ -95,6 +95,10 @@ public class Log {
 	public synchronized void logInfo(Object object, String debugLine){
 		println ("[Info]["+getShortClassName(object.getClass().getName())+"] "+debugLine);
 	}
+
+	public synchronized void logInfo(Object object, int lineNum, String debugLine) {
+		logInfo(object,"Line:"+lineNum+" - "+debugLine);
+	}
 	
 	/**
 	 * 

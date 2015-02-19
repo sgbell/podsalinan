@@ -234,29 +234,15 @@ public class CLInterface extends CLIOption implements Runnable{
             		    returnValue.methodParameters = menuInput;
                 	}
            			if (debug) {
-           				Podsalinan.debugLog.logInfo(this,"Before the methodCall");
-               			Podsalinan.debugLog.logInfo(this,"methodCall: "+returnValue.methodCall);
-               			Podsalinan.debugLog.logInfo(this,"methodParameters: "+returnValue.methodParameters);
+           				Podsalinan.debugLog.logInfo(this,237,"Before the methodCall");
+               			Podsalinan.debugLog.logInfo(this,238,"methodCall: "+returnValue.methodCall);
+               			Podsalinan.debugLog.logInfo(this,239,"methodParameters: "+returnValue.methodParameters);
            			}
-    				/*TODO: Working here. need to redesign this section to work with globalSelection, so it will traverse the
-    				 * menu better
-    				 *
-    				String[] keys = {"episode","podcast","download"};
-    				boolean validKey=false;
-    				int keyCount=0;
-    				while (!validKey){
-    					if (globalSelection.containsKey(keys[keyCount])){
-    						if (debug) Podsalinan.debugLog.logInfo(this, "Global Selection Found:"+keys[keyCount]);
-    						returnValue=options.get(keys[keyCount]).execute(menuInput);
-    						validKey=true;
-    					}
-    					keyCount++;
-    				} */           		
            			returnValue=options.get(returnValue.methodCall.toLowerCase()).execute(returnValue.methodParameters);
            			if (debug){
-           				Podsalinan.debugLog.logInfo("After the methodCall");
-               			Podsalinan.debugLog.logInfo("methodCall: "+returnValue.methodCall);
-               			Podsalinan.debugLog.logInfo("methodParameters: "+returnValue.methodParameters);
+           				Podsalinan.debugLog.logInfo(this,257,"After the methodCall");
+               			Podsalinan.debugLog.logInfo(this,258,"methodCall: "+returnValue.methodCall);
+               			Podsalinan.debugLog.logInfo(this,259,"methodParameters: "+returnValue.methodParameters);
            			}
            			
                     if (returnValue.methodCall.length()>0){
@@ -265,7 +251,7 @@ public class CLInterface extends CLIOption implements Runnable{
                         	menuCommand +=" "+returnValue.methodParameters;
                     } else
                     	menuCommand = "";
-          			if (debug) Podsalinan.debugLog.logInfo("menuCommand: "+ menuCommand);
+          			if (debug) Podsalinan.debugLog.logInfo(this,268,"menuCommand: "+ menuCommand);
                 }
 			} else {
 				options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
@@ -403,8 +389,8 @@ public class CLInterface extends CLIOption implements Runnable{
 				else
 					params = "";
 				if (debug) {
-					Podsalinan.debugLog.logInfo(this," menuCommand:"+menuCommand.length());
-					Podsalinan.debugLog.logInfo(this," menuCommand:'"+menuCommand+"'");
+					Podsalinan.debugLog.logInfo(this,406," menuCommand:"+menuCommand.length());
+					Podsalinan.debugLog.logInfo(this,407," menuCommand:'"+menuCommand+"'");
 				}
 				if (menuCommand.length()==0)
 					if (globalSelection.size()>0){
