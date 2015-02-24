@@ -375,6 +375,9 @@ public class CLInterface extends CLIOption implements Runnable{
 					if (debug){
 						Podsalinan.debugLog.logMap(globalSelection);
 					}
+					/*TODO: Working here. Probably shouldn't be calling select straight off
+					 * on the way back here.
+					 */
 					options.get("select").execute("");
 				} else {
 					if (returnObject.execute){
@@ -385,7 +388,6 @@ public class CLInterface extends CLIOption implements Runnable{
 				}
 			}
 			if (debug){
-   				Podsalinan.debugLog.logInfo(this,387,"run().");
    				Podsalinan.debugLog.logInfo(this, 388, returnObject.methodCall);
    				Podsalinan.debugLog.logInfo(this, 389, returnObject.methodParameters);
 			}

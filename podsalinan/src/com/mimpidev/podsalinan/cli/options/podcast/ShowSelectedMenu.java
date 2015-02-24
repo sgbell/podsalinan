@@ -39,8 +39,8 @@ public class ShowSelectedMenu extends CLIOption {
 				System.out.println("9. Return to List of Podcasts");
 				System.out.println();
 				
-				returnObject.methodCall = "podcast";
-				returnObject.methodParameters = command;
+				/*returnObject.methodCall = "podcast";
+				returnObject.methodParameters = command;*/
 				
 				return returnObject;
 			}

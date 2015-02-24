@@ -79,6 +79,7 @@ public class SelectPodcast extends CLIOption {
 				}
 			}
 			if (selectedPodcast!=null){
+				if (debug) Podsalinan.debugLog.logInfo(this, 82, "Set selected podcast:"+selectedPodcast.getDatafile());
 				globalSelection.clear();
 				globalSelection.put("podcast",selectedPodcast.getDatafile());
 				command=selectedPodcast.getDatafile();
