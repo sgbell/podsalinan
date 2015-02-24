@@ -219,29 +219,26 @@ public class CLInterface extends CLIOption implements Runnable{
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
                 	// The reason for the return call is so that we can check mainMenu to transform the call,
                 	// and then have the called method call another one if it needs to.
-                	ReturnObject returnValue = new ReturnObject();
-                	
-                	returnValue.execute=true;
-                	returnValue.methodCall=menuInput.split(" ",2)[0];
-                	returnValue.methodParameters=menuInput;
-                	
+                	returnObject.methodParameters=menuInput;
            			if (debug) {
-           				Podsalinan.debugLog.logInfo(this,228,"Before the methodCall");
-               			Podsalinan.debugLog.logInfo(this,229,"methodCall: "+returnValue.methodCall);
-               			Podsalinan.debugLog.logInfo(this,230,"methodParameters: "+returnValue.methodParameters);
+           				Podsalinan.debugLog.logInfo(this,229,"Before the methodCall");
+               			Podsalinan.debugLog.logInfo(this,230,"methodCall: "+returnObject.methodCall);
+               			Podsalinan.debugLog.logInfo(this,231,"methodParameters: "+returnObject.methodParameters);
            			}
-           			returnValue=options.get(returnValue.methodCall.toLowerCase()).execute(returnValue.methodParameters);
+           			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
            			if (debug){
-           				Podsalinan.debugLog.logInfo(this,234,"After the methodCall");
-               			Podsalinan.debugLog.logInfo(this,235,"methodCall: "+returnValue.methodCall);
-               			Podsalinan.debugLog.logInfo(this,236,"methodParameters: "+returnValue.methodParameters);
+           				Podsalinan.debugLog.logInfo(this,235,"After the methodCall");
+               			Podsalinan.debugLog.logInfo(this,236,"methodCall: "+returnObject.methodCall);
+               			Podsalinan.debugLog.logInfo(this,237,"methodParameters: "+returnObject.methodParameters);
            			}
            			
                 }
 			} else {
 				options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
 			}
-			
+			if (debug){
+   				Podsalinan.debugLog.logInfo(this,245,"After options.get");
+			}
                 	/**
                 	 * How to traverse a menu system using commands???
                 	 * 
@@ -368,14 +365,31 @@ public class CLInterface extends CLIOption implements Runnable{
 		while (!data.getSettings().isFinished()){
 			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))){
+				if (debug){
+	   				Podsalinan.debugLog.logInfo(this,374,"run().");
+	   				Podsalinan.debugLog.logInfo(this, 375, returnObject.methodCall);
+	   				Podsalinan.debugLog.logInfo(this, 375, returnObject.methodParameters);
+				}
 				if (globalSelection.size()>0){
+
 					if (debug){
 						Podsalinan.debugLog.logMap(globalSelection);
 					}
 					options.get("select").execute("");
-				} else
-					options.get("").execute("");
+				} else {
+					if (returnObject.execute){
+						returnObject=options.get(returnObject.methodCall).execute(returnObject.methodParameters);
+						
+					} else
+						returnObject=options.get("").execute("");
+				}
 			}
+			if (debug){
+   				Podsalinan.debugLog.logInfo(this,387,"run().");
+   				Podsalinan.debugLog.logInfo(this, 388, returnObject.methodCall);
+   				Podsalinan.debugLog.logInfo(this, 389, returnObject.methodParameters);
+			}
+			
 			if (!data.getSettings().isFinished())
 				userInput();
 		}

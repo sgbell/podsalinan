@@ -55,21 +55,26 @@ public class MainMenuCommand extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 
 		if (options.containsKey(command))
 			options.get(command).execute(command);
 		else if (menuCommands.containsKey(command)){
-			returnObject = new ReturnObject();
-			
 			returnObject.methodCall=menuCommands.get(command);
 			returnObject.methodParameters="";
-			//returnValue.methodParameters="showMenu";
 			returnObject.execute=true;
+			if (debug){
+				Podsalinan.debugLog.logInfo(this, 67, returnObject.methodCall);
+			}
 		} else if (command.length()==0) {
 			options.get("showmenu").execute("");
+			returnObject.methodCall="";
+			returnObject.methodParameters="";
 		} else {
 			System.out.println("Error: Invalid User Command");
+		}
+		if (debug){
+			Podsalinan.debugLog.logInfo(this, 75, returnObject.methodCall);
 		}
 		return returnObject;
 	}
