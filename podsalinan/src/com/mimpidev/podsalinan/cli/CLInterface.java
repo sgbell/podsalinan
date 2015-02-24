@@ -45,10 +45,6 @@ public class CLInterface extends CLIOption implements Runnable{
 	 * 
 	 */
 	private CLInput input;
-	/**
-	 * 
-	 */
-	private String menuCommand="";
 
 	public CLInterface(DataStorage newData){
 		super(newData);
@@ -226,32 +222,21 @@ public class CLInterface extends CLIOption implements Runnable{
                 	ReturnObject returnValue = new ReturnObject();
                 	
                 	returnValue.execute=true;
-                	if (menuCommand.length()>0){
-                		returnValue.methodCall = menuCommand.split(" ")[0];
-                		returnValue.methodParameters = (menuCommand.substring(menuCommand.split(" ")[0].length())+" "+menuInput).trim();
-                	} else {
-                		returnValue.methodCall = menuCommand;
-            		    returnValue.methodParameters = menuInput;
-                	}
+                	returnValue.methodCall=menuInput.split(" ",2)[0];
+                	returnValue.methodParameters=menuInput;
+                	
            			if (debug) {
-           				Podsalinan.debugLog.logInfo(this,237,"Before the methodCall");
-               			Podsalinan.debugLog.logInfo(this,238,"methodCall: "+returnValue.methodCall);
-               			Podsalinan.debugLog.logInfo(this,239,"methodParameters: "+returnValue.methodParameters);
+           				Podsalinan.debugLog.logInfo(this,228,"Before the methodCall");
+               			Podsalinan.debugLog.logInfo(this,229,"methodCall: "+returnValue.methodCall);
+               			Podsalinan.debugLog.logInfo(this,230,"methodParameters: "+returnValue.methodParameters);
            			}
            			returnValue=options.get(returnValue.methodCall.toLowerCase()).execute(returnValue.methodParameters);
            			if (debug){
-           				Podsalinan.debugLog.logInfo(this,257,"After the methodCall");
-               			Podsalinan.debugLog.logInfo(this,258,"methodCall: "+returnValue.methodCall);
-               			Podsalinan.debugLog.logInfo(this,259,"methodParameters: "+returnValue.methodParameters);
+           				Podsalinan.debugLog.logInfo(this,234,"After the methodCall");
+               			Podsalinan.debugLog.logInfo(this,235,"methodCall: "+returnValue.methodCall);
+               			Podsalinan.debugLog.logInfo(this,236,"methodParameters: "+returnValue.methodParameters);
            			}
            			
-                    if (returnValue.methodCall.length()>0){
-                    	menuCommand = returnValue.methodCall;
-                        if (returnValue.methodParameters.length()>0)
-                        	menuCommand +=" "+returnValue.methodParameters;
-                    } else
-                    	menuCommand = "";
-          			if (debug) Podsalinan.debugLog.logInfo(this,268,"menuCommand: "+ menuCommand);
                 }
 			} else {
 				options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
@@ -383,25 +368,13 @@ public class CLInterface extends CLIOption implements Runnable{
 		while (!data.getSettings().isFinished()){
 			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))){
-				String params;
-				if (menuCommand.split(" ").length>1)
-					params =  menuCommand.split(" ", 2)[1];
-				else
-					params = "";
-				if (debug) {
-					Podsalinan.debugLog.logInfo(this,406," menuCommand:"+menuCommand.length());
-					Podsalinan.debugLog.logInfo(this,407," menuCommand:'"+menuCommand+"'");
-				}
-				if (menuCommand.length()==0)
-					if (globalSelection.size()>0){
-						if (debug){
-							Podsalinan.debugLog.logMap(globalSelection);
-						}
-						options.get("select").execute("");
-					} else
-						options.get("").execute(params);
-				else
-					options.get((menuCommand.split(" ")[0]).toLowerCase()).execute(params);
+				if (globalSelection.size()>0){
+					if (debug){
+						Podsalinan.debugLog.logMap(globalSelection);
+					}
+					options.get("select").execute("");
+				} else
+					options.get("").execute("");
 			}
 			if (!data.getSettings().isFinished())
 				userInput();

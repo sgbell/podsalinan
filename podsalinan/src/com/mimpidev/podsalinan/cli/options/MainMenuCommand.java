@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu;
@@ -53,23 +54,24 @@ public class MainMenuCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		ReturnObject returnValue=null;
+		debug=true;
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 
 		if (options.containsKey(command))
 			options.get(command).execute(command);
 		else if (menuCommands.containsKey(command)){
-			returnValue = new ReturnObject();
+			returnObject = new ReturnObject();
 			
-			returnValue.methodCall=menuCommands.get(command);
-			returnValue.methodParameters="";
+			returnObject.methodCall=menuCommands.get(command);
+			returnObject.methodParameters="";
 			//returnValue.methodParameters="showMenu";
-			returnValue.execute=true;
+			returnObject.execute=true;
 		} else if (command.length()==0) {
 			options.get("showmenu").execute("");
 		} else {
 			System.out.println("Error: Invalid User Command");
 		}
-		return returnValue;
+		return returnObject;
 	}
 
 }
