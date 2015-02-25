@@ -40,4 +40,11 @@ public class ReturnObject {
 	 * If the system needs to continue looping
 	 */
 	public boolean execute=false;
+
+	public boolean useGlobalSelection() {
+		if (execute && methodCall.length()<1)
+			return true;
+		else
+			return false;
+	}
 }

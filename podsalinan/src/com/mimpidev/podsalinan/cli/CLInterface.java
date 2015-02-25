@@ -215,7 +215,22 @@ public class CLInterface extends CLIOption implements Runnable{
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
                 	// The reason for the return call is so that we can check mainMenu to transform the call,
                 	// and then have the called method call another one if it needs to.
-                	returnObject.methodParameters=menuInput;
+                	if (returnObject.useGlobalSelection()){
+    					if (debug){
+    						Podsalinan.debugLog.logMap(globalSelection);
+    					}
+                		
+                		//Travel through the globalSelection to figure out what has been selected
+                		if (globalSelection.containsKey("podcast")||globalSelection.containsKey("episode")){
+                			returnObject.methodCall="podcast";
+                			returnObject.methodParameters=globalSelection.get("podcast")+" "+menuInput;
+                		} else if (globalSelection.containsKey("download")){
+                			returnObject.methodCall="download";
+                			returnObject.methodParameters=globalSelection.get("download")+" "+menuInput;
+                		}
+                	} else {
+                	   returnObject.methodParameters=menuInput;
+                	}
            			if (debug) {
            				Podsalinan.debugLog.logInfo(this,229,"Before the methodCall");
                			Podsalinan.debugLog.logInfo(this,230,"methodCall: "+returnObject.methodCall);
@@ -358,34 +373,31 @@ public class CLInterface extends CLIOption implements Runnable{
 	public void run() {
 		System.out.println("Welcome to podsalinan.");
 		System.out.println("----------------------");
+		returnObject.execute=true;
 		while (!data.getSettings().isFinished()){
 			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))){
 				if (debug){
-	   				Podsalinan.debugLog.logInfo(this,374,"run().");
-	   				Podsalinan.debugLog.logInfo(this, 375, returnObject.methodCall);
-	   				Podsalinan.debugLog.logInfo(this, 375, returnObject.methodParameters);
+	   				Podsalinan.debugLog.logInfo(this,366,"run() Before options().execute");
+	   				Podsalinan.debugLog.logInfo(this, 367, returnObject.methodCall);
+	   				Podsalinan.debugLog.logInfo(this, 368, returnObject.methodParameters);
 				}
-				if (globalSelection.size()>0){
+				if (returnObject.useGlobalSelection() && globalSelection.size()>0){
 
 					if (debug){
 						Podsalinan.debugLog.logMap(globalSelection);
 					}
-					/*TODO: Working here. Probably shouldn't be calling select straight off
-					 * on the way back here.
-					 */
-					options.get("select").execute("");
+					
+					options.get("").execute("");
 				} else {
 					if (returnObject.execute){
 						returnObject=options.get(returnObject.methodCall).execute(returnObject.methodParameters);
-						
-					} else
-						returnObject=options.get("").execute("");
+					}
 				}
 			}
 			if (debug){
-   				Podsalinan.debugLog.logInfo(this, 388, returnObject.methodCall);
-   				Podsalinan.debugLog.logInfo(this, 389, returnObject.methodParameters);
+   				Podsalinan.debugLog.logInfo(this, 386, returnObject.methodCall);
+   				Podsalinan.debugLog.logInfo(this, 387, returnObject.methodParameters);
 			}
 			
 			if (!data.getSettings().isFinished())
@@ -420,20 +432,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		
 		return date;
 	}
-/*
-	private void selectPodcast(Podcast podcast){
-		// Add information to menuList
-		menuList.clear();
-		menuList.add(new MenuPath("mainMenu", "podcast"));
-		menuList.add(new MenuPath("selectedPodcast", podcast.getDatafile()));
-			
-		// Set selected podcast
-		((CLPodcastSelectedMenu)(mainMenu.findSubmenu("podcast_selected"))).setSelectedPodcast(podcast);
-
-		if ((data.getSettings().isValidSetting("menuVisible"))&&
-			(data.getSettings().findSetting("menuVisible").equalsIgnoreCase("false")))
-  		    System.out.println("Selected Podcast: "+podcast.getName());
-	}*/
 
 	/**
 	 * @return the data
@@ -452,15 +450,5 @@ public class CLInterface extends CLIOption implements Runnable{
 	@Override
 	public ReturnObject execute(String command) {
 		return null;
-	}
-	
-	public static class MenuPath {
-		public String name;
-		public String value;
-
-		public MenuPath(String newName, String newValue) {
-			name = newName;
-			newValue = value;
-		}
 	}
 }

@@ -20,8 +20,6 @@ public class ShowSelectedMenu extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		returnObject = new ReturnObject();
-		
 		String podcastId = command.split(" ")[0];
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){
@@ -44,7 +42,7 @@ public class ShowSelectedMenu extends CLIOption {
 				
 				return returnObject;
 			}
-		
+		returnObject.execute=true;
 		return returnObject;
 	}
 
