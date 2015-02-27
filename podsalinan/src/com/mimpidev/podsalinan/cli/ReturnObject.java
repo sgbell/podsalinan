@@ -42,7 +42,7 @@ public class ReturnObject {
 	public boolean execute=false;
 
 	public boolean useGlobalSelection() {
-		if (execute && methodCall.length()<1)
+		if ((execute) && (methodCall.length()<1))
 			return true;
 		else
 			return false;
