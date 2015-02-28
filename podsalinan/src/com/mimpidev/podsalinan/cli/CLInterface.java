@@ -215,7 +215,7 @@ public class CLInterface extends CLIOption implements Runnable{
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
                 	// The reason for the return call is so that we can check mainMenu to transform the call,
                 	// and then have the called method call another one if it needs to.
-                	if (returnObject.useGlobalSelection()){
+                	if (globalSelection.size()>0){
     					if (debug){
     						Podsalinan.debugLog.logMap(globalSelection);
     					}
@@ -382,17 +382,8 @@ public class CLInterface extends CLIOption implements Runnable{
 	   				Podsalinan.debugLog.logInfo(this, 367, returnObject.methodCall);
 	   				Podsalinan.debugLog.logInfo(this, 368, returnObject.methodParameters);
 				}
-				if (returnObject.useGlobalSelection() && globalSelection.size()>0){
-
-					if (debug){
-						Podsalinan.debugLog.logMap(globalSelection);
-					}
-					
-					options.get("").execute("");
-				} else {
-					if (returnObject.execute){
-						returnObject=options.get(returnObject.methodCall).execute(returnObject.methodParameters);
-					}
+				if (returnObject.execute){
+					returnObject=options.get(returnObject.methodCall).execute(returnObject.methodParameters);
 				}
 			}
 			if (debug){
