@@ -219,31 +219,25 @@ public class CLInterface extends CLIOption implements Runnable{
     					if (debug){
     						Podsalinan.debugLog.logMap(globalSelection);
     					}
-                		
                 		//Travel through the globalSelection to figure out what has been selected
-                		if (globalSelection.containsKey("podcast")||globalSelection.containsKey("episode")){
-                			returnObject.methodCall="podcast";
-                			returnObject.methodParameters=globalSelection.get("podcast")+" "+menuInput;
-                		} else if (globalSelection.containsKey("download")){
-                			returnObject.methodCall="download";
-                			returnObject.methodParameters=globalSelection.get("download")+" "+menuInput;
-                		}
-                	} else {
-                	   returnObject.methodParameters=menuInput;
+    					menuInput=addGlobalSelection()+menuInput;
                 	}
-           			if (debug) {
-           				Podsalinan.debugLog.logInfo(this,229,"Before the methodCall");
-               			Podsalinan.debugLog.logInfo(this,230,"methodCall: "+returnObject.methodCall);
-               			Podsalinan.debugLog.logInfo(this,231,"methodParameters: "+returnObject.methodParameters);
-           			}
-           			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
-           			if (debug){
-           				Podsalinan.debugLog.logInfo(this,235,"After the methodCall");
-               			Podsalinan.debugLog.logInfo(this,236,"methodCall: "+returnObject.methodCall);
-               			Podsalinan.debugLog.logInfo(this,237,"methodParameters: "+returnObject.methodParameters);
-           			}
-           			
-                }
+                } else if ((!menuInput.startsWith("select")) ||
+                		   (!menuInput.startsWith("set"))){
+   					menuInput=addGlobalSelection()+menuInput;
+               	}
+           	   returnObject.methodParameters=menuInput;
+       			if (debug) {
+       				Podsalinan.debugLog.logInfo(this,229,"Before the methodCall");
+           			Podsalinan.debugLog.logInfo(this,230,"methodCall: "+returnObject.methodCall);
+           			Podsalinan.debugLog.logInfo(this,231,"methodParameters: "+returnObject.methodParameters);
+       			}
+       			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
+       			if (debug){
+       				Podsalinan.debugLog.logInfo(this,235,"After the methodCall");
+           			Podsalinan.debugLog.logInfo(this,236,"methodCall: "+returnObject.methodCall);
+           			Podsalinan.debugLog.logInfo(this,237,"methodParameters: "+returnObject.methodParameters);
+       			}
 			} else {
 				options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
 			}
@@ -398,6 +392,21 @@ public class CLInterface extends CLIOption implements Runnable{
 		synchronized (data.getSettings().getWaitObject()){
 			data.getSettings().getWaitObject().notify();
 		}
+	}
+	
+	public String addGlobalSelection(){
+		String returnString="";
+		String[] firstLevel = {"download","episode"};
+		for (String key : firstLevel){
+			if (globalSelection.containsKey(key)){
+				returnString=key+" "+globalSelection.get(key)+" ";
+			}
+		}
+		if (globalSelection.containsKey("podcast")){
+			returnString="podcast ";
+		}
+		
+		return returnString;
 	}
 	
     /** This method is used to try to find a date from the user entry
