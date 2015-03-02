@@ -46,7 +46,7 @@ public class SelectPodcast extends CLIOption {
 				command="";
 			}
 		} else {
-			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command);
+			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ",2)[0]);
 			if (selectedPodcast==null){
 				Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(command);
 				if (debug) Podsalinan.debugLog.logInfo(this, "Line:52, PodcastList.size="+podcastList.size());
@@ -82,27 +82,26 @@ public class SelectPodcast extends CLIOption {
 				if (debug) Podsalinan.debugLog.logInfo(this, 82, "Set selected podcast:"+selectedPodcast.getDatafile());
 				globalSelection.clear();
 				globalSelection.put("podcast",selectedPodcast.getDatafile());
-				command=selectedPodcast.getDatafile();
+				command=selectedPodcast.getDatafile()+(command.split(" ",2).length>1?" "+command.split(" ",2)[1]:"");
 			}
 		}
 
-		/*TODO: need to fix this, so that traversing the menu still works
-		 */
+		if (debug) Podsalinan.debugLog.logInfo(this,91, "Command: "+command);
 		if (command.length()==8){
 			returnObject = options.get("").execute(command);
-			if (debug) Podsalinan.debugLog.logInfo(this,"Command Length:"+command.length());
+			if (debug) Podsalinan.debugLog.logInfo(this,94,"Command Length:"+command.length());
 		}else if (command.split(" ").length>1){
-			if (debug) Podsalinan.debugLog.logInfo(this,"Command Length:"+command.length());
+			if (debug) Podsalinan.debugLog.logInfo(this,96,"Command Length:"+command.length());
 			if (command.split(" ")[1].equals("9")){
 				returnObject.methodCall="podcast";
 				returnObject.methodParameters="";
 			} else {
-				if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command.split(" ")[1]);
-				if (debug) Podsalinan.debugLog.logInfo(this, "Podcast: "+convertCharToNumber(command.split(" ")[1]));
+				if (debug) Podsalinan.debugLog.logInfo(this,101, "Command: "+command);
+				if (debug) Podsalinan.debugLog.logInfo(this,102, "Podcast: "+command.split(" ")[0]);
 				if (convertCharToNumber(command.split(" ")[1])>=0){
 					returnObject = options.get("<aa>").execute(command);
 				} else {
-					returnObject = options.get("").execute(command);
+					returnObject = options.get(command.split(" ")[1]).execute(command);
 				}
 			}
 		} else {

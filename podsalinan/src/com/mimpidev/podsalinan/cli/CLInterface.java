@@ -221,12 +221,14 @@ public class CLInterface extends CLIOption implements Runnable{
     					}
                 		//Travel through the globalSelection to figure out what has been selected
     					menuInput=addGlobalSelection()+menuInput;
+                        returnObject.methodCall=menuInput.split(" ",2)[0];
+                        menuInput=menuInput.split(" ",2)[1];
                 	}
                 } else if ((!menuInput.startsWith("select")) ||
                 		   (!menuInput.startsWith("set"))){
    					menuInput=addGlobalSelection()+menuInput;
                	}
-           	   returnObject.methodParameters=menuInput;
+           	    returnObject.methodParameters=menuInput;
        			if (debug) {
        				Podsalinan.debugLog.logInfo(this,229,"Before the methodCall");
            			Podsalinan.debugLog.logInfo(this,230,"methodCall: "+returnObject.methodCall);
@@ -403,7 +405,7 @@ public class CLInterface extends CLIOption implements Runnable{
 			}
 		}
 		if (globalSelection.containsKey("podcast")){
-			returnString="podcast ";
+			returnString="podcast "+globalSelection.get("podcast")+" ";
 		}
 		
 		return returnString;

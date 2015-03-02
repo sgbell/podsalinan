@@ -72,11 +72,17 @@ public class PodcastCommand extends CLIOption {
 					}
 					returnObject = options.get("<aaaaaaaa>").execute(command);
 				} else {
+					if (debug) Podsalinan.debugLog.logInfo(this, "Podcast Value: "+command.split(" ",2)[0]);
 					// If the user has entered 8 characters find the right podcast in the list
-					for (int count=0; count<data.getPodcasts().getList().size(); count++){
+                    int count=0;
+                    boolean found=false;
+                    while ((!found)&&(count<data.getPodcasts().getList().size())){
 						Podcast currentPodcast = data.getPodcasts().getList().get(count);
-						if (currentPodcast.getDatafile().equals(command.split(" ")[0]))
+						if (currentPodcast.getDatafile().equals(command.split(" ")[0])){
 							returnObject = options.get("<aaaaaaaa>").execute(command);
+							found=true;
+						}
+						count++;
 					}
 				}
 			}
