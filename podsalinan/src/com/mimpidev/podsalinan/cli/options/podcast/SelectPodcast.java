@@ -39,6 +39,10 @@ public class SelectPodcast extends CLIOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"Line:41, Command :"+command);
+
+		/*TODO: Need to test if the podcast passed in already exists in globalSelection, and make
+		 * sure that we dont do anything unnecessary, like clearing the selection, and creating it again
+		 */
 		
 		if (command.split(" ").length==1 && command.length()==1){
 			if (command.equals("9") && globalSelection.size()>0){
