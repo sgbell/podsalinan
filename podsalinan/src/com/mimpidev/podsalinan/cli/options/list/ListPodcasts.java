@@ -31,13 +31,15 @@ public class ListPodcasts extends CLIOption {
 		int podcastCount=1;
 		
 		for (Podcast podcast : data.getPodcasts().getList()){
-			if (!podcast.isRemoved())
+			if (!podcast.isRemoved()){
 				if (command.split(" ")[command.split(" ").length-1].equalsIgnoreCase("showCount"))
 					System.out.print(getEncodingFromNumber(podcastCount));
 				else
 					System.out.print(podcast.getDatafile());
 				System.out.println(". "+podcast.getName());
-			podcastCount++;
+			
+			    podcastCount++;
+			}
 		}
 		
 		return returnObject;

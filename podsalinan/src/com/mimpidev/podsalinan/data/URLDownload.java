@@ -95,7 +95,7 @@ public class URLDownload extends URLDetails {
 	}
 
 	public void setDestination(File outputFile) {
-		fields.get("direcotory").setValue(outputFile.getAbsolutePath());
+		fields.get("directory").setValue(outputFile.getAbsolutePath());
 	}
 
 	/**

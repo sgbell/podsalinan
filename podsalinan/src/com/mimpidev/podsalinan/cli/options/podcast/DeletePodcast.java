@@ -38,8 +38,9 @@ public class DeletePodcast extends CLIOption {
 		    		selectedPodcast.setRemoved(true);
 		    	}
 			}
-			returnObject.methodCall = "Podcast";
+			returnObject.methodCall = "podcast";
 			returnObject.methodParameters = "";
+			returnObject.execute=true;
 		}
 		
 		return returnObject;

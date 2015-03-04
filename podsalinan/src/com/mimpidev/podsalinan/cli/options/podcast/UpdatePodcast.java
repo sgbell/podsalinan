@@ -27,17 +27,21 @@ public class UpdatePodcast extends CLIOption {
 	 */
 	@Override
 	public ReturnObject execute(String command) {
+		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"]");
 		
 		String tempDir=data.getSettingsDir();
+		if (debug) Podsalinan.debugLog.logInfo(this, "tempDir:"+tempDir);
+		
 		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ")[0]);
 		if (selectedPodcast!=null){
-			if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] updating Podcast");
+			if (debug) Podsalinan.debugLog.logInfo(this, "Updating Podcast");
 			selectedPodcast.updateList(tempDir, true);
 		}
 		returnObject = new ReturnObject();
 		returnObject.methodCall = "podcast";
 		returnObject.methodParameters = command.split(" ")[0];
+		returnObject.execute=true;
 		
 		return returnObject;
 	}

@@ -44,6 +44,10 @@ public class PodcastCommand extends CLIOption {
 		else{
 			try {
 				// Check if the value is a number and act accordingly
+				String[] commandSplit = command.split(" ", 2);
+				if (debug)
+					for (String commandItem: commandSplit)
+						Podsalinan.debugLog.logInfo(this, commandItem);
 				Integer.parseInt(command);
 				if (command.equals("9")){
 					globalSelection.clear();

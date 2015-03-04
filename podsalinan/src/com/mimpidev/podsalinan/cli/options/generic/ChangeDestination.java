@@ -43,7 +43,7 @@ public class ChangeDestination extends CLIOption {
 			System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
 			String userInput=input.getStringInput();
 	    	changeDirectory(selectedPodcast,userInput);
-			returnObject.methodCall = "Podcast";
+			returnObject.methodCall = "podcast";
 			returnObject.methodParameters = command.split(" ")[0];
     	} else {
     		URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(commands[0]);
@@ -53,6 +53,7 @@ public class ChangeDestination extends CLIOption {
 				changeDirectory(selectedDownload,userInput);
     		}
 	    } 
+		returnObject.execute=true;
 		
 		return returnObject;
 	}

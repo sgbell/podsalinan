@@ -41,7 +41,7 @@ public class AutoQueueEpisodes extends CLIOption {
 		    		selectedPodcast.setAutomaticQueue(true);
 		    		System.out.println(selectedPodcast.getName()+"podcast autoqeue enabled.");
 		    	}
-				returnObject.methodCall = "Podcast";
+				returnObject.methodCall = "podcast";
 				returnObject.methodParameters = command.split(" ")[0];
 			}
 		}

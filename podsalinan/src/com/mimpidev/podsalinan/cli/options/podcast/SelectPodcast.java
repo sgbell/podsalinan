@@ -43,8 +43,11 @@ public class SelectPodcast extends CLIOption {
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in
 		 * global selection
 		 */
+        /*TODO: Working here to correct menu traversal when the user wants to edit this submenu
+         * 
+         */
 		if (!(globalSelection.containsKey("podcast") && 
-			  (command.split(" ",2)[0].equals(globalSelection.get("podcast"))))){
+              (command.split(" ",2)[0].equals(globalSelection.get("podcast"))))){
 			if (command.split(" ").length==1 && command.length()==1){
 				if (command.equals("9") && globalSelection.size()>0){
 					globalSelection.clear();
