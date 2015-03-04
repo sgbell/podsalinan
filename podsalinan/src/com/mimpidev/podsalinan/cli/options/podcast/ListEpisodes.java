@@ -53,6 +53,7 @@ public class ListEpisodes extends CLIOption {
 		returnObject = new ReturnObject();
 		returnObject.methodCall = "podcast";
 		returnObject.methodParameters = command.split(" ")[0];
+		returnObject.execute=true;
 		
 		return returnObject;
 	}
