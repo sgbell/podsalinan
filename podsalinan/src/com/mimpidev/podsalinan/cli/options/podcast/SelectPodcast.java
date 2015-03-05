@@ -43,8 +43,9 @@ public class SelectPodcast extends CLIOption {
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in
 		 * global selection
 		 */
-        /*TODO: Working here to correct menu traversal when the user wants to edit this submenu
-         * 
+        /*TODO: Working here to correct menu traversal when the user wants to exit this submenu
+         *      This is the current issue. Need to check if command ends in a 9 (If the podcast stored in globalSelection
+         *      equals the podcast passed in, we will clear the globalSelection, and exit.
          */
 		if (!(globalSelection.containsKey("podcast") && 
               (command.split(" ",2)[0].equals(globalSelection.get("podcast"))))){

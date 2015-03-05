@@ -36,11 +36,16 @@ public class DeletePodcast extends CLIOption {
 				CLInput input = new CLInput();
 				if(input.confirmRemoval()){
 		    		selectedPodcast.setRemoved(true);
+		    		globalSelection.clear();
+					returnObject.methodCall = "podcast";
+					returnObject.methodParameters = "";
+					returnObject.execute=true;
+		    	} else {
+		    		returnObject.methodCall = "podcast";
+		    		returnObject.methodParameters = command.split(" ")[0];
+		    		returnObject.execute=true;
 		    	}
 			}
-			returnObject.methodCall = "podcast";
-			returnObject.methodParameters = "";
-			returnObject.execute=true;
 		}
 		
 		return returnObject;

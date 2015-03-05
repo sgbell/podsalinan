@@ -44,15 +44,12 @@ public class PodcastCommand extends CLIOption {
 		else{
 			try {
 				// Check if the value is a number and act accordingly
-				String[] commandSplit = command.split(" ", 2);
-				if (debug)
-					for (String commandItem: commandSplit)
-						Podsalinan.debugLog.logInfo(this, commandItem);
 				Integer.parseInt(command);
 				if (command.equals("9")){
 					globalSelection.clear();
 					returnObject.methodCall="";
 					returnObject.methodParameters="";
+					returnObject.execute=true;
 				} else {
 					// If the user has entered 8 characters find the right podcast in the list, and the hash happens to
 					// be completely numerical
