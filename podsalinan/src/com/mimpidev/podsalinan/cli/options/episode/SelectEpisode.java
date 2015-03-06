@@ -41,7 +41,7 @@ public class SelectEpisode extends CLIOption {
         			returnObject.methodParameters=commandOptions[0];
         			returnObject.execute=true;
         			globalSelection.remove("episode");
-        		} else {
+        		} else if (commandOptions[1].equalsIgnoreCase("episode")){
             		try {
             			Integer.parseInt(commandOptions[3]);
             			if (debug) Podsalinan.debugLog.logInfo(this,45,"Command: "+command);
