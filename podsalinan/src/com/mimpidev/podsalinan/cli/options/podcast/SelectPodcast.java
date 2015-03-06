@@ -103,8 +103,10 @@ public class SelectPodcast extends CLIOption {
 		}else if (command.split(" ").length>1){
 			if (debug) Podsalinan.debugLog.logInfo(this,96,"Command Length:"+command.length());
 			if (command.split(" ")[1].equals("9")){
+				globalSelection.clear();
 				returnObject.methodCall="podcast";
 				returnObject.methodParameters="";
+				returnObject.execute=true;
 			} else {
 				if (debug) Podsalinan.debugLog.logInfo(this,101, "Command: "+command);
 				if (debug) Podsalinan.debugLog.logInfo(this,102, "Podcast: "+command.split(" ")[0]);
