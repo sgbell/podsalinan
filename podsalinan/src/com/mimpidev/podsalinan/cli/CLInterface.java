@@ -405,7 +405,7 @@ public class CLInterface extends CLIOption implements Runnable{
 			}
 		}
 		if (globalSelection.containsKey("podcast")){
-			returnString="podcast "+globalSelection.get("podcast")+" ";
+			returnString="podcast "+globalSelection.get("podcast")+" "+returnString;
 		}
 		
 		return returnString;
