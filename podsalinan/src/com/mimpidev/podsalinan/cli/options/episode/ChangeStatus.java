@@ -42,7 +42,7 @@ public class ChangeStatus extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
+		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command: "+command);
 		
 		// TODO flesh out ChangeStatus for episode command
 		return returnObject;

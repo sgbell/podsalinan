@@ -37,7 +37,6 @@ public class SelectPodcast extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"Line:41, Command :"+command);
 
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in

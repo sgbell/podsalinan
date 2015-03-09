@@ -42,7 +42,7 @@ public class CancelDownload extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
+		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command :"+command);
 
 		// TODO Flesh out CancelDownload for cancelling episode from being downloaded
 		return returnObject;

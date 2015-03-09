@@ -29,11 +29,31 @@ public class SelectEpisode extends CLIOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,31,"Command: "+command);
-		/* TODO: working here to insert the episode details into the globalSelection array and also compare it with
-		 * globalSelection array. No point chasing it, if we already have it.
-		 */
 		String[] commandOptions = command.split(" ");
 		if (debug) Podsalinan.debugLog.logInfo(this, 36, "Length: "+commandOptions.length);
+		
+		// Find out where the episode id is in the command String
+		int episodePosition=-1;
+		if (commandOptions.length>2){
+			if (commandOptions[2].equalsIgnoreCase("episode"))
+				episodePosition=2;
+		} else if (commandOptions.length==2){
+			episodePosition=1;
+		}
+		
+		// If episode 1 is identified (approximately) compare it with globalSelection array
+		if (episodePosition!=-1){
+			try {
+				Integer.parseInt(commandOptions[episodePosition]);
+			} catch (NumberFormatException e){
+				if (((globalSelection.containsKey("episode"))&&
+					 (!commandOptions[episodePosition].equalsIgnoreCase(globalSelection.get("episode"))))||
+					(!globalSelection.containsKey("episode"))){
+					globalSelection.put("episode", commandOptions[episodePosition]);
+				}
+			}
+		}
+		
         switch (commandOptions.length){
         	case 4:
         		if (commandOptions[3].equals("9")){
@@ -61,12 +81,8 @@ public class SelectEpisode extends CLIOption {
         		break;
         	case 2:
         		if (debug) Podsalinan.debugLog.logInfo(this, 60,"Command: "+command);
-        		if ((!globalSelection.containsKey("episode"))||
-      				((globalSelection.containsKey("episode"))&& 
-      				 (!globalSelection.get("episode").equalsIgnoreCase(commandOptions[1])))){
-        			globalSelection.put("episode", commandOptions[1]);
-        		}
-    			returnObject = options.get("showmenu").execute(command);
+
+        		returnObject = options.get("showmenu").execute(command);
         		break;
         	default:
         }
