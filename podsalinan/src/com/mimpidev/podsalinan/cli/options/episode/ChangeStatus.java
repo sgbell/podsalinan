@@ -24,7 +24,10 @@ package com.mimpidev.podsalinan.cli.options.episode;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnObject;
+import com.mimpidev.podsalinan.data.Episode;
+import com.mimpidev.podsalinan.data.Podcast;
 
 /**
  * @author bugman
@@ -43,8 +46,28 @@ public class ChangeStatus extends CLIOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command: "+command);
+		CLInput input = new CLInput();
+
+		String[] commandOptions = command.split(" ");
+		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(commandOptions[0]);
+		if (selectedPodcast!=null){
+			Episode episode = selectedPodcast.getEpisodes().get(convertCharToNumber(commandOptions[2]));
+			if (episode!=null){
+				System.out.println ();
+				
+				for (int statusCount=0; statusCount<4; statusCount++)
+					System.out.println(this.getCharForNumber(statusCount+1)+". "+
+							episode.getStatusString(statusCount));
+				System.out.print("Please select status ["+episode.getCurrentStatus()+"]: ");
+				String statusInput=input.getValidLetter('A','D');
+				if (statusInput!=null){
+					if (debug) Podsalinan.debugLog.logInfo(this, "Status Input: " + statusInput + " - " + convertCharToNumber(statusInput));
+					episode.setStatus(convertCharToNumber(statusInput));
+					System.out.println(episode.getTitle() + " - Status Updated: " + episode.getCurrentStatus());
+				}
+			}
+		}
 		
-		// TODO flesh out ChangeStatus for episode command
 		return returnObject;
 	}
 
