@@ -65,7 +65,6 @@ public class CancelDownload extends CLIOption {
 		returnObject.methodCall="podcast";
 		returnObject.methodParameters=command.substring(0, command.lastIndexOf(commandOptions[3])-1);
 		returnObject.execute=true;
-		//TODO: check SelectEpisode, and track down why the system is not showing the menu again after cancelDownload has executed
 		return returnObject;
 	}
 

@@ -25,7 +25,11 @@ public class ShowSelectedMenu extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
 		String[] commandOptions = command.split(" ");
 		if (commandOptions.length>1){
-			int episodeNum = convertCharToNumber(commandOptions[1]);
+			int episodeNum = -1;
+            if (commandOptions[1].equalsIgnoreCase("episode"))
+               episodeNum = convertCharToNumber(commandOptions[2]);
+            else
+               episodeNum = convertCharToNumber(commandOptions[1]);
 			Podcast podcast = data.getPodcasts().getPodcastByUid(commandOptions[0]);
 			if (episodeNum<podcast.getEpisodes().size()){
 				Episode episode = podcast.getEpisodes().get(episodeNum);
