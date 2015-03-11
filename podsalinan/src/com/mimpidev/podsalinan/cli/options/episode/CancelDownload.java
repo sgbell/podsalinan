@@ -21,10 +21,15 @@
  */
 package com.mimpidev.podsalinan.cli.options.episode;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
+import com.mimpidev.podsalinan.data.Episode;
+import com.mimpidev.podsalinan.data.Podcast;
 
 /**
  * @author bugman
@@ -43,8 +48,24 @@ public class CancelDownload extends CLIOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command :"+command);
-
-		// TODO Flesh out CancelDownload for cancelling episode from being downloaded
+		
+		String[] commandOptions = command.split(" ");
+		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(commandOptions[0]);
+		if (selectedPodcast!=null){
+			Episode episode = selectedPodcast.getEpisodes().get(convertCharToNumber(commandOptions[2]));
+			if (episode!=null){
+				try {
+					data.getUrlDownloads().cancelDownload(new URL(episode.getURL()));
+					System.out.println("Successfully Cancelled Download of Episode: "+episode.getTitle());
+				} catch (MalformedURLException e) {
+					System.out.println("Error: Invalid URL");
+				}
+			}
+		}
+		returnObject.methodCall="podcast";
+		returnObject.methodParameters=command.substring(0, command.lastIndexOf(commandOptions[3])-1);
+		returnObject.execute=true;
+		//TODO: check SelectEpisode, and track down why the system is not showing the menu again after cancelDownload has executed
 		return returnObject;
 	}
 

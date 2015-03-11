@@ -79,8 +79,9 @@ public class SelectEpisode extends CLIOption {
             		}
         		}
         		break;
+        	case 3:
         	case 2:
-        		if (debug) Podsalinan.debugLog.logInfo(this, 60,"Command: "+command);
+        		if (debug) Podsalinan.debugLog.logInfo(this, 84,"Command: "+command);
 
         		returnObject = options.get("showmenu").execute(command);
         		break;
