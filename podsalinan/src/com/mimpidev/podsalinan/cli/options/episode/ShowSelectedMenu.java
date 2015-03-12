@@ -14,7 +14,7 @@ import com.mimpidev.podsalinan.data.Podcast;
  * @author sbell
  *
  */
-public class ShowSelectedMenu extends CLIOption {
+public class ShowSelectedMenu extends BaseEpisodeOption {
 
 	public ShowSelectedMenu(DataStorage newData) {
 		super(newData);
@@ -30,11 +30,11 @@ public class ShowSelectedMenu extends CLIOption {
                episodeNum = convertCharToNumber(commandOptions[2]);
             else
                episodeNum = convertCharToNumber(commandOptions[1]);
-			Podcast podcast = data.getPodcasts().getPodcastByUid(commandOptions[0]);
-			if (episodeNum<podcast.getEpisodes().size()){
-				Episode episode = podcast.getEpisodes().get(episodeNum);
+            
+            Episode episode = getEpisode(commandOptions[0],episodeNum);
+            if (episode!=null){
 				
-				System.out.println ("Podcast: "+podcast.getName());
+				System.out.println ("Podcast: "+getPodcast().getName());
 				System.out.println ("Episode: "+episode.getTitle());
 				System.out.println ("Date: "+episode.getDate());
 				System.out.println ("Status: "+episode.getCurrentStatus());

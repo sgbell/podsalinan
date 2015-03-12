@@ -25,12 +25,14 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
+import com.mimpidev.podsalinan.data.Episode;
+import com.mimpidev.podsalinan.data.Podcast;
 
 /**
  * @author bugman
  *
  */
-public class DownloadEpisode extends CLIOption {
+public class DownloadEpisode extends BaseEpisodeOption {
 
 	/**
 	 * @param newData
@@ -44,7 +46,15 @@ public class DownloadEpisode extends CLIOption {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command: "+command);
 
-		// TODO Flesh out DownloadEpisode class
+		String[] commandOptions = command.split(" ");
+		Episode episode = getEpisode(commandOptions[0], commandOptions[2]);
+		if (episode!=null){
+			episode.setStatus(Episode.CURRENTLY_DOWNLOADING);
+			data.getUrlDownloads().addDownload(episode,getPodcast());
+			System.out.println("Downloading: "+episode.getTitle());
+		}
+		
+		returnObject.execute=true;
 		return returnObject;
 	}
 
