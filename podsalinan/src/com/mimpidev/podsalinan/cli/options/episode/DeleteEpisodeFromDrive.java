@@ -23,7 +23,9 @@ package com.mimpidev.podsalinan.cli.options.episode;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnObject;
+import com.mimpidev.podsalinan.data.Episode;
 
 /**
  * @author bugman
@@ -42,7 +44,18 @@ public class DeleteEpisodeFromDrive extends BaseEpisodeOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command: "+command);
-		// TODO: flesh out DeleteEpisodeFromDrive
+		
+        String[] commandOptions = command.split(" ");
+		Episode episode=this.getEpisode(commandOptions[0], commandOptions[2]);
+		if (episode!=null){
+			if (episode.getDirectory().length()==0){
+				//TODO: if episode[directory] is empty (grab the directory from podcast and continue)
+			}
+			/*CLInput input = new CLInput();
+			if (input.confirmRemoval()){
+				episode.
+			}*/
+		}
 		return returnObject;
 	}
 

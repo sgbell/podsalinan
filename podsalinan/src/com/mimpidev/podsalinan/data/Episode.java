@@ -61,6 +61,7 @@ public class Episode extends URLDetails {
 	public Episode(Map<String,String> record){
 		this();
 		populateFromRecord(record);
+		//TODO: Need to migrate this code to EpisodeLoader
 		if ((!getDatabaseRecord().containsKey("published"))&&
 			(record.containsKey("published"))&&
 			(fields.get("date").getValue().equals("")||fields.get("date").getValue()!=null)){
