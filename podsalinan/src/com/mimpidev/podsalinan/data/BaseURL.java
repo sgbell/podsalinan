@@ -36,7 +36,6 @@ public class BaseURL extends DataRecord{
 
 	public BaseURL (){
 		fields.put("url", new StringType());
-		fields.put("directory", new StringType());
 	}
 	
 	public BaseURL (String url){
@@ -65,22 +64,6 @@ public class BaseURL extends DataRecord{
 		fields.get("url").setValue(url);
 	}
 	
-	/**
-	 * 
-	 * @param newDirectory
-	 */
-	public void setDirectory(String newDirectory){
-		fields.get("directory").setValue(newDirectory);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getDirectory(){
-		return fields.get("directory").getValue();
-	}
-
 	/**
 	 * @return the fields
 	 */

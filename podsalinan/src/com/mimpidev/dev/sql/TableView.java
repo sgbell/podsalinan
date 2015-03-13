@@ -32,7 +32,6 @@ import java.util.Set;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.field.FieldDetails;
-import com.mimpidev.dev.sql.field.condition.FieldCondition;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.sql.sqlitejdbc.Database;
 import com.mimpidev.sql.sqlitejdbc.cursors.SqliteCursor;
@@ -466,6 +465,7 @@ public class TableView {
 		return null;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private String createWhereClause(
 			Map conditions) {
 		String where="";

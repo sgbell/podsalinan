@@ -38,7 +38,7 @@ public class DataRecord {
 	public void populateFromRecord(Map<String, String> record){
 		Iterator<Entry<String, FieldDetails>> it = getDatabaseRecord().entrySet().iterator();
 		while (it.hasNext()){
-			Map.Entry<String, FieldDetails> pairs = (Map.Entry<String,FieldDetails>)it.next();
+			Map.Entry<String, FieldDetails> pairs = it.next();
 			if (record.containsKey(pairs.getKey())){
 				if (pairs.getValue().getFieldType()==FieldDetails.BOOLEAN)
 					if (record.get(pairs.getKey())!=null)
@@ -99,7 +99,7 @@ public class DataRecord {
 		Map<String,FieldDetails> databaseRecord = new HashMap<String,FieldDetails>();
 		Iterator<Entry<String, FieldDetails>> it=fields.entrySet().iterator();
 		while (it.hasNext()){
-			Map.Entry pairs = (Map.Entry)it.next();
+			Entry<String, FieldDetails> pairs = it.next();
 			if (((FieldDetails)pairs.getValue()).isPersistent())
 				databaseRecord.put((String)pairs.getKey(), (FieldDetails)pairs.getValue());
 		}

@@ -30,6 +30,11 @@ public class DataDefinitionException extends Exception {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 6925989787495368292L;
+
+	/**
+	 * 
+	 */
 	public DataDefinitionException() {
 	}
 

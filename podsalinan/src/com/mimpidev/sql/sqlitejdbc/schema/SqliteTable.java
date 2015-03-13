@@ -3,8 +3,8 @@
  */
 package com.mimpidev.sql.sqlitejdbc.schema;
 
-import java.util.HashMap;
 import java.util.Map;
+
 import com.mimpidev.sql.sqlitejdbc.Database;
 import com.mimpidev.sql.sqlitejdbc.SqliteDataTable;
 import com.mimpidev.sql.sqlitejdbc.cursors.SqliteCursor;
@@ -156,6 +156,7 @@ public class SqliteTable {
 	 * @return
 	 * @throws SqliteException
 	 */
+	@SuppressWarnings("rawtypes")
 	public SqliteCursor lookupByWhere(final Map whereClause) throws SqliteException{
 		String conditions="";
 		for (Object key : whereClause.keySet()){
@@ -218,6 +219,7 @@ public class SqliteTable {
 	 * @return
 	 * @throws SqliteException
 	 */
+	@SuppressWarnings("rawtypes")
 	public Object update(final Map datafields, final String where) throws SqliteException{
 		return (Long) db.runWithLock(new SqliteRunnableWithLock(){
 			public Object runWithLock(Database db) throws SqliteException {

@@ -28,8 +28,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.mimpidev.dev.sql.field.FieldDetails;
-
 /**
  * @author bugman
  *
@@ -176,6 +174,7 @@ public class Log {
 		return false;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void logMap(Map mapObject){
 		Iterator<Entry> it = mapObject.entrySet().iterator();
 		

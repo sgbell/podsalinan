@@ -73,7 +73,12 @@ public class SettingsLoader extends TableLoader {
 			
 			for (final Map.Entry<String, String> entry : settings.getMap().entrySet()){
 				try {
-					insert(new HashMap<String, FieldDetails>(){{
+					insert(new HashMap<String, FieldDetails>(){/**
+						 * 
+						 */
+						private static final long serialVersionUID = 6745125487319079752L;
+
+					{
 						put("name",new StringType(entry.getKey()));
 						put("value",new StringType(entry.getValue()));
 					}});

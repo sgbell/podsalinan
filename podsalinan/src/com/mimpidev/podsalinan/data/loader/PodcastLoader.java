@@ -140,7 +140,12 @@ public class PodcastLoader extends TableLoader {
 					}
 				} else if (podcast.isRemoved()){
 					try {
-						delete(new HashMap<String, FieldDetails>(){{
+						delete(new HashMap<String, FieldDetails>(){/**
+							 * 
+							 */
+							private static final long serialVersionUID = -7040466909383675903L;
+
+						{
 							put("url",new StringType(podcast.getURL()));
 						}});
 					} catch (SqlException e) {
@@ -150,7 +155,12 @@ public class PodcastLoader extends TableLoader {
 				} else if (podcast.isUpdated()){
 					try {
 						update(podcast.getDatabaseRecord(), 
-							new HashMap<String, FieldDetails>(){{
+							new HashMap<String, FieldDetails>(){/**
+								 * 
+								 */
+								private static final long serialVersionUID = -3602277504930209966L;
+
+							{
 								put("datafile",new StringType(podcast.getDatafile()));
 						}});
 					} catch (SqlException e) {

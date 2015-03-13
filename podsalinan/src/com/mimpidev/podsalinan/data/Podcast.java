@@ -105,34 +105,12 @@ public class Podcast extends DownloadDetails{
 	public Podcast(Map<String, String> record) {
 		this();
 		populateFromRecord(record);
-		/*Podsalinan.debugLog.logInfo("datafile="+fields.get("datafile").getValue());
-		if ((!getDatabaseRecord().containsKey("localFile"))&&
-				(record.containsKey("localFile"))&&
-				(fields.get("datafile").getValue().equals("")||fields.get("datafile").getValue()!=null)){
-				fields.get("datafile").setValue(record.get("localFile"));
-		}*/
 	}
 	
 	public Vector<Episode> getEpisodes(){
 		return episodeList;
 	}
 	
-	public void setURL(String url){
-		super.setURL(url);
-	}
-	
-	public String getURL(){
-		return super.getURL();
-	}
-
-	public void setDirectory(String directory) {
-		fields.get("directory").setValue(directory);
-	}
-
-	public String getDirectory() {
-		return fields.get("directory").getValue();
-	}
-
 	/**
 	 * @return the image
 	 */

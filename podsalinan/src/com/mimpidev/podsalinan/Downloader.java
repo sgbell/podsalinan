@@ -31,6 +31,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.List;
+
 import com.mimpidev.podsalinan.data.URLDetails;
 import com.mimpidev.podsalinan.data.URLDownload;
 
@@ -113,6 +114,7 @@ public class Downloader extends NotifyingRunnable{
 	 * This test will cover if a download can occur or not.
 	 * @return if its connected to the internet
 	 */
+	@SuppressWarnings("unused")
 	public static boolean isInternetReachable()
     {
             try {
@@ -175,8 +177,6 @@ public class Downloader extends NotifyingRunnable{
 			//System.out.println("Yes it is.");
 			byte buf[]=new byte[1024];
 			int byteRead;	// Number of bytes read from file being downloaded
-			String totalSizeModifier;
-
 				
 			//System.out.println("Internet is reachable.");
 			
@@ -228,13 +228,6 @@ public class Downloader extends NotifyingRunnable{
 						downloadItem.setStatus(URLDetails.DESTINATION_INVALID);
 						return DESTINATION_INVALID;
 					}
-					/*
-					Map<String, List<String>> map = conn.getHeaderFields();
-					for (Map.Entry<String, List<String>> entry: map.entrySet()){
-						System.out.println("Key : " + entry.getKey()+
-								" , Value : "+entry.getValue());
-					}
-					*/
 					
 					if (values != null && !values.isEmpty()){
 						length = (String) values.get(0);

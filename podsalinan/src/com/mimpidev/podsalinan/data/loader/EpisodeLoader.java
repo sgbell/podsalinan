@@ -3,7 +3,6 @@
  */
 package com.mimpidev.podsalinan.data.loader;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +39,7 @@ public class EpisodeLoader extends TableLoader {
 	/**
 	 * 
 	 */
+	@SuppressWarnings("serial")
 	public void updateDatabase() {
 
 		if (podcast.getSettingsDir()!=null){

@@ -123,6 +123,7 @@ public class SqliteDataTable {
 	 * @return
 	 * @throws SqliteException 
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object update(Map datafields, String where) throws SqliteException {
 		Statement sql;
 		String setString="";

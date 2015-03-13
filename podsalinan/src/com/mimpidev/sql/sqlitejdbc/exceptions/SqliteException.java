@@ -9,6 +9,10 @@ package com.mimpidev.sql.sqlitejdbc.exceptions;
  */
 public class SqliteException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2699404458898639890L;
 	private String sqlStatement; 
 	/**
 	 * 

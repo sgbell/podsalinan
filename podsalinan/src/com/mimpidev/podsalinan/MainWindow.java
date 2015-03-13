@@ -10,6 +10,10 @@ import javax.swing.JFrame;
  *
  */
 public class MainWindow extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2141624779421328432L;
 	private CommandPass commandPasser;
 	private DataStorage data;
 	

@@ -76,8 +76,6 @@ public class DownloadsLoader extends TableLoader {
 	@Override
 	public void updateDatabase() {
 		if (isDbOpen()){
-			// Need to figure out how to increment downloadCount
-			final Integer downloadCount= new Integer(0);
 			for (final URLDownload download : downloads.getDownloads()){
 				int sqlType=TableView.NOTHING_CHANGED;
 				if (!download.isAdded()){
@@ -90,7 +88,12 @@ public class DownloadsLoader extends TableLoader {
 					}
 				} else if (download.isRemoved()){
 					try {
-						delete(new HashMap<String, FieldDetails>(){{
+						delete(new HashMap<String, FieldDetails>(){/**
+							 * 
+							 */
+							private static final long serialVersionUID = 5750706774356825968L;
+
+						{
 							put("url",new StringType(download.getURL().toString()));
 						}});
 					} catch (SqlException e) {
@@ -100,7 +103,12 @@ public class DownloadsLoader extends TableLoader {
 				} else if (download.isUpdated()){
 					try {
 						update(download.getDatabaseRecord(), 
-							new HashMap<String, FieldDetails>(){{
+							new HashMap<String, FieldDetails>(){/**
+								 * 
+								 */
+								private static final long serialVersionUID = 6980779916796068770L;
+
+							{
 								put("url",new StringType(download.getURL().toString()));
 						}});
 					} catch (SqlException e) {

@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.data;
 import java.net.URL;
 
 import com.mimpidev.dev.sql.field.IntegerType;
+import com.mimpidev.dev.sql.field.StringType;
 
 /**
  * @author sbell
@@ -31,6 +32,7 @@ public class URLDetails extends BaseURL {
 		super();
 		fields.put("size", new IntegerType());
 		fields.put("status", new IntegerType());
+		fields.put("directory", new StringType());
 	}
 	
 	public URLDetails(String url){
@@ -155,5 +157,13 @@ public class URLDetails extends BaseURL {
 		}
 		
 		return status;
+	}
+	
+	public void setDirectory(String directory) {
+		fields.get("directory").setValue(directory);
+	}
+
+	public String getDirectory() {
+		return fields.get("directory").getValue();
 	}
 }

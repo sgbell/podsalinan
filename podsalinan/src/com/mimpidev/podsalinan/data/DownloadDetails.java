@@ -35,6 +35,7 @@ public class DownloadDetails extends BaseURL{
 		super();
 		fields.put("name", new StringType());
 		fields.put("datafile", new StringType());
+		fields.put("directory", new StringType());
 	}
 	
 	public DownloadDetails(String name){
@@ -56,5 +57,13 @@ public class DownloadDetails extends BaseURL{
 	
 	public String getDatafile(){
 		return fields.get("datafile").getValue();
+	}
+
+	public void setDirectory(String directory) {
+		fields.get("directory").setValue(directory);
+	}
+
+	public String getDirectory() {
+		return fields.get("directory").getValue();
 	}
 }

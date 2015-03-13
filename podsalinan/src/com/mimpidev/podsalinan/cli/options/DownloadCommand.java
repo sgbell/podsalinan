@@ -20,6 +20,7 @@ public class DownloadCommand extends CLIOption {
 		super(newData);
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public ReturnObject execute(String command) {
 		/*TODO: Finish converting this code from the old system to the current system
