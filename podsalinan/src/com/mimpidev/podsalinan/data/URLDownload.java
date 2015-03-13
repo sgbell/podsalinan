@@ -24,6 +24,7 @@ public class URLDownload extends URLDetails {
 		super();
 		fields.put("podcastSource", new StringType());
 		fields.put("uid", new StringType());
+		fields.put("directory", new StringType());
 	}
 	
 	public URLDownload(String url) {
@@ -144,5 +145,12 @@ public class URLDownload extends URLDetails {
 			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 		}
 	}
+	
+	public void setDirectory(String directory) {
+		fields.get("directory").setValue(directory);
+	}
 
+	public String getDirectory() {
+		return fields.get("directory").getValue();
+	}
 }
