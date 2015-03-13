@@ -69,12 +69,26 @@ public class EpisodeLoader extends TableLoader {
 	/**
 	 * 
 	 */
+	@SuppressWarnings("serial")
 	public void readTable() {
 		ArrayList<Map<String,String>> recordSet = readFromTable();
 		
 		if ((recordSet!=null)&&(recordSet.size()>0))
 			for (Map<String,String> record: recordSet){
-				Episode newEpisode = new Episode(record);
+				final Episode newEpisode = new Episode(record);
+				if ((!newEpisode.getDatabaseRecord().containsKey("published"))&&
+					(record.containsKey("published"))&&
+					(newEpisode.getDate().equals("")||newEpisode.getDate()!=null)){
+					newEpisode.setDate(record.get("published"));
+					try {
+						update(newEpisode.getDatabaseRecord(),
+								new HashMap<String, FieldDetails>(){{
+							        put("url", new StringType(newEpisode.getURL().toString().replaceAll("\'", "&apos;")));
+						        }});
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
+				}
 				newEpisode.setAdded(true);
 				newEpisode.setUpdated(false);
 				podcast.addEpisode(newEpisode);
