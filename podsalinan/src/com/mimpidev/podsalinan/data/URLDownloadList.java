@@ -445,4 +445,16 @@ public class URLDownloadList extends DownloadDetails {
 		if (currentDownload!=null)
 			reQueueDownload(currentDownload);
 	}
+
+	public String getDownloadUid(int select) {
+		int downloadCount=0,
+				activeCount=0;
+		boolean found=false;
+		while (!found && downloadCount<getNumberOfQueuedDownloads()){
+			if (downloads.get(downloadCount).getStatus()==URLDetails.DOWNLOAD_QUEUED){
+				//TODO: working here to get downloadUid
+			}
+		}
+		return null;
+	}
 }

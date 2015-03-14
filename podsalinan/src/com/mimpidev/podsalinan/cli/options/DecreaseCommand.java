@@ -39,7 +39,7 @@ public class DecreaseCommand extends CLIOption {
 			if ((menuInput.length()>0)&&(menuInput.length()<3)){
 				int select = convertCharToNumber(menuInput);
 				if ((select>=0)&&(select<data.getUrlDownloads().size())){
-					if (data.getUrlDownloads().decreasePriority(select))
+					if (decrease.execute(data.getUrlDownloads().getDownloadUid(select)))
 					   System.out.println("Decreased Priority: "+data.getUrlDownloads().getDownloads().get(select+1).getURL().toString());
 					else
 						System.out.println("Error: Download already at the bottom of the list.");
