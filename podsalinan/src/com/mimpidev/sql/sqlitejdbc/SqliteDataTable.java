@@ -44,6 +44,12 @@ public class SqliteDataTable {
 		setName(name);
 	}
 
+	/*TODO: Need to change the insert and update statements
+	 * 1. Move conversion of map to string into 1 function
+	 * 2. use the table definition to decide how to format the data, rather than doing a test to see if
+	 *    its a number (as this may fail if somebody decides to store a number in a text field
+	 */
+	
 	public Object insert(SqliteConflictAction onConflict,
 			Map<String, Object> values) throws SqliteException {
 		Statement sql;
@@ -60,7 +66,7 @@ public class SqliteDataTable {
 				Double.parseDouble((String)values.get(key));
 				valuesString+=(String)values.get(key);
 			} catch (NumberFormatException e){
-				valuesString+="'"+(String)values.get(key)+"'";
+				valuesString+="'"+((String)values.get(key)).replaceAll("\'", "&apos;")+"'";
 			}
 		}
 		String insertCommand="INSERT INTO "+name+"("+columnNames+") VALUES("+valuesString+");";
@@ -137,7 +143,7 @@ public class SqliteDataTable {
 				Double.parseDouble((String)datafields.get(key));
 				setString+=(String)datafields.get(key);
 			} catch (NumberFormatException e) {
-				setString+="'"+(String)datafields.get(key)+"'";
+				setString+="'"+((String)datafields.get(key)).replaceAll("\'", "&apos;")+"'";
 			}
 		}
 		String updateCommand="UPDATE "+getName()+" SET "+setString+" WHERE "+where+";";
@@ -147,6 +153,7 @@ public class SqliteDataTable {
 				return Long.valueOf((long)sql.executeUpdate(updateCommand));
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.err.println(updateCommand);
 			throw new SqliteException("Error inserting record into table: "+name,updateCommand);
 		}

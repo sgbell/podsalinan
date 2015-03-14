@@ -76,6 +76,7 @@ public class EpisodeLoader extends TableLoader {
 		if ((recordSet!=null)&&(recordSet.size()>0))
 			for (Map<String,String> record: recordSet){
 				final Episode newEpisode = new Episode(record);
+                // Updating table from using published field to date field
 				if ((!newEpisode.getDatabaseRecord().containsKey("published"))&&
 					(record.containsKey("published"))&&
 					(newEpisode.getDate().equals("")||newEpisode.getDate()!=null)){

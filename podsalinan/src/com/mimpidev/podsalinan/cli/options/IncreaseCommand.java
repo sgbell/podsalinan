@@ -48,7 +48,7 @@ public class IncreaseCommand extends CLIOption {
 			}
 		} else 
 			System.out.println("Error: Invalid user input.");
-		return null;
+		return returnObject;
 	}
 
 }
