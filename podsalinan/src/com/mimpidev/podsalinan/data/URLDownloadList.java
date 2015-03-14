@@ -451,10 +451,15 @@ public class URLDownloadList extends DownloadDetails {
 				activeCount=0;
 		boolean found=false;
 		while (!found && downloadCount<getNumberOfQueuedDownloads()){
-			if (downloads.get(downloadCount).getStatus()==URLDetails.DOWNLOAD_QUEUED){
-				//TODO: working here to get downloadUid
+			if (!downloads.get(downloadCount).isRemoved()){
+				if (activeCount==select){
+					found=true;
+				}
+				activeCount++;
 			}
+			if (!found)
+				downloadCount++;
 		}
-		return null;
+		return downloads.get(downloadCount).getUid();
 	}
 }
