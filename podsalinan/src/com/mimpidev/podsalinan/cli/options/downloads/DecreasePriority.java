@@ -22,16 +22,22 @@ public class DecreasePriority extends CLIOption {
 		debug=true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 
+		boolean decreased=false;
 		if (command.split(" ").length>1){
-			data.getUrlDownloads().decreasePriority(command.split(" ")[0]);
+			decreased=data.getUrlDownloads().decreasePriority(command.split(" ")[0]);
+		} else {
+			decreased=data.getUrlDownloads().decreasePriority(command);
 		}
+		if (decreased){
+			   System.out.println("Decreased Priority: "+data.getUrlDownloads().findDownloadByUid(command));
+		} else {
+			System.out.println("Error: Download already at the bottom of the list.");
+		}
+		
 		
 		return returnObject;
 	}
