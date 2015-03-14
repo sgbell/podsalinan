@@ -25,7 +25,7 @@ public class SetCommand extends CLIOption {
 		/*TODO: flesh out SetCommand
 		 *
 		 */
-		return null;
+		return returnObject;
 		/*menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
 		if (menuInput.toLowerCase().startsWith("updateinterval")){

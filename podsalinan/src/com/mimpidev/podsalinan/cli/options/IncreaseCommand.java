@@ -22,7 +22,7 @@ public class IncreaseCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		/*TODO: may need to make sure this command is working, and delete old code no longer needed
+		/*TODO: flesh out IncreaseCommand
 		 * 
 		 */
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");

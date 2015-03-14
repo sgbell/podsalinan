@@ -46,7 +46,7 @@ public class DumpCommand extends CLIOption {
 			}
 			Podsalinan.debugLog.logInfo("-- URLDownload Contents end --");
 		}
-		return null;
+		return returnObject;
 	}
 
 }

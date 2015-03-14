@@ -25,7 +25,7 @@ public class HideCommand extends CLIOption {
 		if (command.equalsIgnoreCase("hide menu"))
 			if (!data.getSettings().addSetting("menuVisible", "false"))
 				data.getSettings().updateSetting("menuVisible", "false");
-		return null;
+		return returnObject;
 	}
 
 }

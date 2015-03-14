@@ -30,9 +30,6 @@ public class SettingsCommand extends CLIOption {
 		options.put("showMenu", showMenu);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);

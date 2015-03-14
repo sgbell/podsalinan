@@ -216,13 +216,13 @@ public class CLInterface extends CLIOption implements Runnable{
     						Podsalinan.debugLog.logMap(globalSelection);
     					}
                 		//Travel through the globalSelection to figure out what has been selected
-    					menuInput=addGlobalSelection()+menuInput;
+    					menuInput=globalSelectionToString()+menuInput;
                         returnObject.methodCall=menuInput.split(" ",2)[0];
                         menuInput=menuInput.split(" ",2)[1];
                 	}
                 } else if ((!menuInput.startsWith("select")) ||
                 		   (!menuInput.startsWith("set"))){
-   					menuInput=addGlobalSelection()+menuInput;
+   					menuInput=globalSelectionToString()+menuInput;
                	}
            	    returnObject.methodParameters=menuInput;
        			if (debug) {
@@ -390,21 +390,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		synchronized (data.getSettings().getWaitObject()){
 			data.getSettings().getWaitObject().notify();
 		}
-	}
-	
-	public String addGlobalSelection(){
-		String returnString="";
-		String[] firstLevel = {"download","episode"};
-		for (String key : firstLevel){
-			if (globalSelection.containsKey(key)){
-				returnString=key+" "+globalSelection.get(key)+" ";
-			}
-		}
-		if (globalSelection.containsKey("podcast")){
-			returnString="podcast "+globalSelection.get("podcast")+" "+returnString;
-		}
-		
-		return returnString;
 	}
 	
     /** This method is used to try to find a date from the user entry

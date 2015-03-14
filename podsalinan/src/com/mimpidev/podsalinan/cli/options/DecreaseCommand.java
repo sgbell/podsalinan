@@ -24,6 +24,7 @@ public class DecreaseCommand extends CLIOption {
 	public ReturnObject execute(String command) {
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
 
+		//TODO: flesh out DecreaseCommand
 		if (menuInput.equalsIgnoreCase("decrease")){
 			/*if ((menuList.size()>0)&&
 				(menuList.get(menuList.size()-1).name.equalsIgnoreCase("selectedDownload"))){
@@ -45,6 +46,6 @@ public class DecreaseCommand extends CLIOption {
 			}
 		} else 
 			System.out.println("Error: Invalid user input.");
-		return null;	
+		return returnObject;	
 	}
 }

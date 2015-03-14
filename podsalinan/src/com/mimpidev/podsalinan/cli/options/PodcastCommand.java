@@ -29,9 +29,6 @@ public class PodcastCommand extends CLIOption {
 		options.put("", showMenu);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
 		debug=true;

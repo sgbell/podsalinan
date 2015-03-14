@@ -22,11 +22,11 @@ public class RemoveCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		/*TODO: flesh out the Remove command
+		/*TODO: flesh out RemoveCommand
 		 * 
 		 */
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
-		return null;
+		return returnObject;
 		
 		/*
 		if (menuInput.equalsIgnoreCase("remove")){

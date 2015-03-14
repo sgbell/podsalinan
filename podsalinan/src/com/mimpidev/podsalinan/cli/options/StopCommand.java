@@ -23,7 +23,7 @@ public class StopCommand extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		//TODO: Flesh out StopCommand
-		return null;
+		return returnObject;
 		
 		/*
 		URLDownload download=null;

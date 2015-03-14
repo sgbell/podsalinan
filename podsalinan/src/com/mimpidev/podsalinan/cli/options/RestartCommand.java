@@ -38,7 +38,7 @@ public class RestartCommand extends CLIOption {
 				System.out.println("Deleting file for download: "+download.getURL().toString());
 			}
 		}*/
-		return null;
+		return returnObject;
 	}
 
 }

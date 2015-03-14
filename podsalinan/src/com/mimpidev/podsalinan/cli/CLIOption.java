@@ -127,4 +127,19 @@ public abstract class CLIOption {
 		}
 		this.globalSelection = globalSelection;
 	}
+	
+	public String globalSelectionToString(){
+		String returnString="";
+		String[] firstLevel = {"download","episode"};
+		for (String key : firstLevel){
+			if (globalSelection.containsKey(key)){
+				returnString=key+" "+globalSelection.get(key)+" ";
+			}
+		}
+		if (globalSelection.containsKey("podcast")){
+			returnString="podcast "+globalSelection.get("podcast")+" "+returnString;
+		}
+		
+		return returnString;
+	}
 }

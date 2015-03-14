@@ -32,6 +32,7 @@ public class ListCommand extends CLIOption {
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo(this,command);
 		
+		//TODO: flesh out ListCommand
 		if (options.containsKey(command.toLowerCase().split(" ")[0])){
 			options.get(command.toLowerCase().split(" ")[0]).execute((command.split(" ", 2).length>1?command.split(" ",2)[1]:command));
 		} else {

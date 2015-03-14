@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.Map;
 
 import com.mimpidev.dev.sql.field.StringType;
-import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author bugman
