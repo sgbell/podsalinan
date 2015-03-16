@@ -11,6 +11,7 @@ import com.mimpidev.podsalinan.cli.options.list.ListDetails;
 import com.mimpidev.podsalinan.cli.options.list.ListDownloads;
 import com.mimpidev.podsalinan.cli.options.list.ListPodcasts;
 import com.mimpidev.podsalinan.cli.options.list.ListPreferences;
+import com.mimpidev.podsalinan.cli.options.list.ListSelection;
 import com.mimpidev.podsalinan.cli.options.podcast.ListEpisodes;
 
 /**
@@ -26,6 +27,7 @@ public class ListCommand extends CLIOption {
 		options.put("downloads",new ListDownloads(newData));
 		options.put("preferences",new ListPreferences(newData));
 		options.put("details",new ListDetails(newData));
+		options.put("select", new ListSelection(newData));
 	}
 
 	@Override

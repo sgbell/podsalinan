@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
@@ -22,9 +23,11 @@ public class StopCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		//TODO: Flesh out StopCommand
-		return returnObject;
+		debug=true;
+		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 		
+		
+		return returnObject;
 		/*
 		URLDownload download=null;
 		// Grab the selected download and call the method below
