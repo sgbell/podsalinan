@@ -27,15 +27,18 @@ public class ListEpisodes extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("ListEpisodes Class called");
-		if (debug) Podsalinan.debugLog.logInfo("Command Value: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this,30,"ListEpisodes Class called");
+		if (debug) Podsalinan.debugLog.logInfo(this,31,"Command Value: "+command);
 		
 		CLInput input = new CLInput();
 		
-		System.out.println ();
 		int epCount=1;
 		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ")[0]);
+		if (selectedPodcast==null && globalSelection.containsKey("podcast")){
+			selectedPodcast = data.getPodcasts().getPodcastByUid(globalSelection.get("podcast"));
+		}
 		if (selectedPodcast!=null){
+			System.out.println ();
 			synchronized (selectedPodcast.getEpisodes()){
 				for (Episode episode : selectedPodcast.getEpisodes()){
 					System.out.println (getEncodingFromNumber(epCount)+" - " +
@@ -48,6 +51,10 @@ public class ListEpisodes extends CLIOption {
 							break;
 					}
 				}
+			}
+		} else {
+			if (command.equalsIgnoreCase("episodes")){
+				System.out.println("Error: No podcast has been selected");
 			}
 		}
 		returnObject = new ReturnObject();
