@@ -9,6 +9,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.cli.options.episode.SelectEpisode;
 import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
@@ -42,11 +43,11 @@ public class SelectPodcast extends CLIOption {
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in
 		 * global selection
 		 */
-		if (!(globalSelection.containsKey("podcast") && 
-              (command.split(" ",2)[0].equals(globalSelection.get("podcast"))))){
+		if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast") && 
+              (command.split(" ",2)[0].equals(CLInterface.cliGlobals.getGlobalSelection().get("podcast"))))){
 			if (command.split(" ").length==1 && command.length()==1){
-				if (command.equals("9") && globalSelection.size()>0){
-					globalSelection.clear();
+				if (command.equals("9") && CLInterface.cliGlobals.getGlobalSelection().size()>0){
+					CLInterface.cliGlobals.getGlobalSelection().clear();
 					command="";
 				}
 			} else {
@@ -55,8 +56,8 @@ public class SelectPodcast extends CLIOption {
 					Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(command);
 					if (debug) Podsalinan.debugLog.logInfo(this, "Line:52, PodcastList.size="+podcastList.size());
 					if (podcastList.size()==1){
-						globalSelection.clear();
-						globalSelection.put("podcast",podcastList.get(0).getDatafile());
+						CLInterface.cliGlobals.getGlobalSelection().clear();
+						CLInterface.cliGlobals.getGlobalSelection().put("podcast",podcastList.get(0).getDatafile());
 						selectedPodcast=podcastList.get(0);
 					} else if (podcastList.size()>1){
 						int podcastCount=1;
@@ -84,8 +85,8 @@ public class SelectPodcast extends CLIOption {
 				}
 				if (selectedPodcast!=null){
 					if (debug) Podsalinan.debugLog.logInfo(this, 82, "Set selected podcast:"+selectedPodcast.getDatafile());
-					globalSelection.clear();
-					globalSelection.put("podcast",selectedPodcast.getDatafile());
+					CLInterface.cliGlobals.getGlobalSelection().clear();
+					CLInterface.cliGlobals.getGlobalSelection().put("podcast",selectedPodcast.getDatafile());
 					command=selectedPodcast.getDatafile()+(command.split(" ",2).length>1?" "+command.split(" ",2)[1]:"");
 				}
 			}
@@ -98,7 +99,7 @@ public class SelectPodcast extends CLIOption {
 		}else if (command.split(" ").length>1){
 			if (debug) Podsalinan.debugLog.logInfo(this,96,"Command Length:"+command.length());
 			if (command.split(" ")[1].equals("9")){
-				globalSelection.clear();
+				CLInterface.cliGlobals.getGlobalSelection().clear();
 				returnObject.methodCall="podcast";
 				returnObject.methodParameters="";
 				returnObject.execute=true;

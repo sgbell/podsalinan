@@ -7,6 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Podcast;
 
@@ -23,9 +24,7 @@ public class DeletePodcast extends CLIOption {
 		super(newData);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
+
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
@@ -36,7 +35,7 @@ public class DeletePodcast extends CLIOption {
 				CLInput input = new CLInput();
 				if(input.confirmRemoval()){
 		    		selectedPodcast.setRemoved(true);
-		    		globalSelection.clear();
+		    		CLInterface.cliGlobals.getGlobalSelection().clear();
 					returnObject.methodCall = "podcast";
 					returnObject.methodParameters = "";
 					returnObject.execute=true;

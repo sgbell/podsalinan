@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options.episode;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
 /**
@@ -46,10 +47,10 @@ public class SelectEpisode extends CLIOption {
 			try {
 				Integer.parseInt(commandOptions[episodePosition]);
 			} catch (NumberFormatException e){
-				if (((globalSelection.containsKey("episode"))&&
-					 (!commandOptions[episodePosition].equalsIgnoreCase(globalSelection.get("episode"))))||
-					(!globalSelection.containsKey("episode"))){
-					globalSelection.put("episode", commandOptions[episodePosition]);
+				if (((CLInterface.cliGlobals.getGlobalSelection().containsKey("episode"))&&
+					 (!commandOptions[episodePosition].equalsIgnoreCase(CLInterface.cliGlobals.getGlobalSelection().get("episode"))))||
+					(!CLInterface.cliGlobals.getGlobalSelection().containsKey("episode"))){
+					CLInterface.cliGlobals.getGlobalSelection().put("episode", commandOptions[episodePosition]);
 				}
 			}
 		}
@@ -60,7 +61,7 @@ public class SelectEpisode extends CLIOption {
         			returnObject.methodCall="podcast";
         			returnObject.methodParameters=commandOptions[0];
         			returnObject.execute=true;
-        			globalSelection.remove("episode");
+        			CLInterface.cliGlobals.getGlobalSelection().remove("episode");
         		} else if (commandOptions[1].equalsIgnoreCase("episode")){
             		try {
             			Integer.parseInt(commandOptions[3]);

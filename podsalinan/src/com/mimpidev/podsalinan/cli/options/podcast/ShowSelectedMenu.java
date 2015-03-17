@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options.podcast;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Podcast;
 
@@ -23,10 +24,11 @@ public class ShowSelectedMenu extends CLIOption {
 		String podcastId = command.split(" ")[0];
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){
-				globalSelection.clear();
-				globalSelection.put("podcast", podcastId);
+				CLInterface.cliGlobals.getGlobalSelection().clear();
+				CLInterface.cliGlobals.getGlobalSelection().put("podcast", podcastId);
 				System.out.println();
-				System.out.println("Podcast: "+currentPodcast.getName()+ " - Selected");
+				ShowPodcastDetails podcastDetail=new ShowPodcastDetails(data);
+				podcastDetail.execute("selectedMenu");
 				System.out.println("1. List Episodes");
 				System.out.println("2. Update List");
 				System.out.println("3. Delete Podcast");

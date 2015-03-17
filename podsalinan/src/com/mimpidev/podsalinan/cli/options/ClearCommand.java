@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
 /**
@@ -25,7 +26,7 @@ public class ClearCommand extends CLIOption {
 	 */
 	@Override
 	public ReturnObject execute(String command) {
-		globalSelection.clear();
+		CLInterface.cliGlobals.getGlobalSelection().clear();
 		System.out.println("Selection Cleared.");
 		return returnObject;
 	}

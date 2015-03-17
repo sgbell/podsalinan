@@ -7,6 +7,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
@@ -34,8 +35,8 @@ public class ListEpisodes extends CLIOption {
 		
 		int epCount=1;
 		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ")[0]);
-		if (selectedPodcast==null && globalSelection.containsKey("podcast")){
-			selectedPodcast = data.getPodcasts().getPodcastByUid(globalSelection.get("podcast"));
+		if (selectedPodcast==null && CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){
+			selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcast"));
 		}
 		if (selectedPodcast!=null){
 			System.out.println ();

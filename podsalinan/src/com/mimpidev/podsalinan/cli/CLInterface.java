@@ -41,6 +41,11 @@ public class CLInterface extends CLIOption implements Runnable{
 	 * 
 	 */
 	private CLInput input;
+	
+	/**
+	 * cliGlobals is used to pass information betweeen the CLIOptions.
+	 */
+	public static final CLIGlobals cliGlobals = new CLIGlobals(); 
 
 	public CLInterface(DataStorage newData){
 		super(newData);
@@ -187,7 +192,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  3                - Settings Menu
 		 *  4                - Quit
 		 */
-		setGlobalSelection(new HashMap<String,String>());
 	}
 
 	/* TODO: Rewrite user input to allow command line completion. Current thoughts on how to
@@ -211,18 +215,18 @@ public class CLInterface extends CLIOption implements Runnable{
 				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
                 	// The reason for the return call is so that we can check mainMenu to transform the call,
                 	// and then have the called method call another one if it needs to.
-                	if (globalSelection.size()>0){
+                	if (cliGlobals.getGlobalSelection().size()>0){
     					if (debug){
-    						Podsalinan.debugLog.logMap(globalSelection);
+    						Podsalinan.debugLog.logMap(cliGlobals.getGlobalSelection());
     					}
                 		//Travel through the globalSelection to figure out what has been selected
-    					menuInput=globalSelectionToString()+menuInput;
+    					menuInput=cliGlobals.globalSelectionToString()+menuInput;
                         returnObject.methodCall=menuInput.split(" ",2)[0];
                         menuInput=menuInput.split(" ",2)[1];
                 	}
                 } else if ((!menuInput.startsWith("select")) ||
                 		   (!menuInput.startsWith("set"))){
-   					menuInput=globalSelectionToString()+menuInput;
+   					menuInput=cliGlobals.globalSelectionToString()+menuInput;
                	}
            	    returnObject.methodParameters=menuInput;
        			if (debug) {

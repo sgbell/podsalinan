@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.cli.options.downloads.DecreasePriority;
 
@@ -27,8 +28,8 @@ public class DecreaseCommand extends CLIOption {
 
 		DecreasePriority decrease = new DecreasePriority(data);
 		if (menuInput.equalsIgnoreCase("decrease")){
-			if (globalSelection.containsKey("download")){
-				decrease.execute(globalSelection.get("download"));
+			if (CLInterface.cliGlobals.getGlobalSelection().containsKey("download")){
+				decrease.execute(CLInterface.cliGlobals.getGlobalSelection().get("download"));
 			} else {
 				System.out.println("No Download selected");
 			}

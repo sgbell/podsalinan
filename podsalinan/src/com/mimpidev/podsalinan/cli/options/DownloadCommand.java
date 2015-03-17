@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.cli.options.episode.DownloadEpisode;
 
@@ -27,10 +28,10 @@ public class DownloadCommand extends CLIOption {
 		String menuInput= command.replaceFirst(command.split(" ")[0]+" ","");
 		if ((menuInput.toLowerCase().contentEquals("download"))||
 			(menuInput.toLowerCase().equalsIgnoreCase("episode"))){
-			if (globalSelection.containsKey("episode")){
+			if (CLInterface.cliGlobals.getGlobalSelection().containsKey("episode")){
 				// Use the command already set up to do the work.
 				DownloadEpisode queueEpisode = new DownloadEpisode(data);
-				queueEpisode.execute(globalSelectionToString());
+				queueEpisode.execute(CLInterface.cliGlobals.globalSelectionToString());
 			} else {
 				System.out.println("No episode selected");
 			}
