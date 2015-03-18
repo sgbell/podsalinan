@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.podsalinan.cli.CLInterface;
 
 /**
  * @author bugman
@@ -281,6 +282,24 @@ public class URLDownloadList extends DownloadDetails {
 			}
 		}
 		return false;
+	}
+	
+	public String findActiveDownloadByCount(int downloadCount){
+		boolean found=false;
+		int count=0;
+		int activeCount=0;
+		while ((!found)&& count<downloads.size()){
+			URLDownload currentDownload = downloads.get(count); 
+			if ((!currentDownload.isRemoved()) && (activeCount==downloadCount)){
+				// Replace 2 char download id with download uid
+				return currentDownload.getUid();
+			} else if (!currentDownload.isRemoved()){
+				activeCount++;
+			}
+			count++;
+		}
+		// should replace null with throwing an exception
+		return null;
 	}
 	
 	public boolean restartDownload(int download) {

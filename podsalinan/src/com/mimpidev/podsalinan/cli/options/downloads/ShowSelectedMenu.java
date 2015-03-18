@@ -80,21 +80,10 @@ public class ShowSelectedMenu extends CLIOption {
 	 */
 	@Override
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 
 		String downloadUid = command.split(" ")[0];
-		if (downloadUid.length()<=2){
-			int downloadId = convertCharToNumber(command.split(" ")[0]);
-			int count=0;
-			for (URLDownload currentDownload: data.getUrlDownloads().getDownloads()){
-				if (!currentDownload.isRemoved()){
-					if (count==downloadId){
-						downloadUid = currentDownload.getUid();
-					}
-					count++;
-				}
-			}
-		}
+
 		URLDownload currentDownload = data.getUrlDownloads().findDownloadByUid(downloadUid);
 
 		System.out.println();
