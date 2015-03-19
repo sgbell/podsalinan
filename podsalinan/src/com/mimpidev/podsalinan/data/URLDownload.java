@@ -42,6 +42,7 @@ public class URLDownload extends URLDetails {
 	public URLDownload(String url, String length, String destination){
 		super(url, length);
 		setDestination(destination);
+		setUid(url+destination);
 	}
 	
 	public URLDownload(String url, boolean added, String destination){
@@ -127,6 +128,10 @@ public class URLDownload extends URLDetails {
 	 * @return the uid
 	 */
 	public String getUid() {
+		// Just setting a uid, incase the download doesn't have one set already.
+		if (fields.get("uid").getValue().length()==0){
+			setUid(getURL()+getDestination());
+		}
 		return fields.get("uid").getValue();
 	}
 
