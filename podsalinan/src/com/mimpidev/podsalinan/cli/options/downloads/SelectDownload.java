@@ -66,7 +66,7 @@ public class SelectDownload extends CLIOption {
         		// If we continue in the download menu
         	}
         }
-		//TODO: working here. Need to find where the downloadUid is set, as it doesn't seem to be working currently.
+		//TODO: working here. Need to Continue following the selectpodcast class in how it works
 		if (debug) Podsalinan.debugLog.logInfo(this, 70, "Command: "+command);
 		try {
 			Integer.parseInt(command);
