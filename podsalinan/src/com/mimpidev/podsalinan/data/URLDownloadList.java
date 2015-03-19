@@ -284,24 +284,6 @@ public class URLDownloadList extends DownloadDetails {
 		return false;
 	}
 	
-	public String findActiveDownloadByCount(int downloadCount){
-		boolean found=false;
-		int count=0;
-		int activeCount=0;
-		while ((!found)&& count<downloads.size()){
-			URLDownload currentDownload = downloads.get(count); 
-			if ((!currentDownload.isRemoved()) && (activeCount==downloadCount)){
-				// Replace 2 char download id with download uid
-				return currentDownload.getUid();
-			} else if (!currentDownload.isRemoved()){
-				activeCount++;
-			}
-			count++;
-		}
-		// should replace null with throwing an exception
-		return null;
-	}
-	
 	public boolean restartDownload(int download) {
 		if ((download >=0)&&(download<downloads.size())){
 			return restartDownload(downloads.get(download));
@@ -479,6 +461,9 @@ public class URLDownloadList extends DownloadDetails {
 			if (!found)
 				downloadCount++;
 		}
-		return downloads.get(downloadCount).getUid();
+        if (found)
+        	return downloads.get(downloadCount).getUid();
+        else
+        	return null;
 	}
 }

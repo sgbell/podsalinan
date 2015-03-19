@@ -38,21 +38,36 @@ public class SelectDownload extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 		
 		String[] commandOptions = command.split(" ");
-		
 		if (commandOptions[0].length()<=2){
 			int downloadId = convertCharToNumber(commandOptions[0]);
-			String downloadUid = data.getUrlDownloads().findActiveDownloadByCount(downloadId);
-			if (downloadUid!=null){
-				//TODO: finish working here
-			} else {
-				System.out.println("Error: Invalid Download Selected");
-			}
+			String downloadUid = data.getUrlDownloads().getDownloadUid(downloadId);
+			if (downloadUid!=null)
+				commandOptions[0]=downloadUid;
 		}
-		
-		if (debug) Podsalinan.debugLog.logInfo(this, 60, "Command: "+command);
+		command = "";
+		for (String option : commandOptions){
+			if (command.length()>0){
+				command+=" ";
+			}
+			command+=option;
+		}
+        if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("download") &&
+        	commandOptions[0].equals(CLInterface.cliGlobals.getGlobalSelection().get("download")))){
+        	if (command.split(" ").length==1 && command.length()==1){
+        		if (command.equals("9") && CLInterface.cliGlobals.getGlobalSelection().size()>0){
+            		CLInterface.cliGlobals.getGlobalSelection().clear();
+            		command="";
+            		if (debug) Podsalinan.debugLog.logInfo(this, "Cleared Download selection");
+        		}
+       		} else {
+        		// If we continue in the download menu
+        	}
+        }
+		//TODO: working here. Need to find where the downloadUid is set, as it doesn't seem to be working currently.
+		if (debug) Podsalinan.debugLog.logInfo(this, 70, "Command: "+command);
 		try {
 			Integer.parseInt(command);
 			if (command.equals("9")){
@@ -62,7 +77,7 @@ public class SelectDownload extends CLIOption {
 				returnObject.execute=true;
 			}
 		} catch (NumberFormatException e){
-			if (command.split(" ")[1].equals("9")){
+			if (commandOptions[0].equals("9")){
 				returnObject.methodCall="downloads";
 				returnObject.methodParameters="";
 			} else {

@@ -29,7 +29,7 @@ public class DownloadsCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 		returnObject.methodCall="downloads";
 		
 		if (options.containsKey(command))
@@ -40,6 +40,7 @@ public class DownloadsCommand extends CLIOption {
 				if (command.equals("9")){
 					returnObject.methodCall="";
 					returnObject.methodParameters="";
+					returnObject.execute=true;
 				}
 			} catch (NumberFormatException e) {
 				returnObject = options.get("<aa>").execute(command);
