@@ -291,6 +291,7 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	public boolean restartDownload(URLDownload download){
+		debug=true;
 		if (deleteFile(download)){
 			download.setStatus(URLDetails.DOWNLOAD_QUEUED);
 			return true;
@@ -420,15 +421,22 @@ public class URLDownloadList extends DownloadDetails {
 	 */
 	public URLDownload findDownloadByUid(String downloadUid) {
 		for (URLDownload currentDownload : downloads)
-			if (currentDownload.getUid().equals(downloadUid))
+			if (currentDownload.getUid().equals(downloadUid)){
+				if (debug) Podsalinan.debugLog.logInfo(this, "findDownloadByUid(String) Download: "+currentDownload.getURL());
 				return currentDownload;
+			}
 		return null;
 	}
 
 	public void restartDownload(String downloadUid) {
+		debug=true;
+		if (debug) Podsalinan.debugLog.logInfo(this, "Download Uid:"+downloadUid);
 		URLDownload currentDownload = findDownloadByUid(downloadUid);
-		if (currentDownload!=null)
+		if (currentDownload!=null){
+			if (debug) Podsalinan.debugLog.logInfo(this, "restartDownload(String) Download: "+currentDownload.getURL());
+			if (debug) Podsalinan.debugLog.logInfo("Status: "+currentDownload.getCurrentStatus());
 			restartDownload(currentDownload);
+		}
 	}
 
 	public void cancelDownload(String downloadUid) {

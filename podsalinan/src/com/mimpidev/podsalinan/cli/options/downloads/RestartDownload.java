@@ -19,15 +19,13 @@ public class RestartDownload extends CLIOption {
 	 */
 	public RestartDownload(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		debug = true;
+		
+		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 
 		if (command.split(" ").length>1){
 			data.getUrlDownloads().restartDownload(command.split(" ")[0]);
