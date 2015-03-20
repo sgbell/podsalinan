@@ -41,6 +41,7 @@ public class SelectDownload extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 		
 		String[] commandOptions = command.split(" ");
+		//TODO: the following if block does not seem to be converting char to uid
 		if (commandOptions[0].length()<=2){
 			int downloadId = convertCharToNumber(commandOptions[0]);
 			String downloadUid = data.getUrlDownloads().getDownloadUid(downloadId);
@@ -63,25 +64,30 @@ public class SelectDownload extends CLIOption {
             		if (debug) Podsalinan.debugLog.logInfo(this, "Cleared Download selection");
         		}
        		} else {
-        		// If we continue in the download menu
+        		URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(commandOptions[0]);
+        		if (selectedDownload!=null){
+        			CLInterface.cliGlobals.getGlobalSelection().clear();
+        			CLInterface.cliGlobals.getGlobalSelection().put("download", commandOptions[0]);
+        		}
         	}
         }
-		//TODO: working here. Need to Continue following the selectpodcast class in how it works
-		if (debug) Podsalinan.debugLog.logInfo(this, 70, "Command: "+command);
-		try {
-			Integer.parseInt(command);
-			if (command.equals("9")){
+		if (debug) Podsalinan.debugLog.logInfo(this, 73, "Command: "+command);
+		if (commandOptions.length==1){
+			returnObject = options.get("").execute(command);
+		} else if (commandOptions.length > 1){
+			if (commandOptions[1].equals("9")){
+				// If the command is 9 (exit the selected download menu & clear the selected download)
 				CLInterface.cliGlobals.getGlobalSelection().clear();
-				returnObject.methodCall="";
-				returnObject.methodParameters="";
-				returnObject.execute=true;
-			}
-		} catch (NumberFormatException e){
-			if (commandOptions[0].equals("9")){
 				returnObject.methodCall="downloads";
 				returnObject.methodParameters="";
+				returnObject.execute=true;
 			} else {
-				returnObject = options.get(command.split(" ")[1]).execute(command);
+				//if it doesn't equal 9 call the command
+				if (options.containsKey(commandOptions[1])){
+					returnObject = options.get(commandOptions[1]).execute(command);
+				} else {
+					System.out.println("Error: Command does not exist.");
+				}
 			}
 		}
 		return returnObject;
