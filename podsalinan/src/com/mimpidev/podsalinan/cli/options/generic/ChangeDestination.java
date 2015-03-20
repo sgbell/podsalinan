@@ -29,9 +29,6 @@ public class ChangeDestination extends CLIOption {
 		input= new CLInput();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
@@ -44,15 +41,16 @@ public class ChangeDestination extends CLIOption {
 			String userInput=input.getStringInput();
 	    	changeDirectory(selectedPodcast,userInput);
 			returnObject.methodCall = "podcast";
-			returnObject.methodParameters = command.split(" ")[0];
     	} else {
     		URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(commands[0]);
     		if (selectedDownload!=null){
 				System.out.println("Enter Download Destination ["+selectedDownload.getDestination()+"]: ");
 				String userInput = input.getStringInput();
 				changeDirectory(selectedDownload,userInput);
+				returnObject.methodCall = "downloads";
     		}
 	    } 
+		returnObject.methodParameters = command.split(" ")[0];
 		returnObject.execute=true;
 		
 		return returnObject;
