@@ -24,7 +24,6 @@ package com.mimpidev.podsalinan.cli;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
@@ -379,7 +378,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	   				Podsalinan.debugLog.logInfo(this, 368, returnObject.methodParameters);
 				}
 				if (returnObject.execute){
-					returnObject=options.get(returnObject.methodCall).execute(returnObject.methodParameters);
+					returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
 				}
 			}
 			if (debug){

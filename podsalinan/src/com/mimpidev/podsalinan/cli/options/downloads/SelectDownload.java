@@ -44,6 +44,7 @@ public class SelectDownload extends CLIOption {
 		//TODO: the following if block does not seem to be converting char to uid
 		if (commandOptions[0].length()<=2){
 			int downloadId = convertCharToNumber(commandOptions[0]);
+			if (debug) Podsalinan.debugLog.logInfo(this, "Download ID: "+downloadId);
 			String downloadUid = data.getUrlDownloads().getDownloadUid(downloadId);
 			if (downloadUid!=null)
 				commandOptions[0]=downloadUid;
@@ -55,8 +56,8 @@ public class SelectDownload extends CLIOption {
 			}
 			command+=option;
 		}
-        if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("download") &&
-        	commandOptions[0].equals(CLInterface.cliGlobals.getGlobalSelection().get("download")))){
+        if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads") &&
+        	commandOptions[0].equals(CLInterface.cliGlobals.getGlobalSelection().get("downloads")))){
         	if (command.split(" ").length==1 && command.length()==1){
         		if (command.equals("9") && CLInterface.cliGlobals.getGlobalSelection().size()>0){
             		CLInterface.cliGlobals.getGlobalSelection().clear();
@@ -67,7 +68,7 @@ public class SelectDownload extends CLIOption {
         		URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(commandOptions[0]);
         		if (selectedDownload!=null){
         			CLInterface.cliGlobals.getGlobalSelection().clear();
-        			CLInterface.cliGlobals.getGlobalSelection().put("download", commandOptions[0]);
+        			CLInterface.cliGlobals.getGlobalSelection().put("downloads", commandOptions[0]);
         		}
         	}
         }

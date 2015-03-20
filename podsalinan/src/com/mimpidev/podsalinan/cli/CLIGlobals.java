@@ -48,7 +48,7 @@ public class CLIGlobals {
 	 */
 	public String globalSelectionToString(){
 		String returnString="";
-		String[] firstLevel = {"download","episode"};
+		String[] firstLevel = {"downloads","episode"};
 		for (String key : firstLevel){
 			if (globalSelection.containsKey(key)){
 				returnString=key+" "+globalSelection.get(key)+" ";

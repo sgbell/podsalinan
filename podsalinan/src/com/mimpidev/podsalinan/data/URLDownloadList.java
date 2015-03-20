@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import com.mimpidev.podsalinan.Podsalinan;
-import com.mimpidev.podsalinan.cli.CLInterface;
 
 /**
  * @author bugman
@@ -380,7 +379,7 @@ public class URLDownloadList extends DownloadDetails {
 		
 		synchronized (downloads){
 			for (URLDownload download : downloads)
-				if (download.getStatus()==URLDetails.DOWNLOAD_QUEUED)
+				if (!download.isRemoved())
 					numberofQueuedItems++;
 		}
 		
@@ -392,10 +391,11 @@ public class URLDownloadList extends DownloadDetails {
 	 * @return URLDownload
 	 */
 	public URLDownload getHighestQueuedItem(){
-		for (URLDownload download : downloads)
-			if (download.getStatus()==URLDetails.DOWNLOAD_QUEUED)
-				return download;
-		
+		synchronized(downloads){
+			for (URLDownload download : downloads)
+				if (download.getStatus()==URLDetails.DOWNLOAD_QUEUED && !download.isRemoved())
+					return download;
+		}
 		// if item is not found
 		return null;
 	}
@@ -448,9 +448,12 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public String getDownloadUid(int select) {
+		
+		if (debug) Podsalinan.debugLog.logInfo(this, "getDownloadUid("+select+")");
 		int downloadCount=0,
-				activeCount=0;
+			activeCount=0;
 		boolean found=false;
+		if (debug) Podsalinan.debugLog.logInfo(this, "Download Count:"+getNumberOfQueuedDownloads());
 		while (!found && downloadCount<getNumberOfQueuedDownloads()){
 			if (!downloads.get(downloadCount).isRemoved()){
 				if (activeCount==select){
@@ -461,9 +464,10 @@ public class URLDownloadList extends DownloadDetails {
 			if (!found)
 				downloadCount++;
 		}
-        if (found)
+        if (found){
+        	if (debug) Podsalinan.debugLog.logInfo(this, downloads.get(downloadCount).getUid());
         	return downloads.get(downloadCount).getUid();
-        else
+        } else
         	return null;
 	}
 }
