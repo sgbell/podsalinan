@@ -48,12 +48,16 @@ public class DeleteDownload extends CLIOption {
 				if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads"))&&
 					(CLInterface.cliGlobals.getGlobalSelection().get("downloads").equalsIgnoreCase(downloadUid))){
 					CLInterface.cliGlobals.getGlobalSelection().clear();
+				} else {
+					String[] selection = CLInterface.cliGlobals.globalSelectionToString().split(" ", 2);
+					returnObject.methodCall = selection[0];
+					returnObject.methodParameters= (selection.length>1?selection[1]:"");
 				}
 			}
 			if (commandOptions.length>1){
 				returnObject.methodCall="downloads";
+		        returnObject.methodParameters="";
 			}
-	        returnObject.methodParameters="";
 	        returnObject.execute=true;
 		} else {
 			System.out.println("Download does not exist");
