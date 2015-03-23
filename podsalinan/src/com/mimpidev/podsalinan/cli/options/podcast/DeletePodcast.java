@@ -35,7 +35,10 @@ public class DeletePodcast extends CLIOption {
 				CLInput input = new CLInput();
 				if(input.confirmRemoval()){
 		    		selectedPodcast.setRemoved(true);
-		    		CLInterface.cliGlobals.getGlobalSelection().clear();
+					if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast"))&&
+						(CLInterface.cliGlobals.getGlobalSelection().get("podcast").equalsIgnoreCase(command.split(" ")[0]))){
+						CLInterface.cliGlobals.getGlobalSelection().clear();
+					}
 					returnObject.methodCall = "podcast";
 					returnObject.methodParameters = "";
 					returnObject.execute=true;

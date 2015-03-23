@@ -240,7 +240,7 @@ public class CLInterface extends CLIOption implements Runnable{
            			Podsalinan.debugLog.logInfo(this,237,"methodParameters: "+returnObject.methodParameters);
        			}
 			} else {
-				options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
+				returnObject=options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
 			}
 			if (debug){
    				Podsalinan.debugLog.logInfo(this,245,"After options.get");

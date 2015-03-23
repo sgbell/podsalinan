@@ -6,6 +6,8 @@ package com.mimpidev.podsalinan.cli.options.downloads;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInput;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
 /**
@@ -22,20 +24,41 @@ public class DeleteDownload extends CLIOption {
 		debug=true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this," command: "+command);
+		String downloadUid="";
+		String[] commandOptions = command.split(" ");
 
-		if (command.split(" ").length>1){
-			data.getUrlDownloads().deleteActiveDownload(command.split(" ")[0]);
+		downloadUid = commandOptions[0];
+		if (data.getUrlDownloads().findDownloadByUid(downloadUid)==null){
+			downloadUid="";
 		}
 		
-        returnObject.methodCall="downloads";
-        returnObject.methodParameters="";
-        returnObject.execute=true;
+		if (commandOptions.length==1){
+			ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
+			printDetails.execute(downloadUid);
+		}
+		
+		if (downloadUid.length()>0){
+			CLInput input = new CLInput();
+			if(input.confirmRemoval()){
+				data.getUrlDownloads().deleteActiveDownload(downloadUid);
+				System.out.println("Download Removed.");
+				if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads"))&&
+					(CLInterface.cliGlobals.getGlobalSelection().get("downloads").equalsIgnoreCase(downloadUid))){
+					CLInterface.cliGlobals.getGlobalSelection().clear();
+				}
+			}
+			if (commandOptions.length>1){
+				returnObject.methodCall="downloads";
+			}
+	        returnObject.methodParameters="";
+	        returnObject.execute=true;
+		} else {
+			System.out.println("Download does not exist");
+		}
+		
 		return returnObject;
 	}
 
