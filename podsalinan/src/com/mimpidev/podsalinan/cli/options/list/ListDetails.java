@@ -23,7 +23,7 @@ public class ListDetails extends CLIOption {
 	 */
 	public ListDetails(DataStorage newData) {
 		super(newData);
-		options.put("download", new ShowDownloadDetails(newData));
+		options.put("downloads", new ShowDownloadDetails(newData));
 		options.put("episode", new ShowEpisodeDetails(newData));
 		options.put("podcast", new ShowPodcastDetails(newData));
 	}
@@ -33,7 +33,7 @@ public class ListDetails extends CLIOption {
 		debug=true;
 
 		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
-		String[] globalSelectList = {"download","episode","podcast"};
+		String[] globalSelectList = {"downloads","episode","podcast"};
 		boolean detailsShown=false;
 		int selectionCount=0;
 		while (!detailsShown && selectionCount<globalSelectList.length){

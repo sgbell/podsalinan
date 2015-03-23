@@ -41,6 +41,8 @@ public class DownloadsCommand extends CLIOption {
 					returnObject.methodCall="";
 					returnObject.methodParameters="";
 					returnObject.execute=true;
+				} else {
+					returnObject = options.get("<aa>").execute(command);
 				}
 			} catch (NumberFormatException e) {
 				returnObject = options.get("<aa>").execute(command);
