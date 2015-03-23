@@ -21,7 +21,6 @@ public class DeleteDownload extends CLIOption {
 	 */
 	public DeleteDownload(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
 	@Override

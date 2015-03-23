@@ -58,7 +58,6 @@ public class RemoveCommand extends CLIOption {
 				returnObject.execute=true;
 			}
 		}
-		//TODO: Work here and DeleteDownload, so they both will work as expected. 
 		
 		if (debug) Podsalinan.debugLog.logInfo(this, "methodCall: "+returnObject.methodCall);
 		if (debug) Podsalinan.debugLog.logInfo(this, "methodParameters: "+returnObject.methodParameters);
