@@ -3,14 +3,10 @@
  */
 package com.mimpidev.podsalinan.cli.options.downloads;
 
-import java.io.File;
-
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
-import com.mimpidev.podsalinan.data.Episode;
-import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
  * @author sbell
@@ -25,70 +21,16 @@ public class ShowSelectedMenu extends CLIOption {
 		super(newData);
 		debug=true;
 	}
-
-	public void printDetails(URLDownload selectedDownload, boolean showDirectory){
-		if (selectedDownload!=null){
-			System.out.println("URL: "+selectedDownload.getURL().toString());
-			switch (selectedDownload.getStatus()){
-				case Episode.DOWNLOAD_QUEUED:
-					System.out.println ("Status: Download Queued");
-					break;
-				case Episode.CURRENTLY_DOWNLOADING:
-					System.out.println ("Status: Currently Downloading");
-					break;
-				case Episode.INCOMPLETE_DOWNLOAD:
-					System.out.println ("Status: Download Incomplete");
-					break;
-				case Episode.FINISHED:
-					System.out.println ("Status: Completed Download");
-					break;
-				case Episode.DOWNLOAD_CANCELLED:
-					System.out.println ("Status: Download Cancelled");
-				default:
-					System.out.println ("Status: "+selectedDownload.getStatus());
-			}
-			if ((showDirectory)&&(selectedDownload.getDestination()!=null))
-				System.out.println("Destination: "+selectedDownload.getDestination());
-
-			long fileSize;
-			//String filePath=selectedDownload.getDestination()+fileSystemSlash+getFilenameDownload();
-			if (!selectedDownload.getDestinationFile().isDirectory()){
-				File destination = selectedDownload.getDestinationFile();
-				if (destination.exists())
-					fileSize = destination.length();
-				else
-					fileSize = 0;
-			} else {
-				fileSize=0;
-			}
-
-			// Need to make these sizes human readable
-			long fullSize=0;
-			try {
-				fullSize = new Long(selectedDownload.getSize()).longValue();
-			} catch (NumberFormatException e){
-				fullSize = -1;
-			}
-			
-			System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(fullSize));
-		}
-	}
-
 	
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 
+		ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
 		String downloadUid = command.split(" ")[0];
 
-		URLDownload currentDownload = data.getUrlDownloads().findDownloadByUid(downloadUid);
+		printDetails.execute(downloadUid);
 
-		System.out.println();
-		printDetails(currentDownload,false);
-		System.out.println();
 		System.out.println("1. Delete Download");
 		System.out.println("2. Restart Download");
 		System.out.println("3. Stop Download");
