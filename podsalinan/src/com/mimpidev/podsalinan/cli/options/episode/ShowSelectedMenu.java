@@ -31,6 +31,8 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
             
             Episode episode = getEpisode(commandOptions[0],episodeNum);
             if (episode!=null){
+				ShowEpisodeDetails printDetails = new ShowEpisodeDetails(data);
+				printDetails.execute(command);
 				
 				System.out.println ("Podcast: "+getPodcast().getName());
 				System.out.println ("Episode: "+episode.getTitle());

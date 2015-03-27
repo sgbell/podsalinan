@@ -29,24 +29,8 @@ public class ShowDownloadDetails extends CLIOption {
 	public void printDetails(URLDownload selectedDownload, boolean showDirectory){
 		if (selectedDownload!=null){
 			System.out.println("URL: "+selectedDownload.getURL().toString());
-			switch (selectedDownload.getStatus()){
-				case URLDownload.DOWNLOAD_QUEUED:
-					System.out.println ("Status: Download Queued");
-					break;
-				case URLDownload.CURRENTLY_DOWNLOADING:
-					System.out.println ("Status: Currently Downloading");
-					break;
-				case URLDownload.INCOMPLETE_DOWNLOAD:
-					System.out.println ("Status: Download Incomplete");
-					break;
-				case URLDownload.FINISHED:
-					System.out.println ("Status: Completed Download");
-					break;
-				case URLDownload.DOWNLOAD_CANCELLED:
-					System.out.println ("Status: Download Cancelled");
-				default:
-					System.out.println ("Status: "+selectedDownload.getStatus());
-			}
+			System.out.println("Status: "+selectedDownload.getCurrentStatus());
+
 			if ((showDirectory)&&(selectedDownload.getDestination()!=null))
 				System.out.println("Destination: "+selectedDownload.getDestination());
 

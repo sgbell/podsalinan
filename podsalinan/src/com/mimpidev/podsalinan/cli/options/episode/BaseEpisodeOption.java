@@ -43,7 +43,10 @@ public abstract class BaseEpisodeOption extends CLIOption {
 	public void setPodcast(String podcastUid){
 		podcast = data.getPodcasts().getPodcastByUid(podcastUid);
 	}
+
+	public void setPodcast(Podcast selectedPodcast){
+		podcast = selectedPodcast;
+	}
 	
 	public abstract ReturnObject execute(String command);
-
 }
