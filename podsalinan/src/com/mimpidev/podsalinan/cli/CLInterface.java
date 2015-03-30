@@ -193,7 +193,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 */
 	}
 
-	/* TODO: Rewrite user input to allow command line completion. Current thoughts on how to
+	/* TODO: 5. Rewrite user input to allow command line completion. Current thoughts on how to
 	 * implement this:
 	 *       Pass the the command string, and the method into a method of CLInput.
 	 *       ie: userInput.addCommand("select podcast <userInput>",selectPodcastInput());

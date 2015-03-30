@@ -22,7 +22,7 @@ public class ShowCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		/*TODO: flesh out ShowCommand
+		/*TODO: 4. flesh out ShowCommand
 		 * 
 		 */
 		/*
