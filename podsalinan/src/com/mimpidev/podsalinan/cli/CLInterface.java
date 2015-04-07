@@ -203,7 +203,6 @@ public class CLInterface extends CLIOption implements Runnable{
 	 */
 
 	public void userInput(){
-		debug=true;
 		System.out.print("->");
 		String menuInput=input.getStringInput();
 		String methodCall="";

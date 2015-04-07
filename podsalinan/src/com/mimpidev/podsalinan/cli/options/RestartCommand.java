@@ -26,7 +26,6 @@ public class RestartCommand extends CLIOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
-		//TODO: 2. flesh out RestartCommand
 		
 		String[] commandSplit = command.split(" ");
 		if (debug) Podsalinan.debugLog.logInfo(this, "size: "+commandSplit.length);

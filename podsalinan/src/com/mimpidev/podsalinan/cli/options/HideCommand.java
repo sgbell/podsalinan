@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
@@ -22,7 +23,9 @@ public class HideCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		if (command.equalsIgnoreCase("hide menu"))
+		if (debug) Podsalinan.debugLog.logInfo(this, 27, "Command: "+command);
+		
+		if (command.equalsIgnoreCase("menu"))
 			if (!data.getSettings().addSetting("menuVisible", "false"))
 				data.getSettings().updateSetting("menuVisible", "false");
 		return returnObject;

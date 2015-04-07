@@ -41,7 +41,6 @@ public class SelectDownload extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 		
 		String[] commandOptions = command.split(" ");
-		//TODO: 1. The following if block does not seem to be converting char to uid
 		if (commandOptions[0].length()<=2){
 			if (debug) Podsalinan.debugLog.logInfo(this, "Download ID: "+commandOptions[0]);
 			int downloadId = convertCharToNumber(commandOptions[0]);

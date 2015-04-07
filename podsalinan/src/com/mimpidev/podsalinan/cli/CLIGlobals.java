@@ -60,4 +60,20 @@ public class CLIGlobals {
 		
 		return returnString;
 	}
+	
+	public ReturnObject createReturnObject(){
+		ReturnObject returnObject = new ReturnObject();
+		String[] firstLevel = {"downloads","podcast"};
+		for (String key : firstLevel){
+			if (globalSelection.containsKey(key)){
+				returnObject.methodCall=key;
+				returnObject.methodParameters=globalSelection.get(key);
+			}
+		}
+		if (globalSelection.containsKey("episode")){
+			returnObject.methodParameters+=" "+globalSelection.get("episode");
+		}
+		
+		return returnObject;
+	}
 }
