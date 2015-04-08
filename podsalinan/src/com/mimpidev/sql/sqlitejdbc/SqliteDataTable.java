@@ -44,10 +44,10 @@ public class SqliteDataTable {
 		setName(name);
 	}
 
-	/*TODO: Need to change the insert and update statements
-	 * 1. Move conversion of map to string into 1 function
-	 * 2. use the table definition to decide how to format the data, rather than doing a test to see if
-	 *    its a number (as this may fail if somebody decides to store a number in a text field
+	/*TODO: sqliteJDBC 1. Need to change the insert and update statements
+	 * 1.1. Move conversion of map to string into 1 function
+	 * 1.2. use the table definition to decide how to format the data, rather than doing a test to see if
+	 *      its a number (as this may fail if somebody decides to store a number in a text field
 	 */
 	
 	public Object insert(SqliteConflictAction onConflict,

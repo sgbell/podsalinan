@@ -30,7 +30,7 @@ import com.mimpidev.sql.sqlitejdbc.SqliteDataTable;
  */
 public class SqliteIndexScopeCursor {
 
-	//TODO: flesh out this class if needed
+	//TODO: sqliteJDBC 4. flesh out this class if needed
 	public SqliteIndexScopeCursor(SqliteDataTable table, Database db,
 			String fieldName, Object value) {
 		

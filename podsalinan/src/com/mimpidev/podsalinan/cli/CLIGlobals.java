@@ -21,7 +21,7 @@ public class CLIGlobals {
 	 */
 	private Map<String,String> globalSelection; 
 	
-	private boolean debug=true;
+	private boolean debug=false;
 	/**
 	 * 
 	 */

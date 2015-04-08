@@ -44,7 +44,7 @@ public class SelectPodcast extends CLIOption {
 		 * global selection
 		 */
 		if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast") && 
-              (command.split(" ",2)[0].equals(CLInterface.cliGlobals.getGlobalSelection().get("podcast"))))){
+             (command.split(" ",2)[0].equals(CLInterface.cliGlobals.getGlobalSelection().get("podcast"))))){
 			if (command.split(" ").length==1 && command.length()==1){
 				if (command.equals("9") && CLInterface.cliGlobals.getGlobalSelection().size()>0){
 					CLInterface.cliGlobals.getGlobalSelection().clear();
@@ -93,7 +93,7 @@ public class SelectPodcast extends CLIOption {
 		}
 
 		if (debug) Podsalinan.debugLog.logInfo(this,91, "Command: "+command);
-		if (command.length()==8){
+		if (command.length()==8 && data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")){
 			returnObject = options.get("").execute(command);
 			if (debug) Podsalinan.debugLog.logInfo(this,94,"Command Length:"+command.length());
 		}else if (command.split(" ").length>1){
@@ -112,6 +112,9 @@ public class SelectPodcast extends CLIOption {
 					returnObject = options.get(command.split(" ")[1]).execute(command);
 				}
 			}
+		} else if (!data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")){
+			ShowPodcastDetails podcastDetail=new ShowPodcastDetails(data);
+			returnObject = podcastDetail.execute("");
 		} else {
 			returnObject = options.get("").execute(command);
 		}

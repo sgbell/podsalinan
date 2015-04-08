@@ -106,7 +106,7 @@ public class SqliteSchema {
 			sql = database.getConnection().createStatement();
 			sql.execute(createStatement);
 			// Need to create a new SqliteTable object so we can play with the table data, and return it.
-			// TODO: Make this return a newly created SqliteTable Object
+			// TODO: sqliteJDBC 2. Make this return a newly created SqliteTable Object
 			return null;
 		} catch (SQLException e) {
 			throw new SqliteException("Problem with CREATE TABLE command.");
@@ -119,7 +119,7 @@ public class SqliteSchema {
 			sql = database.getConnection().createStatement();
 			sql.execute(alterTableSql);
 			// Need to create a new SqliteTable object se we can pass the table back to the calling function
-			//TODO: Make a SqliteTable object after execution, and return SqliteTable object
+			//TODO: sqliteJDBC 3. Make a SqliteTable object after execution, and return SqliteTable object
 			return null;
 		} catch (SQLException e) {
 			throw new SqliteException("Program with Alter Table command.");

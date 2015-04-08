@@ -28,8 +28,6 @@ public class ShowCommand extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo(this, 31, "Command: "+command);
-		//TODO: 1. Finish improving this code
-		//TODO: 2. Check in ShowMenu Class
 		String[] commandOptions = command.split(" ");
 		if (options.containsKey(commandOptions[0])){
 			returnObject=options.get(commandOptions[0]).execute(command);

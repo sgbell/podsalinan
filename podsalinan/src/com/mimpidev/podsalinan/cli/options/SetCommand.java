@@ -22,7 +22,7 @@ public class SetCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		/*TODO: 3. flesh out SetCommand
+		/*TODO: 1. flesh out SetCommand
 		 *
 		 */
 		return returnObject;

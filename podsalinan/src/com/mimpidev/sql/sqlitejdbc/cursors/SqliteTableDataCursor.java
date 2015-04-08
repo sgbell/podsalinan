@@ -30,7 +30,7 @@ import com.mimpidev.sql.sqlitejdbc.SqliteDataTable;
  */
 public class SqliteTableDataCursor {
 
-	//TODO: flesh this out if needed
+	//TODO: sqliteJDBC 5. flesh this out if needed
 	public SqliteTableDataCursor(SqliteDataTable sqliteDataTable, Database db) {
 		
 	}

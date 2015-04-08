@@ -45,7 +45,6 @@ public class ListSelection extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 
 		System.out.println("Currently Selected");
