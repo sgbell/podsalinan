@@ -9,6 +9,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
@@ -34,8 +35,17 @@ public class ChangeDestination extends CLIOption {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
 		//TODO: 1.5 Change this to accept a call from SetCommand
-		System.out.println ();
 	    String commands[] = command.split(" ");
+        //TODO: 1.5.1 Need to fix menu traversal to get here
+	    //TODO: 1.5.2 Need to fix direct call to get here
+	    // Call direct with "set destination <path>"
+	    if (commands.length>1 && commands[0].equalsIgnoreCase("destination")){
+	    	if (CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){
+	    		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcast"));
+	    		
+	    	}
+	    }
+		System.out.println ();
 		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(commands[0]);
 		if (selectedPodcast!=null){
 			System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");

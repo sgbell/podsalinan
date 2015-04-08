@@ -31,9 +31,7 @@ public class SetCommand extends CLIOption {
 		options.put("maxdownloaders", new MaxDownloaders(newData));
 		options.put("autoqueue", new AutoQueueEpisodes(newData));
 		options.put("defaultdirectory", new DownloadDirectory(newData));
-		ChangeDestination changeDestination = new ChangeDestination(newData);
-		options.put("destination", changeDestination); 
-		options.put("podcast", changeDestination);
+		options.put("destination", new ChangeDestination(newData)); 
 		options.put("menuvisible", new MenuVisibility(newData));
 	}
 
