@@ -31,21 +31,10 @@ public class ShowCommand extends CLIOption {
 		String[] commandOptions = command.split(" ");
 		if (options.containsKey(commandOptions[0])){
 			returnObject=options.get(commandOptions[0]).execute(command);
+		} else {
+			System.out.println("Error: Invalid user Input.");
 		}
-		
-		/*
-		if (menuInput.equalsIgnoreCase("show menu")){
-			if (!data.getSettings().addSetting("menuVisible", "true"))
-				data.getSettings().updateSetting("menuVisible", "true");
-			mainMenu.process(99);
-		} else if (menuInput.toLowerCase().startsWith("show")){
-			menuInput= menuInput.replaceFirst(menuInput.split(" ")[0]+" ","");
-			if (menuInput.toLowerCase().equalsIgnoreCase("details")){
-				mainMenu.process(98);
-			} else {
-				System.out.println("Error: Invalid User Input");
-			}
-		}*/
+
 		return returnObject;
 	}
 
