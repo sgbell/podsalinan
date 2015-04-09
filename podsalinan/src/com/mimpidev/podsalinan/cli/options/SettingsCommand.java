@@ -32,11 +32,11 @@ public class SettingsCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
-		returnObject.methodCall="settings";
+		debug=true;
+		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
 		
 		if (options.containsKey(command.toLowerCase())){
-			options.get(command).execute(command);
+			returnObject=options.get(command).execute(command);
 		} else {
 			try {
 				Integer.parseInt(command);
@@ -45,9 +45,10 @@ public class SettingsCommand extends CLIOption {
 					returnObject.methodParameters="";
 				}
 			} catch (NumberFormatException e){
-				
+				System.out.println("Error: Invalid Command.");
 			}
 		}
+		if (debug) Podsalinan.debugLog.logInfo(this, "methodParameters: "+returnObject.methodParameters);
 		
 		return returnObject;
 	}
