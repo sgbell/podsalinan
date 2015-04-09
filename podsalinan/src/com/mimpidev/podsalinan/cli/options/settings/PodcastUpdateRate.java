@@ -23,31 +23,27 @@ public class PodcastUpdateRate extends CLIOption {
 		super(newData);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		String[] commandOptions = command.split(" ");
+		String updateValue="";
+		if (commandOptions.length==1){
+			updateValue=executeMenuOption();
+		} else {
+			try {
+				// Check that the second value passed in is a number, and between 1 & 6
+			    if ((Integer.parseInt(commandOptions[1])<1)||
+			    	(Integer.parseInt(commandOptions[1])>6)){
+			    	throw new NumberFormatException("Number out of Bounds");
+			    }
+			    updateValue=commandOptions[1];
+			} catch (NumberFormatException e){
+				System.out.println("Error: Invalid Value.");
+				System.out.println("Valid values: (1)Hourly, (2)Every 2 Hours, (3)Every 3 Hours, (4)Every 6 Hours, (5)Every 12 Hours, (6)Daily");
+			}
+		}
 
-		System.out.println ();
-		System.out.println ("How often to update the podcast feeds?");
-		System.out.println ("1. Hourly");
-		System.out.println ("2. Every 2 Hours");
-		System.out.println ("3. Every 3 Hours");
-		System.out.println ("4. Every 6 Hours");
-		System.out.println ("5. Every 12 Hours");
-		System.out.println ("6. Daily");
-		if (!data.getSettings().isValidSetting("updateInterval"))
-			data.getSettings().addSetting("updateInterval", "1440");
-        
-        System.out.print ("Choice ["+printUserFriendlyUpdateRate()+"]: ");
-		/* Take user input.
-		 * Make sure it is between 1 & 6
-		 * If not leave PodcastRate as it's current value.
-		 */
-		
-		String updateValue = input.getValidNumber(1,6);
 		if (updateValue!=null){
 			if (updateValue.length()>0){
 				switch (Integer.parseInt(updateValue)){
@@ -85,8 +81,29 @@ public class PodcastUpdateRate extends CLIOption {
 				}
 			}
 		}		
-		
 		return returnObject;
+	}
+
+	private String executeMenuOption() {
+
+		System.out.println ();
+		System.out.println ("How often to update the podcast feeds?");
+		System.out.println ("1. Hourly");
+		System.out.println ("2. Every 2 Hours");
+		System.out.println ("3. Every 3 Hours");
+		System.out.println ("4. Every 6 Hours");
+		System.out.println ("5. Every 12 Hours");
+		System.out.println ("6. Daily");
+		if (!data.getSettings().isValidSetting("updateInterval"))
+			data.getSettings().addSetting("updateInterval", "1440");
+        
+        System.out.print ("Choice ["+printUserFriendlyUpdateRate()+"]: ");
+		/* Take user input.
+		 * Make sure it is between 1 & 6
+		 * If not leave PodcastRate as it's current value.
+		 */
+		
+		return input.getValidNumber(1,6);
 	}
 
 	private String printUserFriendlyUpdateRate(){

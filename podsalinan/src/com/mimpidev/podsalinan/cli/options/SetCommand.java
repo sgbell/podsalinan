@@ -4,8 +4,16 @@
 package com.mimpidev.podsalinan.cli.options;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
+import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
+import com.mimpidev.podsalinan.cli.options.settings.AutoQueueEpisodes;
+import com.mimpidev.podsalinan.cli.options.settings.DownloadDirectory;
+import com.mimpidev.podsalinan.cli.options.settings.DownloadSpeedLimit;
+import com.mimpidev.podsalinan.cli.options.settings.MaxDownloaders;
+import com.mimpidev.podsalinan.cli.options.settings.MenuVisibility;
+import com.mimpidev.podsalinan.cli.options.settings.PodcastUpdateRate;
 
 /**
  * @author sbell
@@ -18,59 +26,31 @@ public class SetCommand extends CLIOption {
 	 */
 	public SetCommand(DataStorage newData) {
 		super(newData);
+		options.put("updateinterval", new PodcastUpdateRate(newData));
+		options.put("downloadlimit", new DownloadSpeedLimit(newData));
+		options.put("maxdownloaders", new MaxDownloaders(newData));
+		options.put("autoqueue", new AutoQueueEpisodes(newData));
+		options.put("defaultdirectory", new DownloadDirectory(newData));
+		ChangeDestination changeDestination = new ChangeDestination(newData);
+		options.put("destination", changeDestination); 
+		options.put("podcast", changeDestination);
+		options.put("menuvisible", new MenuVisibility(newData));
 	}
 
 	@Override
 	public ReturnObject execute(String command) {
-		/*TODO: 1. flesh out SetCommand
-		 *
-		 */
+		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
+		String[] commandOptions = command.split(" ");
+		if (options.containsKey(commandOptions[0].toLowerCase())){
+			returnObject = options.get(commandOptions[0].toLowerCase()).execute(command);
+		} else {
+			System.out.println("Error: Invalid user input.");
+		}
+		
 		return returnObject;
 		/*menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
-		if (menuInput.toLowerCase().startsWith("updateinterval")){
-			String name = menuInput.split(" ")[0];
-			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
-			int value=-1;
-			try {
-				value = Integer.parseInt(menuInput);
-			} catch (NumberFormatException e){
-				value=-1;
-			}
-			if ((value>0)&&(value<=6)){
-				switch (value){
-					case 1:
-						// 1 Hour
-						menuInput="60";
-						break;
-					case 2:
-						//2 Hours
-						menuInput="120";
-						break;
-					case 3:
-						// 3 Hours
-						menuInput="180";
-						break;
-					case 4:
-						// 6 Hours
-						menuInput="360";
-						break;
-					case 5:
-						// 12 Hours
-						menuInput="720";
-						break;
-					case 6:
-						// 24 Hours
-						menuInput="1440";
-						break;
-				}
-				data.getSettings().updateSetting(name, menuInput);
-				System.out.println(name+" value updated");
-			} else {
-				System.out.println("Error: Invalid user input.");
-				System.out.println("Valid values: (1)Hourly, (2)Every 2 Hours, (3)Every 3 Hours, (4)Every 6 Hours, (5)Every 12 Hours, (6)Daily");
-			}
-		} else if (menuInput.toLowerCase().startsWith("downloadlimit")){
+        if (menuInput.toLowerCase().startsWith("downloadlimit")){
 			String name = menuInput.split(" ")[0];
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			int value=-1;

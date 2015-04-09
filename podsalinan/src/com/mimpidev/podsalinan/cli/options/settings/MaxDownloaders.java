@@ -23,13 +23,10 @@ public class MaxDownloaders extends CLIOption {
 		super(newData);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
-
+        //TODO: 1.2 Change this to accept a call from SetCommand
 		System.out.println ();
 		System.out.print ("Enter Number of Simultaneous Downloads["+data.getSettings().findSetting("maxDownloaders")+"]: ");
 		/* Take user input.

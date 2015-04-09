@@ -39,7 +39,7 @@ public class SelectDownload extends CLIOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
-		
+
 		String[] commandOptions = command.split(" ");
 		if (commandOptions[0].length()<=2){
 			if (debug) Podsalinan.debugLog.logInfo(this, "Download ID: "+commandOptions[0]);

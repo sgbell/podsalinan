@@ -30,7 +30,7 @@ public class AutoQueueEpisodes extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
-		
+		//TODO: 1.3 Change this to accept a call from SetCommand 
 		System.out.println ();
 		if (!data.getSettings().isValidSetting("autoQueue"))
 			data.getSettings().addSetting("autoQueue", "false");

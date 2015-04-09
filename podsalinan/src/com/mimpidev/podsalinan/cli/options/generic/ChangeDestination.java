@@ -31,8 +31,8 @@ public class ChangeDestination extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
-		
+		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
+		//TODO: 1.5 Change this to accept a call from SetCommand
 		System.out.println ();
 	    String commands[] = command.split(" ");
 		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(commands[0]);

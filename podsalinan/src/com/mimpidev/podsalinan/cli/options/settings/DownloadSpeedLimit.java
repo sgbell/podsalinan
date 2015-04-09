@@ -26,6 +26,7 @@ public class DownloadSpeedLimit extends CLIOption {
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		//TODO: 1.1 Change this to accept a call from SetCommand and to process it
 		
 		System.out.println();
 		System.out.println("Valid values: 0 (Means no limit); 25 (Means 25Kbps); 1M (Means 1 Mbps)");
