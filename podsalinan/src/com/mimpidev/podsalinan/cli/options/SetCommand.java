@@ -50,20 +50,7 @@ public class SetCommand extends CLIOption {
 		return returnObject;
 		/*menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 		
-        if (menuInput.toLowerCase().startsWith("downloadlimit")){
-			String name = menuInput.split(" ")[0];
-			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
-			int value=-1;
-			try {
-				value = Integer.parseInt(menuInput);
-			} catch (NumberFormatException e){
-				value = -1;
-			}
-			if (value>-1){
-				data.getSettings().updateSetting(name, menuInput);
-				System.out.println(name+" value updated");
-			}
-		} else if (menuInput.toLowerCase().startsWith("maxdownloaders")){
+        if (menuInput.toLowerCase().startsWith("maxdownloaders")){
 			String name = menuInput.split(" ")[0];
 			menuInput = menuInput.replaceFirst(menuInput.split(" ")[0]+" ", "");
 			int value=-1;

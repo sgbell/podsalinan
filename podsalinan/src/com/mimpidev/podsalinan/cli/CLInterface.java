@@ -220,13 +220,16 @@ public class CLInterface extends CLIOption implements Runnable{
     					if (debug){
     						Podsalinan.debugLog.logMap(cliGlobals.getGlobalSelection());
     					}
+    					returnObject=cliGlobals.createReturnObject();
+    					returnObject.methodParameters+=" "+menuInput;
                 		//Travel through the globalSelection to figure out what has been selected
-    					menuInput=cliGlobals.globalSelectionToString()+menuInput;
+    					/*menuInput=cliGlobals.globalSelectionToString()+menuInput;
                         returnObject.methodCall=menuInput.split(" ",2)[0];
-                        menuInput=menuInput.split(" ",2)[1];
+                        menuInput=menuInput.split(" ",2)[1];*/
                 	}
                 } else if ((!menuInput.startsWith("select")) ||
                 		   (!menuInput.startsWith("set"))){
+                	
    					menuInput=cliGlobals.globalSelectionToString()+menuInput;
                	}
            	    returnObject.methodParameters=menuInput;

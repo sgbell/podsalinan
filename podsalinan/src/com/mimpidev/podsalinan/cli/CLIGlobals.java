@@ -63,7 +63,7 @@ public class CLIGlobals {
 	
 	public ReturnObject createReturnObject(){
 		ReturnObject returnObject = new ReturnObject();
-		String[] firstLevel = {"downloads","podcast"};
+		String[] firstLevel = {"downloads","podcast","settings"};
 		for (String key : firstLevel){
 			if (globalSelection.containsKey(key)){
 				returnObject.methodCall=key;
