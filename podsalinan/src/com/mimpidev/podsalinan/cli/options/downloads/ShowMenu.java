@@ -22,10 +22,6 @@ public class ShowMenu extends CLIOption {
 		super(newData);
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(String command) {
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
@@ -38,7 +34,8 @@ public class ShowMenu extends CLIOption {
 		System.out.println("To add a new download to the queue just enter the the url to be downloaded.");
 		System.out.println();
 		System.out.println("9. Return to Main Menu");
-
+		returnObject.methodCall="downloads";
+		
 		return returnObject;
 	}
 

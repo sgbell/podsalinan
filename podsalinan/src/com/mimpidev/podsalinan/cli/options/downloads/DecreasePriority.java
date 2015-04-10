@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options.downloads;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
 /**
@@ -37,7 +38,8 @@ public class DecreasePriority extends CLIOption {
 		} else {
 			System.out.println("Error: Download already at the bottom of the list.");
 		}
-		
+		returnObject = CLInterface.cliGlobals.createReturnObject();
+		returnObject.execute=true;
 		
 		return returnObject;
 	}
