@@ -22,19 +22,31 @@ public class MaxDownloaders extends CLIOption {
 	public MaxDownloaders(DataStorage newData) {
 		super(newData);
 	}
-
-	@Override
-	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
-        //TODO: 1.2 Change this to accept a call from SetCommand
+	
+	public String executeMenuOption(){
 		System.out.println ();
 		System.out.print ("Enter Number of Simultaneous Downloads["+data.getSettings().findSetting("maxDownloaders")+"]: ");
 		/* Take user input.
 		 * Make sure it is between 1 and 30
 		 * If not, get the user to enter it again.
 		 */
-		String numDownloaders = input.getValidNumber(1,30);
-		if (debug) Podsalinan.debugLog.logInfo("Number of downloaders:"+numDownloaders);
+		return input.getValidNumber(1,30);
+	}
+	
+	public ReturnObject execute(String command) {
+		debug=true;
+		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
+		String numDownloaders="";
+
+		String[] commandOptions = command.split(" ");
+        if (commandOptions.length==1){
+        	numDownloaders=executeMenuOption();
+        	returnObject.methodCall="settings";
+        	returnObject.execute=true;
+        } else {
+        	numDownloaders=commandOptions[1];
+        }		
+		
 		if (numDownloaders!=null)
 			if(!data.getSettings().updateSetting("maxDownloaders",numDownloaders))
 				data.getSettings().addSetting("maxDownloaders",numDownloaders);

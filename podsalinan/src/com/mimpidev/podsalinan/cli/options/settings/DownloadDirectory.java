@@ -25,11 +25,7 @@ public class DownloadDirectory extends CLIOption {
 		super(newData);
 	}
 
-	@Override
-	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
-		//TODO: 1.4 Change this to accept a call from SetCommand
-		File newPath;
+	public String executeMenuOption(){
 		System.out.println ();
 		System.out.print ("Enter Default Directory["+data.getSettings().findSetting("defaultDirectory")+"]: ");
 		/* Take user input.
@@ -37,7 +33,23 @@ public class DownloadDirectory extends CLIOption {
 		 * If directory exists set defaultDirectory to file Input
 		 * If not show and error and leave defaultDirectory as is
 		 */
-		String userInput=input.getStringInput();
+		return input.getStringInput();
+	}
+	
+	public ReturnObject execute(String command) {
+		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		String userInput="";
+		
+		String[] commandOptions = command.split(" ");
+        if (commandOptions.length==1){
+        	userInput=executeMenuOption();
+        	returnObject.methodCall="settings";
+        	returnObject.execute=true;
+        } else {
+        	userInput=commandOptions[1];
+        }
+        
+		File newPath;
 		if ((userInput.length()>0)&&(userInput!=null)){
 			newPath=new File(userInput);
 			if ((newPath.exists())&&(newPath.isDirectory())){
