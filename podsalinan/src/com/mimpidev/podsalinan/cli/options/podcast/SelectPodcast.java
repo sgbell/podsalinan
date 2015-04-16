@@ -92,8 +92,9 @@ public class SelectPodcast extends CLIOption {
 			}
 		}
 
-		if (debug) Podsalinan.debugLog.logInfo(this,91, "Command: "+command);
-		if (command.length()==8 && data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")){
+		if (debug) Podsalinan.debugLog.logInfo(this,95, "Command: "+command);
+		if (command.length()==8 && (data.getSettings().findSetting("menuVisible")==null)||
+				                    data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")){
 			returnObject = options.get("").execute(command);
 			if (debug) Podsalinan.debugLog.logInfo(this,94,"Command Length:"+command.length());
 		}else if (command.split(" ").length>1){
@@ -112,7 +113,8 @@ public class SelectPodcast extends CLIOption {
 					returnObject = options.get(command.split(" ")[1]).execute(command);
 				}
 			}
-		} else if (!data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")){
+		} else if ((!data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))&&
+				   (data.getSettings().findSetting("menuVisible")!=null)){
 			ShowPodcastDetails podcastDetail=new ShowPodcastDetails(data);
 			returnObject = podcastDetail.execute("");
 		} else {

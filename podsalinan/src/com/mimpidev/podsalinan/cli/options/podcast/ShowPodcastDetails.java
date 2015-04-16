@@ -29,7 +29,8 @@ public class ShowPodcastDetails extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 		if (CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){
 			Podcast podcast=data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcast"));
-			if (command.equalsIgnoreCase("selectedMenu") && data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")){
+			if (command.equalsIgnoreCase("selectedMenu") && (data.getSettings().findSetting("menuVisible")==null||
+					                                         data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
 				System.out.println("Podcast: "+podcast.getName()+ " - Selected");
 			} else {
 			    System.out.println("Podcast: "+podcast.getName());
