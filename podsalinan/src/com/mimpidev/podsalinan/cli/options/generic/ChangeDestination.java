@@ -34,9 +34,7 @@ public class ChangeDestination extends CLIOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
-		//TODO: 1.5 Change this to accept a call from SetCommand
 	    String commandOptions[] = command.split(" ");
-        //TODO: 1.5.1 Need to fix menu traversal to get here
 
 	    // Call direct with "set destination <path>"
 	    if (commandOptions.length>1 && commandOptions[0].equalsIgnoreCase("destination")){

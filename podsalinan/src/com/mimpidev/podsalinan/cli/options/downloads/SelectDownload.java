@@ -34,6 +34,7 @@ public class SelectDownload extends CLIOption {
 		options.put("showSelectedMenu", showMenu);
 		options.put("", showMenu);
 	}
+	//TODO: 3.1 Fix menu traversal for selected downloads
 
 	@Override
 	public ReturnObject execute(String command) {
