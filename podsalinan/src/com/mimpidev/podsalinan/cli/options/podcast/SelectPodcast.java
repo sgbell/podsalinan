@@ -38,7 +38,7 @@ public class SelectPodcast extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo(this,"Line:41, Command :"+command);
+		if (debug) Podsalinan.debugLog.logInfo(this, 41, "Command :"+command);
 
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in
 		 * global selection
@@ -54,7 +54,7 @@ public class SelectPodcast extends CLIOption {
 				Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ",2)[0]);
 				if (selectedPodcast==null){
 					Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(command);
-					if (debug) Podsalinan.debugLog.logInfo(this, "Line:52, PodcastList.size="+podcastList.size());
+					if (debug) Podsalinan.debugLog.logInfo(this, "Line:57, PodcastList.size="+podcastList.size());
 					if (podcastList.size()==1){
 						CLInterface.cliGlobals.getGlobalSelection().clear();
 						CLInterface.cliGlobals.getGlobalSelection().put("podcast",podcastList.get(0).getDatafile());
@@ -84,7 +84,7 @@ public class SelectPodcast extends CLIOption {
 					}
 				}
 				if (selectedPodcast!=null){
-					if (debug) Podsalinan.debugLog.logInfo(this, 82, "Set selected podcast:"+selectedPodcast.getDatafile());
+					if (debug) Podsalinan.debugLog.logInfo(this, 87, "Set selected podcast:"+selectedPodcast.getDatafile());
 					CLInterface.cliGlobals.getGlobalSelection().clear();
 					CLInterface.cliGlobals.getGlobalSelection().put("podcast",selectedPodcast.getDatafile());
 					command=selectedPodcast.getDatafile()+(command.split(" ",2).length>1?" "+command.split(" ",2)[1]:"");
@@ -93,20 +93,20 @@ public class SelectPodcast extends CLIOption {
 		}
 
 		if (debug) Podsalinan.debugLog.logInfo(this,95, "Command: "+command);
-		if (command.length()==8 && (data.getSettings().findSetting("menuVisible")==null)||
-				                    data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")){
+		if (command.length()==8 && ((data.getSettings().findSetting("menuVisible")==null)||
+				                     data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
 			returnObject = options.get("").execute(command);
-			if (debug) Podsalinan.debugLog.logInfo(this,94,"Command Length:"+command.length());
+			if (debug) Podsalinan.debugLog.logInfo(this,99,"Command Length:"+command.length());
 		}else if (command.split(" ").length>1){
-			if (debug) Podsalinan.debugLog.logInfo(this,96,"Command Length:"+command.length());
+			if (debug) Podsalinan.debugLog.logInfo(this,101,"Command Length:"+command.length());
 			if (command.split(" ")[1].equals("9")){
 				CLInterface.cliGlobals.getGlobalSelection().clear();
 				returnObject.methodCall="podcast";
 				returnObject.methodParameters="";
 				returnObject.execute=true;
 			} else {
-				if (debug) Podsalinan.debugLog.logInfo(this,101, "Command: "+command);
-				if (debug) Podsalinan.debugLog.logInfo(this,102, "Podcast: "+command.split(" ")[0]);
+				if (debug) Podsalinan.debugLog.logInfo(this,108, "Command: "+command);
+				if (debug) Podsalinan.debugLog.logInfo(this,109, "Podcast: "+command.split(" ")[0]);
 				if (convertCharToNumber(command.split(" ")[1])>=0){
 					returnObject = options.get("<aa>").execute(command);
 				} else {

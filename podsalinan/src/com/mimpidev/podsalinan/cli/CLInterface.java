@@ -50,15 +50,14 @@ public class CLInterface extends CLIOption implements Runnable{
 		super(newData);
 		input = new CLInput();
 		initializeMenus();
+		debug=true;
 	}
 	
 	public CLInterface(PodcastList podcasts, URLDownloadList urlDownloads, ProgSettings settings){
-		super(new DataStorage());
+		this(new DataStorage());
 		data.setPodcasts(podcasts);
 		data.setUrlDownloads(urlDownloads);
 		data.setSettings(settings);
-		input = new CLInput();
-		initializeMenus();
 	}
 
 	private void initializeMenus() {
@@ -222,33 +221,32 @@ public class CLInterface extends CLIOption implements Runnable{
     					}
     					returnObject=cliGlobals.createReturnObject();
     					returnObject.methodParameters+=" "+menuInput;
-                		//Travel through the globalSelection to figure out what has been selected
-    					/*menuInput=cliGlobals.globalSelectionToString()+menuInput;
-                        returnObject.methodCall=menuInput.split(" ",2)[0];
-                        menuInput=menuInput.split(" ",2)[1];*/
+                	} else {
+               	        returnObject.methodParameters=menuInput;
                 	}
                 } else if ((!menuInput.startsWith("select")) ||
                 		   (!menuInput.startsWith("set"))){
                 	
    					menuInput=cliGlobals.globalSelectionToString()+menuInput;
+               	} else {
+           	        returnObject.methodParameters=menuInput;
                	}
-           	    returnObject.methodParameters=menuInput;
-       			if (debug) {
-       				Podsalinan.debugLog.logInfo(this,229,"Before the methodCall");
-           			Podsalinan.debugLog.logInfo(this,230,"methodCall: "+returnObject.methodCall);
-           			Podsalinan.debugLog.logInfo(this,231,"methodParameters: "+returnObject.methodParameters);
-       			}
-       			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
-       			if (debug){
-       				Podsalinan.debugLog.logInfo(this,235,"After the methodCall");
-           			Podsalinan.debugLog.logInfo(this,236,"methodCall: "+returnObject.methodCall);
-           			Podsalinan.debugLog.logInfo(this,237,"methodParameters: "+returnObject.methodParameters);
-       			}
-			} else {
-				returnObject=options.get(methodCall.toLowerCase()).execute((menuInput.split(" ",2).length==2?menuInput.split(" ",2)[1]:""));
 			}
-			if (debug){
-   				Podsalinan.debugLog.logInfo(this,245,"After options.get");
+   			if (debug) Podsalinan.debugLog.logInfo(this,242,"methodParameters: "+returnObject.methodParameters);
+			returnObject.execute=true;
+			// Continue executing menu calls until the return object says to stop
+			while (returnObject.execute){
+       			if (debug) {
+       				Podsalinan.debugLog.logInfo(this,240,"Before the methodCall");
+           			Podsalinan.debugLog.logInfo(this,241,"methodCall: "+returnObject.methodCall);
+           			Podsalinan.debugLog.logInfo(this,242,"methodParameters: "+returnObject.methodParameters);
+       			}
+				returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
+       			if (debug){
+       				Podsalinan.debugLog.logInfo(this,246,"After the methodCall");
+           			Podsalinan.debugLog.logInfo(this,247,"methodCall: "+returnObject.methodCall);
+           			Podsalinan.debugLog.logInfo(this,248,"methodParameters: "+returnObject.methodParameters);
+       			}
 			}
                 	/**
                 	 * How to traverse a menu system using commands???
