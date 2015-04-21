@@ -36,12 +36,15 @@ public class SelectEpisode extends CLIOption {
 		// Find out where the episode id is in the command String
 		int episodePosition=-1;
 		if (commandOptions.length>2){
-			if (commandOptions[2].equalsIgnoreCase("episode"))
+			if (data.getPodcasts().getPodcastByUid(commandOptions[0])!=null){
+				episodePosition=2;
+			} else if (commandOptions[2].equalsIgnoreCase("episode"))
 				episodePosition=2;
 		} else if (commandOptions.length==2){
 			episodePosition=1;
 		}
-		
+
+		if (debug) Podsalinan.debugLog.logInfo(this, "episodePosition:"+episodePosition);
 		// If episode 1 is identified (approximately) compare it with globalSelection array
 		if (episodePosition!=-1){
 			try {
@@ -56,18 +59,19 @@ public class SelectEpisode extends CLIOption {
 		}
 		
         switch (commandOptions.length){
+            case 3:
         	case 4:
-        		if (commandOptions[3].equals("9")){
+        		if (commandOptions[episodePosition].equals("9")){
         			returnObject.methodCall="podcast";
         			returnObject.methodParameters=commandOptions[0];
         			returnObject.execute=true;
         			CLInterface.cliGlobals.getGlobalSelection().remove("episode");
         		} else if (commandOptions[1].equalsIgnoreCase("episode")){
             		try {
-            			Integer.parseInt(commandOptions[3]);
-            			if (debug) Podsalinan.debugLog.logInfo(this,45,"Command: "+command);
-            			if (options.containsKey(commandOptions[3]))
-            				returnObject = options.get(commandOptions[3]).execute(command);
+            			Integer.parseInt(commandOptions[episodePosition+1]);
+            			if (debug) Podsalinan.debugLog.logInfo(this,71,"Command: "+command);
+            			if (options.containsKey(commandOptions[episodePosition+1]))
+            				returnObject = options.get(commandOptions[episodePosition+1]).execute(command);
             			else{
                 			System.out.println("Error: Invalid option selected");
                 			returnObject.methodCall="podcast";
@@ -80,9 +84,8 @@ public class SelectEpisode extends CLIOption {
             		}
         		}
         		break;
-        	case 3:
         	case 2:
-        		if (debug) Podsalinan.debugLog.logInfo(this, 84,"Command: "+command);
+        		if (debug) Podsalinan.debugLog.logInfo(this, 88,"Command: "+command);
 
         		returnObject = options.get("showmenu").execute(command);
         		break;
