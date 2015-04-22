@@ -71,7 +71,7 @@ public class CLIGlobals {
 			}
 		}
 		if (globalSelection.containsKey("episode")){
-			returnObject.methodParameters+=" "+globalSelection.get("episode");
+			returnObject.methodParameters+=" episode "+globalSelection.get("episode");
 		}
 		
 		return returnObject;
