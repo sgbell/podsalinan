@@ -38,7 +38,7 @@ public class PodcastCommand extends CLIOption {
 		returnObject.methodCall="podcast";
 
 		if (options.containsKey(command.toLowerCase()))
-			options.get(command).execute(command);
+			returnObject=options.get(command).execute(command);
 		else{
 			try {
 				// Check if the value is a number and act accordingly

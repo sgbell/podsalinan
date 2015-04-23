@@ -64,11 +64,10 @@ public class SelectEpisode extends CLIOption {
 		
         switch (commandOptions.length){
         	case 4:
-        		if (commandOptions[episodePosition].equals("9")){
-        			returnObject.methodCall="podcast";
-        			returnObject.methodParameters=commandOptions[0];
-        			returnObject.execute=true;
+        		if (commandOptions[episodePosition+1].equals("9")){
         			CLInterface.cliGlobals.getGlobalSelection().remove("episode");
+                    returnObject = CLInterface.cliGlobals.createReturnObject();
+        			returnObject.execute=true;
         		} else {
             		try {
             			Integer.parseInt(commandOptions[episodePosition+1]);
