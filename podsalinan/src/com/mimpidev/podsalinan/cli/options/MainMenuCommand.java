@@ -69,6 +69,7 @@ public class MainMenuCommand extends CLIOption {
 			options.get("showmenu").execute("");
 			returnObject.methodCall="";
 			returnObject.methodParameters="";
+			returnObject.execute=false;
 		} else {
 			System.out.println("Error: Invalid User Command");
 		}

@@ -22,6 +22,11 @@ public abstract class CLIOption {
 	 */
 	protected DataStorage data;
 	
+	/**
+	 * 
+	 */
+	protected String[] commandOptions;
+	
 	protected boolean debug=false;
 	/**
 	 * 

@@ -34,7 +34,8 @@ public class PodcastCommand extends CLIOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"Line: 38, command: "+command);
-
+        commandOptions = command.split(" ");
+		
 		returnObject.methodCall="podcast";
 
 		if (options.containsKey(command.toLowerCase()))
@@ -61,7 +62,7 @@ public class PodcastCommand extends CLIOption {
 				// 8 characters is the unique identifier we are using for the podcast. So if it is less than 8 numbers
 				// it will be the number in the array
 				if (command.length()<8){
-					if (command.split(" ").length==1){
+					if (commandOptions.length==1){
 						if (debug) Podsalinan.debugLog.logInfo(this,"Command Value: "+command);
 						if (convertCharToNumber(command)<data.getPodcasts().getList().size()){
 							Podcast currentPodcast = data.getPodcasts().getList().get(convertCharToNumber(command));
@@ -71,18 +72,26 @@ public class PodcastCommand extends CLIOption {
 					}
 					returnObject = options.get("<aaaaaaaa>").execute(command);
 				} else {
-					if (debug) Podsalinan.debugLog.logInfo(this, "Podcast Value: "+command.split(" ",2)[0]);
-					// If the user has entered 8 characters find the right podcast in the list
-                    int count=0;
-                    boolean found=false;
-                    while ((!found)&&(count<data.getPodcasts().getList().size())){
-						Podcast currentPodcast = data.getPodcasts().getList().get(count);
-						if (currentPodcast.getDatafile().equals(command.split(" ")[0])){
-							returnObject = options.get("<aaaaaaaa>").execute(command);
-							found=true;
+					if (debug) Podsalinan.debugLog.logInfo(this, "Podcast Value: "+commandOptions[0]);
+					
+/*					if (commandOptions[1].equals("9")){
+						CLInterface.cliGlobals.getGlobalSelection().clear();
+						returnObject.methodCall="";
+						returnObject.methodParameters="";
+						returnObject.execute=true;
+					} else {*/
+						// If the user has entered 8 characters find the right podcast in the list
+	                    int count=0;
+	                    boolean found=false;
+	                    while ((!found)&&(count<data.getPodcasts().getList().size())){
+							Podcast currentPodcast = data.getPodcasts().getList().get(count);
+							if (currentPodcast.getDatafile().equals(command.split(" ")[0])){
+								returnObject = options.get("<aaaaaaaa>").execute(command);
+								found=true;
+							}
+							count++;
 						}
-						count++;
-					}
+					//}
 				}
 			}
 		}

@@ -24,6 +24,7 @@ package com.mimpidev.podsalinan.cli.options.episode;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLInput;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Episode;
 
@@ -54,6 +55,8 @@ public class DeleteEpisodeFromDrive extends BaseEpisodeOption {
 				getPodcast().deleteEpisodeFromDrive(episode);
 			}
 		}
+		returnObject=CLInterface.cliGlobals.createReturnObject();
+		returnObject.execute=true;
 		return returnObject;
 	}
 
