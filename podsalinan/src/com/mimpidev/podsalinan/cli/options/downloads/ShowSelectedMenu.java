@@ -43,7 +43,8 @@ public class ShowSelectedMenu extends CLIOption {
 					
 		returnObject.methodCall="downloads";
 		returnObject.methodParameters=""+downloadUid;
-
+        returnObject.execute=false;
+		
 		return returnObject;
 	}
 

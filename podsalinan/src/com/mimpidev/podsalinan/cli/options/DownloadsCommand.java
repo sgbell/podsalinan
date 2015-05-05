@@ -29,11 +29,12 @@ public class DownloadsCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
+		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 		returnObject.methodCall="downloads";
 		
 		if (options.containsKey(command))
-			options.get(command).execute(command);
+			returnObject=options.get(command).execute(command);
 		else {
 			try {
 				Integer.parseInt(command);

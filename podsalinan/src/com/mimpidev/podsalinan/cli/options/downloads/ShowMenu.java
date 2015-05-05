@@ -24,6 +24,7 @@ public class ShowMenu extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
+		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
 		ListDownloads listDownloads = new ListDownloads(data);
@@ -35,6 +36,7 @@ public class ShowMenu extends CLIOption {
 		System.out.println();
 		System.out.println("9. Return to Main Menu");
 		returnObject.methodCall="downloads";
+		returnObject.execute=false;
 		
 		return returnObject;
 	}

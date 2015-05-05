@@ -34,10 +34,6 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 				ShowEpisodeDetails printDetails = new ShowEpisodeDetails(data);
 				printDetails.execute(command);
 				
-				System.out.println ("Podcast: "+getPodcast().getName());
-				System.out.println ("Episode: "+episode.getTitle());
-				System.out.println ("Date: "+episode.getDate());
-				System.out.println ("Status: "+episode.getCurrentStatus());
 				System.out.println ();
 				System.out.println ("1. Download episode");
 				System.out.println ("2. Delete episode from drive");
@@ -49,6 +45,7 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 				
 				returnObject.methodCall = "podcast";
 				returnObject.methodParameters = command;
+				returnObject.execute=false;
 			}
 		}
 		
