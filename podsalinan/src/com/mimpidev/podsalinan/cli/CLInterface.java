@@ -42,7 +42,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	private CLInput input;
 	
 	/**
-	 * cliGlobals is used to pass information betweeen the CLIOptions.
+	 * cliGlobals is used to pass information between the CLIOptions.
 	 */
 	public static final CLIGlobals cliGlobals = new CLIGlobals(); 
 
