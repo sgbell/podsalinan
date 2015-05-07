@@ -59,6 +59,9 @@ public class DownloadDirectory extends CLIOption {
 			}
 		}
 		System.out.println("Default Directory: "+data.getSettings().findSetting("defaultDirectory"));
+		returnObject.methodCall="settings";
+		returnObject.methodParameters="";
+		returnObject.execute=true;
 		
 		return returnObject;
 	}

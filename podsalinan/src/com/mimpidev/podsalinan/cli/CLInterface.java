@@ -192,10 +192,9 @@ public class CLInterface extends CLIOption implements Runnable{
 		 */
 	}
 
-	//TODO: 1. Traverse menu system (make sure menu works properly)
-	//TODO: 2. check all command line options
-	//TODO: 3. remove all debug=true
-	/* TODO: 5. Rewrite user input to allow command line completion. Current thoughts on how to
+	//TODO: 1. check all command line options
+	//TODO: 2. remove all debug=true
+	/* TODO: 3. Rewrite user input to allow command line completion. Current thoughts on how to
 	 * implement this:
 	 *       Pass the the command string, and the method into a method of CLInput.
 	 *       ie: userInput.addCommand("select podcast <userInput>",selectPodcastInput());

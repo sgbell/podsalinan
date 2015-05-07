@@ -51,6 +51,9 @@ public class MaxDownloaders extends CLIOption {
 			if(!data.getSettings().updateSetting("maxDownloaders",numDownloaders))
 				data.getSettings().addSetting("maxDownloaders",numDownloaders);
 		System.out.println("Simultaneous Downloads: "+data.getSettings().findSetting("maxDownloaders"));		
+		returnObject.methodCall="settings";
+		returnObject.methodParameters="";
+		returnObject.execute=true;
 		
 		return returnObject;
 	}

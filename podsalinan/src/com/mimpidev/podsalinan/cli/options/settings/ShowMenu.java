@@ -39,7 +39,8 @@ public class ShowMenu extends CLIOption {
 			CLInterface.cliGlobals.getGlobalSelection().put("settings", "");
 		}
 		returnObject.methodCall="settings";
-		returnObject.execute=true;
+		returnObject.methodParameters="";
+		returnObject.execute=false;
 		
 		return returnObject;
 	}

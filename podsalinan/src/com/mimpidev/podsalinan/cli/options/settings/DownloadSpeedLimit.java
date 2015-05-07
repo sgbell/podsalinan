@@ -73,6 +73,9 @@ public class DownloadSpeedLimit extends CLIOption {
 			}
 		}
 		System.out.println("Max Download Speed: "+data.getSettings().findSetting("downloadLimit"));
+		returnObject.methodCall="settings";
+		returnObject.methodParameters="";
+		returnObject.execute=true;
 		
 		return returnObject;
 	}

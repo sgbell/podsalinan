@@ -76,6 +76,9 @@ public class AutoQueueEpisodes extends CLIOption {
 				System.out.println ("Error: User entered Value is invalid. No change made");
 		}
 		System.out.println("Auto Queue Downloads: "+data.getSettings().findSetting("autoQueue"));
+		returnObject.methodCall="settings";
+		returnObject.methodParameters="";
+		returnObject.execute=true;
 		
 		return returnObject;
 	}
