@@ -80,7 +80,11 @@ public class PodcastUpdateRate extends CLIOption {
 					data.getSettings().getWaitObject().notify();
 				}
 			}
-		}		
+		}
+		returnObject.methodCall="settings";
+		returnObject.methodParameters="";
+		returnObject.execute=true;
+		
 		return returnObject;
 	}
 

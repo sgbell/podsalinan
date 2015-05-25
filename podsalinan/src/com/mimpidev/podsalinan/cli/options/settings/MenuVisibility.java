@@ -43,6 +43,9 @@ public class MenuVisibility extends CLIOption {
 		} else {
 			System.out.println("Error: Invalid Command.");
 		}
+		returnObject.methodCall="settings";
+		returnObject.methodParameters="";
+		returnObject.execute=true;
 		
 		return returnObject;
 	}
