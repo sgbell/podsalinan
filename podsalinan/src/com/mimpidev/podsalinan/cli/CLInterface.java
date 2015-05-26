@@ -42,7 +42,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	private CLInput input;
 	
 	/**
-	 * cliGlobals is used to pass information betweeen the CLIOptions.
+	 * cliGlobals is used to pass information between the CLIOptions.
 	 */
 	public static final CLIGlobals cliGlobals = new CLIGlobals(); 
 
@@ -230,6 +230,10 @@ public class CLInterface extends CLIOption implements Runnable{
                	} else {
            	        returnObject.methodParameters=menuInput;
                	}
+			} else {
+				returnObject.methodCall=methodCall;
+				if (menuInput.split(" ", 2).length>1)
+					returnObject.methodParameters=menuInput.split(" ", 2)[1];
 			}
    			if (debug) Podsalinan.debugLog.logInfo(this,242,"methodParameters: "+returnObject.methodParameters);
 			returnObject.execute=true;
