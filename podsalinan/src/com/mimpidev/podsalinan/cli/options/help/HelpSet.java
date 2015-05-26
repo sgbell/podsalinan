@@ -26,7 +26,8 @@ public class HelpSet extends CLIOption {
 		System.out.println("set is used to change settings");
 		System.out.println("");
 		System.out.println("   set <preference name> <value>  this will update the preference in the system");
-		return null;
+		returnObject.execute=false;
+		return returnObject;
 	}
 
 }

@@ -32,6 +32,7 @@ public class HelpList extends CLIOption {
 		System.out.println("   list preferences       show list of preferences to the screen");
 		System.out.println("   list select            show list of current selection made to the screen");
 		System.out.println("   list details           show details about currently selected item to the screen");
+		returnObject.execute=false;
 		return returnObject;
 	}
 }

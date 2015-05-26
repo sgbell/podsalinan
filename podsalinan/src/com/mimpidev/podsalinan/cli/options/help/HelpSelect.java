@@ -27,7 +27,8 @@ public class HelpSelect extends CLIOption {
 		System.out.println("   select episode <episode number>     this will select the episode");
 		System.out.println("            If the podcast is not selected this will tell you to select a podcast first.");
 		System.out.println("   select download <download number>   this will select the download");
-		return null;
+		returnObject.execute=false;
+		return returnObject;
 	}
 
 }

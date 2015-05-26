@@ -52,6 +52,7 @@ public class Help extends CLIOption {
 		System.out.println("Commands to exit the program");
 		System.out.println("   quit");
 		System.out.println("   exit");
-		return null;
+		returnObject.execute=false;
+		return returnObject;
 	}
 }

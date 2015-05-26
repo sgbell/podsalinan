@@ -46,9 +46,9 @@ public class HelpCommand extends CLIOption {
         if (!options.containsKey(subOption.toLowerCase())){
             System.out.println("Error: Invalid Help request.");
     		System.out.println("");
-			options.get("").execute(command);
+			returnObject=options.get("").execute(command);
 		} else {
-		    options.get(subOption.toLowerCase()).execute(command);
+		    returnObject=options.get(subOption.toLowerCase()).execute(command);
 		}
 		
 		System.out.println("");
