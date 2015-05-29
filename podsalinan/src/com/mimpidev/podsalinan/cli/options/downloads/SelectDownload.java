@@ -39,6 +39,7 @@ public class SelectDownload extends CLIOption {
 	public ReturnObject execute(String command) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
+		//TODO: 1.1.1 - Handle invalid input from command line (If user enters "select download 1" throw back invalid input
 
 		String[] commandOptions = command.split(" ");
 		if (commandOptions[0].length()<=2){

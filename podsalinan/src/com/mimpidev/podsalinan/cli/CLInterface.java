@@ -75,7 +75,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  help select
 		 *  help set
 		 */
-		//TODO:1.1 check select commands
+		//TODO: 1.1 check select commands
 		options.put("select", new SelectCommand(data));
 		/** select commands
 		 *  ===============
@@ -83,7 +83,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  select episode
 		 *  select download
 		 */
-		//TODO:1.2 check set commands
+		//TODO: 1.2 check set commands
 		options.put("set", new SetCommand(data));
 		/** set commands
 		 *  ============
@@ -97,7 +97,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  set podcast directory
 		 *  set directory
 		 */
-		//TODO:1.3 check list commands
+		//TODO: 1.3 check list commands
 		options.put("list", new ListCommand(data));
 		/** list commands
 		 *  =============
@@ -118,21 +118,21 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  =============
 		 *  hide menu
 		 */
-		//TODO:1.6 check download commands
+		//TODO: 1.6 check download commands
 		options.put("download", new DownloadCommand(data));
 		/** download commands
 		 *  =================
 		 *  download episode
 		 *  download <url>
 		 */
-		//TODO:1.7 check restart commands
+		//TODO: 1.7 check restart commands
 		options.put("restart", new RestartCommand(data));
 		/** restart commands
 		 *  ================
 		 *  restart episode
 		 *  restart downloads
 		 */
-		//TODO:1.8 check stop commands
+		//TODO: 1.8 check stop commands
 		options.put("stop", new StopCommand(data));
 		/** stop commands
 		 *  =============
@@ -140,7 +140,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  stop download
 		 *  stop <downloadId>
 		 */
-		//TODO:1.9 check remove commands
+		//TODO: 1.9 check remove commands
 		options.put("remove", new RemoveCommand(data));
 		/** remove commands
 		 *  ===============
@@ -149,48 +149,48 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  remove podcast
 		 *  remove <downloadId>
 		 */
-		//TODO:1.10 check clear command
+		//TODO: 1.10 check clear command
 		options.put("clear", new ClearCommand(data));
 		/** clear commands
 		 *  ==============
 		 *  clear
 		 */
-		//TODO:1.11 check increase commands
+		//TODO: 1.11 check increase commands
 		options.put("increase", new IncreaseCommand(data));
 		/** increase commands
 		 *  =================
 		 *  increase
 		 *  increase download <downloadId>
 		 */
-		//TODO:1.12 check decrease commands
+		//TODO: 1.12 check decrease commands
 		options.put("decrease", new DecreaseCommand(data));
 		/** decrease commands
 		 *  =================
 		 *  decrease
 		 *  decrease download <downloadId>
 		 */
-		//TODO:1.13 check dump commands
+		//TODO: 1.13 check dump commands
 		options.put("dump", new DumpCommand(data));
 		/** dump commands
 		 *  =============
 		 *  dump
 		 *  dump urldownloads
 		 */
-		//TODO:1.14 check podcast commands
+		//TODO: 1.14 check podcast commands
 		options.put("podcast", new PodcastCommand(data));
 		/** podcast commands
 		 *  ==================
 		 *  <a-zzz>           - Select Podcast
 		 *  9                 - Quit to Main Menu
 		 */
-		//TODO:1.15 check downloads commands
+		//TODO: 1.15 check downloads commands
 		options.put("downloads", new DownloadsCommand(data));
 		/** downloads commands
 		 *  ==================
 		 *  <a-zzz>           - Select Download
 		 *  9                 - Quit to Main Menu
 		 */
-		//TODO:1.16 check settings commands
+		//TODO: 1.16 check settings commands
 		options.put("settings", new SettingsCommand(data));
 		/** settings commands
 		 *  =================
