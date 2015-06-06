@@ -75,7 +75,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  help select
 		 *  help set
 		 */
-		//TODO: 1.1 check select commands
 		options.put("select", new SelectCommand(data));
 		/** select commands
 		 *  ===============
