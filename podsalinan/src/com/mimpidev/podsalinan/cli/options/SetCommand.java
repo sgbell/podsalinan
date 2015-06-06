@@ -37,12 +37,14 @@ public class SetCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
+		debug = true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
 		String[] commandOptions = command.split(" ");
 		if (options.containsKey(commandOptions[0].toLowerCase())){
 			returnObject = options.get(commandOptions[0].toLowerCase()).execute(command);
 		} else {
 			System.out.println("Error: Invalid user input.");
+			returnObject.execute=false;
 		}
 		
 		return returnObject;
