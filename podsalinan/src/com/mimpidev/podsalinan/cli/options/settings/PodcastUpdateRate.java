@@ -25,7 +25,6 @@ public class PodcastUpdateRate extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,29," command: "+command);
 		String[] commandOptions = command.split(" ");
 		String updateValue="";
