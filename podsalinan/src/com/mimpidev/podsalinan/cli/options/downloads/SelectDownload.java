@@ -73,9 +73,13 @@ public class SelectDownload extends CLIOption {
         		}
         	}
         }
-		if (debug) Podsalinan.debugLog.logInfo(this, 73, "Command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this, 76, "Command: "+command);
 		if (commandOptions.length==1){
-			returnObject = options.get("").execute(command);
+			if (commandOptions[0].length()>1)
+			   returnObject = options.get("").execute(command);
+			else {
+				System.out.println("Error: Invalid Command");
+			}
 		} else if (commandOptions.length > 1){
 			if (commandOptions[1].equals("9")){
 				// If the command is 9 (exit the selected download menu & clear the selected download)
