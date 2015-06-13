@@ -34,6 +34,8 @@ public class AutoQueueEpisodes extends CLIOption {
 	}
 	
 	public ReturnObject execute(String command) {
+		//TODO: 1.2.4 Check autoqueue command
+
 		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
 		String[] commandOptions = command.split(" ");
 		String userInput="";

@@ -30,6 +30,8 @@ public class MenuVisibility extends CLIOption {
 	}
 
 	public ReturnObject execute(String command) {
+		//TODO: 1.2.7 Check menuVisibility command
+
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command:"+ command);
 		String[] commandOptions = command.split(" ");

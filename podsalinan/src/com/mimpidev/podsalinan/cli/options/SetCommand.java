@@ -37,7 +37,6 @@ public class SetCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		//TODO: 1.2.3 Check maxdownloaders command
 		debug = true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
 		String[] commandOptions = command.split(" ");

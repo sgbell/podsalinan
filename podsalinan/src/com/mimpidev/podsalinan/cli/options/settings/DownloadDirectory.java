@@ -37,7 +37,9 @@ public class DownloadDirectory extends CLIOption {
 	}
 	
 	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		//TODO: 1.2.5 Check defaultdirectory command
+		
+		if (debug) Podsalinan.debugLog.logInfo(this, 42, "command: "+command);
 		String userInput="";
 		
 		String[] commandOptions = command.split(" ");
