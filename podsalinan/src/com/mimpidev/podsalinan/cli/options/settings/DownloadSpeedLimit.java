@@ -34,17 +34,18 @@ public class DownloadSpeedLimit extends CLIOption {
 	}
 	
 	public ReturnObject execute(String command) {
-		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
+		if (debug) Podsalinan.debugLog.logInfo(this, 38, "command: "+command);
 		String userInput="";
 
 		String[] commandOptions = command.split(" ");
         if (commandOptions.length==1){
         	userInput=executeMenuOption();
         	returnObject.methodCall="settings";
+    		returnObject.methodParameters="";
         	returnObject.execute=true;
         } else {
         	userInput=commandOptions[1];
+        	returnObject.execute=false;
         }
 
         int speed=-1;
@@ -72,12 +73,22 @@ public class DownloadSpeedLimit extends CLIOption {
 				data.getSettings().updateSetting("downloadLimit",Integer.toString(speed));
 			}
 		}
-		System.out.println("Max Download Speed: "+data.getSettings().findSetting("downloadLimit"));
-		returnObject.methodCall="settings";
-		returnObject.methodParameters="";
-		returnObject.execute=true;
+		System.out.println("Max Download Speed: "+speedToString());
 		
 		return returnObject;
 	}
 
+	public String speedToString (){
+		int speed=-1;
+		try {
+			speed = Integer.parseInt(data.getSettings().findSetting("downloadLimit"));
+		} catch (NumberFormatException e){
+			speed = -1;
+		}
+		if (speed>1024){
+			return (speed/1024)+"Mb/s";
+		} else {
+		    return speed+"Kb/s";
+		}
+	}
 }
