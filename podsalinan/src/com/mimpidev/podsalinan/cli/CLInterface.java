@@ -48,6 +48,7 @@ public class CLInterface extends CLIOption implements Runnable{
 
 	public CLInterface(DataStorage newData){
 		super(newData);
+		debug=true;
 		input = new CLInput();
 		initializeMenus();
 	}
@@ -109,7 +110,10 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("decrease download <downloadId>", new DecreaseCommand(data));
 		options.put("dump", new DumpCommand(data));
 		options.put("dump urldownloads", new DumpCommand(data));
+        // podcast by itself will be show menu
+		options.put("podcast", null);
 		options.put("podcast <podcastId>", new PodcastCommand(data));
+		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
 		options.put("downloads <podcastId>", new DownloadsCommand(data));
 		options.put("settings", new SettingsCommand(data));
 		options.put("", new MainMenuCommand(data));
