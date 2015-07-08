@@ -46,9 +46,9 @@ public class MainMenuCommand extends CLIOption {
 		options.put("showmenu", new ShowMenu(newData));
 		
 		menuCommands = new HashMap<String,String>();
-		menuCommands.put("1","podcast");
-		menuCommands.put("2", "downloads");
-		menuCommands.put("3", "settings");
+		menuCommands.put("1","podcast showMenu");
+		menuCommands.put("2", "downloads showMenu");
+		menuCommands.put("3", "settings showMenu");
 		menuCommands.put("4", "quit");
 	}
 
