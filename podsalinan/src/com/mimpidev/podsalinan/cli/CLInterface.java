@@ -417,7 +417,7 @@ public class CLInterface extends CLIOption implements Runnable{
      * @param menuInput
      * @return
      */
-	private Date convertDate(String menuInput) {
+	public Date convertDate(String menuInput) {
 		Date date=null;
 		String[] dateFormat = {"dd-MMM-yy",
 				               "dd-MM-yy",

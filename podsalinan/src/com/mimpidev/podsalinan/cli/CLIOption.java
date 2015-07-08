@@ -5,11 +5,9 @@ package com.mimpidev.podsalinan.cli;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author sbell

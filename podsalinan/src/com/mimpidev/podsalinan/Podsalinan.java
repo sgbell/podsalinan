@@ -28,9 +28,6 @@
  */
 package com.mimpidev.podsalinan;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.data.Podcast;
@@ -141,9 +138,6 @@ public class Podsalinan {
 		
 		// Action Listener for the main window
 		//CommandPass aListener = new CommandPass(settings);
-
-		// disables sqlite4java's logging
-		Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);
 	}
 	
 	public void initialize(){
