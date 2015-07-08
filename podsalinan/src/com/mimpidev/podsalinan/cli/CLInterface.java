@@ -68,145 +68,57 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("http", urlCommand);
 		options.put("ftp", urlCommand);
 		options.put("help", new HelpCommand(data));
-		/** help commands
-		 *  =============
-		 *  help
-		 *  help list
-		 *  help select
-		 *  help set
-		 */
-		options.put("select", new SelectCommand(data));
-		/** select commands
-		 *  ===============
-		 *  select podcast
-		 *  select episode
-		 *  select download
-		 */
-		//TODO: 1.2 check set commands
-		options.put("set", new SetCommand(data));
-		/** set commands
-		 *  ============
-		 *  set updateinterval
-		 *  set downloadlimit
-		 *  set maxdownloaders
-		 *  set autoqueue
-		 *  set menuvisible
-		 *  set defaultdirectory
-		 *  set destination
-		 *  set podcast directory
-		 *  set directory
-		 */
-		//TODO: 1.3 check list commands
-		options.put("list", new ListCommand(data));
-		/** list commands
-		 *  =============
-		 *  list podcasts
-		 *  list episode
-		 *  list select
-		 *  list details
-		 *  list downloads
-		 *  list preferences
-		 */
-		options.put("show", new ShowCommand(data));
-		/** show commands
-		 *  =============
-		 *  show menu
-		 */
-		options.put("hide", new HideCommand(data));
-		/** hide commands
-		 *  =============
-		 *  hide menu
-		 */
-		//TODO: 1.6 check download commands
-		options.put("download", new DownloadCommand(data));
-		/** download commands
-		 *  =================
-		 *  download episode
-		 *  download <url>
-		 */
-		//TODO: 1.7 check restart commands
-		options.put("restart", new RestartCommand(data));
-		/** restart commands
-		 *  ================
-		 *  restart episode
-		 *  restart downloads
-		 */
-		//TODO: 1.8 check stop commands
+		options.put("help list", null);
+		options.put("help select", null);
+		options.put("help set", null);
+		options.put("select podcast", new SelectCommand(data));
+		options.put("select episode", new SelectCommand(data));
+		options.put("select download", new SelectCommand(data));
+		options.put("set updateinterval", new SetCommand(data));
+		options.put("set downloadlimit", new SetCommand(data));
+		options.put("set maxdownloaders", new SetCommand(data));
+		options.put("set autoqueue", new SetCommand(data));
+		options.put("set menuvisible", new SetCommand(data));
+		options.put("set defaultdirectory", new SetCommand(data));
+		options.put("set destination", new SetCommand(data));
+		options.put("set podcast directory", new SetCommand(data));
+		options.put("set directory", new SetCommand(data));
+		options.put("list podcasts", new ListCommand(data));
+		options.put("list episode", new ListCommand(data));
+		options.put("list select", new ListCommand(data));
+		options.put("list details", new ListCommand(data));
+		options.put("list downloads", new ListCommand(data));
+		options.put("list preferences", new ListCommand(data));
+		options.put("show menu", new ShowCommand(data));
+		options.put("hide menu", new HideCommand(data));
+		options.put("download episode", new DownloadCommand(data));
+		options.put("download <url>", new DownloadCommand(data));
+		options.put("restart episode", new RestartCommand(data));
+		options.put("restart downloads", new RestartCommand(data));
 		options.put("stop", new StopCommand(data));
-		/** stop commands
-		 *  =============
-		 *  stop
-		 *  stop download
-		 *  stop <downloadId>
-		 */
-		//TODO: 1.9 check remove commands
+		options.put("stop download", new StopCommand(data));
+		options.put("stop <downloadId>", new StopCommand(data));
 		options.put("remove", new RemoveCommand(data));
-		/** remove commands
-		 *  ===============
-		 *  remove
-		 *  remove download
-		 *  remove podcast
-		 *  remove <downloadId>
-		 */
-		//TODO: 1.10 check clear command
+		options.put("remove download", new RemoveCommand(data));
+		options.put("remove podcast", new RemoveCommand(data));
+		options.put("remove <downloadId|podcastId>", new RemoveCommand(data));
 		options.put("clear", new ClearCommand(data));
-		/** clear commands
-		 *  ==============
-		 *  clear
-		 */
-		//TODO: 1.11 check increase commands
 		options.put("increase", new IncreaseCommand(data));
-		/** increase commands
-		 *  =================
-		 *  increase
-		 *  increase download <downloadId>
-		 */
-		//TODO: 1.12 check decrease commands
+		options.put("increase download <downloadId>", new IncreaseCommand(data));
 		options.put("decrease", new DecreaseCommand(data));
-		/** decrease commands
-		 *  =================
-		 *  decrease
-		 *  decrease download <downloadId>
-		 */
-		//TODO: 1.13 check dump commands
+		options.put("decrease download <downloadId>", new DecreaseCommand(data));
 		options.put("dump", new DumpCommand(data));
-		/** dump commands
-		 *  =============
-		 *  dump
-		 *  dump urldownloads
-		 */
-		//TODO: 1.14 check podcast commands
-		options.put("podcast", new PodcastCommand(data));
-		/** podcast commands
-		 *  ==================
-		 *  <a-zzz>           - Select Podcast
-		 *  9                 - Quit to Main Menu
-		 */
-		//TODO: 1.15 check downloads commands
-		options.put("downloads", new DownloadsCommand(data));
-		/** downloads commands
-		 *  ==================
-		 *  <a-zzz>           - Select Download
-		 *  9                 - Quit to Main Menu
-		 */
-		//TODO: 1.16 check settings commands
+		options.put("dump urldownloads", new DumpCommand(data));
+		options.put("podcast <podcastId>", new PodcastCommand(data));
+		options.put("downloads <podcastId>", new DownloadsCommand(data));
 		options.put("settings", new SettingsCommand(data));
-		/** settings commands
-		 *  =================
-		 */
 		options.put("", new MainMenuCommand(data));
-		/** mainmenu commands
-		 *  =================
-		 *  1                - Podcast Menu
-		 *  2                - Downloads Menu
-		 *  3                - Settings Menu
-		 *  4                - Quit
-		 */
 	}
 
-	//TODO: 1. check all command line options
-	//TODO: 2. remove all debug=true
-	/* TODO: 3. Rewrite user input to allow command line completion. Current thoughts on how to
+	//TODO: 1. Moving the command line menu around again. Move all of the child options to here
+	//TODO: 2. Rewrite menu traversal
+	//TODO: 3. remove all debug=true
+	/* TODO: 4. Rewrite user input to allow command line completion. Current thoughts on how to
 	 * implement this:
 	 *       Pass the the command string, and the method into a method of CLInput.
 	 *       ie: userInput.addCommand("select podcast <userInput>",selectPodcastInput());

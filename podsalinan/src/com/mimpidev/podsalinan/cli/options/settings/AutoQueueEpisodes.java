@@ -34,7 +34,6 @@ public class AutoQueueEpisodes extends CLIOption {
 	}
 	
 	public ReturnObject execute(String command) {
-		//TODO: 1.2.4 Check autoqueue command
 
 		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
 		String[] commandOptions = command.split(" ");
@@ -46,6 +45,9 @@ public class AutoQueueEpisodes extends CLIOption {
         	returnObject.execute=true;
         } else {
         	userInput=commandOptions[1];
+    		returnObject.methodCall="";
+    		returnObject.methodParameters="";
+    		returnObject.execute=false;
         }
 		
 		if (userInput.length()==1){
@@ -78,9 +80,6 @@ public class AutoQueueEpisodes extends CLIOption {
 				System.out.println ("Error: User entered Value is invalid. No change made");
 		}
 		System.out.println("Auto Queue Downloads: "+data.getSettings().findSetting("autoQueue"));
-		returnObject.methodCall="settings";
-		returnObject.methodParameters="";
-		returnObject.execute=true;
 		
 		return returnObject;
 	}

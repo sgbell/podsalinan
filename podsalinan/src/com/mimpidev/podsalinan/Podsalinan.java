@@ -39,10 +39,12 @@ public class Podsalinan {
 	private CLInterface cli;
 	//private MainWindow gui;
 	private String[] cmdLineArgs;
+	// Storing the program name here, as we can use it for the data directory and other uses
+	public static final String PROGRAM_NAME = "Podsalinan";
     /**
      *  debugLog is going to be handed through all of the system so we can write to the debug log
      */
-	public static final Log debugLog = new Log();
+	public static final Log debugLog = new Log(PROGRAM_NAME.toLowerCase());
 	
 	/**
 	 * Upon execution the program will create a new instance of podsalinan, which is where

@@ -37,7 +37,6 @@ public class DownloadDirectory extends CLIOption {
 	}
 	
 	public ReturnObject execute(String command) {
-		//TODO: 1.2.5 Check defaultdirectory command
 		
 		if (debug) Podsalinan.debugLog.logInfo(this, 42, "command: "+command);
 		String userInput="";

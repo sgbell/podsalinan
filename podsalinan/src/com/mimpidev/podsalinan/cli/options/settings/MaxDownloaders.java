@@ -34,9 +34,6 @@ public class MaxDownloaders extends CLIOption {
 	}
 	
 	public ReturnObject execute(String command) {
-		//TODO: 1.2.3 Check maxdownloaders command
-
-		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
 		String numDownloaders="";
 
@@ -47,15 +44,15 @@ public class MaxDownloaders extends CLIOption {
         	returnObject.execute=true;
         } else {
         	numDownloaders=commandOptions[1];
+    		returnObject.methodCall="";
+    		returnObject.execute=false;
         }		
 		
 		if (numDownloaders!=null)
 			if(!data.getSettings().updateSetting("maxDownloaders",numDownloaders))
 				data.getSettings().addSetting("maxDownloaders",numDownloaders);
 		System.out.println("Simultaneous Downloads: "+data.getSettings().findSetting("maxDownloaders"));		
-		returnObject.methodCall="settings";
 		returnObject.methodParameters="";
-		returnObject.execute=true;
 		
 		return returnObject;
 	}

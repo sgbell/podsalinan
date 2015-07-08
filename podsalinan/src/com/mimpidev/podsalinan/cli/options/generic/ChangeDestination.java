@@ -32,7 +32,6 @@ public class ChangeDestination extends CLIOption {
 
 	@Override
 	public ReturnObject execute(String command) {
-		//TODO: 1.2.6 Check destination command
 
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
