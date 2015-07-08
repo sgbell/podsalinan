@@ -43,9 +43,14 @@ public class Log {
 	private boolean showShortName=false;
 
 	private RandomAccessFile fileOutput=null;
+	private String dataDirectory="mimpidev-debug";
 	
 	public Log(){
 		
+	}
+	
+	public Log(String programName){
+		dataDirectory=programName;
 	}
 	
 	public Log(File file, String mode){
@@ -62,6 +67,9 @@ public class Log {
 	
 	public void setNewLog (File filename, String mode){
 		try {
+			if (!filename.exists()){
+				filename.createNewFile();
+			}
 			fileOutput = new RandomAccessFile(filename, mode);
 			fileOutput.seek(fileOutput.length());
 		} catch (IOException e) {
@@ -161,13 +169,19 @@ public class Log {
 		if (fileOutput==null){
 			String settingsDir="";
 			String fileSystemSlash="";
-			if (System.getProperty("os.name").equalsIgnoreCase("linux")){
-				settingsDir = System.getProperty("user.home").concat("/.podsalinan");
-				fileSystemSlash = "/";
-			}else if (System.getProperty("os.name").startsWith("Windows")){
-				settingsDir = System.getProperty("user.home").concat("\\appdata\\local\\podsalinan");
+			if (System.getProperty("os.name").startsWith("Windows")){
+				settingsDir = System.getProperty("user.home")+"\\appdata\\local\\"+dataDirectory;
 				fileSystemSlash = "\\";
+			} else {
+				settingsDir = System.getProperty("user.home")+"/."+dataDirectory;
+				fileSystemSlash = "/";
 			}
+			// Check if the settings directory exists, and if not, create it.
+			File settingsLocation = new File(settingsDir);
+			if (!settingsLocation.exists()){
+				settingsLocation.mkdir();
+			}
+			
 			setNewLog(settingsDir+fileSystemSlash+filename,"rw");
 			return true;
 		}
@@ -193,5 +207,13 @@ public class Log {
 			return className.substring(className.lastIndexOf(".")+1).trim();
 		else
 			return className;
+	}
+
+	public String getDataDirectory() {
+		return dataDirectory;
+	}
+
+	public void setDataDirectory(String dataDirectory) {
+		this.dataDirectory = dataDirectory;
 	}
 }
