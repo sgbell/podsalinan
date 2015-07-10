@@ -161,20 +161,25 @@ public class CLInterface extends CLIOption implements Runnable{
 				if (menuInput.split(" ", 2).length>1)
 					returnObject.methodParameters=menuInput.split(" ", 2)[1];
 			}
-   			if (debug) Podsalinan.debugLog.logInfo(this,242,"methodParameters: "+returnObject.methodParameters);
+   			if (debug) Podsalinan.debugLog.logInfo(this,164,"methodParameters: "+returnObject.methodParameters);
 			returnObject.execute=true;
 			// Continue executing menu calls until the return object says to stop
 			while (returnObject.execute){
        			if (debug) {
-       				Podsalinan.debugLog.logInfo(this,240,"Before the methodCall");
-           			Podsalinan.debugLog.logInfo(this,241,"methodCall: "+returnObject.methodCall);
-           			Podsalinan.debugLog.logInfo(this,242,"methodParameters: "+returnObject.methodParameters);
+       				Podsalinan.debugLog.logInfo(this,169,"Before the methodCall");
+           			Podsalinan.debugLog.logInfo(this,170,"methodCall: "+returnObject.methodCall);
+           			Podsalinan.debugLog.logInfo(this,171,"methodParameters: "+returnObject.methodParameters);
        			}
-				returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
+                if (!options.containsKey(returnObject.methodCall)){
+                	/*TODO: 1.1 methodParameters will now be a map.
+                	 *          methodCall will now be the same as methodParameters.
+                	 *          Need to split methodCall and all of the keys, and match them here. */ 
+                }
+       			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
        			if (debug){
-       				Podsalinan.debugLog.logInfo(this,246,"After the methodCall");
-           			Podsalinan.debugLog.logInfo(this,247,"methodCall: "+returnObject.methodCall);
-           			Podsalinan.debugLog.logInfo(this,248,"methodParameters: "+returnObject.methodParameters);
+       				Podsalinan.debugLog.logInfo(this,175,"After the methodCall");
+           			Podsalinan.debugLog.logInfo(this,176,"methodCall: "+returnObject.methodCall);
+           			Podsalinan.debugLog.logInfo(this,177,"methodParameters: "+returnObject.methodParameters);
        			}
 			}
                 	/**
