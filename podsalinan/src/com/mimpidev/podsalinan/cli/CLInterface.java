@@ -173,7 +173,15 @@ public class CLInterface extends CLIOption implements Runnable{
                 if (!options.containsKey(returnObject.methodCall)){
                 	/*TODO: 1.1 methodParameters will now be a map.
                 	 *          methodCall will now be the same as methodParameters.
-                	 *          Need to split methodCall and all of the keys, and match them here. */ 
+                	 *          Need to split methodCall and all of the keys, and match them here. */
+                	String[] methodCallSplit = returnObject.methodCall.split(" ");
+                	String methodcall="";
+                	for (String key : options.keySet()){
+                		String[] splitValue = key.split(" ");
+                		if (methodCallSplit[0].equalsIgnoreCase(splitValue[0])){
+                			
+                		}
+                	}
                 }
        			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
        			if (debug){
