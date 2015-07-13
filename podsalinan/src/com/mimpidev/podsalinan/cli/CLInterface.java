@@ -175,11 +175,38 @@ public class CLInterface extends CLIOption implements Runnable{
                 	 *          methodCall will now be the same as methodParameters.
                 	 *          Need to split methodCall and all of the keys, and match them here. */
                 	String[] methodCallSplit = returnObject.methodCall.split(" ");
-                	String methodcall="";
                 	for (String key : options.keySet()){
                 		String[] splitValue = key.split(" ");
-                		if (methodCallSplit[0].equalsIgnoreCase(splitValue[0])){
-                			
+                		if (splitValue.length==methodCallSplit.length){
+                			int svc=0;
+                			boolean match=true;
+                			while (svc<splitValue.length && match){
+                				if (splitValue[svc].startsWith("<")&&
+                					splitValue[svc].endsWith(">")){
+                					if (splitValue[svc].matches("^<url>") &&
+                						!methodCallSplit[svc].matches("^(http|https|ftp):")){
+                						match=false;
+                					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>") &&
+                						!methodCallSplit[svc].matches("^[a-zA-Z0-9]{8}")){
+                						match=false;
+                					} else {
+                						System.out.println("Match Found: URL|downloadId|podcastId");
+                					}
+                				} else {
+                					if (!splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
+                						match=false;
+                					} else {
+                						System.out.println("Match found:"+splitValue[svc]);
+                					}
+                				}
+                				svc++;
+                			}
+                			if (match){
+                				returnObject.methodCall=key;
+                			}
+                		} else {
+                			returnObject.execute=false;
+                			System.out.println("Error: Invalid user input");
                 		}
                 	}
                 }
