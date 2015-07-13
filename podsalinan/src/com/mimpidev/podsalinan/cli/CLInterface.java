@@ -184,19 +184,15 @@ public class CLInterface extends CLIOption implements Runnable{
                 				if (splitValue[svc].startsWith("<")&&
                 					splitValue[svc].endsWith(">")){
                 					if (splitValue[svc].matches("^<url>") &&
-                						!methodCallSplit[svc].matches("^(http|https|ftp):")){
+                						!methodCallSplit[svc].matches("\\b(https?|ftp):.*")){
                 						match=false;
                 					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>") &&
-                						!methodCallSplit[svc].matches("^[a-zA-Z0-9]{8}")){
+                						!methodCallSplit[svc].matches("^[a-fA-F0-9]{8}")){
                 						match=false;
-                					} else {
-                						System.out.println("Match Found: URL|downloadId|podcastId");
                 					}
                 				} else {
                 					if (!splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
                 						match=false;
-                					} else {
-                						System.out.println("Match found:"+splitValue[svc]);
                 					}
                 				}
                 				svc++;
