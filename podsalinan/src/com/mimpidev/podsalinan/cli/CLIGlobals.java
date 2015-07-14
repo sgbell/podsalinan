@@ -66,12 +66,9 @@ public class CLIGlobals {
 		String[] firstLevel = {"downloads","podcast","settings"};
 		for (String key : firstLevel){
 			if (globalSelection.containsKey(key)){
-				returnObject.methodCall=key;
-				returnObject.methodParameters=globalSelection.get(key);
 			}
 		}
 		if (globalSelection.containsKey("episode")){
-			returnObject.methodParameters+=" episode "+globalSelection.get("episode");
 		}
 		
 		return returnObject;

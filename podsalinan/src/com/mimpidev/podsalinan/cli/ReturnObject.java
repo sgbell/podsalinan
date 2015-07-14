@@ -22,6 +22,11 @@
  */
 package com.mimpidev.podsalinan.cli;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.mimpidev.podsalinan.Podsalinan;
+
 /**
  * @author bugman
  *
@@ -35,10 +40,18 @@ public class ReturnObject {
 	/**
 	 * The parameters to be passed to the method
 	 */
-	public String methodParameters="";
+	public Map<String,String> parameterMap = new HashMap<String,String>();
 	/**
 	 * If the system needs to continue looping
 	 */
 	public boolean execute=false;
+
+	public void debug(boolean debug) {
+		if (debug) {
+			Podsalinan.debugLog.logInfo(this, "methodCall="+methodCall);
+			Podsalinan.debugLog.logInfo(this, "parameterMap contents");
+			Podsalinan.debugLog.logMap(parameterMap);
+		}
+	}
 
 }

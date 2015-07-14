@@ -24,9 +24,12 @@ package com.mimpidev.podsalinan.cli;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
+import com.mimpidev.podsalinan.cli.options.podcast.SelectPodcast;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -110,7 +113,11 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("decrease download <downloadId>", new DecreaseCommand(data));
 		options.put("dump", new DumpCommand(data));
 		options.put("dump urldownloads", new DumpCommand(data));
-		options.put("podcast <podcastId>", new PodcastCommand(data));
+        SelectPodcast selectPodcast = new SelectPodcast(data);
+		options.put("podcast <podcastId>", selectPodcast);
+		options.put("podcast <a-zz>",  selectPodcast);
+        // Exit podcast menu, and return to main menu
+		options.put("podcast 9", new PodcastCommand(data));
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
 		options.put("downloads <podcastId>", new DownloadsCommand(data));
 		options.put("settings", new SettingsCommand(data));
@@ -132,54 +139,23 @@ public class CLInterface extends CLIOption implements Runnable{
 	public void userInput(){
 		System.out.print("->");
 		String menuInput=input.getStringInput();
-		String methodCall="";
 		if ((menuInput.length()>0)&&(menuInput!=null)){
-			methodCall=menuInput.split(" ",2)[0];
-			if (!options.containsKey(methodCall)){
-                if ((data.getSettings().findSetting("menuVisible")==null)||
-				    (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
-                	// The reason for the return call is so that we can check mainMenu to transform the call,
-                	// and then have the called method call another one if it needs to.
-                	if (cliGlobals.getGlobalSelection().size()>0){
-    					if (debug){
-    						Podsalinan.debugLog.logMap(cliGlobals.getGlobalSelection());
-    					}
-    					returnObject=cliGlobals.createReturnObject();
-    					returnObject.methodParameters+=" "+menuInput;
-                	} else {
-               	        returnObject.methodParameters=menuInput;
-                	}
-                } else if ((!menuInput.startsWith("select")) ||
-                		   (!menuInput.startsWith("set"))){
-                	
-   					menuInput=cliGlobals.globalSelectionToString()+menuInput;
-               	} else {
-           	        returnObject.methodParameters=menuInput;
-               	}
-			} else {
-				returnObject.methodCall=methodCall;
-				if (menuInput.split(" ", 2).length>1)
-					returnObject.methodParameters=menuInput.split(" ", 2)[1];
-			}
-   			if (debug) Podsalinan.debugLog.logInfo(this,164,"methodParameters: "+returnObject.methodParameters);
 			returnObject.execute=true;
 			// Continue executing menu calls until the return object says to stop
 			while (returnObject.execute){
        			if (debug) {
-       				Podsalinan.debugLog.logInfo(this,169,"Before the methodCall");
-           			Podsalinan.debugLog.logInfo(this,170,"methodCall: "+returnObject.methodCall);
-           			Podsalinan.debugLog.logInfo(this,171,"methodParameters: "+returnObject.methodParameters);
+       				Podsalinan.debugLog.logInfo(this,175,"Before the methodCall");
        			}
+       			returnObject.debug(debug);
                 if (!options.containsKey(returnObject.methodCall)){
                 	/*TODO: 1.1 methodParameters will now be a map.
-                	 *          methodCall will now be the same as methodParameters.
                 	 *          Need to split methodCall and all of the keys, and match them here. */
+        			boolean match=true;
                 	String[] methodCallSplit = returnObject.methodCall.split(" ");
                 	for (String key : options.keySet()){
                 		String[] splitValue = key.split(" ");
                 		if (splitValue.length==methodCallSplit.length){
                 			int svc=0;
-                			boolean match=true;
                 			while (svc<splitValue.length && match){
                 				if (splitValue[svc].startsWith("<")&&
                 					splitValue[svc].endsWith(">")){
@@ -200,18 +176,15 @@ public class CLInterface extends CLIOption implements Runnable{
                 			if (match){
                 				returnObject.methodCall=key;
                 			}
-                		} else {
-                			returnObject.execute=false;
-                			System.out.println("Error: Invalid user input");
                 		}
                 	}
+                    if (!match){
+                    	returnObject.execute=false;
+                    	System.out.println("Error: Invalid user Input.");
+                    }
                 }
-       			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
-       			if (debug){
-       				Podsalinan.debugLog.logInfo(this,175,"After the methodCall");
-           			Podsalinan.debugLog.logInfo(this,176,"methodCall: "+returnObject.methodCall);
-           			Podsalinan.debugLog.logInfo(this,177,"methodParameters: "+returnObject.methodParameters);
-       			}
+       			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
+       			returnObject.debug(debug);
 			}
                 	/**
                 	 * How to traverse a menu system using commands???
@@ -340,19 +313,12 @@ public class CLInterface extends CLIOption implements Runnable{
 		while (!data.getSettings().isFinished()){
 			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))){
-				if (debug){
-	   				Podsalinan.debugLog.logInfo(this,366,"run() Before options().execute");
-	   				Podsalinan.debugLog.logInfo(this, 367, returnObject.methodCall);
-	   				Podsalinan.debugLog.logInfo(this, 368, returnObject.methodParameters);
-				}
+				returnObject.debug(debug);
 				if (returnObject.execute){
-					returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.methodParameters);
+					returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
 				}
 			}
-			if (debug){
-   				Podsalinan.debugLog.logInfo(this, 386, returnObject.methodCall);
-   				Podsalinan.debugLog.logInfo(this, 387, returnObject.methodParameters);
-			}
+			returnObject.debug(debug);
 			
 			if (!data.getSettings().isFinished())
 				userInput();
@@ -402,7 +368,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	}
 	
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
 		return null;
 	}
 }

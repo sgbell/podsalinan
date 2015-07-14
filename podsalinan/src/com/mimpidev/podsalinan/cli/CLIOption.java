@@ -47,7 +47,7 @@ public abstract class CLIOption {
 		returnObject=parentObject;
 	}
 
-	public abstract ReturnObject execute(String command);
+	public abstract ReturnObject execute(Map<String,String> functionParms);
 	
 	public String getCharForNumber(int i){
 		return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
