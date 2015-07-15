@@ -54,9 +54,14 @@ public class MainMenuCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
-
+		debug=true;
+		if (debug) Podsalinan.debugLog.logMap(functionParms);
+        String command="";
+		if (functionParms.size()==0){
+			returnObject.methodCall="mainmenu showMenu";
+			returnObject.parameterMap= new HashMap();
+			returnObject.execute=true;
+		}
 		if (options.containsKey(command)){
 			//options.get(command).execute(command);
 		} else if (menuCommands.containsKey(command)){

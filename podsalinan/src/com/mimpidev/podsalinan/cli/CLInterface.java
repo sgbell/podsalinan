@@ -122,6 +122,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("downloads <podcastId>", new DownloadsCommand(data));
 		options.put("settings", new SettingsCommand(data));
 		options.put("", new MainMenuCommand(data));
+		options.put("mainmenu showMenu", new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data));
 	}
 
 	//TODO: 1. Moving the command line menu around again. Move all of the child options to here
@@ -164,6 +165,10 @@ public class CLInterface extends CLIOption implements Runnable{
                 						match=false;
                 					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>") &&
                 						!methodCallSplit[svc].matches("^[a-fA-F0-9]{8}")){
+                						match=false;
+                					}
+                					if (splitValue[svc].matches("^<a-z>") &&
+                						!methodCallSplit[svc].matches("[a-zA-Z]")){
                 						match=false;
                 					}
                 				} else {
