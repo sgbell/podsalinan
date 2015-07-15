@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -24,14 +26,15 @@ public class SelectCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
 		
 		String[] commandSplit = command.split(" ",2);
 		if (commandSplit.length>1){
 			if (debug) Podsalinan.debugLog.logInfo(this," next command: "+commandSplit[0]);
 			if (options.containsKey(commandSplit[0].toLowerCase())){
-				returnObject=options.get(commandSplit[0].toLowerCase()).execute(commandSplit[1]);
+				//returnObject=options.get(commandSplit[0].toLowerCase()).execute(commandSplit[1]);
 			}
 		} else {
 			System.out.println("Error: Invalid input.");

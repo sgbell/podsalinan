@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -31,11 +33,12 @@ public class ListCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this,command);
 		
 		if (options.containsKey(command.toLowerCase().split(" ")[0])){
-			options.get(command.toLowerCase().split(" ")[0]).execute((command.split(" ", 2).length>1?command.split(" ",2)[1]:command));
+			//options.get(command.toLowerCase().split(" ")[0]).execute((command.split(" ", 2).length>1?command.split(" ",2)[1]:command));
 		} else {
 			System.out.println("Error: Invalid command");
 		}

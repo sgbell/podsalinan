@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.downloads;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -24,7 +26,8 @@ public class DeleteDownload extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this," command: "+command);
 		String downloadUid="";
 		String[] commandOptions = command.split(" ");
@@ -36,7 +39,7 @@ public class DeleteDownload extends CLIOption {
 		
 		if (commandOptions.length==1){
 			ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
-			printDetails.execute(downloadUid);
+			//printDetails.execute(downloadUid);
 		}
 		
 		if (downloadUid.length()>0){
@@ -50,12 +53,12 @@ public class DeleteDownload extends CLIOption {
 				} else {
 					String[] selection = CLInterface.cliGlobals.globalSelectionToString().split(" ", 2);
 					returnObject.methodCall = selection[0];
-					returnObject.methodParameters= (selection.length>1?selection[1]:"");
+					//returnObject.methodParameters= (selection.length>1?selection[1]:"");
 				}
 			}
 			if (commandOptions.length>1){
 				returnObject.methodCall="downloads";
-		        returnObject.methodParameters="";
+		        //returnObject.methodParameters="";
 			}
 	        returnObject.execute=true;
 		} else {

@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -21,13 +23,12 @@ public class ClearCommand extends CLIOption {
 		super(newData);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		returnObject = new ReturnObject();
 		CLInterface.cliGlobals.getGlobalSelection().clear();
 		System.out.println("Selection Cleared.");
+
 		return returnObject;
 	}
 

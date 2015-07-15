@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.downloads;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -23,13 +25,14 @@ public class ShowSelectedMenu extends CLIOption {
 	}
 	
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 
 		ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
 		String downloadUid = command.split(" ")[0];
 
-		printDetails.execute(downloadUid);
+		//printDetails.execute(downloadUid);
 
 		System.out.println("1. Delete Download");
 		System.out.println("2. Restart Download");
@@ -42,7 +45,7 @@ public class ShowSelectedMenu extends CLIOption {
 		System.out.println("9. Return to Download List");
 					
 		returnObject.methodCall="downloads";
-		returnObject.methodParameters=""+downloadUid;
+		//returnObject.methodParameters=""+downloadUid;
         returnObject.execute=false;
 		
 		return returnObject;

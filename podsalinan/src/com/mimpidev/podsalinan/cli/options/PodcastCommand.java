@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -31,31 +33,32 @@ public class PodcastCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"Line: 38, command: "+command);
         commandOptions = command.split(" ");
 		
 		returnObject.methodCall="podcast";
 
-		if (options.containsKey(command.toLowerCase()))
-			returnObject=options.get(command).execute(command);
-		else{
+		if (options.containsKey(command.toLowerCase())) {
+			//returnObject=options.get(command).execute(command);
+		} else {
 			try {
 				// Check if the value is a number and act accordingly
 				Integer.parseInt(command);
 				if (command.equals("9")){
 					CLInterface.cliGlobals.getGlobalSelection().clear();
 					returnObject.methodCall="";
-					returnObject.methodParameters="";
 					returnObject.execute=true;
 				} else {
 					// If the user has entered 8 characters find the right podcast in the list, and the hash happens to
 					// be completely numerical
 					for (int count=0; count<data.getPodcasts().getList().size(); count++){
 						Podcast currentPodcast = data.getPodcasts().getList().get(count);
-						if (currentPodcast.getDatafile().equals(command))
-							returnObject = options.get("<aaaaaaaa>").execute(command);
+						if (currentPodcast.getDatafile().equals(command)){
+							//returnObject = options.get("<aaaaaaaa>").execute(command);
+						}
 					}
 				}
 			} catch (NumberFormatException e) {
@@ -70,7 +73,7 @@ public class PodcastCommand extends CLIOption {
 							if (debug) Podsalinan.debugLog.logInfo("Found podcast: "+command);
 						}
 					}
-					returnObject = options.get("<aaaaaaaa>").execute(command);
+					//returnObject = options.get("<aaaaaaaa>").execute(command);
 				} else {
 					if (debug) Podsalinan.debugLog.logInfo(this, "Podcast Value: "+commandOptions[0]);
 					
@@ -86,7 +89,7 @@ public class PodcastCommand extends CLIOption {
 	                    while ((!found)&&(count<data.getPodcasts().getList().size())){
 							Podcast currentPodcast = data.getPodcasts().getList().get(count);
 							if (currentPodcast.getDatafile().equals(command.split(" ")[0])){
-								returnObject = options.get("<aaaaaaaa>").execute(command);
+								//returnObject = options.get("<aaaaaaaa>").execute(command);
 								found=true;
 							}
 							count++;

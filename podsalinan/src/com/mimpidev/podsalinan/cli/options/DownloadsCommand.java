@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -28,29 +30,28 @@ public class DownloadsCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 		returnObject.methodCall="downloads";
 		
-		if (options.containsKey(command))
-			returnObject=options.get(command).execute(command);
-		else {
+		if (options.containsKey(command)){
+			//returnObject=options.get(command).execute(command);
+	    } else {
 			try {
 				Integer.parseInt(command);
 				if (command.equals("9")){
 					returnObject.methodCall="";
-					returnObject.methodParameters="";
 					returnObject.execute=true;
 				} else {
-					returnObject = options.get("<aa>").execute(command);
+					//returnObject = options.get("<aa>").execute(command);
 				}
 			} catch (NumberFormatException e) {
-				returnObject = options.get("<aa>").execute(command);
+				//returnObject = options.get("<aa>").execute(command);
 			}
 		}
 		
 		return returnObject;
 	}
-
 }

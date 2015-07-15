@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -23,13 +25,14 @@ public class IncreaseCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
 
 		IncreasePriority increase = new IncreasePriority(data);
 		if (menuInput.equalsIgnoreCase("increase")){
 			if (CLInterface.cliGlobals.getGlobalSelection().containsKey("download")){
-				increase.execute(CLInterface.cliGlobals.getGlobalSelection().get("download"));
+				//increase.execute(CLInterface.cliGlobals.getGlobalSelection().get("download"));
 			} else {
 				System.out.println("No Download selected");
 			}
@@ -40,7 +43,7 @@ public class IncreaseCommand extends CLIOption {
 			if ((menuInput.length()>0)&&(menuInput.length()<3)){
 				int select = convertCharToNumber(menuInput);
 				if ((select>=0)&&(select<data.getUrlDownloads().size())){
-						increase.execute(data.getUrlDownloads().getDownloadUid(select));
+						//increase.execute(data.getUrlDownloads().getDownloadUid(select));
 				}
 			}
 		} else 

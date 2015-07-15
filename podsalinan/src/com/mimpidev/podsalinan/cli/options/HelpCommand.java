@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -31,7 +33,8 @@ public class HelpCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
@@ -46,9 +49,9 @@ public class HelpCommand extends CLIOption {
         if (!options.containsKey(subOption.toLowerCase())){
             System.out.println("Error: Invalid Help request.");
     		System.out.println("");
-			returnObject=options.get("").execute(command);
+			//returnObject=options.get("").execute(command);
 		} else {
-		    returnObject=options.get(subOption.toLowerCase()).execute(command);
+		    //returnObject=options.get(subOption.toLowerCase()).execute(command);
 		}
 		
 		System.out.println("");

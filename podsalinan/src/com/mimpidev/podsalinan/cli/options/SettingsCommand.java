@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -31,24 +33,23 @@ public class SettingsCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
 		
 		if (options.containsKey(command.toLowerCase())){
-			returnObject=options.get(command).execute(command);
+			//returnObject=options.get(command).execute(command);
 		} else {
 			try {
 				Integer.parseInt(command);
 				if (command.equals("9")){
 					returnObject.methodCall="";
-					returnObject.methodParameters="";
 				}
 			} catch (NumberFormatException e){
 				System.out.println("Error: Invalid Command.");
 			}
 		}
-		if (debug) Podsalinan.debugLog.logInfo(this, "methodParameters: "+returnObject.methodParameters);
 		
 		return returnObject;
 	}

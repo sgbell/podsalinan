@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -25,7 +26,8 @@ public class URLCommand extends CLIOption {
 
 	@SuppressWarnings("unused")
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		try {
 			// newURL is only used to confirm that the user input is a url
 			URL newURL = new URL(command);

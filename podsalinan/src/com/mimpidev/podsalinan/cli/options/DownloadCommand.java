@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -19,13 +21,13 @@ public class DownloadCommand extends CLIOption {
 		super(newData);
 	}
 
-	@SuppressWarnings("unused")
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
 		
 		boolean downloading=false;
-		String menuInput= command.replaceFirst(command.split(" ")[0]+" ","");
+		//String menuInput= command.replaceFirst(command.split(" ")[0]+" ","");
+		String menuInput="";
 		if ((menuInput.toLowerCase().contentEquals("download"))||
 			(menuInput.toLowerCase().equalsIgnoreCase("episode"))){
 			if (CLInterface.cliGlobals.getGlobalSelection().containsKey("episode")){
@@ -37,7 +39,7 @@ public class DownloadCommand extends CLIOption {
 			}
 		} else if (menuInput.length()>6){
 			URLCommand urlCommand = new URLCommand(data);
-			urlCommand.execute(menuInput);
+			//urlCommand.execute(menuInput);
 		}
 		return returnObject;
 	}

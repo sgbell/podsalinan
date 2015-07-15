@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -29,7 +31,8 @@ public class RemoveCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
@@ -41,7 +44,7 @@ public class RemoveCommand extends CLIOption {
 				if (debug) Podsalinan.debugLog.logInfo(this, "Check: "+deleteItem);
 				if (!found && CLInterface.cliGlobals.getGlobalSelection().containsKey(deleteItem)){
 				    if (debug) Podsalinan.debugLog.logInfo(this, "Global Selection contains: "+deleteItem);
-				    returnObject=options.get(deleteItem).execute(CLInterface.cliGlobals.getGlobalSelection().get(deleteItem));
+				    //returnObject=options.get(deleteItem).execute(CLInterface.cliGlobals.getGlobalSelection().get(deleteItem));
 				    found=true;
 				}
 			}
@@ -52,7 +55,7 @@ public class RemoveCommand extends CLIOption {
 		} else {
 			String[] commandOptions = command.split(" ");
 			if (options.containsKey(commandOptions[0])){
-				returnObject=options.get(commandOptions[0]).execute(command.replaceFirst(commandOptions[0]+" ", ""));
+				//returnObject=options.get(commandOptions[0]).execute(command.replaceFirst(commandOptions[0]+" ", ""));
 			} else {
 				System.out.println("Error: Invalid User Input");
 				returnObject.execute=true;
@@ -60,7 +63,6 @@ public class RemoveCommand extends CLIOption {
 		}
 		
 		if (debug) Podsalinan.debugLog.logInfo(this, "methodCall: "+returnObject.methodCall);
-		if (debug) Podsalinan.debugLog.logInfo(this, "methodParameters: "+returnObject.methodParameters);
 		
 		return returnObject;
 	}

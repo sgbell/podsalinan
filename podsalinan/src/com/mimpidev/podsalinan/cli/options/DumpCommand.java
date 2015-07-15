@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.cli.options;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
@@ -27,7 +28,8 @@ public class DumpCommand extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
 		
 		if ((menuInput.equalsIgnoreCase("dump"))||
