@@ -319,7 +319,7 @@ public class CLInterface extends CLIOption implements Runnable{
 			if (((data.getSettings().findSetting("menuVisible")==null)||
 				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))){
 				returnObject.debug(debug);
-				if (returnObject.execute){
+				while (returnObject.execute){
 					returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
 				}
 			}
