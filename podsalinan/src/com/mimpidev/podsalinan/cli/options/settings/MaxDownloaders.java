@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.settings;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -33,7 +35,8 @@ public class MaxDownloaders extends CLIOption {
 		return input.getValidNumber(1,30);
 	}
 	
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
 		String numDownloaders="";
 
@@ -52,7 +55,7 @@ public class MaxDownloaders extends CLIOption {
 			if(!data.getSettings().updateSetting("maxDownloaders",numDownloaders))
 				data.getSettings().addSetting("maxDownloaders",numDownloaders);
 		System.out.println("Simultaneous Downloads: "+data.getSettings().findSetting("maxDownloaders"));		
-		returnObject.methodParameters="";
+		//returnObject.methodParameters="";
 		
 		return returnObject;
 	}

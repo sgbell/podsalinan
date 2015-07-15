@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.settings;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -24,7 +26,8 @@ public class PodcastUpdateRate extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this,29," command: "+command);
 		String[] commandOptions = command.split(" ");
 		String updateValue="";
@@ -97,7 +100,7 @@ public class PodcastUpdateRate extends CLIOption {
 		}
 		if (!commandOptions[0].equalsIgnoreCase("updateinterval")){
 			returnObject.methodCall="settings";
-			returnObject.methodParameters="";
+			//returnObject.methodParameters="";
 			returnObject.execute=true;
 		} else {
 			returnObject.execute=false;

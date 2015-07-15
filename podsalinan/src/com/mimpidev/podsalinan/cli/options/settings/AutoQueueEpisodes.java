@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.settings;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -33,7 +35,8 @@ public class AutoQueueEpisodes extends CLIOption {
 		return input.getStringInput();
 	}
 	
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 
 		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
 		String[] commandOptions = command.split(" ");
@@ -46,7 +49,7 @@ public class AutoQueueEpisodes extends CLIOption {
         } else {
         	userInput=commandOptions[1];
     		returnObject.methodCall="";
-    		returnObject.methodParameters="";
+    		//returnObject.methodParameters="";
     		returnObject.execute=false;
         }
 		

@@ -3,6 +3,7 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
+import java.util.Map;
 import java.util.Vector;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -37,7 +38,8 @@ public class SelectPodcast extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this, 41, "Command :"+command);
 
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in
@@ -95,30 +97,30 @@ public class SelectPodcast extends CLIOption {
 		if (debug) Podsalinan.debugLog.logInfo(this,95, "Command: "+command);
 		if (command.length()==8 && ((data.getSettings().findSetting("menuVisible")==null)||
 				                     data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
-			returnObject = options.get("").execute(command);
+			//returnObject = options.get("").execute(command);
 			if (debug) Podsalinan.debugLog.logInfo(this,99,"Command Length:"+command.length());
 		}else if (command.split(" ").length>1){
 			if (debug) Podsalinan.debugLog.logInfo(this,101,"Command Length:"+command.length());
 			if (command.split(" ")[1].equals("9")){
 				CLInterface.cliGlobals.getGlobalSelection().clear();
 				returnObject.methodCall="podcast";
-				returnObject.methodParameters="";
+				//returnObject.methodParameters="";
 				returnObject.execute=true;
 			} else {
 				if (debug) Podsalinan.debugLog.logInfo(this,108, "Command: "+command);
 				if (debug) Podsalinan.debugLog.logInfo(this,109, "Podcast: "+command.split(" ")[0]);
 				if (convertCharToNumber(command.split(" ")[1])>=0){
-					returnObject = options.get("<aa>").execute(command);
+					//returnObject = options.get("<aa>").execute(command);
 				} else {
-					returnObject = options.get(command.split(" ")[1]).execute(command);
+					//returnObject = options.get(command.split(" ")[1]).execute(command);
 				}
 			}
 		} else if ((!data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))&&
 				   (data.getSettings().findSetting("menuVisible")!=null)){
 			ShowPodcastDetails podcastDetail=new ShowPodcastDetails(data);
-			returnObject = podcastDetail.execute("");
+			//returnObject = podcastDetail.execute("");
 		} else {
-			returnObject = options.get("").execute(command);
+			//returnObject = options.get("").execute(command);
 		}
 		
 		return returnObject;

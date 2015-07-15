@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.help;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -21,7 +23,8 @@ public class HelpList extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		// If user enters "help list"
 	    // Show sub commands for list command
 		System.out.println("list can have the following parameters");

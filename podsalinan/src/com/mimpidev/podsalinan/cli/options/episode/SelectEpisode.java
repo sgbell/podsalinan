@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.episode;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -27,7 +29,8 @@ public class SelectEpisode extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,31,"Command: "+command);
 		String[] commandOptions = command.split(" ");
@@ -72,22 +75,22 @@ public class SelectEpisode extends CLIOption {
             		try {
             			Integer.parseInt(commandOptions[episodePosition+1]);
             			if (debug) Podsalinan.debugLog.logInfo(this,76,"Command: "+command);
-            			if (options.containsKey(commandOptions[episodePosition+1]))
-            				returnObject = options.get(commandOptions[episodePosition+1]).execute(command);
-            			else{
+            			if (options.containsKey(commandOptions[episodePosition+1])){
+            				//returnObject = options.get(commandOptions[episodePosition+1]).execute(command);
+            			} else{
                 			System.out.println("Error: Invalid option selected");
                 			returnObject.methodCall="podcast";
                 			for (String option: commandOptions){
-                				if (returnObject.methodParameters.length()>0){
+                				/*if (returnObject.methodParameters.length()>0){
                 					returnObject.methodParameters+=" ";
                 				}
-                			    returnObject.methodParameters+=option;
+                			    returnObject.methodParameters+=option;*/
                 			}
             			}
             		} catch (NumberFormatException e){
             			System.out.println("Error: Invalid option selected");
             			returnObject.methodCall="podcast";
-            			returnObject.methodParameters=commandOptions[0]+" "+commandOptions[1]+" "+commandOptions[2];
+            			//returnObject.methodParameters=commandOptions[0]+" "+commandOptions[1]+" "+commandOptions[2];
             		}
         		}
         		break;
@@ -95,7 +98,7 @@ public class SelectEpisode extends CLIOption {
         	case 2:
         		if (debug) Podsalinan.debugLog.logInfo(this, 97,"Command: "+command);
 
-        		returnObject = options.get("showmenu").execute(command);
+        		//returnObject = options.get("showmenu").execute(command);
         		break;
         	default:
         }

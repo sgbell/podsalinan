@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.help;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -18,7 +20,8 @@ public class HelpSelect extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		System.out.println("select is used to traverse around the system, when not using the menu");
 		System.out.println("");
 		System.out.println("   select podcast <podcast name>       this will select the podcast");

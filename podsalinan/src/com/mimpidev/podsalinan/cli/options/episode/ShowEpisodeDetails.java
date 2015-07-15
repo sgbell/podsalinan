@@ -46,7 +46,8 @@ public class ShowEpisodeDetails extends BaseEpisodeOption {
 	}
 	
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 		if (command.length()==0){

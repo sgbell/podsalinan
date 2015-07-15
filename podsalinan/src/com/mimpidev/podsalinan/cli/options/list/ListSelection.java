@@ -22,6 +22,7 @@
 package com.mimpidev.podsalinan.cli.options.list;
 
 import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Set;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -44,7 +45,8 @@ public class ListSelection extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 
 		System.out.println("Currently Selected");

@@ -23,6 +23,7 @@ package com.mimpidev.podsalinan.cli.options.episode;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
@@ -45,7 +46,8 @@ public class CancelDownload extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command :"+command);
 		
@@ -63,7 +65,6 @@ public class CancelDownload extends CLIOption {
 			}
 		}
 		returnObject.methodCall="podcast";
-		returnObject.methodParameters=command.substring(0, command.lastIndexOf(commandOptions[3])-1);
 		returnObject.execute=true;
 		return returnObject;
 	}

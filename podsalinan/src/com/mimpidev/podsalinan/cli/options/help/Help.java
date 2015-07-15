@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.help;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -21,7 +23,8 @@ public class Help extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		// Main help text
 		System.out.println("A url is accepted at almost any time to add it to the download queue.");
 		System.out.println("It will have to start with (http/https/ftp):// for the system to download it.");

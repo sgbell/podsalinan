@@ -33,7 +33,7 @@ public class DownloadCommand extends CLIOption {
 			if (CLInterface.cliGlobals.getGlobalSelection().containsKey("episode")){
 				// Use the command already set up to do the work.
 				DownloadEpisode queueEpisode = new DownloadEpisode(data);
-				queueEpisode.execute(CLInterface.cliGlobals.globalSelectionToString());
+				//queueEpisode.execute(CLInterface.cliGlobals.globalSelectionToString());
 			} else {
 				System.out.println("No episode selected");
 			}

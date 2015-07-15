@@ -3,6 +3,7 @@
  */
 package com.mimpidev.podsalinan.cli.options.list;
 
+import java.util.Map;
 import java.util.Set;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -24,7 +25,8 @@ public class ListPreferences extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] Size of Preferences: "+data.getSettings().getMap().size());

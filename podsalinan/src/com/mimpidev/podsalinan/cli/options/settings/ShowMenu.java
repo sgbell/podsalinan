@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.settings;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -23,8 +25,9 @@ public class ShowMenu extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
+		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 
 		System.out.println();
 		System.out.println("1. Change Podcast Update Rate");
@@ -39,7 +42,7 @@ public class ShowMenu extends CLIOption {
 			CLInterface.cliGlobals.getGlobalSelection().put("settings", "");
 		}
 		returnObject.methodCall="settings";
-		returnObject.methodParameters="";
+		//returnObject.methodParameters="";
 		returnObject.execute=false;
 		
 		return returnObject;

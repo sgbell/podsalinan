@@ -21,6 +21,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.episode;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -40,7 +42,8 @@ public class DownloadEpisode extends BaseEpisodeOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command: "+command);
 

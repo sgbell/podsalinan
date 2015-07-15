@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.list;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -29,7 +31,8 @@ public class ListDetails extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 
 		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
@@ -38,7 +41,7 @@ public class ListDetails extends CLIOption {
 		int selectionCount=0;
 		while (!detailsShown && selectionCount<globalSelectList.length){
 			if (CLInterface.cliGlobals.getGlobalSelection().containsKey(globalSelectList[selectionCount])){
-				options.get(globalSelectList[selectionCount]).execute("");
+				//options.get(globalSelectList[selectionCount]).execute("");
 				detailsShown=true;
 			}
 			selectionCount++;

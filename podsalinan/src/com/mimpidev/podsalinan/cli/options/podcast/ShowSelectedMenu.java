@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -20,7 +22,8 @@ public class ShowSelectedMenu extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		String podcastId = command.split(" ")[0];
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){
@@ -28,7 +31,7 @@ public class ShowSelectedMenu extends CLIOption {
 				CLInterface.cliGlobals.getGlobalSelection().put("podcast", podcastId);
 				System.out.println();
 				ShowPodcastDetails podcastDetail=new ShowPodcastDetails(data);
-				podcastDetail.execute("selectedMenu");
+				//podcastDetail.execute("selectedMenu");
 				System.out.println("1. List Episodes");
 				System.out.println("2. Update List");
 				System.out.println("3. Delete Podcast");

@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.help;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -21,7 +23,8 @@ public class HelpSet extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		// If the user enters "help set"
 		System.out.println("set is used to change settings");
 		System.out.println("");

@@ -32,7 +32,7 @@ public class ShowMenu extends CLIOption {
 		
 		ListDownloads listDownloads = new ListDownloads(data);
 		
-		listDownloads.execute(command);
+		//listDownloads.execute(command);
 		System.out.println();
 		System.out.println("(A-ZZ) Enter Download letter to select Download.");
 		System.out.println("To add a new download to the queue just enter the the url to be downloaded.");

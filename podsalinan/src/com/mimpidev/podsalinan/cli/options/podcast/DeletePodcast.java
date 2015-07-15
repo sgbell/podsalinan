@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -26,7 +28,8 @@ public class DeletePodcast extends CLIOption {
 
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 		
@@ -39,7 +42,7 @@ public class DeletePodcast extends CLIOption {
 
 		if (commandOptions.length==1){
 			ShowPodcastDetails printDetails = new ShowPodcastDetails(data);
-			printDetails.execute(podcastUid);
+			//printDetails.execute(podcastUid);
 		}
 		
 		if (podcastUid.length()>0){
@@ -54,12 +57,12 @@ public class DeletePodcast extends CLIOption {
 					} else {
 					    String[] selection = CLInterface.cliGlobals.globalSelectionToString().split(" ", 2);
 					    returnObject.methodCall = selection[0];
-					    returnObject.methodParameters= (selection.length>1?selection[1]:"");
+					    //returnObject.methodParameters= (selection.length>1?selection[1]:"");
 					}
 		    	}
 				if (commandOptions.length>1){
 		    		returnObject.methodCall = "podcast";
-		    		returnObject.methodParameters = "";
+		    		//returnObject.methodParameters = "";
 		    	}
 	    		returnObject.execute=true;
 			} else {

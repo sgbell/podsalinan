@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.list;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -23,7 +25,8 @@ public class ListPodcasts extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this,command);
 		int podcastCount=1;
 		

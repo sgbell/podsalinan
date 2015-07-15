@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -24,7 +26,8 @@ public class ShowPodcastDetails extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
 		if (CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){

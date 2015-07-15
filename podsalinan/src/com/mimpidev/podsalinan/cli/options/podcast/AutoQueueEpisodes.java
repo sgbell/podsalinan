@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -27,7 +29,8 @@ public class AutoQueueEpisodes extends CLIOption {
 	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
 	 */
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
 		
 		if (command.split(" ").length>1){
@@ -42,7 +45,7 @@ public class AutoQueueEpisodes extends CLIOption {
 		    		System.out.println(selectedPodcast.getName()+"podcast autoqeue enabled.");
 		    	}
 				returnObject.methodCall = "podcast";
-				returnObject.methodParameters = command.split(" ")[0];
+				//returnObject.methodParameters = command.split(" ")[0];
 			}
 		}
 		

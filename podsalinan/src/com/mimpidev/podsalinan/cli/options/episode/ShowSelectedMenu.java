@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.episode;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -19,7 +21,8 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
 		String[] commandOptions = command.split(" ");
 		if (commandOptions.length>1){
@@ -32,7 +35,7 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
             Episode episode = getEpisode(commandOptions[0],episodeNum);
             if (episode!=null){
 				ShowEpisodeDetails printDetails = new ShowEpisodeDetails(data);
-				printDetails.execute(command);
+				//printDetails.execute(command);
 				
 				System.out.println ();
 				System.out.println ("1. Download episode");
@@ -44,7 +47,7 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 				System.out.println ();
 				
 				returnObject.methodCall = "podcast";
-				returnObject.methodParameters = command;
+				//returnObject.methodParameters = command;
 				returnObject.execute=false;
 			}
 		}

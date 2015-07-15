@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.settings;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -33,7 +35,8 @@ public class DownloadSpeedLimit extends CLIOption {
 		return input.getStringInput();
 	}
 	
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this, 38, "command: "+command);
 		String userInput="";
 
@@ -41,7 +44,7 @@ public class DownloadSpeedLimit extends CLIOption {
         if (commandOptions.length==1){
         	userInput=executeMenuOption();
         	returnObject.methodCall="settings";
-    		returnObject.methodParameters="";
+    		//returnObject.methodParameters="";
         	returnObject.execute=true;
         } else {
         	userInput=commandOptions[1];

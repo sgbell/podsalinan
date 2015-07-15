@@ -47,6 +47,4 @@ public abstract class BaseEpisodeOption extends CLIOption {
 	public void setPodcast(Podcast selectedPodcast){
 		podcast = selectedPodcast;
 	}
-	
-	public abstract ReturnObject execute(String command);
 }

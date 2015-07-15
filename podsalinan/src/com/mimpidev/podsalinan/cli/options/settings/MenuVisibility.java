@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options.settings;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -29,7 +30,8 @@ public class MenuVisibility extends CLIOption {
 		options.put("hide", new HideCommand(data));
 	}
 
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command:"+ command);
@@ -38,14 +40,14 @@ public class MenuVisibility extends CLIOption {
 		Set<String> trueList = new HashSet<String>(Arrays.asList(new String[] {"true","1","yes","y"}));
 		Set<String> falseList = new HashSet<String>(Arrays.asList(new String[] {"false","0","no","n"}));
 		if (trueList.contains(commandOptions[1].toLowerCase())){
-			returnObject=options.get("show").execute("menu");
+			//returnObject=options.get("show").execute("menu");
 		} else if (falseList.contains(commandOptions[1].toLowerCase())){
-			returnObject=options.get("hide").execute("menu");
+			//returnObject=options.get("hide").execute("menu");
 		} else {
 			System.out.println("Error: Invalid Command.");
 		}
 		returnObject.methodCall="settings";
-		returnObject.methodParameters="";
+		//returnObject.methodParameters="";
 		returnObject.execute=true;
 		
 		return returnObject;

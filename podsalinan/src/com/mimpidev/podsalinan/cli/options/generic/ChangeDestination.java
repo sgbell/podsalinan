@@ -4,6 +4,7 @@
 package com.mimpidev.podsalinan.cli.options.generic;
 
 import java.io.File;
+import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
@@ -31,7 +32,8 @@ public class ChangeDestination extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
@@ -65,7 +67,7 @@ public class ChangeDestination extends CLIOption {
 				  returnObject.methodCall = "downloads";
     		  }
 	      } 
-		  returnObject.methodParameters = command.split(" ")[0];
+		  //returnObject.methodParameters = command.split(" ")[0];
 		  returnObject.execute=true;
 	    }
 	    

@@ -3,6 +3,8 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
+import java.util.Map;
+
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
@@ -27,7 +29,8 @@ public class ListEpisodes extends CLIOption {
 	}
 
 	@Override
-	public ReturnObject execute(String command) {
+	public ReturnObject execute(Map<String, String> functionParms) {
+		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this,30,"ListEpisodes Class called");
 		if (debug) Podsalinan.debugLog.logInfo(this,31,"Command Value: "+command);
 		
@@ -60,7 +63,7 @@ public class ListEpisodes extends CLIOption {
 		}
 		returnObject = new ReturnObject();
 		returnObject.methodCall = "podcast";
-		returnObject.methodParameters = command.split(" ")[0];
+		//returnObject.methodParameters = command.split(" ")[0];
 		returnObject.execute=true;
 		
 		return returnObject;
