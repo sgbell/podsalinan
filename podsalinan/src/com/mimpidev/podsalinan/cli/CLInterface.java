@@ -24,6 +24,7 @@ package com.mimpidev.podsalinan.cli;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -121,8 +122,9 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
 		options.put("downloads <podcastId>", new DownloadsCommand(data));
 		options.put("settings", new SettingsCommand(data));
-		options.put("", new MainMenuCommand(data));
-		options.put("mainmenu showMenu", new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data));
+		MainMenuCommand mainMenuCommands = new MainMenuCommand(data);
+		options.put("mainmenu showmenu", new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data));
+		options.put("mainmenu <0-9>", mainMenuCommands);
 	}
 
 	//TODO: 1. Moving the command line menu around again. Move all of the child options to here
@@ -136,197 +138,24 @@ public class CLInterface extends CLIOption implements Runnable{
 	 * Then when user input is entered, and the user presses tab, it will either complete,
 	 *   or list options.
 	 */
-
-	public void userInput(){
-		System.out.print("->");
-		String menuInput=input.getStringInput();
-		if ((menuInput.length()>0)&&(menuInput!=null)){
-			returnObject.execute=true;
-			// Continue executing menu calls until the return object says to stop
-			while (returnObject.execute){
-       			if (debug) {
-       				Podsalinan.debugLog.logInfo(this,175,"Before the methodCall");
-       			}
-       			returnObject.debug(debug);
-                if (!options.containsKey(returnObject.methodCall)){
-                	/*TODO: 1.1 methodParameters will now be a map.
-                	 *          Need to split methodCall and all of the keys, and match them here. */
-        			boolean match=true;
-                	String[] methodCallSplit = returnObject.methodCall.split(" ");
-                	for (String key : options.keySet()){
-                		String[] splitValue = key.split(" ");
-                		if (splitValue.length==methodCallSplit.length){
-                			int svc=0;
-                			while (svc<splitValue.length && match){
-                				if (splitValue[svc].startsWith("<")&&
-                					splitValue[svc].endsWith(">")){
-                					if (splitValue[svc].matches("^<url>") &&
-                						!methodCallSplit[svc].matches("\\b(https?|ftp):.*")){
-                						match=false;
-                					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>") &&
-                						!methodCallSplit[svc].matches("^[a-fA-F0-9]{8}")){
-                						match=false;
-                					}
-                					if (splitValue[svc].matches("^<a-z>") &&
-                						!methodCallSplit[svc].matches("[a-zA-Z]")){
-                						match=false;
-                					}
-                				} else {
-                					if (!splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
-                						match=false;
-                					}
-                				}
-                				svc++;
-                			}
-                			if (match){
-                				returnObject.methodCall=key;
-                			}
-                		}
-                	}
-                    if (!match){
-                    	returnObject.execute=false;
-                    	System.out.println("Error: Invalid user Input.");
-                    }
-                }
-       			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
-       			returnObject.debug(debug);
-			}
-                	/**
-                	 * How to traverse a menu system using commands???
-                	 * 
-                	 * Start with creating an entire tree of the command structure to visualize
-                	 * the different commands.
-                	 * Then we can devise a way of traversing the menu system
-                	 * 
-                	 * - mainMenu showMenu           menuCommand = ""
-                	 * user enters 1
-                	 *   - mainMenu 1                menuCommand = "podcast"
-                	 *   - podcast showMenu          menuCommand = "podcast"
-                	 * user enters a
-                	 *   - podcast a                 menuCommand = "podcast a"              
-                	 *   - podcast showSelectedMenu  menuCommand = "podcast a"
-                	 * user enters 1
-                	 *   - list episode              menuCommand = "podcast a" 
-                	 *   - podcast showSelectedMenu  menuCommand = "podcast a"
-                	 * user enters a
-                	 *   - select episode a          menuCommand = "podcast a episode a"
-                	 *   - episode showMenu          menuCommand = "podcast a episode a"
-                	 * user enters 1
-                	 *   - episode download          menuCommand = "podcast a episode a"
-                	 *   - episode showMenu          menuCommand = "podcast a episode a"
-                	 * user enters 9
-                	 *   - podcastShowSelectedMenu   menuCommand = "podcast a"
-                	 * user enters 9
-                	 *   - podcastShowMenu           menuCommand = "podcast"
-                	 * user enters 9
-                	 *   - mainMenu showMenu         menuCommand = ""
-                	 * 
-                	 * 
-                	 * MainMenu
-                	 * =========
-                	 *                        Functionality                    Command            
-                	 * <empty string>       - display Menu                     mainMenu showMenu
-                	 * 1                    - Podcast Menu                     podcast showMenu
-                	 *     <a-zz>           - Select Podcast                   (podcast <a-zzz>) or (select podcast <a-zzz>) podcast showSelectedMenu 
-                	 *            1         - List Episodes                    list episode
-                	 *            2         - Update List                      podcast update
-                	 *            3         - Delete Podcast                   podcast delete
-                	 *            4         - Change Download Directory        (podcast set directory) or (set podcast directory)
-                	 *            5         - Autoqueue Episodes               podcast autoqueue
-                	 *            <a-zz>    - Select Episode                   (select episode <a-zz>) or (podcast episode <a-zz>) episode showMenu
-                	 *                   1  - Download Episode                 (episode download) or (download episode)
-                	 *                   2  - Delete Episode from Drive        (episode delete) or (delete episode)
-                	 *                   3  - Cancel Download of Episode       (episode cancel) or (cancel episode)
-                	 *                   4  - Change Status of Episode         episode set status
-                	 *                   9  - Quit to Selected Podcast Menu    podcast showSelecetedMenu
-                	 *            9         - Quit to Podcast Menu             podcast showMenu
-                	 *     9                - Quit to Main Menu                mainMenu showMenu
-                	 * 2                    - Downloads Menu                   downloads showMenu
-                	 *     <a-zz>           - Select Download                  select download     downloads showSelectedMenu
-                	 *            1         - Delete Download                  (delete download) or (download delete)
-                	 *            2         - Restart download                 download restart
-                	 *            3         - Stop Download                    download stop
-                	 *            4         - Start Download                   download start
-                	 *            5         - Increase Priority                increase
-                	 *            6         - Decrease Priority                decrease
-                	 *            7         - Change Destination               download destination or set destination
-                	 *            9         - Quit to Downloads Menu           downloads showMenu
-                	 *     9                - Quit to Main Menu                mainMenu showMenu
-                	 * 3                    - Settings Menu                    settings showMenu
-                	 *     1                - Change Update Rate               settings updateinterval
-                	 *     2                - Change Number of Downloaders     settings maxdownloaders
-                	 *     3                - Default Download Directory       settings defaultdirectory
-                	 *     4                - AutoQueue All Podcast Episodes   settings autoqueue
-                	 *     5                - Set Download Speed Limit         settings downloadlimit
-                	 *     9                - Quit to Main Menu                mainMenu showMenu
-                	 * 4                    - Quit                             quit
-                	 * 
-                	 * mainMenu  - showMenu
-                	 * podcast   - showMenu
-                	 *           - showSelectedMenu
-                	 *           - <a-zz>    (load a podcast)
-                	 *           - update
-                	 *           - delete
-                	 *           - set directory
-                	 *           - autoqueue
-                	 *           - episode <a-zz>
-                	 *           - <a-zz> episode <a-zz>
-                	 * episode   - showMenu
-                	 *           - <a-zz>    (load an episode from the selected podcast)
-                	 *           - download
-                	 *           - delete
-                	 *           - cancel
-                	 *           - set status
-                	 * downloads - showMenu
-                	 *           - showSelectedMenu
-                	 * settings  - showMenu
-                	 *           - updateInterval
-                	 *           - maxdownloaders
-                	 *           - defaultdirectory
-                	 *           - autoqueue
-                	 *           - downloadlimit
-                	 * list      - episode
-                	 * delete    - episode
-                	 *           - download
-                	 *           - podcast
-                	 * cancel    - episode
-                	 * select    - podcast <a-zz>
-                	 *           - episode <a-zz>
-                	 *           - download <a-zz>
-                	 * set       - podcast directory
-                	 *           - status episode
-                	 *           - destination 
-                	 * download  - episode
-                	 *           - delete
-                	 *           - stop
-                	 *           - start
-                	 *           - increase
-                	 *           - decrease
-                	 *           - destination
-                	 * increase
-                	 * decrease           
-                	 */
-                	
-		}
-	}
-
 	@Override
 	public void run() {
 		System.out.println("Welcome to podsalinan.");
 		System.out.println("----------------------");
+		returnObject.methodCall="mainmenu showMenu";
 		returnObject.execute=true;
 		while (!data.getSettings().isFinished()){
-			if (((data.getSettings().findSetting("menuVisible")==null)||
-				 (data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true")))){
-				returnObject.debug(debug);
-				while (returnObject.execute){
-					returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
+			returnObject=execute(returnObject.parameterMap);
+
+			// User Input
+			if (!data.getSettings().isFinished()){
+				System.out.print("->");
+				String menuInput=input.getStringInput();
+				if ((menuInput.length()>0)&&(menuInput!=null)){
+					returnObject.methodCall=menuInput;
+					returnObject.execute=true;
 				}
 			}
-			returnObject.debug(debug);
-			
-			if (!data.getSettings().isFinished())
-				userInput();
 		}
 		System.out.println("Please Standby for system Shutdown.");
 		synchronized (data.getSettings().getWaitObject()){
@@ -374,6 +203,63 @@ public class CLInterface extends CLIOption implements Runnable{
 	
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		return null;
+    	returnObject.parameterMap = new HashMap<String,String>();
+    	
+		while (returnObject.execute){
+			if (!options.containsKey(returnObject.methodCall)){
+	        	/*TODO: 1.1 methodParameters will now be a map.
+	        	 *          Need to split methodCall and all of the keys, and match them here. */
+				boolean match=true;
+	        	returnObject.debug(debug);
+				String[] methodCallSplit = returnObject.methodCall.split(" ");
+	        	for (String key : options.keySet()){
+	        		String[] splitValue = key.split(" ");
+	        		if (splitValue.length==methodCallSplit.length){
+	        			int svc=0;
+	        			while (svc<splitValue.length && match){
+	        				if (splitValue[svc].startsWith("<")&&
+	        					splitValue[svc].endsWith(">")){
+	        					if ((splitValue[svc].matches("^<url>") &&
+	        						 !methodCallSplit[svc].matches("\\b(https?|ftp):.*"))||
+	        						(splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>") &&
+	    	        				 !methodCallSplit[svc].matches("^[a-fA-F0-9]{8}"))){
+	        						match=false;
+	        					} else if (splitValue[svc].matches("^<url>")){
+	        						returnObject.parameterMap.put("url", methodCallSplit[svc]);
+	        					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>")){
+	        						returnObject.parameterMap.put("uid", methodCallSplit[svc]);
+	        					}
+	        					if (splitValue[svc].matches("^<a-z>") &&
+	        						!methodCallSplit[svc].matches("[a-zA-Z]")){
+	        						match=false;
+	        					}
+	        				} else {
+	        					if (!splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
+	        						match=false;
+	        					}
+	        				}
+	        				svc++;
+	        			}
+	        			if (match){
+	        				returnObject.methodCall=key;
+	        			}
+	        		}
+	        	}
+	            if (!match){
+	            	returnObject.execute=false;
+	            }
+	        }
+			// This is going to traverse the main menu
+			if (!options.containsKey(returnObject.methodCall)){
+				if (returnObject.methodCall.matches("[0-9]{1}")){
+					returnObject.parameterMap.put("menuItem", returnObject.methodCall);
+					returnObject.methodCall="mainmenu <0-9>";
+					returnObject.execute=true;
+				}
+			}
+			returnObject.debug(true);
+			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
+		}
+		return returnObject;
 	}
 }

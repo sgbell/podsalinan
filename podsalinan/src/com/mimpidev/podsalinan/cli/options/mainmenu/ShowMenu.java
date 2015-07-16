@@ -35,8 +35,9 @@ public class ShowMenu extends CLIOption {
 		System.out.println("2. Downloads Menu");
 		System.out.println("3. Preferences");
 		System.out.println();
-		System.out.println("4. Quit");		
-		return null;
+		System.out.println("4. Quit");
+		returnObject.execute=false;
+		return returnObject;
 	}
 
 }

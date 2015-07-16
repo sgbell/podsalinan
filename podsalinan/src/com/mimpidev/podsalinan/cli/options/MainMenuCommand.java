@@ -28,7 +28,6 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
-import com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu;
 
 /**
  * @author bugman
@@ -43,7 +42,6 @@ public class MainMenuCommand extends CLIOption {
 	public MainMenuCommand(DataStorage newData) {
 		super(newData);
 		options = new HashMap<String, CLIOption>();
-		options.put("showmenu", new ShowMenu(newData));
 		
 		menuCommands = new HashMap<String,String>();
 		menuCommands.put("1","podcast showMenu");
@@ -59,8 +57,10 @@ public class MainMenuCommand extends CLIOption {
         String command="";
 		if (functionParms.size()==0){
 			returnObject.methodCall="mainmenu showMenu";
-			returnObject.parameterMap= new HashMap();
+			returnObject.parameterMap= new HashMap<String, String>();
 			returnObject.execute=true;
+		} else if (functionParms.size()==1) {
+			
 		}
 		if (options.containsKey(command)){
 			//options.get(command).execute(command);
