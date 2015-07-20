@@ -54,32 +54,24 @@ public class MainMenuCommand extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logMap(functionParms);
-        String command="";
+
 		if (functionParms.size()==0){
 			returnObject.methodCall="mainmenu showMenu";
-			returnObject.parameterMap= new HashMap<String, String>();
 			returnObject.execute=true;
 		} else if (functionParms.size()==1) {
-			
-		}
-		if (options.containsKey(command)){
-			//options.get(command).execute(command);
-		} else if (menuCommands.containsKey(command)){
-			returnObject.methodCall=menuCommands.get(command);
-			returnObject.execute=true;
-			if (debug){
-				Podsalinan.debugLog.logInfo(this, 67, returnObject.methodCall);
+			if (functionParms.containsKey("menuItem") &&
+				menuCommands.containsKey(functionParms.get("menuItem"))){
+				returnObject.methodCall=menuCommands.get(functionParms.get("menuItem"));
+			} else {
+				System.out.println("Error: Invalid user Entry.");
+				returnObject.methodCall="mainMenu showMenu";
 			}
-		} else if (command.length()==0) {
-			//options.get("showmenu").execute("");
-			returnObject.methodCall="";
-			returnObject.execute=false;
-		} else {
-			System.out.println("Error: Invalid User Command");
 		}
-		if (debug){
-			Podsalinan.debugLog.logInfo(this, 75, returnObject.methodCall);
-		}
+		returnObject.parameterMap=new HashMap<String,String>();
+		returnObject.execute=true;
+		if (debug) Podsalinan.debugLog.logInfo(this, 75, "Finish");
+		returnObject.debug(debug);
+		
 		return returnObject;
 	}
 

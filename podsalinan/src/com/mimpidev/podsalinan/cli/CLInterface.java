@@ -121,6 +121,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast 9", new PodcastCommand(data));
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
 		options.put("downloads <podcastId>", new DownloadsCommand(data));
+		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
 		MainMenuCommand mainMenuCommands = new MainMenuCommand(data);
 		options.put("mainmenu showmenu", new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data));

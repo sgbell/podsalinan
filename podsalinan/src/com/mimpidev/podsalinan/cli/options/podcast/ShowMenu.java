@@ -35,14 +35,16 @@ public class ShowMenu extends CLIOption {
 		System.out.println();
 		
 		ListPodcasts list = new ListPodcasts(data);
-		//list.execute("showCount");
+		returnObject = new ReturnObject();
+		returnObject.parameterMap.put("showcount", "");
+		list.execute(returnObject.parameterMap);
 
 		System.out.println();
 		System.out.println("(A-Z) Enter Podcast letter to select Podcast.");
 		System.out.println();
 		System.out.println("9. Return to Main Menu");
         returnObject.methodCall="podcast";
-        //returnObject.methodParameters="";
+        returnObject.parameterMap.clear();
 		returnObject.execute=false;
 		return returnObject;
 	}

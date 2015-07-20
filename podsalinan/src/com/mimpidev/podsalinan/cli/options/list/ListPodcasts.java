@@ -26,16 +26,17 @@ public class ListPodcasts extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this,command);
+		debug=true;
 		int podcastCount=1;
 		
 		for (Podcast podcast : data.getPodcasts().getList()){
 			if (!podcast.isRemoved()){
-				if (command.split(" ")[command.split(" ").length-1].equalsIgnoreCase("showCount"))
+				if (functionParms.containsKey("showcount")){
+					
 					System.out.print(getEncodingFromNumber(podcastCount));
-				else
+				} else {
 					System.out.print(podcast.getDatafile());
+				}
 				System.out.println(". "+podcast.getName());
 			
 			    podcastCount++;
