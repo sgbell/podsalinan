@@ -211,49 +211,54 @@ public class CLInterface extends CLIOption implements Runnable{
     	
 		while (returnObject.execute){
 			if (!options.containsKey(returnObject.methodCall)){
-	        	/*TODO: 1.1 methodParameters will now be a map.
-	        	 *          Need to split methodCall and all of the keys, and match them here. */
-				boolean match=true;
+				int score=0;
+				boolean match=false;
 	        	returnObject.debug(debug);
 				String[] methodCallSplit = returnObject.methodCall.split(" ");
 	        	for (String key : options.keySet()){
+	        		if (debug) Podsalinan.debugLog.logInfo(this, 220, "Current Key:"+key);
 	        		String[] splitValue = key.split(" ");
 	        		if (splitValue.length==methodCallSplit.length){
 	        			int svc=0;
-	        			while (svc<splitValue.length && match){
+	        			while (svc<splitValue.length && score<splitValue.length && !match){
 	        				if (splitValue[svc].startsWith("<")&&
 	        					splitValue[svc].endsWith(">")){
 	        					if ((splitValue[svc].matches("^<url>") &&
-	        						 !methodCallSplit[svc].matches("\\b(https?|ftp):.*"))||
+	        						 methodCallSplit[svc].matches("\\b(https?|ftp):.*"))||
 	        						(splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>") &&
-	    	        				 !methodCallSplit[svc].matches("^[a-fA-F0-9]{8}"))){
-	        						match=false;
-	        					} else if (splitValue[svc].matches("^<url>")){
-	        						returnObject.parameterMap.put("url", methodCallSplit[svc]);
-	        					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>")){
-	        						returnObject.parameterMap.put("uid", methodCallSplit[svc]);
+	    	        				 methodCallSplit[svc].matches("^[a-fA-F0-9]{8}") &&
+	    	        				 !methodCallSplit[svc].equalsIgnoreCase("showmenu"))){
+		        					if (splitValue[svc].matches("^<url>")){
+		        						returnObject.parameterMap.put("url", methodCallSplit[svc]);
+		        					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>")){
+		        						returnObject.parameterMap.put("uid", methodCallSplit[svc]);
+		        					}
+	        						score++;
 	        					}
 	        					//TODO:NEXT - podcast a is not matching here when it should
-	        					if (splitValue[svc].matches("^<a-z>") &&
-	        						!methodCallSplit[svc].matches("[a-zA-Z]")){
-	        						match=false;
+	        					if (splitValue[svc].matches("<a-z>") &&
+	        						methodCallSplit[svc].matches("[a-zA-Z]")){
+	        						score++;
 	        					}
 	        				} else {
-	        					if (!splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
-	        						match=false;
+	        					if (splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
+	        						score++;
 	        					}
 	        				}
 	        				svc++;
 	        			}
-	        			if (match){
+	        			if (score==splitValue.length){
+	        				match=true;
 	        				returnObject.methodCall=key;
 	        				returnObject.execute=true;
-	        				if (debug) Podsalinan.debugLog.logInfo(this, 250, "correct: "+returnObject.methodCall);
+	        				if (debug) Podsalinan.debugLog.logInfo(this, 254, "matched");
+	        				break;
 	        			}
 	        		}
 	        	}
 	            if (!match){
 	            	returnObject.execute=false;
+    				if (debug) Podsalinan.debugLog.logInfo(this, 252, "not matched");
 	            }
 	        }
 			// This is going to traverse the main menu
