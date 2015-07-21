@@ -116,10 +116,13 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("dump urldownloads", new DumpCommand(data));
         SelectPodcast selectPodcast = new SelectPodcast(data);
 		options.put("podcast <podcastId>", selectPodcast);
-		options.put("podcast <a-zz>",  selectPodcast);
+		options.put("podcast <a-z>",  selectPodcast);
         // Exit podcast menu, and return to main menu
-		options.put("podcast 9", new PodcastCommand(data));
+		PodcastCommand podcastCommand = new PodcastCommand(data);
+		options.put("podcast 9", podcastCommand);
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
+		options.put("podcast <a-z>", podcastCommand);
+		options.put("podcast <aaaaaaaa>", null);
 		options.put("downloads <podcastId>", new DownloadsCommand(data));
 		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
@@ -151,7 +154,7 @@ public class CLInterface extends CLIOption implements Runnable{
 			// User Input
 			if (!data.getSettings().isFinished()){
 				System.out.print("->");
-				String menuInput=input.getStringInput();
+				String menuInput=(returnObject.methodCall.length()>0?returnObject.methodCall+" ":"")+input.getStringInput();
 				if ((menuInput.length()>0)&&(menuInput!=null)){
 					returnObject.methodCall=menuInput;
 					returnObject.execute=true;
@@ -230,6 +233,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	        					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>")){
 	        						returnObject.parameterMap.put("uid", methodCallSplit[svc]);
 	        					}
+	        					//TODO:NEXT - podcast a is not matching here when it should
 	        					if (splitValue[svc].matches("^<a-z>") &&
 	        						!methodCallSplit[svc].matches("[a-zA-Z]")){
 	        						match=false;
@@ -243,6 +247,8 @@ public class CLInterface extends CLIOption implements Runnable{
 	        			}
 	        			if (match){
 	        				returnObject.methodCall=key;
+	        				returnObject.execute=true;
+	        				if (debug) Podsalinan.debugLog.logInfo(this, 250, "correct: "+returnObject.methodCall);
 	        			}
 	        		}
 	        	}
