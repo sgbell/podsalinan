@@ -148,9 +148,7 @@ public class TableView {
 		while (it.hasNext()){
 			int newResult=0;
 			Map.Entry<String,String> pairs = (Map.Entry<String,String>)it.next();
-			log.logInfo("[TableView]"+(String)pairs.getKey()+","+(String)pairs.getValue());
 			try {
-				System.out.println("Add new column");
 				newResult = addNewColumn((String)pairs.getKey(),(String)pairs.getValue());
 			} catch (SqlException e) {
 	        	log.logInfo("[Table:"+name+"] Error Adding Column:"+(String)pairs.getKey());
@@ -381,6 +379,7 @@ public class TableView {
 			try {
 				columns = db.getSchema().getTable(name).getColumns();
 			} catch (SqliteException e) {
+				e.printStackTrace();
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_READING_TABLE_SCHEMA);
 			}
@@ -395,9 +394,9 @@ public class TableView {
 			
 			if (!columnFound){
 				try {
-					log.logInfo(this, "Adding Column:"+"ALTER TABLE "+name+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
 					db.alterTable("ALTER TABLE "+name+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
 					if (debug) log.logInfo("[Table:"+name+"] Added Column:"+columnName);
+					log.logInfo("[Table:"+name+"] Added Column:"+columnName);
 					return NEW_COLUMNS_ADDED;
 				} catch (SqliteException e) {
 					e.printStackTrace();
