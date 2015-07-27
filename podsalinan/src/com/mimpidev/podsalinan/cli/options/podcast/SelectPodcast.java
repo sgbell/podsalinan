@@ -39,6 +39,7 @@ public class SelectPodcast extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
+		debug=true;
 		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this, 41, "Command :"+command);
 

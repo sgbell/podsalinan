@@ -3,6 +3,7 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -23,15 +24,13 @@ public class ShowSelectedMenu extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		String podcastId = command.split(" ")[0];
+		final String podcastId = functionParms.get("podcastId");
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){
-				CLInterface.cliGlobals.getGlobalSelection().clear();
-				CLInterface.cliGlobals.getGlobalSelection().put("podcast", podcastId);
 				System.out.println();
 				ShowPodcastDetails podcastDetail=new ShowPodcastDetails(data);
-				//podcastDetail.execute("selectedMenu");
+				podcastDetail.execute(new HashMap<String,String>(){{put("podcastId",podcastId);
+				                                                    put("command","selectedMenu");}});
 				System.out.println("1. List Episodes");
 				System.out.println("2. Update List");
 				System.out.println("3. Delete Podcast");

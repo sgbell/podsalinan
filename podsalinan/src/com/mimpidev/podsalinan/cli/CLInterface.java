@@ -31,6 +31,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
 import com.mimpidev.podsalinan.cli.options.podcast.SelectPodcast;
+import com.mimpidev.podsalinan.cli.options.podcast.ShowSelectedMenu;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -122,8 +123,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast 9", podcastCommand);
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
 		options.put("podcast <a-z>", podcastCommand);
-		options.put("podcast <aaaaaaaa>", null);
-		options.put("downloads <podcastId>", new DownloadsCommand(data));
+		options.put("podcast <aaaaaaaa>", new ShowSelectedMenu(data));
+		options.put("downloads <downloadId>", new DownloadsCommand(data));
 		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
 		MainMenuCommand mainMenuCommands = new MainMenuCommand(data);
@@ -216,6 +217,8 @@ public class CLInterface extends CLIOption implements Runnable{
 	        	returnObject.debug(debug);
 				String[] methodCallSplit = returnObject.methodCall.split(" ");
 	        	for (String key : options.keySet()){
+					score=0;
+					returnObject.parameterMap.clear();
 	        		if (debug) Podsalinan.debugLog.logInfo(this, 220, "Current Key:"+key);
 	        		String[] splitValue = key.split(" ");
 	        		if (splitValue.length==methodCallSplit.length){
@@ -238,6 +241,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	        					//TODO:NEXT - podcast a is not matching here when it should
 	        					if (splitValue[svc].matches("<a-z>") &&
 	        						methodCallSplit[svc].matches("[a-zA-Z]")){
+	        						returnObject.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
 	        					}
 	        				} else {
@@ -269,6 +273,7 @@ public class CLInterface extends CLIOption implements Runnable{
 					returnObject.execute=true;
 				}
 			}
+			if (debug) Podsalinan.debugLog.logInfo(this, "Calling requested function: "+returnObject.methodCall);
 			returnObject.debug(true);
 			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
 		}
