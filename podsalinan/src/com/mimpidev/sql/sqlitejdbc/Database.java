@@ -37,8 +37,12 @@ public class Database {
 		setFileName(filename);
 	}
 	
-	public Object runTransaction(ISqliteTransaction operation) throws SqliteException {
-		return null;
+	public Object runTransaction(ISqliteTransaction op) throws SqliteException {
+		return runSynchronized(new ISqliteEngineSynchronized(){
+			public Object runSynchronized(Database db) throws SqliteException {
+				return op.run(db);
+			}
+		});
 	}
 	
 	public boolean checkOpen() throws SqliteException {
@@ -63,6 +67,7 @@ public class Database {
 
 			@Override
 			public Object run(Database db) throws SqliteException {
+				System.out.println("Running alter table.");
 				return getSchema().alterTable(sql);
 			}
 			

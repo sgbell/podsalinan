@@ -155,6 +155,7 @@ public class SqliteDataTable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(updateCommand);
+			System.exit(1);
 			throw new SqliteException("Error inserting record into table: "+name,updateCommand);
 		}
 	}

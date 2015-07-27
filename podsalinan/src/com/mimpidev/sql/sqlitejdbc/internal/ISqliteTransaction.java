@@ -31,4 +31,5 @@ import com.mimpidev.sql.sqlitejdbc.exceptions.SqliteException;
 public interface ISqliteTransaction {
 
 	public Object run(Database db) throws SqliteException;
+
 }

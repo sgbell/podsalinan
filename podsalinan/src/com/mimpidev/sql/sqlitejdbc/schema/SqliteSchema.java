@@ -104,6 +104,7 @@ public class SqliteSchema {
 		Statement sql;
 		try {
 			sql = database.getConnection().createStatement();
+			System.out.println(createStatement);
 			sql.execute(createStatement);
 			// Need to create a new SqliteTable object so we can play with the table data, and return it.
 			// TODO: sqliteJDBC 2. Make this return a newly created SqliteTable Object
@@ -118,11 +119,12 @@ public class SqliteSchema {
 		try {
 			sql = database.getConnection().createStatement();
 			sql.execute(alterTableSql);
+			System.out.println("SqliteSchema.alterTable: "+alterTableSql);
 			// Need to create a new SqliteTable object se we can pass the table back to the calling function
 			//TODO: sqliteJDBC 3. Make a SqliteTable object after execution, and return SqliteTable object
 			return null;
 		} catch (SQLException e) {
-			throw new SqliteException("Program with Alter Table command.");
+			throw new SqliteException("Problem with Alter Table command.");
 		}
 	}
 
