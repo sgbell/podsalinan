@@ -396,10 +396,8 @@ public class TableView {
 				try {
 					db.alterTable("ALTER TABLE "+name+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
 					if (debug) log.logInfo("[Table:"+name+"] Added Column:"+columnName);
-					log.logInfo("[Table:"+name+"] Added Column:"+columnName);
 					return NEW_COLUMNS_ADDED;
 				} catch (SqliteException e) {
-					e.printStackTrace();
 					log.printStackTrace(e.getStackTrace());
 					throw new SqlException(SqlException.FAILED_ADDING_NEW_COLUMN);
 				}
@@ -514,14 +512,19 @@ public class TableView {
 	private boolean setTable() throws SqlException{
 		if (table==null){
 			try {
+				log.logInfo(this, "Set Table:"+name);
 				table = (SqliteTable)db.getTable(name);
+				log.logInfo(this, "table set");
 				return true;
 			} catch (SqliteException e) {
 				log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_SET_TABLE);
 			}
+		} else if (table!=null){
+			return true;
+		} else {
+		    return false;
 		}
-		return false;
 	}
 	
 	/*TODO: 6. I need to change the layout of the Table. remove the id field, and make sure we just have the text fields
