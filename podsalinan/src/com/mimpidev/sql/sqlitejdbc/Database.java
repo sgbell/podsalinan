@@ -37,7 +37,7 @@ public class Database {
 		setFileName(filename);
 	}
 	
-	public Object runTransaction(ISqliteTransaction op) throws SqliteException {
+	public Object runTransaction(final ISqliteTransaction op) throws SqliteException {
 		return runSynchronized(new ISqliteEngineSynchronized(){
 			public Object runSynchronized(Database db) throws SqliteException {
 				return op.run(db);

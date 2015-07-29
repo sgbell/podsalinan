@@ -3,6 +3,7 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -25,45 +26,50 @@ public class ListEpisodes extends CLIOption {
 	 */
 	public ListEpisodes(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
 	@Override
-	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this,30,"ListEpisodes Class called");
-		if (debug) Podsalinan.debugLog.logInfo(this,31,"Command Value: "+command);
+	public ReturnObject execute(final Map<String, String> functionParms) {
+		debug=true;
 		
 		CLInput input = new CLInput();
 		
 		int epCount=1;
-		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ")[0]);
-		if (selectedPodcast==null && CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){
-			selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcast"));
-		}
-		if (selectedPodcast!=null){
-			System.out.println ();
-			synchronized (selectedPodcast.getEpisodes()){
-				for (Episode episode : selectedPodcast.getEpisodes()){
-					System.out.println (getEncodingFromNumber(epCount)+" - " +
-							episode.getTitle()+" : "+episode.getDate());
-					epCount++;
-					if ((epCount%20)==0){
-						System.out.println("-- Press any key to continue, q to quit --");
-						char charInput=input.getSingleCharInput();
-						if (charInput=='q')
-							break;
-					}
-				}
-			}
-		} else {
-			if (command.equalsIgnoreCase("episodes")){
-				System.out.println("Error: No podcast has been selected");
-			}
-		}
 		returnObject = new ReturnObject();
-		returnObject.methodCall = "podcast";
-		//returnObject.methodParameters = command.split(" ")[0];
+		returnObject.methodCall="podcast";
+		
+        if (functionParms.containsKey("podcastId")){
+    		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("podcastId"));
+    		if (selectedPodcast==null && CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){
+    			selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcast"));
+    		}
+    		if (selectedPodcast!=null){
+    			System.out.println ();
+    			synchronized (selectedPodcast.getEpisodes()){
+    				for (Episode episode : selectedPodcast.getEpisodes()){
+    					System.out.println (getEncodingFromNumber(epCount)+" - " +
+    							episode.getTitle()+" : "+episode.getDate());
+    					epCount++;
+    					if ((epCount%20)==0){
+    						System.out.println("-- Press any key to continue, q to quit --");
+    						char charInput=input.getSingleCharInput();
+    						if (charInput=='q')
+    							break;
+    					}
+    				}
+    			}
+    			returnObject.methodCall += " <aaaaaaaa> showmenu";
+    			returnObject.parameterMap=new HashMap<String,String>(){/**
+					 * 
+					 */
+					private static final long serialVersionUID = -4227936048587147659L;
+				    {put("podcastId",functionParms.get("podcastId"));}};
+    		}
+   		} else {
+				System.out.println("Error: No podcast has been selected");
+				returnObject.methodCall += " showmenu";
+				returnObject.parameterMap=new HashMap<String,String>();
+		}
 		returnObject.execute=true;
 		
 		return returnObject;

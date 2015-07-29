@@ -29,8 +29,12 @@ public class ShowSelectedMenu extends CLIOption {
 			if (currentPodcast!=null){
 				System.out.println();
 				ShowPodcastDetails podcastDetail=new ShowPodcastDetails(data);
-				podcastDetail.execute(new HashMap<String,String>(){{put("podcastId",podcastId);
-				                                                    put("command","selectedMenu");}});
+				podcastDetail.execute(new HashMap<String,String>(){/**
+					 * 
+					 */
+					private static final long serialVersionUID = -393124687274598350L;
+				    {put("podcastId",podcastId);
+				     put("command","selectedMenu");}});
 				System.out.println("1. List Episodes");
 				System.out.println("2. Update List");
 				System.out.println("3. Delete Podcast");
@@ -41,8 +45,12 @@ public class ShowSelectedMenu extends CLIOption {
 				System.out.println("9. Return to List of Podcasts");
 				System.out.println();
 				
-				/*returnObject.methodCall = "podcast";
-				returnObject.methodParameters = command;*/
+				returnObject.methodCall = "podcast <aaaaaaaa>";
+				returnObject.parameterMap = new HashMap<String,String>(){/**
+					 * 
+					 */
+					private static final long serialVersionUID = -2874925380286596826L;
+                    {put("podcastId",podcastId);}};
 				
 				return returnObject;
 			}

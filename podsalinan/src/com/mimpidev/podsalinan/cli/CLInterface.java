@@ -30,8 +30,14 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
+import com.mimpidev.podsalinan.cli.options.episode.SelectEpisode;
+import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
+import com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes;
+import com.mimpidev.podsalinan.cli.options.podcast.DeletePodcast;
+import com.mimpidev.podsalinan.cli.options.podcast.ListEpisodes;
 import com.mimpidev.podsalinan.cli.options.podcast.SelectPodcast;
 import com.mimpidev.podsalinan.cli.options.podcast.ShowSelectedMenu;
+import com.mimpidev.podsalinan.cli.options.podcast.UpdatePodcast;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -108,6 +114,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("remove download", new RemoveCommand(data));
 		options.put("remove podcast", new RemoveCommand(data));
 		options.put("remove <downloadId|podcastId>", new RemoveCommand(data));
+		// New command to implement
+		options.put("remove all downloads", null);
 		options.put("clear", new ClearCommand(data));
 		options.put("increase", new IncreaseCommand(data));
 		options.put("increase download <downloadId>", new IncreaseCommand(data));
@@ -121,9 +129,17 @@ public class CLInterface extends CLIOption implements Runnable{
         // Exit podcast menu, and return to main menu
 		PodcastCommand podcastCommand = new PodcastCommand(data);
 		options.put("podcast 9", podcastCommand);
+		options.put("podcast <aaaaaaaa> 1", new ListEpisodes(data));
+		options.put("podcast <aaaaaaaa> 2", new UpdatePodcast(data));
+		options.put("podcast <aaaaaaaa> 3", new DeletePodcast(data));
+		options.put("podcast <aaaaaaaa> 4", new ChangeDestination(data));
+		options.put("podcast <aaaaaaaa> 5", new AutoQueueEpisodes(data));
+		options.put("podcast <aaaaaaaa> episode <aa>", new SelectEpisode(data));		
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
 		options.put("podcast <a-z>", podcastCommand);
-		options.put("podcast <aaaaaaaa>", new ShowSelectedMenu(data));
+		ShowSelectedMenu showSelectedPodcastMenu =new ShowSelectedMenu(data); 
+		options.put("podcast <aaaaaaaa>", showSelectedPodcastMenu);
+		options.put("podcast <aaaaaaaa> showMenu", showSelectedPodcastMenu);
 		options.put("downloads <downloadId>", new DownloadsCommand(data));
 		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
