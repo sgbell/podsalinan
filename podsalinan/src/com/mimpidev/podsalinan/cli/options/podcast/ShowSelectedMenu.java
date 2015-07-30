@@ -52,9 +52,8 @@ public class ShowSelectedMenu extends CLIOption {
 					private static final long serialVersionUID = -2874925380286596826L;
                     {put("podcastId",podcastId);}};
 				
-				return returnObject;
 			}
-		returnObject.execute=true;
+		returnObject.execute=false;
 		return returnObject;
 	}
 

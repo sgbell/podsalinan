@@ -139,7 +139,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <a-z>", podcastCommand);
 		ShowSelectedMenu showSelectedPodcastMenu =new ShowSelectedMenu(data); 
 		options.put("podcast <aaaaaaaa>", showSelectedPodcastMenu);
-		options.put("podcast <aaaaaaaa> showMenu", showSelectedPodcastMenu);
+		options.put("podcast <aaaaaaaa> showmenu", showSelectedPodcastMenu);
 		options.put("downloads <downloadId>", new DownloadsCommand(data));
 		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
@@ -224,7 +224,6 @@ public class CLInterface extends CLIOption implements Runnable{
 	
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-    	returnObject.parameterMap = new HashMap<String,String>();
     	
 		while (returnObject.execute){
 			if (!options.containsKey(returnObject.methodCall)){
@@ -235,7 +234,6 @@ public class CLInterface extends CLIOption implements Runnable{
 	        	for (String key : options.keySet()){
 					score=0;
 					returnObject.parameterMap.clear();
-	        		if (debug) Podsalinan.debugLog.logInfo(this, 220, "Current Key:"+key);
 	        		String[] splitValue = key.split(" ");
 	        		if (splitValue.length==methodCallSplit.length){
 	        			int svc=0;
@@ -290,6 +288,9 @@ public class CLInterface extends CLIOption implements Runnable{
 				}
 			}
 			if (debug) Podsalinan.debugLog.logInfo(this, "Calling requested function: "+returnObject.methodCall);
+			if (returnObject.parameterMap.size()==0){
+				returnObject.parameterMap=cliGlobals.getGlobalSelection();
+			}
 			returnObject.debug(true);
 			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
 		}

@@ -512,9 +512,7 @@ public class TableView {
 	private boolean setTable() throws SqlException{
 		if (table==null){
 			try {
-				log.logInfo(this, "Set Table:"+name);
 				table = (SqliteTable)db.getTable(name);
-				log.logInfo(this, "table set");
 				return true;
 			} catch (SqliteException e) {
 				log.printStackTrace(e.getStackTrace());
