@@ -33,14 +33,30 @@ public class ChangeDestination extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
-	    String commandOptions[] = command.split(" ");
-
+		
+        if (functionParms.containsKey("podcastId")){
+        	Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("podcastId"));
+        	if (selectedPodcast!=null){
+			   System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
+			   String userInput=input.getStringInput();
+	    	   changeDirectory(selectedPodcast,userInput);
+			   returnObject.methodCall = "podcast <aaaaaaaa>";
+        	}
+        } else if (functionParms.containsKey("downloadId")) {
+        	 URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(functionParms.get("downloadId"));
+    		if (selectedDownload!=null){
+				  System.out.println("Enter Download Destination ["+selectedDownload.getDestination()+"]: ");
+				  String userInput = input.getStringInput();
+				  changeDirectory(selectedDownload,userInput);
+				  returnObject.methodCall = "downloads <downloadId>";
+    		}
+        } else {
+        	System.out.println("I'm not sure what I need to do.");
+        }
+		
 	    // Call direct with "set destination <path>"
-	    if (commandOptions.length>1 && commandOptions[0].equalsIgnoreCase("destination")){
+	    /*if (commandOptions.length>1 && commandOptions[0].equalsIgnoreCase("destination")){
 	    	Object selectedItem=null;
 	    	if (CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){
 	    		selectedItem = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcast"));
@@ -54,22 +70,14 @@ public class ChangeDestination extends CLIOption {
 		  System.out.println ();
 		  Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(commandOptions[0]);
 		  if (selectedPodcast!=null){
-			  System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
-			  String userInput=input.getStringInput();
-	    	  changeDirectory(selectedPodcast,userInput);
-			  returnObject.methodCall = "podcast";
     	  } else {
     		  URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(commandOptions[0]);
     		  if (selectedDownload!=null){
-				  System.out.println("Enter Download Destination ["+selectedDownload.getDestination()+"]: ");
-				  String userInput = input.getStringInput();
-				  changeDirectory(selectedDownload,userInput);
-				  returnObject.methodCall = "downloads";
     		  }
 	      } 
 		  //returnObject.methodParameters = command.split(" ")[0];
 		  returnObject.execute=true;
-	    }
+	    }*/
 	    
 		return returnObject;
 	}
