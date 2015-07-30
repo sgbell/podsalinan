@@ -29,8 +29,8 @@ public class ShowPodcastDetails extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
 		
-		if (CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){
-			Podcast podcast=data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcast"));
+		if (CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastId")){
+			Podcast podcast=data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcastId"));
 			if (functionParms.get("command").equalsIgnoreCase("selectedMenu") && 
 				(data.getSettings().findSetting("menuVisible")==null||
 				 data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){

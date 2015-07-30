@@ -40,8 +40,8 @@ public class ListEpisodes extends CLIOption {
 		
         if (functionParms.containsKey("podcastId")){
     		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("podcastId"));
-    		if (selectedPodcast==null && CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){
-    			selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcast"));
+    		if (selectedPodcast==null && CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastId")){
+    			selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcastId"));
     		}
     		if (selectedPodcast!=null){
     			System.out.println ();

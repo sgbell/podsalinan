@@ -39,7 +39,7 @@ public class PodcastCommand extends CLIOption {
 			if (convertCharToNumber(command)<data.getPodcasts().getList().size()){
 				Podcast currentPodcast = data.getPodcasts().getList().get(convertCharToNumber(command));
 				returnObject.parameterMap.put("podcastId",currentPodcast.getDatafile());
-				CLInterface.cliGlobals.getGlobalSelection().put("podcast", returnObject.parameterMap.get("podcastId"));
+				CLInterface.cliGlobals.getGlobalSelection().put("podcastId", returnObject.parameterMap.get("podcastId"));
 				returnObject.methodCall+=" <aaaaaaaa>";
 				if (debug) Podsalinan.debugLog.logInfo("Found podcast: "+command);
 			} else {

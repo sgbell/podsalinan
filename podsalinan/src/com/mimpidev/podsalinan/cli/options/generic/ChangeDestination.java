@@ -42,6 +42,8 @@ public class ChangeDestination extends CLIOption {
 			   String userInput=input.getStringInput();
 	    	   changeDirectory(selectedPodcast,userInput);
 			   returnObject.methodCall = "podcast <aaaaaaaa>";
+			   returnObject.parameterMap.clear();
+			   returnObject.execute=true;
         	}
         } else if (functionParms.containsKey("downloadId")) {
         	 URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(functionParms.get("downloadId"));
@@ -50,6 +52,8 @@ public class ChangeDestination extends CLIOption {
 				  String userInput = input.getStringInput();
 				  changeDirectory(selectedDownload,userInput);
 				  returnObject.methodCall = "downloads <downloadId>";
+                  returnObject.parameterMap.clear();
+				  returnObject.execute=true;
     		}
         } else {
         	System.out.println("I'm not sure what I need to do.");

@@ -46,8 +46,8 @@ public class SelectPodcast extends CLIOption {
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in
 		 * global selection
 		 */
-		if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast") && 
-             (command.split(" ",2)[0].equals(CLInterface.cliGlobals.getGlobalSelection().get("podcast"))))){
+		if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastId") && 
+             (command.split(" ",2)[0].equals(CLInterface.cliGlobals.getGlobalSelection().get("podcastId"))))){
 			if (command.split(" ").length==1 && command.length()==1){
 				if (command.equals("9") && CLInterface.cliGlobals.getGlobalSelection().size()>0){
 					CLInterface.cliGlobals.getGlobalSelection().clear();

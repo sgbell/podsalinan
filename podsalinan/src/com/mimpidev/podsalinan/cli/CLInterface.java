@@ -124,17 +124,17 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("dump", new DumpCommand(data));
 		options.put("dump urldownloads", new DumpCommand(data));
         SelectPodcast selectPodcast = new SelectPodcast(data);
-		options.put("podcast <podcastId>", selectPodcast);
+//		options.put("podcast <podcastId>", selectPodcast);
 		options.put("podcast <a-z>",  selectPodcast);
         // Exit podcast menu, and return to main menu
 		PodcastCommand podcastCommand = new PodcastCommand(data);
 		options.put("podcast 9", podcastCommand);
-		options.put("podcast <aaaaaaaa> 1", new ListEpisodes(data));
-		options.put("podcast <aaaaaaaa> 2", new UpdatePodcast(data));
-		options.put("podcast <aaaaaaaa> 3", new DeletePodcast(data));
-		options.put("podcast <aaaaaaaa> 4", new ChangeDestination(data));
-		options.put("podcast <aaaaaaaa> 5", new AutoQueueEpisodes(data));
-		options.put("podcast <aaaaaaaa> episode <aa>", new SelectEpisode(data));		
+		options.put("podcast <podcastId> 1", new ListEpisodes(data));
+		options.put("podcast <podcastId> 2", new UpdatePodcast(data));
+		options.put("podcast <podcastId> 3", new DeletePodcast(data));
+		options.put("podcast <podcastId> 4", new ChangeDestination(data));
+		options.put("podcast <podcastId> 5", new AutoQueueEpisodes(data));
+		options.put("podcast <podcastId> episode <aa>", new SelectEpisode(data));		
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
 		options.put("podcast <a-z>", podcastCommand);
 		ShowSelectedMenu showSelectedPodcastMenu =new ShowSelectedMenu(data); 
