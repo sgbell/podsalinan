@@ -124,7 +124,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("dump", new DumpCommand(data));
 		options.put("dump urldownloads", new DumpCommand(data));
         SelectPodcast selectPodcast = new SelectPodcast(data);
-//		options.put("podcast <podcastId>", selectPodcast);
 		options.put("podcast <a-z>",  selectPodcast);
         // Exit podcast menu, and return to main menu
 		PodcastCommand podcastCommand = new PodcastCommand(data);
@@ -138,8 +137,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
 		options.put("podcast <a-z>", podcastCommand);
 		ShowSelectedMenu showSelectedPodcastMenu =new ShowSelectedMenu(data); 
-		options.put("podcast <aaaaaaaa>", showSelectedPodcastMenu);
-		options.put("podcast <aaaaaaaa> showmenu", showSelectedPodcastMenu);
+		options.put("podcast <podcastId>", showSelectedPodcastMenu);
+		options.put("podcast <podcastId> showmenu", showSelectedPodcastMenu);
 		options.put("downloads <downloadId>", new DownloadsCommand(data));
 		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
