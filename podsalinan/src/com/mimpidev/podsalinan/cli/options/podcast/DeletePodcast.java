@@ -6,7 +6,6 @@ package com.mimpidev.podsalinan.cli.options.podcast;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -48,19 +47,18 @@ public class DeletePodcast extends CLIOption {
 					if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastId"))&&
 						(CLInterface.cliGlobals.getGlobalSelection().get("podcastId").equalsIgnoreCase(functionParms.get("podcastId")))){
 						CLInterface.cliGlobals.getGlobalSelection().clear();
-					} else {
-					    String[] selection = CLInterface.cliGlobals.globalSelectionToString().split(" ", 2);
-					    returnObject.methodCall = selection[0];
-					    //returnObject.methodParameters= (selection.length>1?selection[1]:"");
 					}
+		    		returnObject.methodCall = "podcast showmenu";
+		    	} else {
+		    		returnObject.methodCall = "podcast <podcastId>";
 		    	}
-/*				if (commandOptions.length>1){
-		    		returnObject.methodCall = "podcast";
-		    		//returnObject.methodParameters = "";
-		    	}*/
+	    		returnObject.parameterMap.clear();
 	    		returnObject.execute=true;
 			} else {
 				System.out.println("Podcast does not exist");
+	    		returnObject.methodCall = "podcast";
+	    		returnObject.parameterMap.clear();
+	    		returnObject.execute=true;
 			}
 		}
 		
