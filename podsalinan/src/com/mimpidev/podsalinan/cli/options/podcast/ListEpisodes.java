@@ -58,7 +58,7 @@ public class ListEpisodes extends CLIOption {
     					}
     				}
     			}
-    			returnObject.methodCall += " <aaaaaaaa> showmenu";
+    			returnObject.methodCall += " <podcastid>";
     			returnObject.parameterMap=new HashMap<String,String>(){/**
 					 * 
 					 */

@@ -7,10 +7,8 @@ import java.io.File;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
-import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
@@ -41,7 +39,7 @@ public class ChangeDestination extends CLIOption {
 			   System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
 			   String userInput=input.getStringInput();
 	    	   changeDirectory(selectedPodcast,userInput);
-			   returnObject.methodCall = "podcast <aaaaaaaa>";
+			   returnObject.methodCall = "podcast <podcastid>";
 			   returnObject.parameterMap.clear();
 			   returnObject.execute=true;
         	}
@@ -51,7 +49,7 @@ public class ChangeDestination extends CLIOption {
 				  System.out.println("Enter Download Destination ["+selectedDownload.getDestination()+"]: ");
 				  String userInput = input.getStringInput();
 				  changeDirectory(selectedDownload,userInput);
-				  returnObject.methodCall = "downloads <downloadId>";
+				  returnObject.methodCall = "downloads <downloadid>";
                   returnObject.parameterMap.clear();
 				  returnObject.execute=true;
     		}
