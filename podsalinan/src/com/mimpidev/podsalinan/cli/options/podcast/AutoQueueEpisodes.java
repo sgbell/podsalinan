@@ -22,7 +22,6 @@ public class AutoQueueEpisodes extends CLIOption {
 	 */
 	public AutoQueueEpisodes(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
 	/* (non-Javadoc)
@@ -30,11 +29,12 @@ public class AutoQueueEpisodes extends CLIOption {
 	 */
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		debug=true;
+		if (debug) Podsalinan.debugLog.logInfo(this,"Called");
+		returnObject.debug(debug);
 		
-		if (command.split(" ").length>1){
-			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ")[0]);
+		if (functionParms.containsKey("podcastId")){
+			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("podcastId"));
 			if (selectedPodcast!=null){
 				System.out.println ();
 		    	if (selectedPodcast.isAutomaticQueue()){
@@ -44,12 +44,12 @@ public class AutoQueueEpisodes extends CLIOption {
 		    		selectedPodcast.setAutomaticQueue(true);
 		    		System.out.println(selectedPodcast.getName()+"podcast autoqeue enabled.");
 		    	}
-				returnObject.methodCall = "podcast";
-				//returnObject.methodParameters = command.split(" ")[0];
+				returnObject.methodCall = "podcast <podcastid>";
+				returnObject.parameterMap.clear();
+				returnObject.execute=false;
 			}
 		}
 		
 		return returnObject;
 	}
-
 }
