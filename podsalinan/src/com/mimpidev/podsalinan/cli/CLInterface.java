@@ -163,10 +163,10 @@ public class CLInterface extends CLIOption implements Runnable{
 			// User Input
 			if (!data.getSettings().isFinished()){
 				System.out.print("->");
-				String menuInput=(returnObject.methodCall.length()>0?returnObject.methodCall+" ":"")+input.getStringInput();
+				String menuInput=input.getStringInput();
 				if ((menuInput.length()>0)&&(menuInput!=null)){
-					returnObject.methodCall=menuInput;
-					returnObject.execute=true;
+					System.out.println(getMenuCommand(menuInput).methodCall);
+					System.exit(0);
 				}
 			}
 		}
@@ -213,19 +213,18 @@ public class CLInterface extends CLIOption implements Runnable{
 	public void setData(DataStorage data) {
 		this.data = data;
 	}
-	
-	@Override
-	public ReturnObject execute(Map<String, String> functionParms) {
-    	
-		while (returnObject.execute){
-			if (!options.containsKey(returnObject.methodCall)){
+
+	public ReturnObject getMenuCommand(String input){
+		ReturnObject menuCommand = new ReturnObject();
+		
+		while (menuCommand.execute==false){
+			if (!options.containsKey(input)){
 				int score=0;
 				boolean match=false;
-	        	returnObject.debug(debug);
-				String[] methodCallSplit = returnObject.methodCall.split(" ");
+	        	if (debug) Podsalinan.debugLog.logInfo(this, "user input: "+input);
+				String[] methodCallSplit = input.split(" ");
 	        	for (String key : options.keySet()){
 					score=0;
-					returnObject.parameterMap.clear();
 	        		String[] splitValue = key.split(" ");
 	        		if (splitValue.length==methodCallSplit.length){
 	        			int svc=0;
@@ -238,16 +237,15 @@ public class CLInterface extends CLIOption implements Runnable{
 	    	        				 methodCallSplit[svc].matches("^[a-fA-F0-9]{8}") &&
 	    	        				 !methodCallSplit[svc].equalsIgnoreCase("showmenu"))){
 		        					if (splitValue[svc].matches("^<url>")){
-		        						returnObject.parameterMap.put("url", methodCallSplit[svc]);
+		        						menuCommand.parameterMap.put("url", methodCallSplit[svc]);
 		        					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>")){
-		        						returnObject.parameterMap.put("uid", methodCallSplit[svc]);
+		        						menuCommand.parameterMap.put("uid", methodCallSplit[svc]);
 		        					}
 	        						score++;
 	        					}
-	        					//TODO:NEXT - podcast a is not matching here when it should
 	        					if (splitValue[svc].matches("<a-z>") &&
 	        						methodCallSplit[svc].matches("[a-zA-Z]")){
-	        						returnObject.parameterMap.put("userInput", methodCallSplit[svc]);
+	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
 	        					}
 	        				} else {
@@ -259,26 +257,40 @@ public class CLInterface extends CLIOption implements Runnable{
 	        			}
 	        			if (score==splitValue.length){
 	        				match=true;
-	        				returnObject.methodCall=key;
-	        				returnObject.execute=true;
+	        				menuCommand.methodCall=key;
+	        				menuCommand.execute=true;
 	        				if (debug) Podsalinan.debugLog.logInfo(this, 254, "matched");
 	        				break;
 	        			}
 	        		}
 	        	}
 	            if (!match){
-	            	returnObject.execute=false;
-    				if (debug) Podsalinan.debugLog.logInfo(this, 252, "not matched");
+	            	menuCommand.execute=false;
+					if (debug) Podsalinan.debugLog.logInfo(this, 252, "not matched");
 	            }
-	        }
-			// This is going to traverse the main menu
-			if (!options.containsKey(returnObject.methodCall)){
-				if (returnObject.methodCall.matches("[0-9]{1}")){
-					returnObject.parameterMap.put("menuItem", returnObject.methodCall);
-					returnObject.methodCall="mainmenu <0-9>";
-					returnObject.execute=true;
+	        } else {
+				// This is going to traverse the main menu
+				if (!options.containsKey(menuCommand.methodCall)){
+					if (input.matches("[0-9]{1}")){
+						menuCommand.parameterMap.put("menuItem", returnObject.methodCall);
+						menuCommand.methodCall="mainmenu <0-9>";
+						menuCommand.execute=true;
+					}
+				} else {
+	        	    menuCommand.methodCall=input;
+	        	    menuCommand.execute=true;
 				}
-			}
+	        }
+		}
+		
+		return menuCommand;
+	}
+	
+	@Override
+	public ReturnObject execute(Map<String, String> functionParms) {
+    	
+		while (returnObject.execute){
+
 			if (debug) Podsalinan.debugLog.logInfo(this, "Calling requested function: "+returnObject.methodCall);
 			if (returnObject.parameterMap.size()==0){
 				returnObject.parameterMap=cliGlobals.getGlobalSelection();
