@@ -298,8 +298,9 @@ public class CLInterface extends CLIOption implements Runnable{
 				returnObject.parameterMap=cliGlobals.getGlobalSelection();
 			}
 			returnObject.debug(true);
+			returnObject=getMenuCommand(returnObject.methodCall);
 			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
 		}
-		return returnObject;
+		return returnObject; //ece<3sam
 	}
 }
