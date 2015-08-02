@@ -270,7 +270,6 @@ public class CLInterface extends CLIOption implements Runnable{
 	            }
 	        } else {
         	    menuCommand.methodCall=input;
-        	    //TODO: 1.1. Need to add parameters to parameterMap
         	    menuCommand.execute=true;
 			}
 			// This is going to traverse the main menu

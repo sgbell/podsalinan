@@ -40,7 +40,7 @@ public class PodcastCommand extends CLIOption {
 				Podcast currentPodcast = data.getPodcasts().getList().get(convertCharToNumber(command));
 				returnObject.parameterMap.put("podcastId",currentPodcast.getDatafile());
 				CLInterface.cliGlobals.getGlobalSelection().put("podcastId", returnObject.parameterMap.get("podcastId"));
-				returnObject.methodCall+=" <podcastId>";
+				returnObject.methodCall+=" "+currentPodcast.getDatafile();
 				if (debug) Podsalinan.debugLog.logInfo("Found podcast: "+command);
 			} else {
 				System.out.println("Error: Invalid Podcast number");
