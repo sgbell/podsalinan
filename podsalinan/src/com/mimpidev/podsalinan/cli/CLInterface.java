@@ -165,8 +165,8 @@ public class CLInterface extends CLIOption implements Runnable{
 				System.out.print("->");
 				String menuInput=input.getStringInput();
 				if ((menuInput.length()>0)&&(menuInput!=null)){
-					System.out.println(getMenuCommand(menuInput).methodCall);
-					System.exit(0);
+					returnObject = getMenuCommand(menuInput);
+					returnObject = options.get(returnObject.methodCall).execute(returnObject.parameterMap);
 				}
 			}
 		}
@@ -259,29 +259,32 @@ public class CLInterface extends CLIOption implements Runnable{
 	        				match=true;
 	        				menuCommand.methodCall=key;
 	        				menuCommand.execute=true;
-	        				if (debug) Podsalinan.debugLog.logInfo(this, 254, "matched");
+	        				if (debug) Podsalinan.debugLog.logInfo(this, 262, "matched");
 	        				break;
 	        			}
 	        		}
 	        	}
 	            if (!match){
 	            	menuCommand.execute=false;
-					if (debug) Podsalinan.debugLog.logInfo(this, 252, "not matched");
+					if (debug) Podsalinan.debugLog.logInfo(this, 272, "not matched");
 	            }
 	        } else {
-				// This is going to traverse the main menu
-				if (!options.containsKey(menuCommand.methodCall)){
-					if (input.matches("[0-9]{1}")){
-						menuCommand.parameterMap.put("menuItem", returnObject.methodCall);
-						menuCommand.methodCall="mainmenu <0-9>";
-						menuCommand.execute=true;
-					}
-				} else {
-	        	    menuCommand.methodCall=input;
-	        	    menuCommand.execute=true;
+        	    menuCommand.methodCall=input;
+        	    //TODO: 1.1. Need to add parameters to parameterMap
+        	    menuCommand.execute=true;
+			}
+			// This is going to traverse the main menu
+			if (menuCommand.execute==false){
+				if (returnObject.methodCall.length()==0 && input.matches("[0-9]{1}")){
+					menuCommand.parameterMap.put("menuItem", input);
+					menuCommand.methodCall="mainmenu <0-9>";
+					menuCommand.execute=true;
+				} else if (returnObject.methodCall.length()>0){
+					input=returnObject.methodCall+" "+input;
 				}
-	        }
+			}
 		}
+		menuCommand.debug(debug);
 		
 		return menuCommand;
 	}
