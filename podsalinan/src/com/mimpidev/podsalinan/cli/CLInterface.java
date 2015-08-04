@@ -126,8 +126,7 @@ public class CLInterface extends CLIOption implements Runnable{
         SelectPodcast selectPodcast = new SelectPodcast(data);
 		options.put("podcast <a-z>",  selectPodcast);
         // Exit podcast menu, and return to main menu
-		PodcastCommand podcastCommand = new PodcastCommand(data);
-		options.put("podcast 9", podcastCommand);
+//		PodcastCommand podcastCommand = new PodcastCommand(data);
 		options.put("podcast <podcastid> 1", new ListEpisodes(data));
 		options.put("podcast <podcastid> 2", new UpdatePodcast(data));
 		options.put("podcast <podcastid> 3", new DeletePodcast(data));
@@ -135,7 +134,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> 5", new AutoQueueEpisodes(data));
 		options.put("podcast <podcastid> episode <aa>", new SelectEpisode(data));		
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
-		options.put("podcast <a-z>", podcastCommand);
 		ShowSelectedMenu showSelectedPodcastMenu =new ShowSelectedMenu(data); 
 		options.put("podcast <podcastid>", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> showmenu", showSelectedPodcastMenu);
@@ -143,7 +141,9 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
 		MainMenuCommand mainMenuCommands = new MainMenuCommand(data);
-		options.put("mainmenu showmenu", new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data));
+		com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu mainMenuShow = new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data); 
+		options.put("mainmenu showmenu", mainMenuShow);
+		options.put("podcast 9", mainMenuShow);
 		options.put("mainmenu <0-9>", mainMenuCommands);
 	}
 
@@ -233,12 +233,12 @@ public class CLInterface extends CLIOption implements Runnable{
 	        					splitValue[svc].endsWith(">")){
 	        					if ((splitValue[svc].matches("^<url>") &&
 	        						 methodCallSplit[svc].matches("\\b(https?|ftp):.*"))||
-	        						(splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>") &&
+	        						(splitValue[svc].matches("^\\<((download|podcast)(I|i)d|download(I|i)d\\|podcast(I|i)d)\\>") &&
 	    	        				 methodCallSplit[svc].matches("^[a-fA-F0-9]{8}") &&
 	    	        				 !methodCallSplit[svc].equalsIgnoreCase("showmenu"))){
 		        					if (splitValue[svc].matches("^<url>")){
 		        						menuCommand.parameterMap.put("url", methodCallSplit[svc]);
-		        					} else if (splitValue[svc].matches("^\\<((download|podcast)Id|downloadId\\|podcastId)\\>")){
+		        					} else if (splitValue[svc].matches("^\\<((download|podcast)(I|i)d|download(I|i)d\\|podcast(I|i)d)\\>")){
 		        						menuCommand.parameterMap.put("uid", methodCallSplit[svc]);
 		        					}
 	        						score++;
@@ -270,6 +270,8 @@ public class CLInterface extends CLIOption implements Runnable{
 	            }
 	        } else {
         	    menuCommand.methodCall=input;
+        	    if (debug) Podsalinan.debugLog.logInfo(this, menuCommand.methodCall);
+        	    returnObject.debug(debug);
         	    menuCommand.execute=true;
 			}
 			// This is going to traverse the main menu

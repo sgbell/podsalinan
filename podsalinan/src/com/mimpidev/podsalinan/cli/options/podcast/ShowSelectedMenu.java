@@ -26,7 +26,7 @@ public class ShowSelectedMenu extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Called");
-		final String podcastId = functionParms.get("podcastId");
+		final String podcastId = functionParms.get("uid");
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){
 				System.out.println();
@@ -47,7 +47,7 @@ public class ShowSelectedMenu extends CLIOption {
 				System.out.println("9. Return to List of Podcasts");
 				System.out.println();
 				
-				returnObject.methodCall = "podcast <podcastid>";
+				returnObject.methodCall = "podcast "+currentPodcast.getDatafile();
 				returnObject.parameterMap = new HashMap<String,String>(){/**
 					 * 
 					 */
