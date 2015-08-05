@@ -40,23 +40,18 @@ public class SelectPodcast extends CLIOption {
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this, 41, "Command :"+command);
 
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in
 		 * global selection
 		 */
 		if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastId") && 
-             (command.split(" ",2)[0].equals(CLInterface.cliGlobals.getGlobalSelection().get("podcastId"))))){
-			if (command.split(" ").length==1 && command.length()==1){
-				if (command.equals("9") && CLInterface.cliGlobals.getGlobalSelection().size()>0){
-					CLInterface.cliGlobals.getGlobalSelection().clear();
-					command="";
-				}
-			} else {
-				Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(command.split(" ",2)[0]);
-				if (selectedPodcast==null){
-					Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(command);
+             (functionParms.get("uid").equals(CLInterface.cliGlobals.getGlobalSelection().get("podcastId"))))){
+			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("uid"));
+	    	if (functionParms.containsKey("userInput") && (selectedPodcast==null)){
+		    	if (functionParms.get("userInput").length()==1)
+		    		selectedPodcast = data.getPodcasts().getList().get(convertCharToNumber(functionParms.get("userInput")));
+			   	if (selectedPodcast==null){
+					Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
 					if (debug) Podsalinan.debugLog.logInfo(this, "Line:57, PodcastList.size="+podcastList.size());
 					if (podcastList.size()==1){
 						CLInterface.cliGlobals.getGlobalSelection().clear();
@@ -86,36 +81,19 @@ public class SelectPodcast extends CLIOption {
 						System.out.println("Error: Podcast not found.");
 					}
 				}
-				if (selectedPodcast!=null){
-					if (debug) Podsalinan.debugLog.logInfo(this, 87, "Set selected podcast:"+selectedPodcast.getDatafile());
-					CLInterface.cliGlobals.getGlobalSelection().clear();
-					CLInterface.cliGlobals.getGlobalSelection().put("podcast",selectedPodcast.getDatafile());
-					command=selectedPodcast.getDatafile()+(command.split(" ",2).length>1?" "+command.split(" ",2)[1]:"");
-				}
+				
 			}
-		}
-
-		if (debug) Podsalinan.debugLog.logInfo(this,95, "Command: "+command);
-		if (command.length()==8 && ((data.getSettings().findSetting("menuVisible")==null)||
-				                     data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
-			//returnObject = options.get("").execute(command);
-			if (debug) Podsalinan.debugLog.logInfo(this,99,"Command Length:"+command.length());
-		}else if (command.split(" ").length>1){
-			if (debug) Podsalinan.debugLog.logInfo(this,101,"Command Length:"+command.length());
-			if (command.split(" ")[1].equals("9")){
+			if (selectedPodcast!=null){
+				if (debug) Podsalinan.debugLog.logInfo(this, 87, "Set selected podcast:"+selectedPodcast.getDatafile());
 				CLInterface.cliGlobals.getGlobalSelection().clear();
-				returnObject.methodCall="podcast";
-				//returnObject.methodParameters="";
-				returnObject.execute=true;
-			} else {
-				if (debug) Podsalinan.debugLog.logInfo(this,108, "Command: "+command);
-				if (debug) Podsalinan.debugLog.logInfo(this,109, "Podcast: "+command.split(" ")[0]);
-				if (convertCharToNumber(command.split(" ")[1])>=0){
-					//returnObject = options.get("<aa>").execute(command);
-				} else {
-					//returnObject = options.get(command.split(" ")[1]).execute(command);
-				}
+				CLInterface.cliGlobals.getGlobalSelection().put("podcastid",selectedPodcast.getDatafile());
 			}
+    	}
+
+		if (functionParms.containsKey("uid") && 
+			((data.getSettings().findSetting("menuVisible")==null)||
+			  data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
+			//returnObject = options.get("").execute(command);
 		} else if ((!data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))&&
 				   (data.getSettings().findSetting("menuVisible")!=null)){
 			ShowPodcastDetails podcastDetail=new ShowPodcastDetails(data);
