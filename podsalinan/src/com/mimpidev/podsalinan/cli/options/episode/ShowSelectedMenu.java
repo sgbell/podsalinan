@@ -36,7 +36,7 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
             else
                episodeNum = convertCharToNumber(commandOptions[1]);*/
             
-            Episode episode = //getEpisode(commandOptions[0],episodeNum);
+            Episode episode = null; //getEpisode(commandOptions[0],episodeNum);
             if (episode!=null){
 				ShowEpisodeDetails printDetails = new ShowEpisodeDetails(data);
 				//printDetails.execute(command);
