@@ -22,17 +22,21 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this.getClass().getName()+":"+command);
-		String[] commandOptions = command.split(" ");
-		if (commandOptions.length>1){
+		debug=true;
+		if (debug) Podsalinan.debugLog.logInfo(this,"Called");
+		if (debug) Podsalinan.debugLog.logMap(functionParms);
+
+		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
+			
+		}
+		/*if (commandOptions.length>1){
 			int episodeNum = -1;
             if (commandOptions[1].equalsIgnoreCase("episode"))
                episodeNum = convertCharToNumber(commandOptions[2]);
             else
-               episodeNum = convertCharToNumber(commandOptions[1]);
+               episodeNum = convertCharToNumber(commandOptions[1]);*/
             
-            Episode episode = getEpisode(commandOptions[0],episodeNum);
+            Episode episode = //getEpisode(commandOptions[0],episodeNum);
             if (episode!=null){
 				ShowEpisodeDetails printDetails = new ShowEpisodeDetails(data);
 				//printDetails.execute(command);
@@ -47,10 +51,10 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 				System.out.println ();
 				
 				returnObject.methodCall = "podcast";
-				//returnObject.methodParameters = command;
+				returnObject.parameterMap.clear();
 				returnObject.execute=false;
 			}
-		}
+		//}
 		
 		return returnObject;
 	}
