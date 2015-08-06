@@ -26,6 +26,7 @@ public class ShowSelectedMenu extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Called");
+		if (debug) Podsalinan.debugLog.logMap(functionParms);
 		final String podcastId = functionParms.get("uid");
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){
@@ -52,7 +53,7 @@ public class ShowSelectedMenu extends CLIOption {
 					 * 
 					 */
 					private static final long serialVersionUID = -2874925380286596826L;
-                    {put("podcastId",podcastId);}};
+                    {put("podcastid",podcastId);}};
 				
 			}
 		returnObject.execute=false;

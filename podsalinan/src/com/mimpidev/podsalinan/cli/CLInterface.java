@@ -123,20 +123,23 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("decrease download <downloadid>", new DecreaseCommand(data));
 		options.put("dump", new DumpCommand(data));
 		options.put("dump urldownloads", new DumpCommand(data));
-        SelectPodcast selectPodcast = new SelectPodcast(data);
+        //SelectPodcast will be used when a user either enters the podcast name, or the menu item letter 
+		SelectPodcast selectPodcast = new SelectPodcast(data);
+        options.put("podcast <podcastName>", selectPodcast);
 		options.put("podcast <a-z>",  selectPodcast);
-        // Exit podcast menu, and return to main menu
-//		PodcastCommand podcastCommand = new PodcastCommand(data);
+        // Show Podcast Selected Menu will be called a number of ways
+		ShowSelectedMenu showSelectedPodcastMenu =new ShowSelectedMenu(data);
+		options.put("podcast <podcastid>", showSelectedPodcastMenu);
+		options.put("podcast <podcastid> showmenu", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> 1", new ListEpisodes(data));
 		options.put("podcast <podcastid> 2", new UpdatePodcast(data));
 		options.put("podcast <podcastid> 3", new DeletePodcast(data));
 		options.put("podcast <podcastid> 4", new ChangeDestination(data));
 		options.put("podcast <podcastid> 5", new AutoQueueEpisodes(data));
-		options.put("podcast <podcastid> episode <aa>", new SelectEpisode(data));		
+		options.put("podcast <podcastid> episode <aa>", new SelectEpisode(data));
+		//TODO: The following needs to be copied for "podcast <podcastid> 9" 
 		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
-		ShowSelectedMenu showSelectedPodcastMenu =new ShowSelectedMenu(data); 
-		options.put("podcast <podcastid>", showSelectedPodcastMenu);
-		options.put("podcast <podcastid> showmenu", showSelectedPodcastMenu);
+		
 		options.put("downloads <downloadid>", new DownloadsCommand(data));
 		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
@@ -217,11 +220,11 @@ public class CLInterface extends CLIOption implements Runnable{
 	public ReturnObject getMenuCommand(String input){
 		ReturnObject menuCommand = new ReturnObject();
 		
-		while (menuCommand.execute==false){
+		while (!menuCommand.execute){
 			if (!options.containsKey(input)){
 				int score=0;
 				boolean match=false;
-	        	if (debug) Podsalinan.debugLog.logInfo(this, "user input: "+input);
+	        	if (debug) Podsalinan.debugLog.logInfo(this, "user input: '"+input+"'");
 				String[] methodCallSplit = input.split(" ");
 	        	for (String key : options.keySet()){
 					score=0;
@@ -274,14 +277,19 @@ public class CLInterface extends CLIOption implements Runnable{
         	    returnObject.debug(debug);
         	    menuCommand.execute=true;
 			}
+			
 			// This is going to traverse the main menu
-			if (menuCommand.execute==false){
+			if (!menuCommand.execute){
 				if (returnObject.methodCall.length()==0 && input.matches("[0-9]{1}")){
 					menuCommand.parameterMap.put("menuItem", input);
 					menuCommand.methodCall="mainmenu <0-9>";
 					menuCommand.execute=true;
-				} else if (returnObject.methodCall.length()>0){
+				} else if (returnObject.methodCall.length()>0 && !input.contains(returnObject.methodCall)){
 					input=returnObject.methodCall+" "+input;
+				} else {
+					System.out.println("Error: Invalid input - "+input);
+					input=returnObject.methodCall;
+					if (debug) Podsalinan.debugLog.logInfo(this, "Error - '"+input+"'");
 				}
 			}
 		}
