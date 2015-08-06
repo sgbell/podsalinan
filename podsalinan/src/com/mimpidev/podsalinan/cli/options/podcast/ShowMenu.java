@@ -8,6 +8,7 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.cli.options.list.ListPodcasts;
 
@@ -46,6 +47,7 @@ public class ShowMenu extends CLIOption {
         returnObject.methodCall="podcast";
         returnObject.parameterMap.clear();
 		returnObject.execute=false;
+		CLInterface.cliGlobals.getGlobalSelection().clear();
 		return returnObject;
 	}
 

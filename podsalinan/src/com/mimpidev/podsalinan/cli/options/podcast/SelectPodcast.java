@@ -39,7 +39,8 @@ public class SelectPodcast extends CLIOption {
 			String userInput=functionParms.get("userInput");
 			Podcast selectedPodcast=null;
             // See if userInput is a value of a podcast in the list and load it
-            selectedPodcast = data.getPodcasts().getList().get(convertCharToNumber(userInput));
+			if (data.getPodcasts().getList().size()>convertCharToNumber(userInput))
+				selectedPodcast = data.getPodcasts().getList().get(convertCharToNumber(userInput));
 			if (selectedPodcast==null){
 				Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
 				if (debug) Podsalinan.debugLog.logInfo(this, "Line:57, PodcastList.size="+podcastList.size());
@@ -73,59 +74,15 @@ public class SelectPodcast extends CLIOption {
 			}
 			if (selectedPodcast!=null){
 				if (debug) Podsalinan.debugLog.logInfo(this, 87, "Set selected podcast:"+selectedPodcast.getDatafile());
+				returnObject.methodCall="podcast "+selectedPodcast.getDatafile();
 				CLInterface.cliGlobals.getGlobalSelection().clear();
 				CLInterface.cliGlobals.getGlobalSelection().put("podcastid",selectedPodcast.getDatafile());
+			} else {
+				returnObject.methodCall="podcast showmenu";
 			}
 		}
-		
-		if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastId") && 
-             (functionParms.get("uid").equals(CLInterface.cliGlobals.getGlobalSelection().get("podcastId"))))){
-			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("uid"));
-	    	if (functionParms.containsKey("userInput") && (selectedPodcast==null)){
-		    	if (functionParms.get("userInput").length()==1)
-		    		selectedPodcast = data.getPodcasts().getList().get(convertCharToNumber(functionParms.get("userInput")));
-			   	if (selectedPodcast==null){
-					Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
-					if (debug) Podsalinan.debugLog.logInfo(this, "Line:57, PodcastList.size="+podcastList.size());
-					if (podcastList.size()==1){
-						CLInterface.cliGlobals.getGlobalSelection().clear();
-						CLInterface.cliGlobals.getGlobalSelection().put("podcast",podcastList.get(0).getDatafile());
-						selectedPodcast=podcastList.get(0);
-					} else if (podcastList.size()>1){
-						int podcastCount=1;
-						// If too many podcasts with text found
-						System.out.println ("Matches Found: "+podcastList.size());
-						for (Podcast foundPodcast : podcastList){
-							System.out.println(getEncodingFromNumber(podcastCount)+". "+foundPodcast.getName());
-						    podcastCount++;
-						}
-						System.out.print("Please select a podcast: ");
-						// Ask user to select podcast
-						CLInput input = new CLInput();
-						String userInput = input.getStringInput();
-						if ((userInput.length()>0)&&(userInput!=null)){
-							int selection = convertCharToNumber(userInput);
-							if ((selection>=0)&&(selection<podcastList.size())){
-								selectedPodcast = podcastList.get(selection);
-							} else
-								System.out.println("Error: Invalid user input");
-						} else 
-							System.out.println("Error: Invalid user input");
-					} else {
-						System.out.println("Error: Podcast not found.");
-					}
-				}
-				
-			}
-			if (selectedPodcast!=null){
-				if (debug) Podsalinan.debugLog.logInfo(this, 87, "Set selected podcast:"+selectedPodcast.getDatafile());
-				CLInterface.cliGlobals.getGlobalSelection().clear();
-				CLInterface.cliGlobals.getGlobalSelection().put("podcastid",selectedPodcast.getDatafile());
-				returnObject.methodCall="podcast "+selectedPodcast.getDatafile();
-				returnObject.parameterMap.clear();
-				returnObject.execute=true;
-			}
-    	}
+		returnObject.parameterMap.clear();
+		returnObject.execute=true;
 		
 		return returnObject;
 	}

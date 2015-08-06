@@ -30,6 +30,8 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
+import com.mimpidev.podsalinan.cli.options.episode.DeleteEpisodeFromDrive;
+import com.mimpidev.podsalinan.cli.options.episode.DownloadEpisode;
 import com.mimpidev.podsalinan.cli.options.episode.SelectEpisode;
 import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
 import com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes;
@@ -131,15 +133,23 @@ public class CLInterface extends CLIOption implements Runnable{
 		ShowSelectedMenu showSelectedPodcastMenu =new ShowSelectedMenu(data);
 		options.put("podcast <podcastid>", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> showmenu", showSelectedPodcastMenu);
+		options.put("podcast <podcastid> 9", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> 1", new ListEpisodes(data));
 		options.put("podcast <podcastid> 2", new UpdatePodcast(data));
 		options.put("podcast <podcastid> 3", new DeletePodcast(data));
 		options.put("podcast <podcastid> 4", new ChangeDestination(data));
 		options.put("podcast <podcastid> 5", new AutoQueueEpisodes(data));
-		options.put("podcast <podcastid> episode <aa>", new SelectEpisode(data));
-		//TODO: The following needs to be copied for "podcast <podcastid> 9" 
-		options.put("podcast showmenu", new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data));
-		
+		CLIOption selectEpisode = new SelectEpisode(data);
+		options.put("podcast <podcastid> <aa>", selectEpisode);
+		options.put("podcast <podcastid> episode <aa>", selectEpisode);
+		options.put("podcast <podcastid> episode <aa> showmenu", new com.mimpidev.podsalinan.cli.options.episode.ShowSelectedMenu(data));
+		options.put("podcast <podcastid> episode <aa> 1", new DownloadEpisode(data));
+		options.put("podcast <podcastid> episode <aa> 2", new DeleteEpisodeFromDrive(data));
+		options.put("podcast <podcastid> episode <aa> 3", new com.mimpidev.podsalinan.cli.options.episode.CancelDownload(data));
+		options.put("podcast <podcastid> episode <aa> 4", new com.mimpidev.podsalinan.cli.options.episode.ChangeStatus(data));
+		CLIOption podcastShowmenu = new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data);
+		options.put("podcast showmenu", podcastShowmenu);
+		options.put("podcast <podcastid> 9", podcastShowmenu);
 		options.put("downloads <downloadid>", new DownloadsCommand(data));
 		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
@@ -245,10 +255,17 @@ public class CLInterface extends CLIOption implements Runnable{
 		        						menuCommand.parameterMap.put("uid", methodCallSplit[svc]);
 		        					}
 	        						score++;
-	        					}
-	        					if (splitValue[svc].matches("<a-z>") &&
+	        					} else if (splitValue[svc].matches("<podcastName>")&&
+	        						!methodCallSplit[svc].matches("^[a-fA-F0-9]{8}")){
+	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
+	        						score++;
+	        					} else if (splitValue[svc].matches("<a-z>") &&
 	        						methodCallSplit[svc].matches("[a-zA-Z]")){
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
+	        						score++;
+	        					} else if (splitValue[svc].matches("<aa>") &&
+	        							methodCallSplit[svc].matches("[a-zA-Z]{1,2}")){
+	        						menuCommand.parameterMap.put("episode", methodCallSplit[svc]);
 	        						score++;
 	        					}
 	        				} else {
