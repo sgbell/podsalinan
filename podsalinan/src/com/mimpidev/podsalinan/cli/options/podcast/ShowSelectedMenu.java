@@ -36,7 +36,7 @@ public class ShowSelectedMenu extends CLIOption {
 					 * 
 					 */
 					private static final long serialVersionUID = -393124687274598350L;
-				    {put("podcastId",podcastId);
+				    {put("uid",podcastId);
 				     put("command","selectedMenu");}});
 				System.out.println("1. List Episodes");
 				System.out.println("2. Update List");
