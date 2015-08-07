@@ -43,18 +43,21 @@ public class DownloadEpisode extends BaseEpisodeOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command: "+command);
-
-		String[] commandOptions = command.split(" ");
-		Episode episode = getEpisode(commandOptions[0], commandOptions[2]);
+		if (debug) Podsalinan.debugLog.logMap(functionParms);
+		Episode episode=null;
+		
+		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
+			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("episode"));
+		}		
 		if (episode!=null){
 			episode.setStatus(Episode.CURRENTLY_DOWNLOADING);
 			data.getUrlDownloads().addDownload(episode,getPodcast());
 			System.out.println("Downloading: "+episode.getTitle());
 		}
-		
+		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode ";
+		returnObject.methodCall+=functionParms.get("episode");
+		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		return returnObject;
 	}
