@@ -139,6 +139,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> 3", new DeletePodcast(data));
 		options.put("podcast <podcastid> 4", new ChangeDestination(data));
 		options.put("podcast <podcastid> 5", new AutoQueueEpisodes(data));
+		
 		CLIOption selectEpisode = new SelectEpisode(data);
 		options.put("podcast <podcastid> <aa>", selectEpisode);
 		options.put("podcast <podcastid> episode <aa>", selectEpisode);
@@ -147,9 +148,11 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> episode <aa> 2", new DeleteEpisodeFromDrive(data));
 		options.put("podcast <podcastid> episode <aa> 3", new com.mimpidev.podsalinan.cli.options.episode.CancelDownload(data));
 		options.put("podcast <podcastid> episode <aa> 4", new com.mimpidev.podsalinan.cli.options.episode.ChangeStatus(data));
+		
 		CLIOption podcastShowmenu = new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data);
 		options.put("podcast showmenu", podcastShowmenu);
 		options.put("podcast <podcastid> 9", podcastShowmenu);
+		
 		options.put("downloads <downloadid>", new DownloadsCommand(data));
 		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
 		options.put("settings", new SettingsCommand(data));
