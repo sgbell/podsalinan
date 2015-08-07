@@ -25,21 +25,15 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"Called");
 		if (debug) Podsalinan.debugLog.logMap(functionParms);
+		Episode episode = null;
 
 		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
-			
-		}
-		/*if (commandOptions.length>1){
-			int episodeNum = -1;
-            if (commandOptions[1].equalsIgnoreCase("episode"))
-               episodeNum = convertCharToNumber(commandOptions[2]);
-            else
-               episodeNum = convertCharToNumber(commandOptions[1]);*/
-            
-            Episode episode = null; //getEpisode(commandOptions[0],episodeNum);
-            if (episode!=null){
+			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("episode"));
+		} 
+        if (episode!=null){
 				ShowEpisodeDetails printDetails = new ShowEpisodeDetails(data);
-				//printDetails.execute(command);
+				functionParms.put("menuCalled", "true");
+				printDetails.execute(functionParms);
 				
 				System.out.println ();
 				System.out.println ("1. Download episode");
@@ -50,11 +44,12 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 				System.out.println ("9. Return to Podcast Menu");
 				System.out.println ();
 				
-				returnObject.methodCall = "podcast";
+				returnObject.methodCall = "podcast "+getPodcast().getDatafile()+" episode ";
+				returnObject.methodCall+=functionParms.get("episode");
 				returnObject.parameterMap.clear();
 				returnObject.execute=false;
 			}
-		//}
+            
 		
 		return returnObject;
 	}

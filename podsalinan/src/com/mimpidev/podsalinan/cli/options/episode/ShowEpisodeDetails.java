@@ -47,31 +47,15 @@ public class ShowEpisodeDetails extends BaseEpisodeOption {
 	
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
-		if (command.length()==0){
-			Map<String,String> selection = CLInterface.cliGlobals.getGlobalSelection();
-			if (selection.containsKey("episode") && selection.containsKey("podcast")){
-				Episode episode = getEpisode(selection.get("podcast"), selection.get("episode"));
-				if (episode!=null){
-					printDetails(episode,true);
-				}
-			}
-		} else {
-			String[] commandOptions = command.split(" ");
-			if (commandOptions.length>1){
-				int episodeNum = -1;
-				if (commandOptions[1].equalsIgnoreCase("episode")){
-					episodeNum = convertCharToNumber(commandOptions[2]);
-				} else {
-					episodeNum = convertCharToNumber(commandOptions[1]);
-				}
-				Episode episode = getEpisode(commandOptions[0],episodeNum);
-				if (episode!=null){
-					printDetails(episode,false);
-				}
-			}
+		if (debug) Podsalinan.debugLog.logMap(functionParms);
+		Episode episode=null;
+		
+		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
+			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("episode"));
+		} 
+		if (episode!=null){
+			printDetails(episode,!functionParms.containsKey("menuCalled"));
 		}
 		
 		return returnObject;
