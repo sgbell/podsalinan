@@ -36,7 +36,7 @@ import com.mimpidev.podsalinan.data.Podcast;
  * @author bugman
  *
  */
-public class CancelDownload extends CLIOption {
+public class CancelDownload extends BaseEpisodeOption {
 
 	/**
 	 * @param newData
@@ -47,25 +47,26 @@ public class CancelDownload extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command :"+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		Episode episode=null;
 		
-		String[] commandOptions = command.split(" ");
-		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(commandOptions[0]);
-		if (selectedPodcast!=null){
-			Episode episode = selectedPodcast.getEpisodes().get(convertCharToNumber(commandOptions[2]));
-			if (episode!=null){
-				try {
-					data.getUrlDownloads().cancelDownload(new URL(episode.getURL()));
-					System.out.println("Successfully Cancelled Download of Episode: "+episode.getTitle());
-				} catch (MalformedURLException e) {
-					System.out.println("Error: Invalid URL");
-				}
+		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
+			episode = getEpisode(functionParms.get("uid"), functionParms.get("episode"));
+		}
+		if (episode!=null){
+			try {
+				data.getUrlDownloads().cancelDownload(new URL(episode.getURL()));
+				System.out.println("Successfully Cancelled Download of Episode: "+episode.getTitle());
+			} catch (MalformedURLException e) {
+				System.out.println("Error: Invalid URL");
 			}
 		}
-		returnObject.methodCall="podcast";
+		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode ";
+		returnObject.methodCall+=functionParms.get("episode");
+		returnObject.parameterMap.clear();
 		returnObject.execute=true;
+		
 		return returnObject;
 	}
 

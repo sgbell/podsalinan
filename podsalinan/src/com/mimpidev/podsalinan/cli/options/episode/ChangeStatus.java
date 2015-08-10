@@ -45,13 +45,14 @@ public class ChangeStatus extends BaseEpisodeOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this,45,"Command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		CLInput input = new CLInput();
+		Episode episode = null;
 
-		String[] commandOptions = command.split(" ");
-		Episode episode = getEpisode(commandOptions[0], commandOptions[2]);
+		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
+			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("episode"));
+		}
 		if (episode!=null){
 			System.out.println ();
 			
@@ -66,7 +67,9 @@ public class ChangeStatus extends BaseEpisodeOption {
 				System.out.println(episode.getTitle() + " - Status Updated: " + episode.getCurrentStatus());
 			}
 		}
-		returnObject = CLInterface.cliGlobals.createReturnObject();
+		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode ";
+		returnObject.methodCall+=functionParms.get("episode");
+		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
 		return returnObject;

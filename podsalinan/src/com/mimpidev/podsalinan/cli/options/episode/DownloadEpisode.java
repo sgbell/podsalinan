@@ -44,7 +44,7 @@ public class DownloadEpisode extends BaseEpisodeOption {
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
-		if (debug) Podsalinan.debugLog.logMap(functionParms);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		Episode episode=null;
 		
 		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
@@ -55,6 +55,7 @@ public class DownloadEpisode extends BaseEpisodeOption {
 			data.getUrlDownloads().addDownload(episode,getPodcast());
 			System.out.println("Downloading: "+episode.getTitle());
 		}
+		
 		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode ";
 		returnObject.methodCall+=functionParms.get("episode");
 		returnObject.parameterMap.clear();

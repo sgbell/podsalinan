@@ -216,4 +216,11 @@ public class Log {
 	public void setDataDirectory(String dataDirectory) {
 		this.dataDirectory = dataDirectory;
 	}
+
+	@SuppressWarnings("rawtypes")
+	public void logMap(Object object,
+			 Map mapObject) {
+		logInfo(object,"Map used:");
+		logMap(mapObject);
+	}
 }

@@ -25,8 +25,7 @@ public class ShowSelectedMenu extends CLIOption {
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this, "Called");
-		if (debug) Podsalinan.debugLog.logMap(functionParms);
+		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 		final String podcastId = functionParms.get("uid");
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){
