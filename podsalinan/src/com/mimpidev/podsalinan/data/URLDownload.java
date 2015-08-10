@@ -29,30 +29,46 @@ public class URLDownload extends URLDetails {
 	
 	public URLDownload(String url) {
 		super(url);
+		fields.put("podcastSource", new StringType());
+		fields.put("uid", new StringType());
+		fields.put("directory", new StringType());
 	}
 
 	public URLDownload(String url, String length){
 		super(url, length);
+		fields.put("podcastSource", new StringType());
+		fields.put("uid", new StringType());
+		fields.put("directory", new StringType());
 	}
 	
 	public URLDownload(String url, boolean added){
 		super(url, added);
+		fields.put("podcastSource", new StringType());
+		fields.put("uid", new StringType());
+		fields.put("directory", new StringType());
 	}
 	
 	public URLDownload(String url, String length, String destination){
 		super(url, length);
+		fields.put("podcastSource", new StringType());
+		fields.put("uid", new StringType());
+		fields.put("directory", new StringType());
 		setDestination(destination);
 		setUid(url+destination);
 	}
 	
 	public URLDownload(String url, boolean added, String destination){
 		super(url, added);
+		fields.put("podcastSource", new StringType());
+		fields.put("uid", new StringType());
+		fields.put("directory", new StringType());
 		setDestination(destination);
 		setUid(url+destination);
 	}
 
 	public URLDownload(String url, String length, boolean added, String destination){
 		this(url, added, destination);
+
 		setSize(length);
 	}
 	
@@ -69,6 +85,9 @@ public class URLDownload extends URLDetails {
 	 */
 	public URLDownload(URL url, boolean added){
 		super(url.toString(),added);
+		fields.put("podcastSource", new StringType());
+		fields.put("uid", new StringType());
+		fields.put("directory", new StringType());
 	}
 	/**
 	 * 
@@ -78,6 +97,7 @@ public class URLDownload extends URLDetails {
 		this();
 		populateFromRecord(record);
 	}
+	
 	/**
 	 * @return the destination, including the filename
 	 */

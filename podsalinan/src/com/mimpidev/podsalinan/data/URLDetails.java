@@ -6,6 +6,7 @@ package com.mimpidev.podsalinan.data;
 import java.net.URL;
 
 import com.mimpidev.dev.sql.field.IntegerType;
+import com.mimpidev.podsalinan.Podsalinan;
 
 /**
  * @author sbell
@@ -35,6 +36,8 @@ public class URLDetails extends BaseURL {
 	
 	public URLDetails(String url){
 		super(url);
+		fields.put("size", new IntegerType());
+		fields.put("status", new IntegerType());
 		setSize("0");
 	}
 	
@@ -50,6 +53,8 @@ public class URLDetails extends BaseURL {
 	
 	public URLDetails(String url, boolean added){
 		super(url,added);
+		fields.put("size", new IntegerType());
+		fields.put("status", new IntegerType());
 	}
 	
 	public String getSize(){
@@ -65,6 +70,9 @@ public class URLDetails extends BaseURL {
 		try {
 			status = Integer.parseInt(fields.get("status").getValue());
 		} catch (NumberFormatException e){
+			status = UNKNOWN_STATUS;
+		} catch (NullPointerException e){
+			Podsalinan.debugLog.logMap(this, fields);
 			status = UNKNOWN_STATUS;
 		}
 		return status; 

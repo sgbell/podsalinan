@@ -57,6 +57,7 @@ public class CancelDownload extends BaseEpisodeOption {
 		if (episode!=null){
 			try {
 				data.getUrlDownloads().cancelDownload(new URL(episode.getURL()));
+				episode.setStatus(Episode.NOT_QUEUED);
 				System.out.println("Successfully Cancelled Download of Episode: "+episode.getTitle());
 			} catch (MalformedURLException e) {
 				System.out.println("Error: Invalid URL");
