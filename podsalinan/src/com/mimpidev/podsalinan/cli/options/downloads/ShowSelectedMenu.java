@@ -9,6 +9,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
+import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
  * @author sbell
@@ -26,13 +27,25 @@ public class ShowSelectedMenu extends CLIOption {
 	
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 
+		if (functionParms.containsKey("userInput")){
+			String userInput=functionParms.get("userInput");
+			String selectedDownload=null;
+			if (data.getUrlDownloads().getNumberOfQueuedDownloads()>convertCharToNumber(userInput))
+				selectedDownload=data.getUrlDownloads().getDownloadUid(convertCharToNumber(userInput));
+			if (selectedDownload==null){
+				System.out.println("Error: Download does not exist.");
+				returnObject.methodCall="downloads showmenu";
+			} else {
+				if (debug) Podsalinan.debugLog.logInfo(this, 41, "Set selected Download:"+selectedDownload);
+				
+			}
+			returnObject.parameterMap.clear();
+			returnObject.execute=true;
+		}
 		ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
-		String downloadUid = command.split(" ")[0];
-
-		//printDetails.execute(downloadUid);
+		printDetails.execute(functionParms);
 
 		System.out.println("1. Delete Download");
 		System.out.println("2. Restart Download");

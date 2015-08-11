@@ -24,26 +24,28 @@ public class SelectDownload extends CLIOption {
 	 */
 	public SelectDownload(DataStorage newData) {
 		super(newData);
-		ShowSelectedMenu showMenu = new ShowSelectedMenu(newData);
-		
-		options.put("1", new DeleteDownload(newData));		
-		options.put("2", new RestartDownload(newData));		
-		options.put("3", new StopDownload(newData));		
-		options.put("4", new StartDownload(newData));		
-		options.put("5", new IncreasePriority(newData));		
-		options.put("6", new DecreasePriority(newData));		
-		options.put("7", new ChangeDestination(newData));
-		options.put("showSelectedMenu", showMenu);
-		options.put("", showMenu);
 	}
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 
-		String[] commandOptions = command.split(" ");
+		if (functionParms.containsKey("userInput")){
+			String userInput=functionParms.get("userInput");
+			String selectedDownload=null;
+			
+			if (data.getUrlDownloads().getNumberOfQueuedDownloads()>convertCharToNumber(userInput)){
+				selectedDownload = data.getUrlDownloads().getDownloadUid(convertCharToNumber(userInput));
+			}
+			if (selectedDownload==null){
+				System.out.println("Error: Invalid download requested.");
+				returnObject.methodCall="downloads showmenu";
+			} else {
+				
+			}
+		}
+		/*
 		if (commandOptions[0].length()<=2){
 			if (debug) Podsalinan.debugLog.logInfo(this, "Download ID: "+commandOptions[0]);
 			int downloadId = convertCharToNumber(commandOptions[0]);
@@ -52,7 +54,6 @@ public class SelectDownload extends CLIOption {
 			if (downloadUid!=null)
 				commandOptions[0]=downloadUid;
 		}
-		command = "";
 		for (String option : commandOptions){
 			if (command.length()>0){
 				command+=" ";
@@ -96,7 +97,7 @@ public class SelectDownload extends CLIOption {
 					System.out.println("Error: Command does not exist.");
 				}
 			}
-		}
+		}*/
 		return returnObject;
 	}
 

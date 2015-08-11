@@ -26,13 +26,12 @@ public class ShowMenu extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		
 		ListDownloads listDownloads = new ListDownloads(data);
 		
-		//listDownloads.execute(command);
+		listDownloads.execute(null);
 		System.out.println();
 		System.out.println("(A-ZZ) Enter Download letter to select Download.");
 		System.out.println("To add a new download to the queue just enter the the url to be downloaded.");

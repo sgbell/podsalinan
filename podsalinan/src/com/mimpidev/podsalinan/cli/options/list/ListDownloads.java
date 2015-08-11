@@ -26,8 +26,6 @@ public class ListDownloads extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-
 		int downloadCount=1;
 			
 		for (URLDownload download : data.getUrlDownloads().getDownloads()){

@@ -30,6 +30,13 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
+import com.mimpidev.podsalinan.cli.options.downloads.DecreasePriority;
+import com.mimpidev.podsalinan.cli.options.downloads.DeleteDownload;
+import com.mimpidev.podsalinan.cli.options.downloads.IncreasePriority;
+import com.mimpidev.podsalinan.cli.options.downloads.RestartDownload;
+import com.mimpidev.podsalinan.cli.options.downloads.SelectDownload;
+import com.mimpidev.podsalinan.cli.options.downloads.StartDownload;
+import com.mimpidev.podsalinan.cli.options.downloads.StopDownload;
 import com.mimpidev.podsalinan.cli.options.episode.DeleteEpisodeFromDrive;
 import com.mimpidev.podsalinan.cli.options.episode.DownloadEpisode;
 import com.mimpidev.podsalinan.cli.options.episode.SelectEpisode;
@@ -125,7 +132,11 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("decrease download <downloadid>", new DecreaseCommand(data));
 		options.put("dump", new DumpCommand(data));
 		options.put("dump urldownloads", new DumpCommand(data));
-        //SelectPodcast will be used when a user either enters the podcast name, or the menu item letter 
+
+		/** 
+		 *  The following group of cli options are for the podcast menu & submenu
+		 */
+		//SelectPodcast will be used when a user either enters the podcast name, or the menu item letter 
 		SelectPodcast selectPodcast = new SelectPodcast(data);
         options.put("podcast <podcastName>", selectPodcast);
 		options.put("podcast <a-z>",  selectPodcast);
@@ -152,14 +163,37 @@ public class CLInterface extends CLIOption implements Runnable{
 		CLIOption podcastShowmenu = new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data);
 		options.put("podcast showmenu", podcastShowmenu);
 		options.put("podcast <podcastid> 9", podcastShowmenu);
+		/**
+		 * Here ends the podcast menu commands
+		 */
 		
-		options.put("downloads <downloadid>", new DownloadsCommand(data));
-		options.put("downloads showmenu", new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data));
+		/**
+		 *  Here is the download menu command list
+		 */
+		CLIOption downloadsShowmenu = new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data);
+		options.put("downloads showmenu", downloadsShowmenu);
+		options.put("downloads <downloadid> 9", downloadsShowmenu);
+		options.put("downloads <a-z>", new SelectDownload(data));
+		CLIOption showSelectedDownloadMenu = new com.mimpidev.podsalinan.cli.options.downloads.ShowSelectedMenu(data);
+		options.put("downloads <downloadid>", showSelectedDownloadMenu);
+		options.put("downloads <downloadid> showmenu", showSelectedDownloadMenu);
+		options.put("downloads <downloadid> 1", new DeleteDownload(data));		
+		options.put("downloads <downloadid> 2", new RestartDownload(data));		
+		options.put("downloads <downloadid> 3", new StopDownload(data));		
+		options.put("downloads <downloadid> 4", new StartDownload(data));		
+		options.put("downloads <downloadid> 5", new IncreasePriority(data));		
+		options.put("downloads <downloadid> 6", new DecreasePriority(data));		
+		options.put("downloads <downloadid> 7", new ChangeDestination(data));
+		/**
+		 *  Here ends the download menu command list
+		 */
+		
 		options.put("settings", new SettingsCommand(data));
 		MainMenuCommand mainMenuCommands = new MainMenuCommand(data);
 		com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu mainMenuShow = new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data); 
 		options.put("mainmenu showmenu", mainMenuShow);
 		options.put("podcast 9", mainMenuShow);
+		options.put("downloads 9", mainMenuShow);
 		options.put("mainmenu <0-9>", mainMenuCommands);
 	}
 
