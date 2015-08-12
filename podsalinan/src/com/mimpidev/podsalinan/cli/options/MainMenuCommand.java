@@ -41,7 +41,6 @@ public class MainMenuCommand extends CLIOption {
 	 */
 	public MainMenuCommand(DataStorage newData) {
 		super(newData);
-		options = new HashMap<String, CLIOption>();
 		
 		menuCommands = new HashMap<String,String>();
 		menuCommands.put("1","podcast showMenu");

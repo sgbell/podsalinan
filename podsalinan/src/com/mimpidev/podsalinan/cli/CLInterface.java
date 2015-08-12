@@ -24,6 +24,7 @@ package com.mimpidev.podsalinan.cli;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -67,11 +68,14 @@ public class CLInterface extends CLIOption implements Runnable{
 	/**
 	 * cliGlobals is used to pass information between the CLIOptions.
 	 */
-	public static final CLIGlobals cliGlobals = new CLIGlobals(); 
+	public static final CLIGlobals cliGlobals = new CLIGlobals();
+	
+	private Map<String,CLIOption> options;
 
 	public CLInterface(DataStorage newData){
 		super(newData);
 		input = new CLInput();
+		options=new HashMap<String,CLIOption>();
 		initializeMenus();
 	}
 	

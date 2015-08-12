@@ -24,7 +24,7 @@ public abstract class CLIOption {
 	/**
 	 * 
 	 */
-	protected Map<String, CLIOption> options;
+	//protected Map<String, CLIOption> options;
 	protected ReturnObject returnObject;
 
 	/**
@@ -33,7 +33,7 @@ public abstract class CLIOption {
 	public CLIOption(DataStorage newData) {
 		data=newData;
 		// Declaring here so it doesn't have to be initialized in the children
-		options = new HashMap<String, CLIOption>();
+		//options = new HashMap<String, CLIOption>();
 		returnObject = new ReturnObject();
 	}
 	
