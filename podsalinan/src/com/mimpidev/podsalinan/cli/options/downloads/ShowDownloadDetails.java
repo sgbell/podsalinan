@@ -9,7 +9,6 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.URLDownload;
 
@@ -61,25 +60,20 @@ public class ShowDownloadDetails extends CLIOption {
 	
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
-		String[] commandOptions = command.split(" ");
-		if (debug) Podsalinan.debugLog.logInfo(this, "selection: "+CLInterface.cliGlobals.globalSelectionToString());
-		if (command.length()==0 && CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads")){
-			String downloadUid = CLInterface.cliGlobals.getGlobalSelection().get("downloads");
-			URLDownload currentDownload = data.getUrlDownloads().findDownloadByUid(downloadUid);
-			
+		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
+
+		if (functionParms.containsKey("uid")){
+			URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(functionParms.get("uid"));
 			System.out.println();
-			printDetails(currentDownload,true);
+			printDetails(selectedDownload,!functionParms.containsKey("menuCall"));
 			System.out.println();
-			returnObject.execute=true;
 		} else {
-			URLDownload currentDownload = data.getUrlDownloads().findDownloadByUid(commandOptions[0]);
-			System.out.println();
-			printDetails(currentDownload,false);
-			System.out.println();
+			System.out.println("Error: Invalid command call");
 		}
+		
+		returnObject.methodCall = "downloads "+functionParms.get("uid");
+		returnObject.execute=false;
 		
 		return returnObject;
 	}

@@ -27,43 +27,27 @@ public class DeleteDownload extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this," command: "+command);
-		String downloadUid="";
-		String[] commandOptions = command.split(" ");
+		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 
-		downloadUid = commandOptions[0];
-		if (data.getUrlDownloads().findDownloadByUid(downloadUid)==null){
-			downloadUid="";
-		}
-		
-		if (commandOptions.length==1){
+		if (functionParms.containsKey("uid")){
 			ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
-			//printDetails.execute(downloadUid);
-		}
-		
-		if (downloadUid.length()>0){
+			printDetails.execute(functionParms);
+
 			CLInput input = new CLInput();
 			if(input.confirmRemoval()){
-				data.getUrlDownloads().deleteActiveDownload(downloadUid);
+				data.getUrlDownloads().deleteActiveDownload(functionParms.get("uid"));
 				System.out.println("Download Removed.");
 				if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads"))&&
-					(CLInterface.cliGlobals.getGlobalSelection().get("downloads").equalsIgnoreCase(downloadUid))){
+					(CLInterface.cliGlobals.getGlobalSelection().get("downloads").equalsIgnoreCase(functionParms.get("uid")))){
 					CLInterface.cliGlobals.getGlobalSelection().clear();
-				} else {
-					String[] selection = CLInterface.cliGlobals.globalSelectionToString().split(" ", 2);
-					returnObject.methodCall = selection[0];
-					//returnObject.methodParameters= (selection.length>1?selection[1]:"");
 				}
+				
 			}
-			if (commandOptions.length>1){
-				returnObject.methodCall="downloads";
-		        //returnObject.methodParameters="";
-			}
-	        returnObject.execute=true;
-		} else {
-			System.out.println("Download does not exist");
+			returnObject.methodCall = "downloads showmenu";
 		}
+		
+		returnObject.parameterMap.clear();
+		returnObject.execute=true;
 		
 		return returnObject;
 	}

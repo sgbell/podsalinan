@@ -10,8 +10,6 @@ import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
-import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
-import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
  * @author sbell
@@ -42,7 +40,12 @@ public class SelectDownload extends CLIOption {
 				System.out.println("Error: Invalid download requested.");
 				returnObject.methodCall="downloads showmenu";
 			} else {
-				
+				if (!(CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads")&&
+					selectedDownload.equals(CLInterface.cliGlobals.getGlobalSelection().get("downloads")))){
+					CLInterface.cliGlobals.getGlobalSelection().clear();
+					CLInterface.cliGlobals.getGlobalSelection().put("downloads", selectedDownload);
+				}
+				returnObject.methodCall="downloads "+selectedDownload;
 			}
 		}
 		/*
@@ -98,6 +101,9 @@ public class SelectDownload extends CLIOption {
 				}
 			}
 		}*/
+		returnObject.parameterMap.clear();
+		returnObject.execute=true;
+
 		return returnObject;
 	}
 
