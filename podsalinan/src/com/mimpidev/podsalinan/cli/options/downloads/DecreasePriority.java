@@ -27,21 +27,20 @@ public class DecreasePriority extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 
 		boolean decreased=false;
-		if (command.split(" ").length>1){
-			decreased=data.getUrlDownloads().decreasePriority(command.split(" ")[0]);
-		} else {
-			decreased=data.getUrlDownloads().decreasePriority(command);
+		if (functionParms.containsKey("uid")){
+			decreased=data.getUrlDownloads().decreasePriority(functionParms.get("uid"));
+			if (decreased){
+				   System.out.println("Decreased Priority: "+data.getUrlDownloads().findDownloadByUid(functionParms.get("uid")));
+			} else {
+				System.out.println("Error: Download already at the bottom of the list.");
+			}
 		}
-		if (decreased){
-			   System.out.println("Decreased Priority: "+data.getUrlDownloads().findDownloadByUid(command));
-		} else {
-			System.out.println("Error: Download already at the bottom of the list.");
-		}
-		returnObject = CLInterface.cliGlobals.createReturnObject();
+		
+		returnObject.methodCall="downloads "+functionParms.get("uid");
+		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
 		return returnObject;
