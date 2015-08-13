@@ -525,7 +525,7 @@ public class TableView {
 		}
 	}
 	
-	/*TODO: 6. I need to change the layout of the Table. remove the id field, and make sure we just have the text fields
+	/*TODO: 4. I need to change the layout of the Table. remove the id field, and make sure we just have the text fields
 	 * that way we don't need to reset the table index. 
 	 */
 	public boolean purgeTable() throws SqlException{

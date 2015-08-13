@@ -197,9 +197,8 @@ public class CLInterface extends CLIOption implements Runnable{
 	}
 
 	//TODO: 1. Moving the command line menu around again. Move all of the child options to here
-	//TODO: 2. Rewrite menu traversal
-	//TODO: 3. remove all debug=true
-	//TODO: 4. Change input to character input
+	//TODO: 2. remove all debug=true
+	//TODO: 3. Change input to character input
 	@Override
 	public void run() {
 		System.out.println("Welcome to podsalinan.");
