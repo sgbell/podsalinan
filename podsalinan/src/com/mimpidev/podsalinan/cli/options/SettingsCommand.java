@@ -22,14 +22,7 @@ public class SettingsCommand extends CLIOption {
 	 */
 	public SettingsCommand(DataStorage newData) {
 		super(newData);
-		ShowMenu showMenu = new ShowMenu(newData);
-		options.put("1", new PodcastUpdateRate(newData));
-		options.put("2", new MaxDownloaders(newData));
-		options.put("3", new DownloadDirectory(newData));
-		options.put("4", new AutoQueueEpisodes(newData));
-		options.put("5", new DownloadSpeedLimit(newData));
-		options.put("", showMenu);
-		options.put("showMenu", showMenu);
+
 	}
 
 	@Override

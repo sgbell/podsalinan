@@ -24,7 +24,6 @@ package com.mimpidev.podsalinan.cli;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -47,6 +46,10 @@ import com.mimpidev.podsalinan.cli.options.podcast.ListEpisodes;
 import com.mimpidev.podsalinan.cli.options.podcast.SelectPodcast;
 import com.mimpidev.podsalinan.cli.options.podcast.ShowSelectedMenu;
 import com.mimpidev.podsalinan.cli.options.podcast.UpdatePodcast;
+import com.mimpidev.podsalinan.cli.options.settings.DownloadDirectory;
+import com.mimpidev.podsalinan.cli.options.settings.DownloadSpeedLimit;
+import com.mimpidev.podsalinan.cli.options.settings.MaxDownloaders;
+import com.mimpidev.podsalinan.cli.options.settings.PodcastUpdateRate;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -81,10 +84,10 @@ public class CLInterface extends CLIOption implements Runnable{
 
 	private void initializeMenus() {
 		
-        URLCommand urlCommand =new URLCommand(data);
         QuitCommand quit = new QuitCommand(data);
 		options.put("quit", quit);
 		options.put("exit", quit);
+        URLCommand urlCommand =new URLCommand(data);
 		options.put("http", urlCommand);
 		options.put("ftp", urlCommand);
 		options.put("help", new HelpCommand(data));
@@ -187,13 +190,34 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  Here ends the download menu command list
 		 */
 		
-		options.put("settings", new SettingsCommand(data));
+		/**
+		 *   Begin Settings Options
+		 */
+		CLIOption showSettingsMenu = new com.mimpidev.podsalinan.cli.options.settings.ShowMenu(data);
+		options.put("settings showmenu", showSettingsMenu);
+		options.put("settings <0-9> 9", showSettingsMenu);
+		options.put("settings 1", new PodcastUpdateRate(data));
+		options.put("settings 2", new MaxDownloaders(data));
+		options.put("settings 3", new DownloadDirectory(data));
+		options.put("settings 4", new AutoQueueEpisodes(data));
+		options.put("settings 5", new DownloadSpeedLimit(data));
+		/**
+		 *  End settings options
+		 */
+		
+		/**
+		 *  Begin main menu calls
+		 */
 		MainMenuCommand mainMenuCommands = new MainMenuCommand(data);
 		com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu mainMenuShow = new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data); 
 		options.put("mainmenu showmenu", mainMenuShow);
 		options.put("podcast 9", mainMenuShow);
 		options.put("downloads 9", mainMenuShow);
+		options.put("setting 9", mainMenuShow);
 		options.put("mainmenu <0-9>", mainMenuCommands);
+		/**
+		 *  End Main Menu calls
+		 */
 	}
 
 	//TODO: 1. Moving the command line menu around again. Move all of the child options to here

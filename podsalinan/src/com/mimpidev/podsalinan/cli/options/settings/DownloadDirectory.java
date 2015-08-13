@@ -38,21 +38,16 @@ public class DownloadDirectory extends CLIOption {
 	}
 	
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		
-		if (debug) Podsalinan.debugLog.logInfo(this, 42, "command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		String userInput="";
 		
-		String[] commandOptions = command.split(" ");
-        if (commandOptions.length==1){
-        	userInput=executeMenuOption();
-        	returnObject.methodCall="settings";
-        	returnObject.execute=true;
+        if (functionParms.containsKey("passedDirectory")){
+        	userInput = functionParms.get("passedDirectory");
         } else {
-        	userInput=commandOptions[1];
+        	userInput=executeMenuOption();
         }
-        
-		File newPath;
+
+        File newPath;
 		if ((userInput.length()>0)&&(userInput!=null)){
 			newPath=new File(userInput);
 			if ((newPath.exists())&&(newPath.isDirectory())){
@@ -62,8 +57,12 @@ public class DownloadDirectory extends CLIOption {
 			}
 		}
 		System.out.println("Default Directory: "+data.getSettings().findSetting("defaultDirectory"));
-		returnObject.methodCall="settings";
-		//returnObject.methodParameters="";
+        if (functionParms.containsKey("passedDirectory")){
+        	returnObject.methodCall="";
+        } else {
+        	returnObject.methodCall="settings";
+        }
+		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
 		return returnObject;
