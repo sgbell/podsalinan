@@ -8,7 +8,6 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
 /**
@@ -27,13 +26,15 @@ public class StopDownload extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
 
-		if (command.split(" ").length>1){
-			data.getUrlDownloads().cancelDownload(command.split(" ")[0]);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+
+		if (functionParms.containsKey("uid")){
+			data.getUrlDownloads().cancelDownload(functionParms.get("uid"));
 		}
-		returnObject = CLInterface.cliGlobals.createReturnObject();
+
+		returnObject.methodCall="downloads "+functionParms.get("uid");
+		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
 		return returnObject;

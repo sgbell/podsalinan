@@ -22,7 +22,6 @@ public class DecreasePriority extends CLIOption {
 	 */
 	public DecreasePriority(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
 	@Override

@@ -68,7 +68,6 @@ public class CLInterface extends CLIOption implements Runnable{
 
 	public CLInterface(DataStorage newData){
 		super(newData);
-		debug=true;
 		input = new CLInput();
 		initializeMenus();
 	}

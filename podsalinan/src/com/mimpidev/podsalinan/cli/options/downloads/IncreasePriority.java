@@ -8,7 +8,6 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
-import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
 /**
@@ -22,21 +21,24 @@ public class IncreasePriority extends CLIOption {
 	 */
 	public IncreasePriority(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 
-		if (command.split(" ").length>1){
-			data.getUrlDownloads().increasePriority(command.split(" ")[0]);
+		boolean increased=false;
+		if (functionParms.containsKey("uid")){
+			increased=data.getUrlDownloads().increasePriority(functionParms.get("uid"));
+			if (increased){
+				   System.out.println("Increased Priority: "+data.getUrlDownloads().findDownloadByUid(functionParms.get("uid")));
+			} else {
+				System.out.println("Error: Download already at the top of the list.");
+			}
 		}
-		returnObject = CLInterface.cliGlobals.createReturnObject();
+		
+		returnObject.methodCall="downloads "+functionParms.get("uid");
+		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
 		return returnObject;

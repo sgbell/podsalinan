@@ -20,7 +20,7 @@ public abstract class CLIOption {
 	 */
 	protected DataStorage data;
 	
-	protected boolean debug=false;
+	protected boolean debug=true;
 	/**
 	 * 
 	 */
