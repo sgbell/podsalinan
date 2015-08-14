@@ -27,10 +27,9 @@ public class PodcastUpdateRate extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this,29," command: "+command);
-		String[] commandOptions = command.split(" ");
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		String updateValue="";
+		
 		if (commandOptions.length==1 && !command.equalsIgnoreCase("updateinterval")){
 			updateValue=executeMenuOption();
 		} else if (command.equalsIgnoreCase("updateinterval")){

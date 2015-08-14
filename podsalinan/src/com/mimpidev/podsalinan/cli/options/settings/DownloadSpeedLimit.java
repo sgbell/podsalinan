@@ -36,19 +36,17 @@ public class DownloadSpeedLimit extends CLIOption {
 	}
 	
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this, 38, "command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		String userInput="";
 
-		String[] commandOptions = command.split(" ");
-        if (commandOptions.length==1){
-        	userInput=executeMenuOption();
-        	returnObject.methodCall="settings";
-    		//returnObject.methodParameters="";
-        	returnObject.execute=true;
-        } else {
-        	userInput=commandOptions[1];
+        if (functionParms.containsKey("userInput")){
+        	userInput=functionParms.get("userInput");
+        	returnObject.methodCall="";
         	returnObject.execute=false;
+        } else {
+        	userInput=executeMenuOption();
+        	returnObject.methodCall="settings showmenu";
+        	returnObject.execute=true;
         }
 
         int speed=-1;

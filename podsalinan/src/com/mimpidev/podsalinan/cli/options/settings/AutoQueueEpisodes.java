@@ -36,22 +36,19 @@ public class AutoQueueEpisodes extends CLIOption {
 	}
 	
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 
-		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
-		String[] commandOptions = command.split(" ");
+		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 		String userInput="";
-		
-        if (commandOptions.length==1){
-        	userInput=executeMenuOption();
-        	returnObject.methodCall="settings";
-        	returnObject.execute=true;
-        } else {
-        	userInput=commandOptions[1];
-    		returnObject.methodCall="";
-    		//returnObject.methodParameters="";
-    		returnObject.execute=false;
-        }
+
+		if (functionParms.containsKey("<true|false>")){
+			userInput=functionParms.get("<true|false>");
+			returnObject.methodCall="";
+			returnObject.execute=false;
+		} else {
+			userInput=executeMenuOption();
+			returnObject.methodCall="settings showmenu";
+			returnObject.execute=true;
+		}
 		
 		if (userInput.length()==1){
 			switch (userInput.charAt(0)){
@@ -83,6 +80,8 @@ public class AutoQueueEpisodes extends CLIOption {
 				System.out.println ("Error: User entered Value is invalid. No change made");
 		}
 		System.out.println("Auto Queue Downloads: "+data.getSettings().findSetting("autoQueue"));
+
+		returnObject.parameterMap.clear();
 		
 		return returnObject;
 	}

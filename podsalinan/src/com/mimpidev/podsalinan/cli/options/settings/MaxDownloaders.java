@@ -36,26 +36,25 @@ public class MaxDownloaders extends CLIOption {
 	}
 	
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this,"Command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		String numDownloaders="";
 
-		String[] commandOptions = command.split(" ");
-        if (commandOptions.length==1){
+		if (functionParms.containsKey("userInput")){
+			numDownloaders=functionParms.get("userInput");
+			returnObject.methodCall="";
+			returnObject.execute=false;
+		} else {
         	numDownloaders=executeMenuOption();
         	returnObject.methodCall="settings";
         	returnObject.execute=true;
-        } else {
-        	numDownloaders=commandOptions[1];
-    		returnObject.methodCall="";
-    		returnObject.execute=false;
         }		
 		
 		if (numDownloaders!=null)
 			if(!data.getSettings().updateSetting("maxDownloaders",numDownloaders))
 				data.getSettings().addSetting("maxDownloaders",numDownloaders);
-		System.out.println("Simultaneous Downloads: "+data.getSettings().findSetting("maxDownloaders"));		
-		//returnObject.methodParameters="";
+		System.out.println("Simultaneous Downloads: "+data.getSettings().findSetting("maxDownloaders"));
+		
+		returnObject.parameterMap.clear();
 		
 		return returnObject;
 	}
