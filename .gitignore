@@ -5,3 +5,6 @@ podsalinan/.project
 podsalinan/.settings/
 podsalinan/bin
 podsalinan/lib
+/bin
+.classpath
+.project
