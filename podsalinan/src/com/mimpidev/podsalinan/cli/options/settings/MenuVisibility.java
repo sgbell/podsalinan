@@ -26,8 +26,7 @@ public class MenuVisibility extends CLIOption {
 	 */
 	public MenuVisibility(DataStorage newData) {
 		super(newData);
-		options.put("show", new ShowMenu(data));
-		options.put("hide", new HideCommand(data));
+
 	}
 
 	public ReturnObject execute(Map<String, String> functionParms) {
@@ -37,13 +36,14 @@ public class MenuVisibility extends CLIOption {
 		Set<String> trueList = new HashSet<String>(Arrays.asList(new String[] {"true","1","yes","y"}));
 		Set<String> falseList = new HashSet<String>(Arrays.asList(new String[] {"false","0","no","n"}));
 		if (trueList.contains(functionParms.get("userInput"))){
-			//returnObject=options.get("show").execute("menu");
+			returnObject.methodCall="show menu";
 		} else if (falseList.contains(functionParms.get("userInput"))){
-			//returnObject=options.get("hide").execute("menu");
+			returnObject.methodCall="hide menu";
 		} else {
 			System.out.println("Error: Invalid Command.");
+			returnObject.methodCall="";
 		}
-		returnObject.methodCall="settings";
+
 		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
