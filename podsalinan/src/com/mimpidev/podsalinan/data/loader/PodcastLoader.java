@@ -100,20 +100,33 @@ public class PodcastLoader extends TableLoader {
 				}
 				newPodcast.setAdded(true);
 				podcastList.add(newPodcast);
-				File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
+				final File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
 				if (podcastFile.exists()){
-					Database podcastDB=null;
-					try {
-						podcastDB = new Database(podcastFile.getAbsolutePath());
-					} catch (SqliteException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-					}
+					// To increase the speed of start up time, I have moved the episode loading to the background
+					Thread newThread = new Thread(){
+						public void run(){
+							Database podcastDB=null;
+							try {
+								podcastDB = new Database(podcastFile.getAbsolutePath());
+							} catch (SqliteException e){
+								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+							} catch  (ClassNotFoundException e) {
+								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+							}
 
-					if (podcastDB!=null){
-						EpisodeLoader episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
-						episodeLoader.readTable();
-						episodeLoaders.add(episodeLoader);
-					}
+							if (podcastDB!=null){
+								EpisodeLoader episodeLoader;
+								try {
+									episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
+									episodeLoader.readTable();
+									episodeLoaders.add(episodeLoader);
+								} catch (ClassNotFoundException e) {
+									Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+								}
+							}
+						}
+					};
+					newThread.start();
 				} else {
 					Podsalinan.debugLog.logError("File does not exist");
 				}

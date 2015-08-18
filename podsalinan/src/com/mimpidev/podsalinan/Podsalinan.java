@@ -131,13 +131,6 @@ public class Podsalinan {
 	}
 
 	public Podsalinan(){
-		// Moved the 3 lines below to DataStorage.
-		// podcasts = new Vector<Podcast>();
-		// URL Downloads
-		// urlDownloads = new URLDownloadList(podcasts);
-		// Program Settings
-		// settings = new ProgSettings();
-		
 		// Action Listener for the main window
 		//CommandPass aListener = new CommandPass(settings);
 	}

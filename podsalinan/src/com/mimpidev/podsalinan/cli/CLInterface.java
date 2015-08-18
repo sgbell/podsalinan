@@ -81,8 +81,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("quit", quit);
 		options.put("exit", quit);
         URLCommand urlCommand =new URLCommand(data);
-		options.put("http", urlCommand);
-		options.put("ftp", urlCommand);
+		options.put("<url>", urlCommand);
 		options.put("download <url>", urlCommand);
 		options.put("help", new Help(data));
 		options.put("help list", new HelpList(data));

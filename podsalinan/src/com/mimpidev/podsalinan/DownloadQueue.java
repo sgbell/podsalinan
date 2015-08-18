@@ -147,6 +147,15 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 							podcastCount++;
 				}
 				if (selectedPodcast!=null){
+					while (selectedPodcast.getEpisodeByURL(url)==null){
+						// If the podcast Episodes have not been loaded yet, we will need to pause this thread
+						// and check it again. until it exists. The download will have already started :)
+						try {
+							Thread.sleep(10000);
+						} catch (InterruptedException e) {
+							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						}
+					}
 					selectedPodcast.getEpisodeByURL(url).setStatus(newStatus);
 					return true;
 				}
