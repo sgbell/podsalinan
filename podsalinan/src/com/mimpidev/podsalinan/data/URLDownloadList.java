@@ -197,7 +197,15 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public void checkDownloadSize(URLDownload newFile){
-		if (Long.parseLong(newFile.getSize())==0){
+		long size;
+		
+		try {
+			size = Long.parseLong(newFile.getSize());
+		} catch (NumberFormatException e){
+			size=0;
+		}
+		
+		if (size==0){
 			try {
 				URLConnection stream = new URL(newFile.getURL()).openConnection();
 				int fileSize=stream.getContentLength();

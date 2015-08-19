@@ -27,16 +27,20 @@ public class URLCommand extends CLIOption {
 	@SuppressWarnings("unused")
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		try {
-			// newURL is only used to confirm that the user input is a url
-			URL newURL = new URL(command);
-			data.getUrlDownloads().addDownload(command, data.getSettings().getSettingValue("defaultDirectory"),"-1",false);
-			System.out.println("Downloading URL: "+command);
-		} catch (MalformedURLException e) {
-			// menuInput is not a url
+		if (functionParms.containsKey("url")){
+			try {
+				// newURL is only used to confirm that the user input is a url
+				URL newURL = new URL(functionParms.get("url"));
+				data.getUrlDownloads().addDownload(functionParms.get("url"), data.getSettings().getSettingValue("defaultDirectory"),"-1",false);
+				System.out.println("Downloading URL: "+functionParms.get("url"));
+			} catch (MalformedURLException e) {
+				System.out.println("Error: Invalid Input");
+			}
+		} else {
 			System.out.println("Error: Invalid Input");
 		}
+		returnObject.methodCall="";
+		returnObject.execute=false;
 
 		return returnObject;
 	}
