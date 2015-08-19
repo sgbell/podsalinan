@@ -47,6 +47,11 @@ public class Podsalinan {
 	public static final Log debugLog = new Log(PROGRAM_NAME.toLowerCase());
 	
 	/**
+	 *  Object used to wake and put to sleep the DownloadQueue
+	 */
+	public static final Object downloadQueueSyncObject=new Object();
+	
+	/**
 	 * Upon execution the program will create a new instance of podsalinan, which is where
 	 * most of the work happens. Creating the new instance builds the main window.
 	 * 
@@ -146,6 +151,7 @@ public class Podsalinan {
 
 		// Downloader List
 		downloaderList = new DownloadQueue(data);
+		downloaderList.setDownloadQueueObject(downloadQueueSyncObject);
 		Thread downloadListThread = new Thread(downloaderList,"DownloadQueue");
 		downloadListThread.start();
 

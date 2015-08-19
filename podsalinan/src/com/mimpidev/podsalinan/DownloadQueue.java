@@ -31,6 +31,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private Vector<Downloader> downloaders;	// Collection of running downloaders
 	private DataStorage data=null;
 	private boolean isFinished;
+	private	Object downloadQueueObject;
+
 
 	public DownloadQueue(){
 		
@@ -69,6 +71,12 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					}
 				}
 				
+				// If the number of downloaders has been dropped, we need to make sure that the system
+				// reflects this, and removes a downloader
+				while (downloaders.size()>maxDownloaders){
+					downloaders.get(downloaders.size()-1).setStopThread(true);
+				}
+				
 				
 				if (data.getUrlDownloads().getNumberOfQueuedDownloads()>0){
 					//search downloadList for next queued item.
@@ -87,6 +95,14 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 							downloadCount++;
 						}
 					}
+				}
+				
+				try {
+					synchronized(getDownloadQueueObject()){
+						getDownloadQueueObject().wait();
+					}
+				} catch (InterruptedException e) {
+					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 				}
 			}
 			// Stop all downloaders when the program is exiting
@@ -220,7 +236,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			}
 			updatePodcastEpisodeStatus(download.getPodcastSource(),download.getURL().toString(), newEpisodeStatus);
 		}
-		
+		synchronized(getDownloadQueueObject()){
+			getDownloadQueueObject().notify();
+		}
 		downloader.downloaderFinished(true);
 	}
 		
@@ -254,5 +272,19 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	 */
 	public void setFinished(boolean isFinished) {
 		this.isFinished = isFinished;
+	}
+
+	/**
+	 * @return the downloadQueueObject
+	 */
+	public Object getDownloadQueueObject() {
+		return downloadQueueObject;
+	}
+
+	/**
+	 * @param downloadQueueObject the downloadQueueObject to set
+	 */
+	public void setDownloadQueueObject(Object downloadQueueObject) {
+		this.downloadQueueObject = downloadQueueObject;
 	}
 }

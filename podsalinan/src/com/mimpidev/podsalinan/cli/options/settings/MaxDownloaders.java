@@ -53,6 +53,8 @@ public class MaxDownloaders extends CLIOption {
 			if(!data.getSettings().updateSetting("maxDownloaders",numDownloaders))
 				data.getSettings().addSetting("maxDownloaders",numDownloaders);
 		System.out.println("Simultaneous Downloads: "+data.getSettings().findSetting("maxDownloaders"));
+        // This is used to wake up the downloadQueue to change the number of downloaders running.
+		Podsalinan.downloadQueueSyncObject.notify();
 		
 		returnObject.parameterMap.clear();
 		
