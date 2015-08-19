@@ -146,7 +146,7 @@ public class Podsalinan {
 
 		// Downloader List
 		downloaderList = new DownloadQueue(data);
-		Thread downloadListThread = new Thread(downloaderList);
+		Thread downloadListThread = new Thread(downloaderList,"DownloadQueue");
 		downloadListThread.start();
 
 		if (!data.getSettings().isValidSetting("interface"))
@@ -166,7 +166,7 @@ public class Podsalinan {
 		
 		if (showCli){
 			cli = new CLInterface(data);
-			Thread cliThread = new Thread(cli);
+			Thread cliThread = new Thread(cli,"CLI");
 			cliThread.start();
 		}
 		

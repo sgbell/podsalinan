@@ -23,12 +23,8 @@ public class ShowMenu extends CLIOption {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		System.out.println(data.getPodcasts().getList().size()+" - Podcasts. "+data.getUrlDownloads().visibleSize()+" - Downloads Queued");
 		System.out.println();
 		System.out.println("1. Podcasts Menu");
@@ -40,4 +36,8 @@ public class ShowMenu extends CLIOption {
 		return returnObject;
 	}
 
+	/*NOTE: The startup time may not be able to be increased. It still waits for the episodes to be loaded because
+	 * the podcasts are stored in a Vector. You might be able to optimize the startup time further by changing the type
+	 * of podcastList to ArrayList, and placing synchronize on either the code blocks, or the methods.
+	 */
 }

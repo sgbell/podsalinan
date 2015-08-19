@@ -229,10 +229,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	//TODO: 1. Moving the command line menu around again. Move all of the child options to here
 	//TODO: 2. remove all debug=true
 	//TODO: 3. Change input to character input
-	/*TODO: 4. Optimize loading of Data. IE load podcast information, and downloads.
-	 *         Then as the user loads a podcast, or the system does an update. load the podcast data.
-	 */
-	//TODO: 5. Add the ability for multiple child download threads to facilitate faster downloading.
+	//TODO: 4. Add the ability for multiple child download threads to facilitate faster downloading.
 	
 	@Override
 	public void run() {

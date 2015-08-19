@@ -24,6 +24,7 @@ package com.mimpidev.podsalinan.data.loader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.mimpidev.dev.sql.SqlException;
@@ -103,34 +104,38 @@ public class PodcastLoader extends TableLoader {
 				final File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
 				if (podcastFile.exists()){
 					// To increase the speed of start up time, I have moved the episode loading to the background
-					Thread newThread = new Thread(){
-						public void run(){
-							Database podcastDB=null;
-							try {
-								podcastDB = new Database(podcastFile.getAbsolutePath());
-							} catch (SqliteException e){
-								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-							} catch  (ClassNotFoundException e) {
-								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-							}
+					Database podcastDB=null;
+					try {
+						podcastDB = new Database(podcastFile.getAbsolutePath());
+					} catch (SqliteException e){
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					} catch  (ClassNotFoundException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					}
 
-							if (podcastDB!=null){
-								EpisodeLoader episodeLoader;
-								try {
-									episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
-									episodeLoader.readTable();
-									episodeLoaders.add(episodeLoader);
-								} catch (ClassNotFoundException e) {
-									Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-								}
-							}
+					if (podcastDB!=null){
+						EpisodeLoader episodeLoader;
+						try {
+							episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
+							//episodeLoader.readTable();
+							episodeLoaders.add(episodeLoader);
+						} catch (ClassNotFoundException e) {
+							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 						}
-					};
-					newThread.start();
+					}
 				} else {
 					Podsalinan.debugLog.logError("File does not exist");
 				}
-			}		
+			}
+			// Loading the episodes in 1 background thread
+			Thread episodeLoader = new Thread("EpisodeLoader"){
+				public void run(){
+					for (EpisodeLoader loader: episodeLoaders){
+						loader.readTable();
+					}
+				}
+			};
+			episodeLoader.start();
 		} else {
 			Podsalinan.debugLog.logError("Error reading from Podcast Table");
 		}
