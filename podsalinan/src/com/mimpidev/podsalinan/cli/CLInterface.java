@@ -232,11 +232,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	/*TODO: 4. Optimize loading of Data. IE load podcast information, and downloads.
 	 *         Then as the user loads a podcast, or the system does an update. load the podcast data.
 	 */
-	/*TODO: 5. Noticed 100s of download threads during debug while limited to 3 downloaders. Need to change the
-	 *         functionality so that the system will have (max downloaders) number of downloaders running at all
-	 *         times, and have them sleep when they have nothing to do. Wkae them up when they have a file to download
-	 */
-	//TODO: 6. Add the ability for multiple child download threads to facilitate faster downloading.
+	//TODO: 5. Add the ability for multiple child download threads to facilitate faster downloading.
 	
 	@Override
 	public void run() {
