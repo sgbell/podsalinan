@@ -74,7 +74,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				// If the number of downloaders has been dropped, we need to make sure that the system
 				// reflects this, and removes a downloader
 				while (downloaders.size()>maxDownloaders){
-					downloaders.get(downloaders.size()-1).setStopThread(true);
+					downloaders.get(downloaders.size()-1).endThread();
 				}
 				
 				
@@ -107,8 +107,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			}
 			// Stop all downloaders when the program is exiting
 			synchronized(downloaders){
-				for (Downloader downloader : downloaders)
-					downloader.setStopThread(true);
+				for (Downloader downloader : downloaders){
+					downloader.endThread();
+				}
 			}
 			
 		}
@@ -235,6 +236,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					newEpisodeStatus=URLDetails.DOWNLOAD_QUEUED;
 			}
 			updatePodcastEpisodeStatus(download.getPodcastSource(),download.getURL().toString(), newEpisodeStatus);
+			if (data.getSettings().isFinished()){
+				downloaders.remove(downloader);
+			}
 		}
 		synchronized(getDownloadQueueObject()){
 			getDownloadQueueObject().notify();
