@@ -34,6 +34,8 @@ public abstract class NotifyingRunnable implements Runnable{
 	private final Set<RunnableCompleteListener> listeners =
 			new CopyOnWriteArraySet<RunnableCompleteListener>();
 	
+	private boolean stopThread=false;
+	
 	public final void addListener(final RunnableCompleteListener listener) {
 		listeners.add(listener);
 	}
@@ -44,12 +46,22 @@ public abstract class NotifyingRunnable implements Runnable{
 		}
 	}
 	
+	public boolean isStopThread(){
+		return stopThread;
+	}
+	
+	public void setStopThread(boolean newStopValue){
+		stopThread=newStopValue;
+	}
+	
 	@Override
 	public final void run(){
-		try {
-			doRun();
-		} finally {
-			notifyListeners();
+		while (!stopThread){
+			try {
+				doRun();
+			} finally {
+				notifyListeners();
+			}
 		}
 	}
 	

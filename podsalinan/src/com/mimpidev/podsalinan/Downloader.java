@@ -37,19 +37,22 @@ import com.mimpidev.podsalinan.data.URLDownload;
 
 
 public class Downloader extends NotifyingRunnable{
-	public final static int CONNECTION_FAILED=-1;
     public final static int NO_STATUS=0;
-	public final static int DOWNLOAD_COMPLETE=1;
+	public final static int CURRENTLY_DOWNLOADING=1;
+	public final static int DOWNLOAD_COMPLETE=2;
+	public final static int CONNECTION_FAILED=-1;
 	public final static int DOWNLOAD_INCOMPLETE=-2;
 	public final static int DESTINATION_INVALID=-3;
 	public final static int DOWNLOAD_ERROR=-4;
 	
 	private URLDownload downloadItem;
     private static int result=NO_STATUS;
-    private boolean stopDownload=false;
     private String fileSystemSlash;
     private URL downloadURL;
     private long saved=0;
+    private Object syncObject = new Object();
+    
+    private boolean active=false;
 	
     public Downloader(URLDownload download, String newFileSystemSlash){
     	downloadItem = download;
@@ -109,6 +112,39 @@ public class Downloader extends NotifyingRunnable{
 		
 	}
 
+	/**
+	 * This is used to initialize a downloader thread
+	 * @param fileSystemSlash
+	 */
+	public Downloader(String fileSystemSlash) {
+		this.fileSystemSlash=fileSystemSlash;
+		downloadItem=new URLDownload();
+	}
+	
+	/**
+	 * 
+	 */
+	public void setDownload(URLDownload downloadItem){
+		this.downloadItem = downloadItem;
+
+        if (downloadItem.getURL().length()>0){
+    		try {
+    			downloadURL = new URL(downloadItem.getURL().toString());
+    		} catch (MalformedURLException e) {
+    			downloadURL=null;
+    		}
+        } else {
+        	downloadURL=null;
+        }
+		if (downloadURL!=null){
+			synchronized(syncObject){
+				syncObject.notify();
+			}
+		} else {
+			downloadItem=null;
+		}
+	}
+
 	/** code found at: 
 	 * http://stackoverflow.com/questions/1139547/detect-internet-connection-using-java
 	 * This test will cover if a download can occur or not.
@@ -129,11 +165,11 @@ public class Downloader extends NotifyingRunnable{
                 //is no connection, this line will fail
                 Object objData = urlConnect.getContent();
             } catch (UnknownHostException e) {
-            		result=CONNECTION_FAILED;
+            		setResult(CONNECTION_FAILED);
                     return false;
             }
             catch (IOException e) {
-            		result=CONNECTION_FAILED;
+            		setResult(CONNECTION_FAILED);
                     return false;
             }
             return true;
@@ -174,6 +210,7 @@ public class Downloader extends NotifyingRunnable{
 		
 		//System.out.print("Is internet Reachable? ");
 		if (isInternetReachable()){
+			setResult(CURRENTLY_DOWNLOADING);
 			//System.out.println("Yes it is.");
 			byte buf[]=new byte[1024];
 			int byteRead;	// Number of bytes read from file being downloaded
@@ -181,7 +218,7 @@ public class Downloader extends NotifyingRunnable{
 			//System.out.println("Internet is reachable.");
 			
 			while ((!remoteFileExists)&&(numTries<2)
-					&&(!stopDownload)){
+					&&(!isStopThread())){
 				//System.out.println("Inside first while");
 				try {
 					checkURLRedirect(new URL(downloadItem.getURL()));
@@ -247,11 +284,11 @@ public class Downloader extends NotifyingRunnable{
 					remoteFileExists=true;
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
-					result=CONNECTION_FAILED;
+					setResult(CONNECTION_FAILED);
 					remoteFileExists=false;
 				} catch (IOException e) {
 					e.printStackTrace();
-					result=CONNECTION_FAILED;
+					setResult(CONNECTION_FAILED);
 					remoteFileExists=false;
 				}
 
@@ -271,7 +308,7 @@ public class Downloader extends NotifyingRunnable{
 												downloadURL.getPort(),
 												downloadURL.getFile());
 					} catch (MalformedURLException e) {
-						result=CONNECTION_FAILED;
+						setResult(CONNECTION_FAILED);
 						remoteFileExists=false;
 					}
 				}
@@ -299,7 +336,7 @@ public class Downloader extends NotifyingRunnable{
 						int chunkCount=0;
 						//System.out.println("before the download while");
 						while (((byteRead = inStream.read(buf)) > 0)
-								&&(!stopDownload)
+								&&(!isStopThread())
 								&&(downloadItem.getStatus()==URLDetails.CURRENTLY_DOWNLOADING)){
 							//System.out.println("Downloading....");
 							outStream.write(buf, 0, byteRead);
@@ -324,29 +361,29 @@ public class Downloader extends NotifyingRunnable{
 					
 					if (saved==Long.parseLong(downloadItem.getSize())){
 						downloadItem.setStatus(URLDetails.FINISHED);
-						result = DOWNLOAD_COMPLETE;
+						setResult(DOWNLOAD_COMPLETE);
 					} else if (saved<Long.parseLong(downloadItem.getSize())){
 						downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
-						result = DOWNLOAD_INCOMPLETE;
+						setResult(DOWNLOAD_INCOMPLETE);
 					} else if ((saved>Long.parseLong(downloadItem.getSize()))&&
 							    (Long.parseLong(downloadItem.getSize())>0)){
 						downloadItem.setStatus(URLDetails.DOWNLOAD_FAULT);
-						result = DOWNLOAD_ERROR;
+						setResult(DOWNLOAD_ERROR);
 					} else if ((Long.parseLong(downloadItem.getSize())==-1)&&saved>0){
 						downloadItem.setStatus(URLDetails.FINISHED);
-						result = DOWNLOAD_COMPLETE;
+						setResult(DOWNLOAD_COMPLETE);
 					}
 				} catch (UnknownHostException e){
 					downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
-					result = CONNECTION_FAILED;
+					setResult(CONNECTION_FAILED);
 				} catch (IOException e) {
 					downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
-					result = CONNECTION_FAILED;
+					setResult(CONNECTION_FAILED);
 				}
 			}
 		} else {
 			// No internet connection.
-			result = CONNECTION_FAILED;
+			setResult(CONNECTION_FAILED);
 		}
 		return result;
 	}
@@ -356,8 +393,13 @@ public class Downloader extends NotifyingRunnable{
 	 * interface Downloader inherits
 	 */
 	public void doRun() {
-		//System.out.println("Downloader.doRun()");
-		// All it needs to do is start downloading and grab the result.
+		synchronized(syncObject){
+			try {
+				syncObject.wait();
+			} catch (InterruptedException e) {
+				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			}
+		}
 		result = getFile();
 	}
 	
@@ -368,31 +410,17 @@ public class Downloader extends NotifyingRunnable{
 	/**
 	 * @return the result
 	 */
-	public int getResult() {
+	public synchronized static int getResult() {
 		return result;
 	}
 
 	/**
 	 * @param result the result to set
 	 */
-	public void setResult(int result) {
+	public synchronized static void setResult(int result) {
 		Downloader.result = result;
 	}
 
-	/**
-	 * @return the stopDownload
-	 */
-	public boolean isStopDownload() {
-		return stopDownload;
-	}
-
-	/**
-	 * @param stopDownload the stopDownload to set
-	 */
-	public void setStopDownload(boolean stopDownload) {
-		this.stopDownload = stopDownload;
-	}
-	
 	public URLDownload getURLDownload(){
 		return downloadItem;
 	}
@@ -403,5 +431,18 @@ public class Downloader extends NotifyingRunnable{
 	 */
 	public long getSaved(){
 		return saved;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean currentlyDownloading() {
+		
+		return active;
+	}
+
+	public void downloaderFinished(boolean finished) {
+		active=!finished;
 	}
 }
