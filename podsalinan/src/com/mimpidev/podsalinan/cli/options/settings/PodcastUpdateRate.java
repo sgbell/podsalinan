@@ -30,24 +30,16 @@ public class PodcastUpdateRate extends CLIOption {
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		String updateValue="";
 		
-		if (commandOptions.length==1 && !command.equalsIgnoreCase("updateinterval")){
+		if (!functionParms.containsKey("updateInterval")){
 			updateValue=executeMenuOption();
-		} else if (command.equalsIgnoreCase("updateinterval")){
-			System.out.println("Error: No interval specified");
-		} else if (commandOptions[0].equalsIgnoreCase("updateinterval")){
-			try {
-				updateValue=commandOptions[1];
-			} catch (NumberFormatException e) {
-				System.out.println("Error: Invalid value.");
-			}
 		} else {
 			try {
 				// Check that the second value passed in is a number, and between 1 & 6
-			    if ((Integer.parseInt(commandOptions[1])<1)||
-			    	(Integer.parseInt(commandOptions[1])>6)){
+			    if ((Integer.parseInt(functionParms.get("updateInterval"))<1)||
+			    	(Integer.parseInt(functionParms.get("updateInterval"))>6)){
 			    	throw new NumberFormatException("Number out of Bounds");
 			    }
-			    updateValue=commandOptions[1];
+			    updateValue=functionParms.get("updateInterval");
 			} catch (NumberFormatException e){
 				System.out.println("Error: Invalid Value.");
 				System.out.println("Valid values: (1)Hourly, (2)Every 2 Hours, (3)Every 3 Hours, (4)Every 6 Hours, (5)Every 12 Hours, (6)Daily");
@@ -97,14 +89,16 @@ public class PodcastUpdateRate extends CLIOption {
 				}
 			}
 		}
-		if (!commandOptions[0].equalsIgnoreCase("updateinterval")){
+		if (!functionParms.containsKey("updateinterval")){
 			returnObject.methodCall="settings";
-			//returnObject.methodParameters="";
 			returnObject.execute=true;
 		} else {
+			returnObject.methodCall="";
+			
 			returnObject.execute=false;
 		}
-		
+
+		returnObject.parameterMap.clear();
 		return returnObject;
 	}
 
