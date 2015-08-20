@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan.cli.options;
+package com.mimpidev.podsalinan.cli.options.mainmenu;
 
 import java.util.Map;
 

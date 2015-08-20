@@ -33,8 +33,11 @@ import com.mimpidev.podsalinan.cli.options.*;
 import com.mimpidev.podsalinan.cli.options.downloads.*;
 import com.mimpidev.podsalinan.cli.options.episode.*;
 import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
+import com.mimpidev.podsalinan.cli.options.generic.RemoveItem;
 import com.mimpidev.podsalinan.cli.options.help.*;
 import com.mimpidev.podsalinan.cli.options.list.*;
+import com.mimpidev.podsalinan.cli.options.mainmenu.HideCommand;
+import com.mimpidev.podsalinan.cli.options.mainmenu.ShowCommand;
 import com.mimpidev.podsalinan.cli.options.podcast.*;
 import com.mimpidev.podsalinan.cli.options.settings.*;
 import com.mimpidev.podsalinan.data.PodcastList;
@@ -80,13 +83,11 @@ public class CLInterface extends CLIOption implements Runnable{
         URLCommand urlCommand =new URLCommand(data);
 		options.put("http", urlCommand);
 		options.put("ftp", urlCommand);
+		options.put("download <url>", urlCommand);
 		options.put("help", new Help(data));
 		options.put("help list", new HelpList(data));
 		options.put("help select", new HelpSelect(data));
 		options.put("help set", new HelpSet(data));
-
-/*		options.put("set podcast directory", new SetCommand(data));
-		options.put("set directory", new SetCommand(data));*/
 
 		options.put("list podcasts", new ListPodcasts(data));
 		options.put("list episode", new ListEpisodes(data));
@@ -97,24 +98,12 @@ public class CLInterface extends CLIOption implements Runnable{
 		
 		options.put("show menu", new ShowCommand(data));
 		options.put("hide menu", new HideCommand(data));
-		options.put("download episode", new DownloadCommand(data));
-		options.put("download <url>", new DownloadCommand(data));
-		options.put("restart episode", new RestartCommand(data));
-		options.put("restart downloads", new RestartCommand(data));
 		options.put("stop", new StopCommand(data));
-		options.put("stop download", new StopCommand(data));
-		options.put("stop <downloadid>", new StopCommand(data));
-		options.put("remove", new RemoveCommand(data));
-		options.put("remove download", new RemoveCommand(data));
-		options.put("remove podcast", new RemoveCommand(data));
-		options.put("remove <downloadid|podcastid>", new RemoveCommand(data));
+		options.put("remove", new RemoveItem(data));
+		options.put("remove <downloadid|podcastid>", new RemoveItem(data));
 		// New command to implement
-		options.put("remove all downloads", null);
-		options.put("clear", new ClearCommand(data));
-		options.put("increase", new IncreaseCommand(data));
-		options.put("increase download <downloadid>", new IncreaseCommand(data));
-		options.put("decrease", new DecreaseCommand(data));
-		options.put("decrease download <downloadid>", new DecreaseCommand(data));
+		options.put("remove all downloads", new RemoveItem(data));
+		
 		options.put("dump", new DumpCommand(data));
 		options.put("dump urldownloads", new DumpCommand(data));
 
@@ -132,7 +121,9 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> episode <aa> 9", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> 1", new ListEpisodes(data));
 		options.put("podcast <podcastid> 2", new UpdatePodcast(data));
-		options.put("podcast <podcastid> 3", new DeletePodcast(data));
+		CLIOption deletePodcast = new DeletePodcast(data);
+		options.put("podcast <podcastid> 3", deletePodcast);
+		options.put("remove podcast", deletePodcast);
 		options.put("podcast <podcastid> 4", new ChangeDestination(data));
 		options.put("podcast <podcastid> 5", new com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes(data));
 		
@@ -140,7 +131,9 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> <aa>", selectEpisode);
 		options.put("podcast <podcastid> episode <aa>", selectEpisode);
 		options.put("podcast <podcastid> episode <aa> showmenu", new com.mimpidev.podsalinan.cli.options.episode.ShowSelectedMenu(data));
-		options.put("podcast <podcastid> episode <aa> 1", new DownloadEpisode(data));
+		CLIOption downloadEpisode = new DownloadEpisode(data);
+		options.put("podcast <podcastid> episode <aa> 1", downloadEpisode);
+		options.put("download episode", downloadEpisode);
 		options.put("podcast <podcastid> episode <aa> 2", new DeleteEpisodeFromDrive(data));
 		options.put("podcast <podcastid> episode <aa> 3", new com.mimpidev.podsalinan.cli.options.episode.CancelDownload(data));
 		options.put("podcast <podcastid> episode <aa> 4", new com.mimpidev.podsalinan.cli.options.episode.ChangeStatus(data));
@@ -167,12 +160,25 @@ public class CLInterface extends CLIOption implements Runnable{
 		CLIOption showSelectedDownloadMenu = new com.mimpidev.podsalinan.cli.options.downloads.ShowSelectedMenu(data);
 		options.put("downloads <downloadid>", showSelectedDownloadMenu);
 		options.put("downloads <downloadid> showmenu", showSelectedDownloadMenu);
-		options.put("downloads <downloadid> 1", new DeleteDownload(data));		
-		options.put("downloads <downloadid> 2", new RestartDownload(data));		
-		options.put("downloads <downloadid> 3", new StopDownload(data));		
+        CLIOption deleteDownload = new DeleteDownload(data);
+		options.put("downloads <downloadid> 1", deleteDownload);
+		options.put("remove download", deleteDownload);
+		CLIOption restartDownload = new RestartDownload(data);
+		options.put("downloads <downloadid> 2", restartDownload);		
+		options.put("restart downloads", restartDownload);
+		CLIOption stopDownload =new StopDownload(data);
+		options.put("downloads <downloadid> 3", stopDownload);		
+		options.put("stop download", stopDownload);
+		options.put("stop <downloadid>", stopDownload);
 		options.put("downloads <downloadid> 4", new StartDownload(data));		
-		options.put("downloads <downloadid> 5", new IncreasePriority(data));		
-		options.put("downloads <downloadid> 6", new DecreasePriority(data));		
+        CLIOption increasePriority = new IncreasePriority(data);
+		options.put("downloads <downloadid> 5", increasePriority);		
+		options.put("increase", increasePriority);
+		options.put("increase download <downloadid>", increasePriority);
+		CLIOption decreasePriority = new DecreasePriority(data);
+		options.put("downloads <downloadid> 6", decreasePriority);		
+		options.put("decrease", decreasePriority);
+		options.put("decrease download <downloadid>", decreasePriority);
 		options.put("downloads <downloadid> 7", new ChangeDestination(data));
 		options.put("select download <a-z>", showSelectedDownloadMenu);
 		/**

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan.cli.options;
+package com.mimpidev.podsalinan.cli.options.generic;
 
 import java.util.Map;
 
@@ -17,12 +17,12 @@ import com.mimpidev.podsalinan.cli.options.podcast.DeletePodcast;
  * @author sbell
  *
  */
-public class RemoveCommand extends CLIOption {
+public class RemoveItem extends CLIOption {
 
 	/**
 	 * @param newData
 	 */
-	public RemoveCommand(DataStorage newData) {
+	public RemoveItem(DataStorage newData) {
 		super(newData);
 		DeleteDownload deleteDownload = new DeleteDownload(newData);
 /*		options.put("downloads", deleteDownload);
