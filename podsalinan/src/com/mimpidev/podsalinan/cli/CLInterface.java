@@ -83,9 +83,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("help list", new HelpList(data));
 		options.put("help select", new HelpSelect(data));
 		options.put("help set", new HelpSet(data));
-		options.put("select podcast", new SelectCommand(data));
-		options.put("select episode", new SelectCommand(data));
-		options.put("select download", new SelectCommand(data));
 		options.put("set updateinterval", new SetCommand(data));
 		options.put("set downloadlimit", new SetCommand(data));
 		options.put("set maxdownloaders", new SetCommand(data));
@@ -154,6 +151,11 @@ public class CLInterface extends CLIOption implements Runnable{
 		CLIOption podcastShowmenu = new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data);
 		options.put("podcast showmenu", podcastShowmenu);
 		options.put("podcast <podcastid> 9", podcastShowmenu);
+
+		options.put("select episode <aa>", selectEpisode);
+		options.put("select podcast <podcastName>", selectPodcast);
+		options.put("select podcast <a-z>", selectPodcast);
+		options.put("select podcast <podcastid>", selectPodcast);
 		/**
 		 * Here ends the podcast menu commands
 		 */
@@ -175,6 +177,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("downloads <downloadid> 5", new IncreasePriority(data));		
 		options.put("downloads <downloadid> 6", new DecreasePriority(data));		
 		options.put("downloads <downloadid> 7", new ChangeDestination(data));
+		options.put("select download <a-z>", showSelectedDownloadMenu);
 		/**
 		 *  Here ends the download menu command list
 		 */
