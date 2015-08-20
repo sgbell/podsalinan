@@ -23,8 +23,8 @@ public class ShowCommand extends CLIOption {
 	 */
 	public ShowCommand(DataStorage newData) {
 		super(newData);
-		options.put("menu", new ShowMenu(newData));
-		options.put("details", new ListDetails(newData));
+	/*	options.put("menu", new ShowMenu(newData));
+		options.put("details", new ListDetails(newData));*/
 	}
 
 	@Override
@@ -32,11 +32,11 @@ public class ShowCommand extends CLIOption {
 		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this, 31, "Command: "+command);
 		String[] commandOptions = command.split(" ");
-		if (options.containsKey(commandOptions[0])){
+		/*if (options.containsKey(commandOptions[0])){
 			//returnObject=options.get(commandOptions[0]).execute(command);
 		} else {
 			System.out.println("Error: Invalid user Input.");
-		}
+		}*/
 
 		return returnObject;
 	}
