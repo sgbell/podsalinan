@@ -34,6 +34,7 @@ import com.mimpidev.podsalinan.cli.options.downloads.*;
 import com.mimpidev.podsalinan.cli.options.episode.*;
 import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
 import com.mimpidev.podsalinan.cli.options.help.*;
+import com.mimpidev.podsalinan.cli.options.list.*;
 import com.mimpidev.podsalinan.cli.options.podcast.*;
 import com.mimpidev.podsalinan.cli.options.settings.*;
 import com.mimpidev.podsalinan.data.PodcastList;
@@ -87,12 +88,13 @@ public class CLInterface extends CLIOption implements Runnable{
 /*		options.put("set podcast directory", new SetCommand(data));
 		options.put("set directory", new SetCommand(data));*/
 
-		options.put("list podcasts", new ListCommand(data));
-		options.put("list episode", new ListCommand(data));
-		options.put("list select", new ListCommand(data));
-		options.put("list details", new ListCommand(data));
-		options.put("list downloads", new ListCommand(data));
-		options.put("list preferences", new ListCommand(data));
+		options.put("list podcasts", new ListPodcasts(data));
+		options.put("list episode", new ListEpisodes(data));
+		options.put("list select", new ListSelection(data));
+		options.put("list details", new ListDetails(data));
+		options.put("list downloads", new ListDownloads(data));
+		options.put("list preferences", new ListPreferences(data));
+		
 		options.put("show menu", new ShowCommand(data));
 		options.put("hide menu", new HideCommand(data));
 		options.put("download episode", new DownloadCommand(data));
