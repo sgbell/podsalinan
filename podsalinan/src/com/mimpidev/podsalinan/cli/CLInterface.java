@@ -83,15 +83,10 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("help list", new HelpList(data));
 		options.put("help select", new HelpSelect(data));
 		options.put("help set", new HelpSet(data));
-		options.put("set updateinterval", new SetCommand(data));
-		options.put("set downloadlimit", new SetCommand(data));
-		options.put("set maxdownloaders", new SetCommand(data));
-		options.put("set autoqueue", new SetCommand(data));
-		options.put("set menuvisible", new SetCommand(data));
-		options.put("set defaultdirectory", new SetCommand(data));
-		options.put("set destination", new SetCommand(data));
-		options.put("set podcast directory", new SetCommand(data));
-		options.put("set directory", new SetCommand(data));
+
+/*		options.put("set podcast directory", new SetCommand(data));
+		options.put("set directory", new SetCommand(data));*/
+
 		options.put("list podcasts", new ListCommand(data));
 		options.put("list episode", new ListCommand(data));
 		options.put("list select", new ListCommand(data));
@@ -188,11 +183,23 @@ public class CLInterface extends CLIOption implements Runnable{
 		CLIOption showSettingsMenu = new com.mimpidev.podsalinan.cli.options.settings.ShowMenu(data);
 		options.put("settings showmenu", showSettingsMenu);
 		options.put("settings <0-9> 9", showSettingsMenu);
-		options.put("settings 1", new PodcastUpdateRate(data));
-		options.put("settings 2", new MaxDownloaders(data));
-		options.put("settings 3", new DownloadDirectory(data));
-		options.put("settings 4", new com.mimpidev.podsalinan.cli.options.settings.AutoQueueEpisodes(data));
-		options.put("settings 5", new DownloadSpeedLimit(data));
+		CLIOption podcastUpdateRate =new PodcastUpdateRate(data);
+		options.put("settings 1", podcastUpdateRate);
+		options.put("set updateinterval", podcastUpdateRate);
+		CLIOption maxDownloads = new MaxDownloaders(data);
+		options.put("settings 2", maxDownloads);
+		options.put("set maxdownloaders", maxDownloads);
+		CLIOption downloadDirectory =new DownloadDirectory(data); 
+		options.put("settings 3", downloadDirectory);
+		options.put("set defaultdirectory", downloadDirectory);
+		CLIOption autoqueueEpisodes =new com.mimpidev.podsalinan.cli.options.settings.AutoQueueEpisodes(data); 
+		options.put("settings 4", autoqueueEpisodes);
+		options.put("set autoqueue", autoqueueEpisodes);
+		CLIOption downloadSpeedLimit = new DownloadSpeedLimit(data); 
+		options.put("settings 5", downloadSpeedLimit);
+		options.put("set downloadlimit", downloadSpeedLimit);
+		options.put("set menuvisible", new MenuVisibility(data));
+		options.put("set destination", new ChangeDestination(data));
 		/**
 		 *  End settings options
 		 */
