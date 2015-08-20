@@ -98,7 +98,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		
 		options.put("show menu", new ShowCommand(data));
 		options.put("hide menu", new HideCommand(data));
-		options.put("stop", new StopCommand(data));
 		options.put("remove", new RemoveItem(data));
 		options.put("remove <downloadid|podcastid>", new RemoveItem(data));
 		// New command to implement
@@ -170,6 +169,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("downloads <downloadid> 3", stopDownload);		
 		options.put("stop download", stopDownload);
 		options.put("stop <downloadid>", stopDownload);
+		options.put("stop", stopDownload);
 		options.put("downloads <downloadid> 4", new StartDownload(data));		
         CLIOption increasePriority = new IncreasePriority(data);
 		options.put("downloads <downloadid> 5", increasePriority);		
