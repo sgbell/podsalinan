@@ -28,13 +28,13 @@ public class SetCommand extends CLIOption {
 	 */
 	public SetCommand(DataStorage newData) {
 		super(newData);
-		options.put("updateinterval", new PodcastUpdateRate(newData));
+	/*	options.put("updateinterval", new PodcastUpdateRate(newData));
 		options.put("downloadlimit", new DownloadSpeedLimit(newData));
 		options.put("maxdownloaders", new MaxDownloaders(newData));
 		options.put("autoqueue", new AutoQueueEpisodes(newData));
 		options.put("defaultdirectory", new DownloadDirectory(newData));
 		options.put("destination", new ChangeDestination(newData)); 
-		options.put("menuvisible", new MenuVisibility(newData));
+		options.put("menuvisible", new MenuVisibility(newData));*/
 	}
 
 	@Override
@@ -43,12 +43,12 @@ public class SetCommand extends CLIOption {
 		debug = true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Command: "+command);
 		String[] commandOptions = command.split(" ");
-		if (options.containsKey(commandOptions[0].toLowerCase())){
+	/*	if (options.containsKey(commandOptions[0].toLowerCase())){
 			//returnObject = options.get(commandOptions[0].toLowerCase()).execute(command);
 		} else {
 			System.out.println("Error: Invalid user input.");
 			returnObject.execute=false;
-		}
+		}*/
 		
 		return returnObject;
 	}

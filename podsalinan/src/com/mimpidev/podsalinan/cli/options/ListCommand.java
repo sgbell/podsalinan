@@ -24,12 +24,12 @@ public class ListCommand extends CLIOption {
 
 	public ListCommand(DataStorage newData) {
 		super(newData);
-		options.put("podcasts",new ListPodcasts(newData));
+	/*	options.put("podcasts",new ListPodcasts(newData));
 		options.put("episodes",new ListEpisodes(newData));
 		options.put("downloads",new ListDownloads(newData));
 		options.put("preferences",new ListPreferences(newData));
 		options.put("details",new ListDetails(newData));
-		options.put("select", new ListSelection(newData));
+		options.put("select", new ListSelection(newData));*/
 	}
 
 	@Override
@@ -37,11 +37,11 @@ public class ListCommand extends CLIOption {
 		String command="";
 		if (debug) Podsalinan.debugLog.logInfo(this,command);
 		
-		if (options.containsKey(command.toLowerCase().split(" ")[0])){
-			//options.get(command.toLowerCase().split(" ")[0]).execute((command.split(" ", 2).length>1?command.split(" ",2)[1]:command));
+		/*if (options.containsKey(command.toLowerCase().split(" ")[0])){
+			options.get(command.toLowerCase().split(" ")[0]).execute((command.split(" ", 2).length>1?command.split(" ",2)[1]:command));
 		} else {
 			System.out.println("Error: Invalid command");
-		}
+		}*/
 
 		return returnObject;
 	}
