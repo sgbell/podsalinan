@@ -24,7 +24,7 @@ public class HelpSet extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
+
 		// If the user enters "help set"
 		System.out.println("set is used to change settings");
 		System.out.println("");

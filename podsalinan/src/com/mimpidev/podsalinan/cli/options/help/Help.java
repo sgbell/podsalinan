@@ -24,7 +24,6 @@ public class Help extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		// Main help text
 		System.out.println("A url is accepted at almost any time to add it to the download queue.");
 		System.out.println("It will have to start with (http/https/ftp):// for the system to download it.");
@@ -55,6 +54,7 @@ public class Help extends CLIOption {
 		System.out.println("Commands to exit the program");
 		System.out.println("   quit");
 		System.out.println("   exit");
+		
 		returnObject.execute=false;
 		return returnObject;
 	}

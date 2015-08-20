@@ -30,27 +30,12 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
-import com.mimpidev.podsalinan.cli.options.downloads.DecreasePriority;
-import com.mimpidev.podsalinan.cli.options.downloads.DeleteDownload;
-import com.mimpidev.podsalinan.cli.options.downloads.IncreasePriority;
-import com.mimpidev.podsalinan.cli.options.downloads.RestartDownload;
-import com.mimpidev.podsalinan.cli.options.downloads.SelectDownload;
-import com.mimpidev.podsalinan.cli.options.downloads.StartDownload;
-import com.mimpidev.podsalinan.cli.options.downloads.StopDownload;
-import com.mimpidev.podsalinan.cli.options.episode.DeleteEpisodeFromDrive;
-import com.mimpidev.podsalinan.cli.options.episode.DownloadEpisode;
-import com.mimpidev.podsalinan.cli.options.episode.SelectEpisode;
+import com.mimpidev.podsalinan.cli.options.downloads.*;
+import com.mimpidev.podsalinan.cli.options.episode.*;
 import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
-import com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes;
-import com.mimpidev.podsalinan.cli.options.podcast.DeletePodcast;
-import com.mimpidev.podsalinan.cli.options.podcast.ListEpisodes;
-import com.mimpidev.podsalinan.cli.options.podcast.SelectPodcast;
-import com.mimpidev.podsalinan.cli.options.podcast.ShowSelectedMenu;
-import com.mimpidev.podsalinan.cli.options.podcast.UpdatePodcast;
-import com.mimpidev.podsalinan.cli.options.settings.DownloadDirectory;
-import com.mimpidev.podsalinan.cli.options.settings.DownloadSpeedLimit;
-import com.mimpidev.podsalinan.cli.options.settings.MaxDownloaders;
-import com.mimpidev.podsalinan.cli.options.settings.PodcastUpdateRate;
+import com.mimpidev.podsalinan.cli.options.help.*;
+import com.mimpidev.podsalinan.cli.options.podcast.*;
+import com.mimpidev.podsalinan.cli.options.settings.*;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
@@ -94,10 +79,10 @@ public class CLInterface extends CLIOption implements Runnable{
         URLCommand urlCommand =new URLCommand(data);
 		options.put("http", urlCommand);
 		options.put("ftp", urlCommand);
-		options.put("help", new HelpCommand(data));
-		options.put("help list", null);
-		options.put("help select", null);
-		options.put("help set", null);
+		options.put("help", new Help(data));
+		options.put("help list", new HelpList(data));
+		options.put("help select", new HelpSelect(data));
+		options.put("help set", new HelpSet(data));
 		options.put("select podcast", new SelectCommand(data));
 		options.put("select episode", new SelectCommand(data));
 		options.put("select download", new SelectCommand(data));
@@ -147,7 +132,7 @@ public class CLInterface extends CLIOption implements Runnable{
         options.put("podcast <podcastName>", selectPodcast);
 		options.put("podcast <a-z>",  selectPodcast);
         // Show Podcast Selected Menu will be called a number of ways
-		ShowSelectedMenu showSelectedPodcastMenu =new ShowSelectedMenu(data);
+		CLIOption showSelectedPodcastMenu =new com.mimpidev.podsalinan.cli.options.podcast.ShowSelectedMenu(data);
 		options.put("podcast <podcastid>", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> showmenu", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> episode <aa> 9", showSelectedPodcastMenu);
@@ -155,7 +140,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> 2", new UpdatePodcast(data));
 		options.put("podcast <podcastid> 3", new DeletePodcast(data));
 		options.put("podcast <podcastid> 4", new ChangeDestination(data));
-		options.put("podcast <podcastid> 5", new AutoQueueEpisodes(data));
+		options.put("podcast <podcastid> 5", new com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes(data));
 		
 		CLIOption selectEpisode = new SelectEpisode(data);
 		options.put("podcast <podcastid> <aa>", selectEpisode);
@@ -203,7 +188,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("settings 1", new PodcastUpdateRate(data));
 		options.put("settings 2", new MaxDownloaders(data));
 		options.put("settings 3", new DownloadDirectory(data));
-		options.put("settings 4", new AutoQueueEpisodes(data));
+		options.put("settings 4", new com.mimpidev.podsalinan.cli.options.settings.AutoQueueEpisodes(data));
 		options.put("settings 5", new DownloadSpeedLimit(data));
 		/**
 		 *  End settings options

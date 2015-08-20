@@ -24,7 +24,6 @@ public class HelpList extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
 		// If user enters "help list"
 	    // Show sub commands for list command
 		System.out.println("list can have the following parameters");
@@ -35,6 +34,7 @@ public class HelpList extends CLIOption {
 		System.out.println("   list preferences       show list of preferences to the screen");
 		System.out.println("   list select            show list of current selection made to the screen");
 		System.out.println("   list details           show details about currently selected item to the screen");
+		
 		returnObject.execute=false;
 		return returnObject;
 	}

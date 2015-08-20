@@ -3,6 +3,7 @@
  */
 package com.mimpidev.podsalinan.cli.options.list;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -10,9 +11,6 @@ import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
-import com.mimpidev.podsalinan.cli.options.downloads.ShowDownloadDetails;
-import com.mimpidev.podsalinan.cli.options.episode.ShowEpisodeDetails;
-import com.mimpidev.podsalinan.cli.options.podcast.ShowPodcastDetails;
 
 /**
  * @author sbell
@@ -20,29 +18,28 @@ import com.mimpidev.podsalinan.cli.options.podcast.ShowPodcastDetails;
  */
 public class ListDetails extends CLIOption {
 
+	private Map<String,String> methodCall = new HashMap<String,String>();
 	/**
 	 * @param newData
 	 */
 	public ListDetails(DataStorage newData) {
 		super(newData);
-		options.put("downloads", new ShowDownloadDetails(newData));
-		options.put("episode", new ShowEpisodeDetails(newData));
-		options.put("podcast", new ShowPodcastDetails(newData));
+		methodCall.put("downloads","");
+		methodCall.put("epsiode","");
+		methodCall.put("podcast","");
 	}
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		debug=true;
-
-		if (debug) Podsalinan.debugLog.logInfo(this,"command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
+		
 		String[] globalSelectList = {"downloads","episode","podcast"};
-		boolean detailsShown=false;
+		boolean detailsFound=false;
 		int selectionCount=0;
-		while (!detailsShown && selectionCount<globalSelectList.length){
+		while (!detailsFound && selectionCount<globalSelectList.length){
 			if (CLInterface.cliGlobals.getGlobalSelection().containsKey(globalSelectList[selectionCount])){
-				//options.get(globalSelectList[selectionCount]).execute("");
-				detailsShown=true;
+				returnObject.methodCall="";
+				detailsFound=true;
 			}
 			selectionCount++;
 		}
