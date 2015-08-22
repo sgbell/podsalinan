@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -34,13 +35,11 @@ public class ListEpisodes extends CLIOption {
 		CLInput input = new CLInput();
 		
 		int epCount=1;
-		returnObject = new ReturnObject();
-		returnObject.methodCall="podcast";
-		
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
         if (functionParms.containsKey("uid") || CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid")){
     		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("uid"));
     		if (selectedPodcast==null && CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid")){
-    			selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcastId"));
+    			selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcastid"));
     		}
     		if (selectedPodcast!=null){
     			System.out.println ();
@@ -57,12 +56,7 @@ public class ListEpisodes extends CLIOption {
     					}
     				}
     			}
-    			returnObject.methodCall += " "+selectedPodcast.getDatafile();
-    			returnObject.parameterMap=new HashMap<String,String>(){/**
-					 * 
-					 */
-					private static final long serialVersionUID = -4227936048587147659L;
-				    {put("podcastid",functionParms.get("uid"));}};
+    			returnObject.methodCall = "podcast "+selectedPodcast.getDatafile();
     		}
    		} else {
 				System.out.println("Error: No podcast has been selected");
