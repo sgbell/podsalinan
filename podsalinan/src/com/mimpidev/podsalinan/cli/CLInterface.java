@@ -118,7 +118,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> showmenu", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> episode <a-z> 9", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> 1", new ListEpisodes(data));
-		options.put("podcast <podcastid> 2", new UpdatePodcast(data));  //TODO: 1.01.6 - Need to fix
+		options.put("podcast <podcastid> 2", new UpdatePodcast(data));
 		CLIOption deletePodcast = new DeletePodcast(data);
 		options.put("podcast <podcastid> 3", deletePodcast);  //TODO: 1.01.7 - Need to fix
 		options.put("remove podcast", deletePodcast);
