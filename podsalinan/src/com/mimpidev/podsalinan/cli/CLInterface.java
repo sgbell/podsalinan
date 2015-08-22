@@ -77,10 +77,10 @@ public class CLInterface extends CLIOption implements Runnable{
 
 	private void initializeMenus() {
 		
-        QuitCommand quit = new QuitCommand(data);
+        CLIOption quit = new QuitCommand(data);
 		options.put("quit", quit);
 		options.put("exit", quit);
-        URLCommand urlCommand =new URLCommand(data);
+        CLIOption urlCommand =new URLCommand(data);
 		options.put("<url>", urlCommand);
 		options.put("download <url>", urlCommand);
 		options.put("help", new Help(data));
@@ -109,7 +109,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  The following group of cli options are for the podcast menu & submenu
 		 */
 		//SelectPodcast will be used when a user either enters the podcast name, or the menu item letter 
-		SelectPodcast selectPodcast = new SelectPodcast(data);
+		CLIOption selectPodcast = new SelectPodcast(data);
         options.put("podcast <podcastName>", selectPodcast);    //TODO: 1.01.1 - Need to fix
 		options.put("podcast <a-z>",  selectPodcast);
         // Show Podcast Selected Menu will be called a number of ways
@@ -221,8 +221,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		/**
 		 *  Begin main menu calls
 		 */
-		MainMenuCommand mainMenuCommands = new MainMenuCommand(data);
-		com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu mainMenuShow = new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data); 
+		CLIOption mainMenuCommands = new MainMenuCommand(data);
+		CLIOption mainMenuShow = new com.mimpidev.podsalinan.cli.options.mainmenu.ShowMenu(data); 
 		options.put("mainmenu showmenu", mainMenuShow);
 		options.put("podcast 9", mainMenuShow);
 		options.put("downloads 9", mainMenuShow);
