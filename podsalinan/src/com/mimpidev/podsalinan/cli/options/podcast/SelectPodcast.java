@@ -37,11 +37,12 @@ public class SelectPodcast extends CLIOption {
 			String userInput=functionParms.get("userInput");
 			Podcast selectedPodcast=null;
             // See if userInput is a value of a podcast in the list and load it
-			if (data.getPodcasts().getList().size()>convertCharToNumber(userInput))
+			if (data.getPodcasts().getList().size()>convertCharToNumber(userInput) && 
+				convertCharToNumber(userInput)>0)
 				selectedPodcast = data.getPodcasts().getList().get(convertCharToNumber(userInput));
 			if (selectedPodcast==null){
 				Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
-				if (debug) Podsalinan.debugLog.logInfo(this, "Line:57, PodcastList.size="+podcastList.size());
+				if (debug) Podsalinan.debugLog.logInfo(this, "Line:45, PodcastList.size="+podcastList.size());
 				if (podcastList.size()==1){
 					CLInterface.cliGlobals.getGlobalSelection().clear();
 					CLInterface.cliGlobals.getGlobalSelection().put("podcast",podcastList.get(0).getDatafile());
