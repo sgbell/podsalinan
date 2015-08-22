@@ -110,13 +110,13 @@ public class CLInterface extends CLIOption implements Runnable{
 		 */
 		//SelectPodcast will be used when a user either enters the podcast name, or the menu item letter 
 		CLIOption selectPodcast = new SelectPodcast(data);
-        options.put("podcast <podcastName>", selectPodcast);    //TODO: 1.01.1 - Need to fix
+        options.put("podcast <podcastName>", selectPodcast);
 		options.put("podcast <a-z>",  selectPodcast);
         // Show Podcast Selected Menu will be called a number of ways
 		CLIOption showSelectedPodcastMenu =new com.mimpidev.podsalinan.cli.options.podcast.ShowSelectedMenu(data);
 		options.put("podcast <podcastid>", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> showmenu", showSelectedPodcastMenu);
-		options.put("podcast <podcastid> episode <aa> 9", showSelectedPodcastMenu);
+		options.put("podcast <podcastid> episode <a-z> 9", showSelectedPodcastMenu);
 		options.put("podcast <podcastid> 1", new ListEpisodes(data));
 		options.put("podcast <podcastid> 2", new UpdatePodcast(data));  //TODO: 1.01.6 - Need to fix
 		CLIOption deletePodcast = new DeletePodcast(data);
@@ -127,25 +127,25 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> showdetails", new ShowPodcastDetails(data));
 		
 		CLIOption selectEpisode = new SelectEpisode(data);
-		options.put("podcast <podcastid> <aa>", selectEpisode);
-		options.put("podcast <podcastid> episode <aa>", selectEpisode);
-		options.put("podcast <podcastid> episode <aa> showmenu", new com.mimpidev.podsalinan.cli.options.episode.ShowSelectedMenu(data));
+		options.put("podcast <podcastid> <a-z>", selectEpisode);
+		options.put("podcast <podcastid> episode <a-z>", selectEpisode);
+		options.put("podcast <podcastid> episode <a-z> showmenu", new com.mimpidev.podsalinan.cli.options.episode.ShowSelectedMenu(data));
 		CLIOption downloadEpisode = new DownloadEpisode(data);
-		options.put("podcast <podcastid> episode <aa> 1", downloadEpisode);
+		options.put("podcast <podcastid> episode <a-z> 1", downloadEpisode);
 		options.put("download episode", downloadEpisode);
-		options.put("podcast <podcastid> episode <aa> 2", new DeleteEpisodeFromDrive(data));
-		options.put("podcast <podcastid> episode <aa> 3", new com.mimpidev.podsalinan.cli.options.episode.CancelDownload(data));
-		options.put("podcast <podcastid> episode <aa> 4", new com.mimpidev.podsalinan.cli.options.episode.ChangeStatus(data));
-		options.put("podcast <podcastid> episode <aa> showdetails", new ShowEpisodeDetails(data));
+		options.put("podcast <podcastid> episode <a-z> 2", new DeleteEpisodeFromDrive(data));
+		options.put("podcast <podcastid> episode <a-z> 3", new com.mimpidev.podsalinan.cli.options.episode.CancelDownload(data));
+		options.put("podcast <podcastid> episode <a-z> 4", new com.mimpidev.podsalinan.cli.options.episode.ChangeStatus(data));
+		options.put("podcast <podcastid> episode <a-z> showdetails", new ShowEpisodeDetails(data));
 		
 		CLIOption podcastShowmenu = new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data);
 		options.put("podcast showmenu", podcastShowmenu);
 		options.put("podcast <podcastid> 9", podcastShowmenu);
 
-		options.put("select episode <aa>", selectEpisode);           //TODO: 1.03 - Need to fix
-		options.put("select podcast <podcastName>", selectPodcast);  //TODO: 1.01.2 - Need to fix
-		options.put("select podcast <a-z>", selectPodcast);          //TODO: 1.01.3 - Need to fix
-		options.put("select podcast <podcastid>", selectPodcast);    //TODO: 1.01.4 - Need to fix
+		options.put("select episode <a-z>", selectEpisode);
+		options.put("select podcast <podcastName>", selectPodcast);  
+		options.put("select podcast <a-z>", selectPodcast);          
+		options.put("select podcast <podcastid>", selectPodcast);
 		/**
 		 * Here ends the podcast menu commands
 		 */
@@ -253,6 +253,10 @@ public class CLInterface extends CLIOption implements Runnable{
 				String menuInput=input.getStringInput();
 				if ((menuInput.length()>0)&&(menuInput!=null)){
 					returnObject = getMenuCommand(menuInput);
+					if (!options.containsKey(returnObject.methodCall)){
+						System.out.println("Error: Invalid command");
+						System.out.println("Error: "+returnObject.methodCall);
+					}
 					returnObject = options.get(returnObject.methodCall).execute(returnObject.parameterMap);
 				}
 			}
@@ -342,12 +346,8 @@ public class CLInterface extends CLIOption implements Runnable{
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
 	        					} else if (splitValue[svc].matches("<a-z>") &&
-	        						methodCallSplit[svc].matches("[a-zA-Z]")){
+	        						methodCallSplit[svc].matches("[a-zA-Z]{1,2}")){
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
-	        						score++;
-	        					} else if (splitValue[svc].matches("<aa>") &&
-	        							methodCallSplit[svc].matches("[a-zA-Z]{1,2}")){
-	        						menuCommand.parameterMap.put("episode", methodCallSplit[svc]);
 	        						score++;
 	        					}
 	        				} else {
@@ -421,7 +421,13 @@ public class CLInterface extends CLIOption implements Runnable{
 			}
 			returnObject.debug(true);
 			returnObject=getMenuCommand(returnObject.methodCall);
-			returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
+			if (!options.containsKey(returnObject.methodCall)){
+				System.out.println("Error: command does not exist.");
+				System.out.println("Error: "+returnObject.methodCall);
+				returnObject.execute=false;
+			} else {
+				returnObject=options.get(returnObject.methodCall.toLowerCase()).execute(returnObject.parameterMap);
+			}
 		}
 		return returnObject; //ece<3sam
 	}

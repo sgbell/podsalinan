@@ -38,7 +38,7 @@ public class SelectPodcast extends CLIOption {
 			Podcast selectedPodcast=null;
             // See if userInput is a value of a podcast in the list and load it
 			if (data.getPodcasts().getList().size()>convertCharToNumber(userInput) && 
-				convertCharToNumber(userInput)>0)
+				convertCharToNumber(userInput)>=0)
 				selectedPodcast = data.getPodcasts().getList().get(convertCharToNumber(userInput));
 			if (selectedPodcast==null){
 				Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));

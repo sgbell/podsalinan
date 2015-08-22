@@ -48,8 +48,8 @@ public class DeleteEpisodeFromDrive extends BaseEpisodeOption {
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		Episode episode=null;
 		
-		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
-			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("episode"));
+		if (functionParms.containsKey("uid") && functionParms.containsKey("userInput")){
+			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("userInput"));
 		}		
 		
 		if (episode!=null){

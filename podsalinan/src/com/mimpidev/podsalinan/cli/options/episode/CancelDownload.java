@@ -49,8 +49,8 @@ public class CancelDownload extends BaseEpisodeOption {
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		Episode episode=null;
 		
-		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
-			episode = getEpisode(functionParms.get("uid"), functionParms.get("episode"));
+		if (functionParms.containsKey("uid") && functionParms.containsKey("userInput")){
+			episode = getEpisode(functionParms.get("uid"), functionParms.get("userInput"));
 		}
 		if (episode!=null){
 			try {

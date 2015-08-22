@@ -50,8 +50,8 @@ public class ShowEpisodeDetails extends BaseEpisodeOption {
 		if (debug) Podsalinan.debugLog.logMap(functionParms);
 		Episode episode=null;
 		
-		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
-			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("episode"));
+		if (functionParms.containsKey("uid") && functionParms.containsKey("userInput")){
+			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("userInput"));
 		} 
 		if (episode!=null){
 			printDetails(episode,!functionParms.containsKey("menuCalled"));

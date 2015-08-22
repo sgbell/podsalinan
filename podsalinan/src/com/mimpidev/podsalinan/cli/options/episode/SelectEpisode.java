@@ -26,14 +26,21 @@ public class SelectEpisode extends CLIOption {
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
+		Podcast selectedPodcast=null;
 		
-		if (debug) Podsalinan.debugLog.logMap(functionParms);
-		if (functionParms.containsKey("uid") && functionParms.containsKey("episode")){
-			Podcast selectedPodcast=null;
+		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
+		if (debug) Podsalinan.debugLog.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
+		if (!functionParms.containsKey("uid") && 
+			functionParms.containsKey("userInput") &&
+			CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid")){
+			functionParms.put("uid", CLInterface.cliGlobals.getGlobalSelection().get("podcastid"));
+		}
+		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
+		if (functionParms.containsKey("uid") && functionParms.containsKey("userInput")){
 			selectedPodcast=data.getPodcasts().getPodcastByUid(functionParms.get("uid"));
 			
 			if (selectedPodcast!=null){
-				if (convertCharToNumber(functionParms.get("episode"))<selectedPodcast.getEpisodes().size()){
+				if (convertCharToNumber(functionParms.get("userInput"))<selectedPodcast.getEpisodes().size()){
 					if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid") &&
 						!CLInterface.cliGlobals.getGlobalSelection().get("podcastid").equalsIgnoreCase(functionParms.get("uid")))||
 						(!CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid"))){
@@ -41,11 +48,11 @@ public class SelectEpisode extends CLIOption {
 						CLInterface.cliGlobals.getGlobalSelection().put("podcastid", functionParms.get("uid"));
 					}
 					if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("episode")&&
-						!CLInterface.cliGlobals.getGlobalSelection().get("episode").equalsIgnoreCase(functionParms.get("episode")))||
+						!CLInterface.cliGlobals.getGlobalSelection().get("episode").equalsIgnoreCase(functionParms.get("userInput")))||
 						(!CLInterface.cliGlobals.getGlobalSelection().containsKey("episode"))){
-						CLInterface.cliGlobals.getGlobalSelection().put("episode", functionParms.get("episode"));
+						CLInterface.cliGlobals.getGlobalSelection().put("episode", functionParms.get("userInput"));
 					}
-					returnObject.methodCall="podcast "+selectedPodcast.getDatafile()+" episode "+functionParms.get("episode").toLowerCase()+" showmenu";
+					returnObject.methodCall="podcast "+selectedPodcast.getDatafile()+" episode "+functionParms.get("userInput").toLowerCase()+" showmenu";
 				} else {
 					System.out.println("Error: Invalid Episode selected");
 					returnObject.methodCall="podcast "+selectedPodcast.getDatafile();
@@ -60,5 +67,4 @@ public class SelectEpisode extends CLIOption {
 		
 		return returnObject;
 	}
-
 }

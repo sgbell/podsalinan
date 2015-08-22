@@ -44,7 +44,7 @@ public class ListDetails extends CLIOption {
 			} else 
 				selectionCount++;
 		}
-		if (globalSelectList[selectionCount].equals("episode")){
+		if (selectionCount<globalSelectList.length && globalSelectList[selectionCount].equals("episode")){
 			returnObject.methodCall="podcast "+CLInterface.cliGlobals.getGlobalSelection().get("podcastid")+" "+returnObject.methodCall;
 		}
 		if (!detailsFound){
