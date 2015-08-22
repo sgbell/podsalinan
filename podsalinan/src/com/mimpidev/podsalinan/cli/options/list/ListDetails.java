@@ -26,7 +26,7 @@ public class ListDetails extends CLIOption {
 		super(newData);
 		
 		globalToMenu.put("podcastid", "podcast");
-		globalToMenu.put("downloadid", "downloads");
+		globalToMenu.put("downloads", "downloads");
 		globalToMenu.put("episode", "episode");
 	}
 

@@ -89,9 +89,9 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("help set", new HelpSet(data));
 
 		options.put("list podcasts", new ListPodcasts(data));
-		options.put("list episode", new ListEpisodes(data));  //TODO: 1.01.5 - Need to test list episode
+		options.put("list episodes", new ListEpisodes(data));  //TODO: 1.01.5 - Need to test list episode
 		options.put("list select", new ListSelection(data));
-		options.put("list details", new ListDetails(data));   //TODO: 1.02.1 - Need to fix list details
+		options.put("list details", new ListDetails(data));
 		options.put("list downloads", new ListDownloads(data));
 		options.put("list preferences", new ListPreferences(data));
 		
@@ -373,7 +373,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	        } else {
         	    menuCommand.methodCall=input;
         	    if (debug) Podsalinan.debugLog.logInfo(this, 375, menuCommand.methodCall);
-        	    returnObject.debug(debug);
+        	    menuCommand.debug(debug);
         	    menuCommand.execute=true;
 			}
 			

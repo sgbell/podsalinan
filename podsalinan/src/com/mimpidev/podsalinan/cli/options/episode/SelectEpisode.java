@@ -34,14 +34,15 @@ public class SelectEpisode extends CLIOption {
 			
 			if (selectedPodcast!=null){
 				if (convertCharToNumber(functionParms.get("episode"))<selectedPodcast.getEpisodes().size()){
-					if (CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid") &&
-						!CLInterface.cliGlobals.getGlobalSelection().get("podcastid").equalsIgnoreCase(functionParms.get("uid"))){
+					if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid") &&
+						!CLInterface.cliGlobals.getGlobalSelection().get("podcastid").equalsIgnoreCase(functionParms.get("uid")))||
+						(!CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid"))){
 						CLInterface.cliGlobals.getGlobalSelection().clear();
 						CLInterface.cliGlobals.getGlobalSelection().put("podcastid", functionParms.get("uid"));
 					}
-					if (CLInterface.cliGlobals.getGlobalSelection().containsKey("episode")&&
-						!CLInterface.cliGlobals.getGlobalSelection().get("episode").equalsIgnoreCase(functionParms.get("episode"))){
-						CLInterface.cliGlobals.getGlobalSelection().clear();
+					if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("episode")&&
+						!CLInterface.cliGlobals.getGlobalSelection().get("episode").equalsIgnoreCase(functionParms.get("episode")))||
+						(!CLInterface.cliGlobals.getGlobalSelection().containsKey("episode"))){
 						CLInterface.cliGlobals.getGlobalSelection().put("episode", functionParms.get("episode"));
 					}
 					returnObject.methodCall="podcast "+selectedPodcast.getDatafile()+" episode "+functionParms.get("episode").toLowerCase()+" showmenu";
