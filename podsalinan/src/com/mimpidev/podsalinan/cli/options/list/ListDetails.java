@@ -18,31 +18,41 @@ import com.mimpidev.podsalinan.cli.ReturnObject;
  */
 public class ListDetails extends CLIOption {
 
-	private Map<String,String> methodCall = new HashMap<String,String>();
+	private Map<String,String> globalToMenu = new HashMap<String,String>();
 	/**
 	 * @param newData
 	 */
 	public ListDetails(DataStorage newData) {
 		super(newData);
-		methodCall.put("downloads","");
-		methodCall.put("epsiode","");
-		methodCall.put("podcast","");
+		
+		globalToMenu.put("podcastid", "podcast");
+		globalToMenu.put("downloadid", "downloads");
+		globalToMenu.put("episode", "episode");
 	}
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
 		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 		
-		String[] globalSelectList = {"downloads","episode","podcast"};
+		String[] globalSelectList = {"downloads","episode","podcastid"};
 		boolean detailsFound=false;
 		int selectionCount=0;
 		while (!detailsFound && selectionCount<globalSelectList.length){
 			if (CLInterface.cliGlobals.getGlobalSelection().containsKey(globalSelectList[selectionCount])){
-				returnObject.methodCall="";
+				returnObject.methodCall=globalToMenu.get(globalSelectList[selectionCount])+" "+CLInterface.cliGlobals.getGlobalSelection().get(globalSelectList[selectionCount]);
 				detailsFound=true;
-			}
-			selectionCount++;
+			} else 
+				selectionCount++;
 		}
+		if (globalSelectList[selectionCount].equals("episode")){
+			returnObject.methodCall="podcast "+CLInterface.cliGlobals.getGlobalSelection().get("podcastid")+" "+returnObject.methodCall;
+		}
+		if (!detailsFound){
+			System.out.println("Nothing Selected.");
+		} else {
+			returnObject.methodCall+=" showdetails";
+		}
+		returnObject.execute=detailsFound;
 		
 		return returnObject;
 	}

@@ -51,11 +51,11 @@ public class CLIGlobals {
 		String[] firstLevel = {"downloads","episode"};
 		for (String key : firstLevel){
 			if (globalSelection.containsKey(key)){
-				returnString=key+" "+globalSelection.get(key)+" ";
+				returnString=key+" "+globalSelection.get(key);
 			}
 		}
-		if (globalSelection.containsKey("podcast")){
-			returnString="podcast "+globalSelection.get("podcast")+" "+returnString;
+		if (globalSelection.containsKey("podcastid")){
+			returnString="podcast "+globalSelection.get("podcastid")+(returnString.length()>0?" "+returnString:"");
 		}
 		
 		return returnString;

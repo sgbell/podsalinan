@@ -90,7 +90,7 @@ public class CLInterface extends CLIOption implements Runnable{
 
 		options.put("list podcasts", new ListPodcasts(data));
 		options.put("list episode", new ListEpisodes(data));  //TODO: 1.01.5 - Need to test list episode
-		options.put("list select", new ListSelection(data));  //TODO: 1.02 - Need to test list select
+		options.put("list select", new ListSelection(data));
 		options.put("list details", new ListDetails(data));   //TODO: 1.02.1 - Need to fix list details
 		options.put("list downloads", new ListDownloads(data));
 		options.put("list preferences", new ListPreferences(data));
@@ -124,6 +124,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("remove podcast", deletePodcast);
 		options.put("podcast <podcastid> 4", new ChangeDestination(data)); //TODO: 1.01.7 - Need to fix
 		options.put("podcast <podcastid> 5", new com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes(data)); //TODO: 1.01.8 - Need to fix
+		options.put("podcast <podcastid> showdetails", new ShowPodcastDetails(data));
 		
 		CLIOption selectEpisode = new SelectEpisode(data);
 		options.put("podcast <podcastid> <aa>", selectEpisode);
@@ -135,6 +136,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> episode <aa> 2", new DeleteEpisodeFromDrive(data));
 		options.put("podcast <podcastid> episode <aa> 3", new com.mimpidev.podsalinan.cli.options.episode.CancelDownload(data));
 		options.put("podcast <podcastid> episode <aa> 4", new com.mimpidev.podsalinan.cli.options.episode.ChangeStatus(data));
+		options.put("podcast <podcastid> episode <aa> showdetails", new ShowEpisodeDetails(data));
 		
 		CLIOption podcastShowmenu = new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data);
 		options.put("podcast showmenu", podcastShowmenu);
@@ -182,6 +184,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("decrease", decreasePriority);                       //TODO: 1.11.09 Need to fix
 		options.put("decrease download <downloadid>", decreasePriority); //TODO: 1.11.10 Need to fix
 		options.put("downloads <downloadid> 7", new ChangeDestination(data)); //TODO: 1.11.11 Need to fix
+		options.put("downloads <downloadid> showdetails", new ShowDownloadDetails(data));
+
 		/**
 		 *  Here ends the download menu command list
 		 */
@@ -299,21 +303,29 @@ public class CLInterface extends CLIOption implements Runnable{
 
 	public ReturnObject getMenuCommand(String input){
 		ReturnObject menuCommand = new ReturnObject();
+		boolean failedMatch=false;
 		
-		while (!menuCommand.execute){
+		while (!menuCommand.execute && !failedMatch){
 			if (!options.containsKey(input)){
 				int score=0;
 				boolean match=false;
-	        	if (debug) Podsalinan.debugLog.logInfo(this, "user input: '"+input+"'");
+	        	if (debug) Podsalinan.debugLog.logInfo(this, 312, "user input: '"+input+"'");
 				String[] methodCallSplit = input.split(" ");
+				if (debug) Podsalinan.debugLog.logInfo(this, 314, "length:"+methodCallSplit.length);
 	        	for (String key : options.keySet()){
 					score=0;
 	        		String[] splitValue = key.split(" ");
+					if ((debug)&&(key.equalsIgnoreCase("podcast <podcastid> <aa>"))){
+						Podsalinan.debugLog.logInfo(this, 319, key);
+						Podsalinan.debugLog.logInfo(this, 320, "length:"+splitValue.length);
+					}
 	        		if (splitValue.length==methodCallSplit.length){
 	        			int svc=0;
 	        			while (svc<splitValue.length && score<splitValue.length && !match){
 	        				if (splitValue[svc].startsWith("<")&&
 	        					splitValue[svc].endsWith(">")){
+	        					
+	        					
 	        					if ((splitValue[svc].matches("^<url>") &&
 	        						 methodCallSplit[svc].matches("\\b(https?|ftp):.*"))||
 	        						(splitValue[svc].matches("^\\<((download|podcast)(I|i)d|download(I|i)d\\|podcast(I|i)d)\\>") &&
@@ -349,18 +361,18 @@ public class CLInterface extends CLIOption implements Runnable{
 	        				match=true;
 	        				menuCommand.methodCall=key;
 	        				menuCommand.execute=true;
-	        				if (debug) Podsalinan.debugLog.logInfo(this, 262, "matched");
+	        				if (debug) Podsalinan.debugLog.logInfo(this, 356, "matched");
 	        				break;
 	        			}
 	        		}
 	        	}
 	            if (!match){
 	            	menuCommand.execute=false;
-					if (debug) Podsalinan.debugLog.logInfo(this, 272, "not matched");
+					if (debug) Podsalinan.debugLog.logInfo(this, 363, "not matched");
 	            }
 	        } else {
         	    menuCommand.methodCall=input;
-        	    if (debug) Podsalinan.debugLog.logInfo(this, menuCommand.methodCall);
+        	    if (debug) Podsalinan.debugLog.logInfo(this, 375, menuCommand.methodCall);
         	    returnObject.debug(debug);
         	    menuCommand.execute=true;
 			}
@@ -371,15 +383,28 @@ public class CLInterface extends CLIOption implements Runnable{
 					menuCommand.parameterMap.put("menuItem", input);
 					menuCommand.methodCall="mainmenu <0-9>";
 					menuCommand.execute=true;
-				} else if (returnObject.methodCall.length()>0 && !input.contains(returnObject.methodCall)){
+				} else if (returnObject.methodCall.length()>0 && 
+						   !input.contains(returnObject.methodCall) &&
+						   input.length()>0){
 					input=returnObject.methodCall+" "+input;
-				} else {
+				} else if (returnObject.methodCall.length()>0){
 					System.out.println("Error: Invalid input - "+input);
 					input=returnObject.methodCall;
-					if (debug) Podsalinan.debugLog.logInfo(this, "Error - '"+input+"'");
+					if (debug) Podsalinan.debugLog.logInfo(this, 397, "Error - '"+input+"'");
+				} else if (cliGlobals.getGlobalSelection().size()>0 && input.length()>0){
+					input=cliGlobals.globalSelectionToString()+" "+input;
+					if (debug) Podsalinan.debugLog.logMap(this, cliGlobals.getGlobalSelection());
+					if (debug) Podsalinan.debugLog.logInfo(this, 393, "'"+menuCommand.methodCall+"'");
+				} else {
+					failedMatch=true;
 				}
 			}
 		}
+		if(failedMatch){
+			menuCommand.methodCall=cliGlobals.globalSelectionToString();
+			menuCommand.execute=true;
+		}
+		
 		menuCommand.debug(debug);
 		
 		return menuCommand;

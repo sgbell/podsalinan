@@ -36,7 +36,8 @@ public class ShowPodcastDetails extends CLIOption {
 			} else {
 			   podcast=data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcastid"));
 			}
-			if (functionParms.get("command").equalsIgnoreCase("selectedMenu") && 
+			if (functionParms.containsKey("command") &&
+				functionParms.get("command").equalsIgnoreCase("selectedMenu") && 
 				(data.getSettings().findSetting("menuVisible")==null||
 				 data.getSettings().findSetting("menuVisible").equalsIgnoreCase("true"))){
 				System.out.println("Podcast: "+podcast.getName()+ " - Selected");

@@ -46,8 +46,7 @@ public class ListSelection extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 
 		System.out.println("Currently Selected");
 		Set<Entry<String,String>> selectedObjects= CLInterface.cliGlobals.getGlobalSelection().entrySet();
