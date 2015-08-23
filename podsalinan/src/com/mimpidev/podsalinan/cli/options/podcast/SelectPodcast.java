@@ -38,8 +38,9 @@ public class SelectPodcast extends CLIOption {
 			Podcast selectedPodcast=null;
             // See if userInput is a value of a podcast in the list and load it
 			if (data.getPodcasts().getList().size()>convertCharToNumber(userInput) && 
-				convertCharToNumber(userInput)>=0)
-				selectedPodcast = data.getPodcasts().getList().get(convertCharToNumber(userInput));
+				convertCharToNumber(userInput)>=0){
+				selectedPodcast = data.getPodcasts().getActivePodcast(convertCharToNumber(userInput));
+			}
 			if (selectedPodcast==null){
 				Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
 				if (debug) Podsalinan.debugLog.logInfo(this, "Line:45, PodcastList.size="+podcastList.size());
@@ -72,10 +73,12 @@ public class SelectPodcast extends CLIOption {
 				}
 			}
 			if (selectedPodcast!=null){
-				if (debug) Podsalinan.debugLog.logInfo(this, 87, "Set selected podcast:"+selectedPodcast.getDatafile());
+				if (debug) Podsalinan.debugLog.logInfo(this, 76, "Set selected podcast:"+selectedPodcast.getDatafile());
 				returnObject.methodCall="podcast "+selectedPodcast.getDatafile();
 				CLInterface.cliGlobals.getGlobalSelection().clear();
 				CLInterface.cliGlobals.getGlobalSelection().put("podcastid",selectedPodcast.getDatafile());
+				//TODO: Working here. for some reason it is not setting podcastid a second time :(
+				// Test with: select podcast, delete podcast, select podcast
 			} else {
 				returnObject.methodCall="podcast showmenu";
 			}
@@ -83,7 +86,9 @@ public class SelectPodcast extends CLIOption {
 		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
+		if (debug) Podsalinan.debugLog.logInfo(this, "Global Selection check");
+		if (debug) Podsalinan.debugLog.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
+		
 		return returnObject;
 	}
-
 }

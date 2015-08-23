@@ -72,4 +72,27 @@ public class PodcastList {
 	public void setSettingsDir(String settingsDir) {
 		this.settingsDir = settingsDir;
 	}
+
+	/**
+	 * 
+	 * @param convertCharToNumber
+	 * @return
+	 */
+	public Podcast getActivePodcast(int selectedPodcastCount) {
+		Podcast selectedPodcast=null;
+		int count=0,
+		    activeCount=0;
+		
+		while (selectedPodcast==null && count<podcasts.size()){
+			if (selectedPodcastCount==activeCount &&
+				!podcasts.get(count).isRemoved()){
+				selectedPodcast=podcasts.get(count);
+			} else if (!podcasts.get(count).isRemoved()){
+					activeCount++;
+			}
+			count++;
+		}
+		
+		return selectedPodcast;
+	}
 }

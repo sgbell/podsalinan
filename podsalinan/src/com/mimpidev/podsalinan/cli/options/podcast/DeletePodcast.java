@@ -44,6 +44,7 @@ public class DeletePodcast extends CLIOption {
 		if (selectedPodcast!=null){
 			CLInput input = new CLInput();
 			if(input.confirmRemoval()){
+				System.out.println("Podcast Removed.");
 	    		selectedPodcast.setRemoved(true);
 				if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid"))&&
 					(CLInterface.cliGlobals.getGlobalSelection().get("podcastid").equalsIgnoreCase(functionParms.get("uid")))){
@@ -51,16 +52,14 @@ public class DeletePodcast extends CLIOption {
 				}
 	    		returnObject.methodCall = "podcast showmenu";
 	    	} else {
-	    		returnObject.methodCall = "podcast <podcastId>";
+	    		returnObject.methodCall = "podcast "+selectedPodcast.getDatafile();
 	    	}
-    		returnObject.parameterMap.clear();
-    		returnObject.execute=true;
 		} else {
 			System.out.println("Podcast does not exist");
-    		returnObject.methodCall = "podcast";
-    		returnObject.parameterMap.clear();
-    		returnObject.execute=true;
+    		returnObject.methodCall = "podcast showmenu";
 		}
+		returnObject.parameterMap.clear();
+		returnObject.execute=true;
 		
 		return returnObject;
 	}
