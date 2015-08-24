@@ -66,7 +66,7 @@ public class MainMenuCommand extends CLIOption {
 				returnObject.methodCall="mainMenu showMenu";
 			}
 		}
-		returnObject.parameterMap=new HashMap<String,String>();
+		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, 75, "Finish");
 		returnObject.debug(debug);

@@ -48,11 +48,7 @@ public class ShowSelectedMenu extends CLIOption {
 				System.out.println();
 				
 				returnObject.methodCall = "podcast "+currentPodcast.getDatafile();
-				returnObject.parameterMap = new HashMap<String,String>(){/**
-					 * 
-					 */
-					private static final long serialVersionUID = -2874925380286596826L;
-                    {put("podcastid",podcastId);}};
+				returnObject.parameterMap.clear();
 				
 			}
 		returnObject.execute=false;

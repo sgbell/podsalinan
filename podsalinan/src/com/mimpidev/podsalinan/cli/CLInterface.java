@@ -417,8 +417,9 @@ public class CLInterface extends CLIOption implements Runnable{
 
 			if (debug) Podsalinan.debugLog.logInfo(this, "Calling requested function: "+returnObject.methodCall);
 			if (returnObject.parameterMap.size()==0){
-				returnObject.parameterMap=cliGlobals.getGlobalSelection();
+				cliGlobals.createReturnParameters(returnObject.parameterMap);				
 			}
+			//TODO: Working here- this is the issue.
 			returnObject.debug(true);
 			returnObject=getMenuCommand(returnObject.methodCall);
 			if (!options.containsKey(returnObject.methodCall)){

@@ -22,6 +22,18 @@ public class CLIGlobals {
 	private Map<String,String> globalSelection; 
 	
 	private boolean debug=false;
+	
+	private Map<String,String> gsToParameterMap = new HashMap<String,String>(){/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8904676551176138163L;
+
+	{ 
+		   put("podcastid","uid");
+		   put("downloads","userInput");
+		   put("episode","userInput");
+	}};
+	
 	/**
 	 * 
 	 */
@@ -72,5 +84,18 @@ public class CLIGlobals {
 		}
 		
 		return returnObject;
+	}
+
+	/**
+	 *  This function shouldn't have to return anything, as it's being set in the parameterMap passed in
+	 * @param parameterMap
+	 */
+	public void createReturnParameters(Map<String, String> parameterMap) {
+		parameterMap.clear();
+		for (String key: gsToParameterMap.keySet()){
+			if (globalSelection.containsKey(key)){
+				parameterMap.put(gsToParameterMap.get(key), globalSelection.get(key));
+			}
+		}
 	}
 }

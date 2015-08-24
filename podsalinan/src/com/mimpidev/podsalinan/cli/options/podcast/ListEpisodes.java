@@ -61,7 +61,7 @@ public class ListEpisodes extends CLIOption {
    		} else {
 				System.out.println("Error: No podcast has been selected");
 				returnObject.methodCall += " showmenu";
-				returnObject.parameterMap=new HashMap<String,String>();
+				returnObject.parameterMap.clear();
 		}
 		returnObject.execute=true;
 		
