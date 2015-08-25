@@ -73,19 +73,6 @@ public class CLIGlobals {
 		return returnString;
 	}
 	
-	public ReturnObject createReturnObject(){
-		ReturnObject returnObject = new ReturnObject();
-		String[] firstLevel = {"downloads","podcast","settings"};
-		for (String key : firstLevel){
-			if (globalSelection.containsKey(key)){
-			}
-		}
-		if (globalSelection.containsKey("episode")){
-		}
-		
-		return returnObject;
-	}
-
 	/**
 	 *  This function shouldn't have to return anything, as it's being set in the parameterMap passed in
 	 * @param parameterMap

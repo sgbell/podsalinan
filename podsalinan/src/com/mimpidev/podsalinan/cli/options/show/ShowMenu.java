@@ -32,7 +32,7 @@ public class ShowMenu extends CLIOption {
 		if (command.equalsIgnoreCase("menu")){
 			if (!data.getSettings().addSetting("menuVisible", "true"))
 				data.getSettings().updateSetting("menuVisible", "true");
-            returnObject=CLInterface.cliGlobals.createReturnObject();
+            returnObject.methodCall=CLInterface.cliGlobals.globalSelectionToString();
 			returnObject.execute=true;
 		}
 		return returnObject;
