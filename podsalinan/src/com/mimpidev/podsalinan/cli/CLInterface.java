@@ -122,8 +122,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		CLIOption deletePodcast = new DeletePodcast(data);
 		options.put("podcast <podcastid> 3", deletePodcast);
 		options.put("remove podcast", deletePodcast);
-		options.put("podcast <podcastid> 4", new ChangeDestination(data)); //TODO: 1.01.7 - Need to fix
-		options.put("podcast <podcastid> 5", new com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes(data)); //TODO: 1.01.8 - Need to fix
+		CLIOption changeDestination = new ChangeDestination(data);
+		options.put("podcast <podcastid> 5", new com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes(data)); //TODO: 1.02 - Need to fix
 		options.put("podcast <podcastid> showdetails", new ShowPodcastDetails(data));
 		
 		CLIOption selectEpisode = new SelectEpisode(data);
@@ -149,6 +149,10 @@ public class CLInterface extends CLIOption implements Runnable{
 		/**
 		 * Here ends the podcast menu commands
 		 */
+        // The following is a generic call - which handles podcasts & downloads
+		options.put("podcast <podcastid> 4", changeDestination);     //TODO: 1.01 - Need to fix for all 3 calls
+		options.put("downloads <downloadid> 7", changeDestination); 
+		options.put("set destination <path>", changeDestination);
 		
 		/**
 		 *  Here is the download menu command list
@@ -183,7 +187,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("downloads <downloadid> 6", decreasePriority);		
 		options.put("decrease", decreasePriority);                       //TODO: 1.11.09 Need to fix
 		options.put("decrease download <downloadid>", decreasePriority); //TODO: 1.11.10 Need to fix
-		options.put("downloads <downloadid> 7", new ChangeDestination(data)); //TODO: 1.11.11 Need to fix
 		options.put("downloads <downloadid> showdetails", new ShowDownloadDetails(data));
 
 		/**
@@ -213,7 +216,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("settings 5", downloadSpeedLimit);
 		options.put("set downloadlimit <00M>", downloadSpeedLimit);                //TODO: 1.12.5 - Fix input scan to match <00M> to speed
 		options.put("set menuvisible <0|1|true|false>", new MenuVisibility(data)); //TODO: 1.12.6 - Need to fix
-		options.put("set destination <path>", new ChangeDestination(data));        //TODO: 1.12.7 - Need to fix
 		/**
 		 *  End settings options
 		 */
