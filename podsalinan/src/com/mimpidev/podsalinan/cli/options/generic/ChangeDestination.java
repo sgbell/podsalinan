@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -31,10 +32,10 @@ public class ChangeDestination extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		
-        if (functionParms.containsKey("podcastId")){
-        	Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("podcastId"));
+        if (functionParms.containsKey("uid")){
+        	Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("uid"));
         	if (selectedPodcast!=null){
 			   System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
 			   String userInput=input.getStringInput();
@@ -42,6 +43,8 @@ public class ChangeDestination extends CLIOption {
 			   returnObject.methodCall = "podcast <podcastid>";
 			   returnObject.parameterMap.clear();
 			   returnObject.execute=true;
+        	} else {
+        	   System.out.println("Error: Cannot find podcast.");
         	}
         } else if (functionParms.containsKey("downloadId")) {
         	 URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(functionParms.get("downloadId"));
@@ -52,6 +55,8 @@ public class ChangeDestination extends CLIOption {
 				  returnObject.methodCall = "downloads <downloadid>";
                   returnObject.parameterMap.clear();
 				  returnObject.execute=true;
+    		} else {
+    			System.out.println("Error: Cannot find download.");
     		}
         } else {
         	System.out.println("I'm not sure what I need to do.");
