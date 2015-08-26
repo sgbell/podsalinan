@@ -21,6 +21,7 @@
  */
 package com.mimpidev.podsalinan.cli;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -351,6 +352,15 @@ public class CLInterface extends CLIOption implements Runnable{
 	        						methodCallSplit[svc].matches("[a-zA-Z]{1,2}")){
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
+	        					} else if (splitValue[svc].matches("<path>") &&
+	        						methodCallSplit[svc].contains(data.getFileSystemSlash())){
+	        						File test = new File(methodCallSplit[svc]);
+	        						if (test.isFile() || test.isDirectory()){
+	        							menuCommand.parameterMap.put("path", methodCallSplit[svc]);
+	        							score++;
+	        						} else {
+	        							failedMatch=true;
+	        						}
 	        					}
 	        				} else {
 	        					if (splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){

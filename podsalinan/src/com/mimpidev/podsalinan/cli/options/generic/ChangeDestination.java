@@ -40,28 +40,25 @@ public class ChangeDestination extends CLIOption {
 			   System.out.print ("Enter Podcast Download Directory["+selectedPodcast.getDirectory()+"]: ");
 			   String userInput=input.getStringInput();
 	    	   changeDirectory(selectedPodcast,userInput);
-			   returnObject.methodCall = "podcast <podcastid>";
+			   returnObject.methodCall = "podcast "+selectedPodcast.getDatafile();
 			   returnObject.parameterMap.clear();
 			   returnObject.execute=true;
         	} else {
-        	   System.out.println("Error: Cannot find podcast.");
-        	}
-        } else if (functionParms.containsKey("downloadId")) {
-        	 URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(functionParms.get("downloadId"));
-    		if (selectedDownload!=null){
+               URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(functionParms.get("uid"));
+    		   if (selectedDownload!=null){
 				  System.out.println("Enter Download Destination ["+selectedDownload.getDestination()+"]: ");
 				  String userInput = input.getStringInput();
 				  changeDirectory(selectedDownload,userInput);
-				  returnObject.methodCall = "downloads <downloadid>";
+				  returnObject.methodCall = "downloads "+selectedDownload.getUid();
                   returnObject.parameterMap.clear();
 				  returnObject.execute=true;
-    		} else {
-    			System.out.println("Error: Cannot find download.");
-    		}
+    		    } else {
+    			  System.out.println("Error: I'm not sure what destination you wanted to change.");
+    		    }
+            }
         } else {
-        	System.out.println("I'm not sure what I need to do.");
+        	// Handle direct call
         }
-		
 	    // Call direct with "set destination <path>"
 	    /*if (commandOptions.length>1 && commandOptions[0].equalsIgnoreCase("destination")){
 	    	Object selectedItem=null;
