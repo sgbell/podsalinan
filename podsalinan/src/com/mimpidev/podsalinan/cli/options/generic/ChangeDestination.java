@@ -10,6 +10,7 @@ import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
@@ -41,7 +42,6 @@ public class ChangeDestination extends CLIOption {
 			   String userInput=input.getStringInput();
 	    	   changeDirectory(selectedPodcast,userInput);
 			   returnObject.methodCall = "podcast "+selectedPodcast.getDatafile();
-			   returnObject.parameterMap.clear();
 			   returnObject.execute=true;
         	} else {
                URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(functionParms.get("uid"));
@@ -50,38 +50,17 @@ public class ChangeDestination extends CLIOption {
 				  String userInput = input.getStringInput();
 				  changeDirectory(selectedDownload,userInput);
 				  returnObject.methodCall = "downloads "+selectedDownload.getUid();
-                  returnObject.parameterMap.clear();
 				  returnObject.execute=true;
     		    } else {
     			  System.out.println("Error: I'm not sure what destination you wanted to change.");
     		    }
             }
+        } else if (functionParms.containsKey("path") && CLInterface.cliGlobals.getGlobalSelection().size()>0){
+        	
         } else {
-        	// Handle direct call
+        	System.out.println("Error: Invalid call.");
         }
-	    // Call direct with "set destination <path>"
-	    /*if (commandOptions.length>1 && commandOptions[0].equalsIgnoreCase("destination")){
-	    	Object selectedItem=null;
-	    	if (CLInterface.cliGlobals.getGlobalSelection().containsKey("podcast")){
-	    		selectedItem = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcast"));
-	    	} else if (CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads")){
-	    		selectedItem = data.getUrlDownloads().findDownloadByUid(CLInterface.cliGlobals.getGlobalSelection().get("downloads"));
-	    	}
-	    	if (selectedItem!=null){
-	    		changeDirectory(selectedItem,commandOptions[1]);
-	    	}
-	    } else {
-		  System.out.println ();
-		  Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(commandOptions[0]);
-		  if (selectedPodcast!=null){
-    	  } else {
-    		  URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(commandOptions[0]);
-    		  if (selectedDownload!=null){
-    		  }
-	      } 
-		  //returnObject.methodParameters = command.split(" ")[0];
-		  returnObject.execute=true;
-	    }*/
+        returnObject.parameterMap.clear();
 	    
 		return returnObject;
 	}

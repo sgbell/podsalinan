@@ -223,4 +223,11 @@ public class Log {
 		logInfo(object,"Map used:");
 		logMap(mapObject);
 	}
+
+	public void logInfo(Object object, int lineNum, String[] stringArray) {
+		logInfo(object,lineNum,"Array of Strings found:");
+		for (String item : stringArray){
+			logInfo(object,lineNum,item);
+		}
+	}
 }

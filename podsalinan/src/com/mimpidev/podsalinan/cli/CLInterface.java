@@ -346,16 +346,26 @@ public class CLInterface extends CLIOption implements Runnable{
 	        						score++;
 	        					} else if (splitValue[svc].matches("<podcastName>")&&
 	        						!methodCallSplit[svc].matches("^[a-fA-F0-9]{8}")){
+	        						if (debug) Podsalinan.debugLog.logInfo(this, 349, "<podcastName> set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
 	        					} else if (splitValue[svc].matches("<a-z>") &&
 	        						methodCallSplit[svc].matches("[a-zA-Z]{1,2}")){
+	        						if (debug) Podsalinan.debugLog.logInfo(this, 349, "<a-z> set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
 	        					} else if (splitValue[svc].matches("<path>") &&
 	        						methodCallSplit[svc].contains(data.getFileSystemSlash())){
-	        						File test = new File(methodCallSplit[svc]);
-	        						if (test.isFile() || test.isDirectory()){
+	        						String newPath[] = methodCallSplit[svc].split(data.getFileSystemSlash());
+	        						if (debug) Podsalinan.debugLog.logInfo(this, 358, newPath);
+	        						String testPath="";
+	        						if (newPath.length>1){
+	        							testPath=newPath[0]+data.getFileSystemSlash()+newPath[1];
+	        						} else {
+	        							testPath=methodCallSplit[svc];
+	        						}
+	        						File test = new File(testPath);
+	        						if (test.exists()){
 	        							menuCommand.parameterMap.put("path", methodCallSplit[svc]);
 	        							score++;
 	        						} else {
@@ -375,6 +385,8 @@ public class CLInterface extends CLIOption implements Runnable{
 	        				menuCommand.execute=true;
 	        				if (debug) Podsalinan.debugLog.logInfo(this, 356, "matched");
 	        				break;
+	        			} else {
+	    	    			menuCommand.parameterMap.clear();
 	        			}
 	        		}
 	        	}
@@ -398,15 +410,16 @@ public class CLInterface extends CLIOption implements Runnable{
 				} else if (returnObject.methodCall.length()>0 && 
 						   !input.contains(returnObject.methodCall) &&
 						   input.length()>0){
+					if (debug) Podsalinan.debugLog.logInfo(this,401, "Error: Adding methodCall to input.");
 					input=returnObject.methodCall+" "+input;
 				} else if (returnObject.methodCall.length()>0){
 					System.out.println("Error: Invalid input - "+input);
 					input=returnObject.methodCall;
-					if (debug) Podsalinan.debugLog.logInfo(this, 397, "Error - '"+input+"'");
+					if (debug) Podsalinan.debugLog.logInfo(this, 406, "Error: '"+input+"'");
 				} else if (cliGlobals.getGlobalSelection().size()>0 && input.length()>0){
 					input=cliGlobals.globalSelectionToString()+" "+input;
 					if (debug) Podsalinan.debugLog.logMap(this, cliGlobals.getGlobalSelection());
-					if (debug) Podsalinan.debugLog.logInfo(this, 393, "'"+menuCommand.methodCall+"'");
+					if (debug) Podsalinan.debugLog.logInfo(this, 410, "'"+menuCommand.methodCall+"'");
 				} else {
 					failedMatch=true;
 				}
