@@ -375,6 +375,9 @@ public class CLInterface extends CLIOption implements Runnable{
 	        				} else {
 	        					if (splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
 	        						score++;
+	        						if (splitValue[svc].equalsIgnoreCase("all")){
+	        							menuCommand.parameterMap.put("all", "true");
+	        						}
 	        					}
 	        				}
 	        				svc++;

@@ -24,27 +24,25 @@ public class RemoveItem extends CLIOption {
 	 */
 	public RemoveItem(DataStorage newData) {
 		super(newData);
-		DeleteDownload deleteDownload = new DeleteDownload(newData);
-/*		options.put("downloads", deleteDownload);
-		options.put("download", deleteDownload);
-		options.put("podcast", new DeletePodcast(newData));*/
 	}
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		debug=true;
-
-		if (debug) Podsalinan.debugLog.logInfo(this, "command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		
-		if (command.length()==0){
-			String[] deleteType = {"downloads","podcast"};
+		if (functionParms.isEmpty()){
+			String[] deleteType = {"downloads","podcastid"};
 			boolean found=false;
 			for (String deleteItem: deleteType){
 				if (debug) Podsalinan.debugLog.logInfo(this, "Check: "+deleteItem);
 				if (!found && CLInterface.cliGlobals.getGlobalSelection().containsKey(deleteItem)){
 				    if (debug) Podsalinan.debugLog.logInfo(this, "Global Selection contains: "+deleteItem);
-				    //returnObject=options.get(deleteItem).execute(CLInterface.cliGlobals.getGlobalSelection().get(deleteItem));
+				    if (deleteItem.equals("downloads"))
+				    	returnObject.methodCall="remove download";
+				    else {
+				    	returnObject.methodCall="remove podcast";
+				    }
+				    returnObject.execute=true;
 				    found=true;
 				}
 			}
@@ -53,13 +51,16 @@ public class RemoveItem extends CLIOption {
 				returnObject.execute=true;
 			}
 		} else {
-			String[] commandOptions = command.split(" ");
-	//		if (options.containsKey(commandOptions[0])){
-				//returnObject=options.get(commandOptions[0]).execute(command.replaceFirst(commandOptions[0]+" ", ""));
-		//	} else {
+			if (functionParms.containsKey("uid")){
+				returnObject.methodCall="podcast "+functionParms.get("uid")+" 3";
+				returnObject.execute=true;
+			} else if (functionParms.containsKey("")){
+				returnObject.methodCall="downloads "+functionParms.get("")+" 1";
+				returnObject.execute=true;
+			} else {
 				System.out.println("Error: Invalid User Input");
 				returnObject.execute=true;
-			//}
+			}
 		}
 		
 		if (debug) Podsalinan.debugLog.logInfo(this, "methodCall: "+returnObject.methodCall);
