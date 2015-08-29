@@ -56,7 +56,35 @@ public class ChangeDestination extends CLIOption {
     		    }
             }
         } else if (functionParms.containsKey("path") && CLInterface.cliGlobals.getGlobalSelection().size()>0){
-        	
+    		File newPath = new File(functionParms.get("path"));
+        	if ((CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid"))||
+        		(CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads"))){
+        		if (!newPath.exists()){
+        			if (newPath.getParentFile().exists()){
+        				System.out.println("Directory does not exists.");
+        				if (input.confirmCreation()){
+        					newPath.mkdir();
+        				}
+        			}
+        		}
+        		if (newPath.exists()){
+        			if (CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid")){
+        				Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcastid"));
+        				if (selectedPodcast!=null){
+        					selectedPodcast.setDirectory(newPath.getPath());
+        				}
+        			} else if (CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads")){
+        				URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(CLInterface.cliGlobals.getGlobalSelection().get("downloads"));
+        				if (selectedDownload!=null){
+        					selectedDownload.setDirectory(newPath.getPath());
+        				}
+        			}
+        		} else {
+        			System.out.println("Error: Directory does not exist.");
+        		}
+        	} else {
+        		System.out.println("Error: No Podcast or Download selected.");
+        	}
         } else {
         	System.out.println("Error: Invalid call.");
         }
