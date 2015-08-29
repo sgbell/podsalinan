@@ -151,7 +151,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 * Here ends the podcast menu commands
 		 */
         // The following is a generic call - which handles podcasts & downloads
-		options.put("podcast <podcastid> 4", changeDestination);     //TODO: 1.01 - Need to fix for all 3 calls
+		options.put("podcast <podcastid> 4", changeDestination);
 		options.put("downloads <downloadid> 7", changeDestination); 
 		options.put("set destination <path>", changeDestination);
 		

@@ -64,6 +64,7 @@ public class ChangeDestination extends CLIOption {
         				System.out.println("Directory does not exists.");
         				if (input.confirmCreation()){
         					newPath.mkdir();
+        					System.out.println("Directory Created: "+newPath.getPath());
         				}
         			}
         		}
@@ -72,11 +73,15 @@ public class ChangeDestination extends CLIOption {
         				Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(CLInterface.cliGlobals.getGlobalSelection().get("podcastid"));
         				if (selectedPodcast!=null){
         					selectedPodcast.setDirectory(newPath.getPath());
+        					selectedPodcast.setUpdated(true);
+        					returnObject.methodCall="podcast "+selectedPodcast.getDatafile();
         				}
         			} else if (CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads")){
         				URLDownload selectedDownload = data.getUrlDownloads().findDownloadByUid(CLInterface.cliGlobals.getGlobalSelection().get("downloads"));
         				if (selectedDownload!=null){
         					selectedDownload.setDirectory(newPath.getPath());
+        					selectedDownload.setUpdated(true);
+        					returnObject.methodCall="downloads "+selectedDownload.getUid();
         				}
         			}
         		} else {
@@ -114,6 +119,7 @@ public class ChangeDestination extends CLIOption {
 			if (setNewPath){
 				if (item instanceof Podcast){
 					((Podcast)item).setDirectory(userInput);
+					((Podcast)item).setUpdated(true);
 					return true;
 				} else if (item instanceof URLDownload){
 					((URLDownload)item).setDestination(userInput);
