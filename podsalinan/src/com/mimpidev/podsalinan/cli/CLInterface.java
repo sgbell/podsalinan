@@ -37,8 +37,8 @@ import com.mimpidev.podsalinan.cli.options.generic.ChangeDestination;
 import com.mimpidev.podsalinan.cli.options.generic.RemoveItem;
 import com.mimpidev.podsalinan.cli.options.help.*;
 import com.mimpidev.podsalinan.cli.options.list.*;
-import com.mimpidev.podsalinan.cli.options.mainmenu.HideCommand;
-import com.mimpidev.podsalinan.cli.options.mainmenu.ShowCommand;
+import com.mimpidev.podsalinan.cli.options.mainmenu.MenuHidden;
+import com.mimpidev.podsalinan.cli.options.mainmenu.MenuVisible;
 import com.mimpidev.podsalinan.cli.options.podcast.*;
 import com.mimpidev.podsalinan.cli.options.settings.*;
 import com.mimpidev.podsalinan.data.PodcastList;
@@ -96,15 +96,16 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("list downloads", new ListDownloads(data));
 		options.put("list preferences", new ListPreferences(data));
 		
-		options.put("show menu", new ShowCommand(data));  //TODO: 1.04 - Need to fix
-		options.put("hide menu", new HideCommand(data));  //TODO: 1.05 - Need to fix
-		options.put("remove", new RemoveItem(data));      //TODO: 1.06 - Need to fix
-		options.put("remove <downloadid|podcastid>", new RemoveItem(data)); //TODO: 1.07 - Need to fix
+		options.put("show menu", new MenuVisible(data));  
+		options.put("hide menu", new MenuHidden(data));
+		CLIOption removeItem = new RemoveItem(data);
+		options.put("remove", removeItem);                        //TODO: 1.06.1 - Need to fix
+		options.put("remove <downloadid|podcastid>", removeItem); //TODO: 1.06.2 - Need to fix
 		// New command to implement
-		options.put("remove all downloads", new RemoveItem(data)); //TODO: 1.08 - Need to fix
+		options.put("remove all downloads", removeItem);          //TODO: 1.06.3 - Need to fix
 		
-		options.put("dump", new DumpCommand(data));              //TODO: 1.09 - Need to fix
-		options.put("dump urldownloads", new DumpCommand(data)); //TODO: 1.10 - Need to fix
+		options.put("dump", new DumpCommand(data));              //TODO: 1.07 - Need to fix
+		options.put("dump urldownloads", new DumpCommand(data)); //TODO: 1.08 - Need to fix
 
 		/** 
 		 *  The following group of cli options are for the podcast menu & submenu
@@ -164,30 +165,30 @@ public class CLInterface extends CLIOption implements Runnable{
         CLIOption selectDownload = new SelectDownload(data);
 		options.put("downloads <a-z>", selectDownload);
 		options.put("select download <a-z>", selectDownload);
-		options.put("select download <downloadid>", selectDownload);  //TODO: 1.11.01 - Need to fix
+		options.put("select download <downloadid>", selectDownload);  //TODO: 1.09.01 - Need to fix
 		CLIOption showSelectedDownloadMenu = new com.mimpidev.podsalinan.cli.options.downloads.ShowSelectedMenu(data);
 		options.put("downloads <downloadid>", showSelectedDownloadMenu);
 		options.put("downloads <downloadid> showmenu", showSelectedDownloadMenu);
         CLIOption deleteDownload = new DeleteDownload(data);
 		options.put("downloads <downloadid> 1", deleteDownload);
-		options.put("remove download", deleteDownload);				//TODO: 1.11.02 - Need to fix
+		options.put("remove download", deleteDownload);				//TODO: 1.09.02 - Need to fix
 		CLIOption restartDownload = new RestartDownload(data);
 		options.put("downloads <downloadid> 2", restartDownload);		
-		options.put("restart downloads", restartDownload);		    //TODO: 1.11.03 - Need to fix
+		options.put("restart downloads", restartDownload);		    //TODO: 1.09.03 - Need to fix
 		CLIOption stopDownload =new StopDownload(data);
 		options.put("downloads <downloadid> 3", stopDownload);		
-		options.put("stop download", stopDownload);					//TODO: 1.11.04 - Need to fix
-		options.put("stop <downloadid>", stopDownload);				//TODO: 1.11.05 - Need to fix
-		options.put("stop", stopDownload);							//TODO: 1.11.06 - Need to fix
+		options.put("stop download", stopDownload);					//TODO: 1.09.04 - Need to fix
+		options.put("stop <downloadid>", stopDownload);				//TODO: 1.09.05 - Need to fix
+		options.put("stop", stopDownload);							//TODO: 1.09.06 - Need to fix
 		options.put("downloads <downloadid> 4", new StartDownload(data));	
         CLIOption increasePriority = new IncreasePriority(data);
 		options.put("downloads <downloadid> 5", increasePriority);		
-		options.put("increase", increasePriority);					     //TODO: 1.11.07 Need to fix
-		options.put("increase download <downloadid>", increasePriority); //TODO: 1.11.08 Need to fix
+		options.put("increase", increasePriority);					     //TODO: 1.09.07 Need to fix
+		options.put("increase download <downloadid>", increasePriority); //TODO: 1.09.08 Need to fix
 		CLIOption decreasePriority = new DecreasePriority(data);
 		options.put("downloads <downloadid> 6", decreasePriority);		
-		options.put("decrease", decreasePriority);                       //TODO: 1.11.09 Need to fix
-		options.put("decrease download <downloadid>", decreasePriority); //TODO: 1.11.10 Need to fix
+		options.put("decrease", decreasePriority);                       //TODO: 1.09.09 Need to fix
+		options.put("decrease download <downloadid>", decreasePriority); //TODO: 1.09.10 Need to fix
 		options.put("downloads <downloadid> showdetails", new ShowDownloadDetails(data));
 
 		/**
@@ -203,20 +204,20 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("settings <0-9> 9", showSettingsMenu);
 		CLIOption podcastUpdateRate =new PodcastUpdateRate(data);
 		options.put("settings 1", podcastUpdateRate);         
-		options.put("set updateinterval <0-9>", podcastUpdateRate); //TODO: 1.12.1 - Fix it
+		options.put("set updateinterval <0-9>", podcastUpdateRate); //TODO: 1.10.1 - Fix it
 		CLIOption maxDownloads = new MaxDownloaders(data);
-		options.put("settings 2", maxDownloads);				 //TODO:1.12.2 - Fix User Input
-		options.put("set maxdownloaders <0-9>", maxDownloads);   //TODO:1.12.2.2 - Fix pass in value
+		options.put("settings 2", maxDownloads);				 //TODO:1.10.2 - Fix User Input
+		options.put("set maxdownloaders <0-9>", maxDownloads);   //TODO:1.10.2.2 - Fix pass in value
 		CLIOption downloadDirectory =new DownloadDirectory(data); 
 		options.put("settings 3", downloadDirectory);
-		options.put("set defaultdirectory <path>", downloadDirectory);   //TODO: 1.12.3 - Fix input scan to match path to file system
+		options.put("set defaultdirectory <path>", downloadDirectory);   //TODO: 1.10.3 - Fix input scan to match path to file system
 		CLIOption autoqueueEpisodes =new com.mimpidev.podsalinan.cli.options.settings.AutoQueueEpisodes(data); 
 		options.put("settings 4", autoqueueEpisodes);
-		options.put("set autoqueue <0|1|true|false>", autoqueueEpisodes);           //TODO: 1.12.4 - Fix input scan to match 0|1|true|false
+		options.put("set autoqueue <0|1|true|false>", autoqueueEpisodes);           //TODO: 1.10.4 - Fix input scan to match 0|1|true|false
 		CLIOption downloadSpeedLimit = new DownloadSpeedLimit(data); 
 		options.put("settings 5", downloadSpeedLimit);
-		options.put("set downloadlimit <00M>", downloadSpeedLimit);                //TODO: 1.12.5 - Fix input scan to match <00M> to speed
-		options.put("set menuvisible <0|1|true|false>", new MenuVisibility(data)); //TODO: 1.12.6 - Need to fix
+		options.put("set downloadlimit <00M>", downloadSpeedLimit);                //TODO: 1.10.5 - Fix input scan to match <00M> to speed
+		options.put("set menuvisible <0|1|true|false>", new MenuVisibility(data)); //TODO: 1.10.6 - Need to fix
 		/**
 		 *  End settings options
 		 */
@@ -236,7 +237,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		 */
 	}
 
-	//TODO: 1. Moving the command line menu around again. Move all of the child options to here
 	//TODO: 2. remove all debug=true
 	//TODO: 3. Change input to character input
 	//TODO: 4. Add the ability for multiple child download threads to facilitate faster downloading.

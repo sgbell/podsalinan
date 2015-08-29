@@ -14,23 +14,22 @@ import com.mimpidev.podsalinan.cli.ReturnObject;
  * @author sbell
  *
  */
-public class HideCommand extends CLIOption {
+public class MenuHidden extends CLIOption {
 
 	/**
 	 * @param newData
 	 */
-	public HideCommand(DataStorage newData) {
+	public MenuHidden(DataStorage newData) {
 		super(newData);
 	}
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(this, 27, "Command: "+command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		
-		if (command.equalsIgnoreCase("menu"))
-			if (!data.getSettings().addSetting("menuVisible", "false"))
-				data.getSettings().updateSetting("menuVisible", "false");
+		if (!data.getSettings().addSetting("menuVisible", "false"))
+			data.getSettings().updateSetting("menuVisible", "false");
+
 		return returnObject;
 	}
 
