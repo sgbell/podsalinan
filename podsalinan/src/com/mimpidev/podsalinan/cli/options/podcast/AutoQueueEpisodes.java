@@ -24,17 +24,13 @@ public class AutoQueueEpisodes extends CLIOption {
 		super(newData);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this,"Called");
 		returnObject.debug(debug);
 		
-		if (functionParms.containsKey("podcastId")){
-			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("podcastId"));
+		if (functionParms.containsKey("uid")){
+			Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("uid"));
 			if (selectedPodcast!=null){
 				System.out.println ();
 		    	if (selectedPodcast.isAutomaticQueue()){
@@ -46,7 +42,7 @@ public class AutoQueueEpisodes extends CLIOption {
 		    	}
 				returnObject.methodCall = "podcast <podcastid>";
 				returnObject.parameterMap.clear();
-				returnObject.execute=false;
+				returnObject.execute=true;
 			}
 		}
 		

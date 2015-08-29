@@ -124,7 +124,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> 3", deletePodcast);
 		options.put("remove podcast", deletePodcast);
 		CLIOption changeDestination = new ChangeDestination(data);
-		options.put("podcast <podcastid> 5", new com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes(data)); //TODO: 1.02 - Need to fix
+		options.put("podcast <podcastid> 5", new com.mimpidev.podsalinan.cli.options.podcast.AutoQueueEpisodes(data));
 		options.put("podcast <podcastid> showdetails", new ShowPodcastDetails(data));
 		
 		CLIOption selectEpisode = new SelectEpisode(data);
