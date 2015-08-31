@@ -8,10 +8,11 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
-import com.mimpidev.podsalinan.cli.options.downloads.DeleteDownload;
-import com.mimpidev.podsalinan.cli.options.podcast.DeletePodcast;
+import com.mimpidev.podsalinan.data.Podcast;
+import com.mimpidev.podsalinan.data.URLDownload;
 
 /**
  * @author sbell
@@ -52,11 +53,25 @@ public class RemoveItem extends CLIOption {
 			}
 		} else {
 			if (functionParms.containsKey("uid")){
-				returnObject.methodCall="podcast "+functionParms.get("uid")+" 3";
-				returnObject.execute=true;
-			} else if (functionParms.containsKey("")){
-				returnObject.methodCall="downloads "+functionParms.get("")+" 1";
-				returnObject.execute=true;
+				Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("uid"));
+				URLDownload selectedDownload=null;
+				if (selectedPodcast !=null){
+					returnObject.methodCall="podcast "+functionParms.get("uid")+" 3";
+					returnObject.execute=true;
+				} else {
+					selectedDownload = data.getUrlDownloads().findDownloadByUid(functionParms.get("uid"));
+					if (selectedDownload!=null){
+						returnObject.methodCall="downloads "+functionParms.get("uid")+" 1";
+						returnObject.execute=true;
+					}
+				}
+				if (selectedPodcast==null && selectedDownload==null){
+					System.out.println("Error: Invalid User Input.");
+				}
+			} else if (functionParms.containsKey("all")){
+				// This is used to purge all download from the download queue.
+				CLInput input = new CLInput();
+				
 			} else {
 				System.out.println("Error: Invalid User Input");
 				returnObject.execute=true;

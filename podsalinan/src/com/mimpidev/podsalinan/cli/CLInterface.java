@@ -99,8 +99,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("show menu", new MenuVisible(data));  
 		options.put("hide menu", new MenuHidden(data));
 		CLIOption removeItem = new RemoveItem(data);
-		options.put("remove", removeItem);                        //TODO: 1.06.1 - Need to fix
-		options.put("remove <downloadid|podcastid>", removeItem); //TODO: 1.06.2 - Need to fix
+		options.put("remove", removeItem);
+		options.put("remove <downloadid|podcastid>", removeItem);
 		// New command to implement
 		options.put("remove all downloads", removeItem);          //TODO: 1.06.3 - Need to fix
 		
@@ -141,6 +141,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("podcast <podcastid> episode <a-z> showdetails", new ShowEpisodeDetails(data));
 		
 		CLIOption podcastShowmenu = new com.mimpidev.podsalinan.cli.options.podcast.ShowMenu(data);
+		options.put("podcast", podcastShowmenu);
 		options.put("podcast showmenu", podcastShowmenu);
 		options.put("podcast <podcastid> 9", podcastShowmenu);
 
@@ -259,8 +260,8 @@ public class CLInterface extends CLIOption implements Runnable{
 					if (!options.containsKey(returnObject.methodCall)){
 						System.out.println("Error: Invalid command");
 						System.out.println("Error: "+returnObject.methodCall);
-					}
-					returnObject = options.get(returnObject.methodCall).execute(returnObject.parameterMap);
+					} else
+					    returnObject = options.get(returnObject.methodCall).execute(returnObject.parameterMap);
 				}
 			}
 		}
@@ -386,7 +387,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	        				match=true;
 	        				menuCommand.methodCall=key;
 	        				menuCommand.execute=true;
-	        				if (debug) Podsalinan.debugLog.logInfo(this, 356, "matched");
+	        				if (debug) Podsalinan.debugLog.logInfo(this, 389, "matched");
 	        				break;
 	        			} else {
 	    	    			menuCommand.parameterMap.clear();
@@ -395,11 +396,11 @@ public class CLInterface extends CLIOption implements Runnable{
 	        	}
 	            if (!match){
 	            	menuCommand.execute=false;
-					if (debug) Podsalinan.debugLog.logInfo(this, 363, "not matched");
+					if (debug) Podsalinan.debugLog.logInfo(this, 398, "not matched");
 	            }
 	        } else {
         	    menuCommand.methodCall=input;
-        	    if (debug) Podsalinan.debugLog.logInfo(this, 375, menuCommand.methodCall);
+        	    if (debug) Podsalinan.debugLog.logInfo(this, 402, menuCommand.methodCall);
         	    menuCommand.debug(debug);
         	    menuCommand.execute=true;
 			}
@@ -413,16 +414,16 @@ public class CLInterface extends CLIOption implements Runnable{
 				} else if (returnObject.methodCall.length()>0 && 
 						   !input.contains(returnObject.methodCall) &&
 						   input.length()>0){
-					if (debug) Podsalinan.debugLog.logInfo(this,401, "Error: Adding methodCall to input.");
+					if (debug) Podsalinan.debugLog.logInfo(this,416, "Error: Adding methodCall to input.");
 					input=returnObject.methodCall+" "+input;
 				} else if (returnObject.methodCall.length()>0){
 					System.out.println("Error: Invalid input - "+input);
 					input=returnObject.methodCall;
-					if (debug) Podsalinan.debugLog.logInfo(this, 406, "Error: '"+input+"'");
+					if (debug) Podsalinan.debugLog.logInfo(this, 421, "Error: '"+input+"'");
 				} else if (cliGlobals.getGlobalSelection().size()>0 && input.length()>0){
 					input=cliGlobals.globalSelectionToString()+" "+input;
 					if (debug) Podsalinan.debugLog.logMap(this, cliGlobals.getGlobalSelection());
-					if (debug) Podsalinan.debugLog.logInfo(this, 410, "'"+menuCommand.methodCall+"'");
+					if (debug) Podsalinan.debugLog.logInfo(this, 425, "'"+menuCommand.methodCall+"'");
 				} else {
 					failedMatch=true;
 				}
@@ -430,6 +431,10 @@ public class CLInterface extends CLIOption implements Runnable{
 		}
 		if(failedMatch){
 			menuCommand.methodCall=cliGlobals.globalSelectionToString();
+			menuCommand.execute=true;
+		}
+		if (menuCommand.methodCall.length()==0){
+			menuCommand.methodCall="mainmenu showMenu";
 			menuCommand.execute=true;
 		}
 		
