@@ -102,7 +102,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("remove", removeItem);
 		options.put("remove <downloadid|podcastid>", removeItem);
 		// New command to implement
-		options.put("remove all downloads", removeItem);          //TODO: 1.06.3 - Need to fix
+		options.put("remove all downloads", removeItem);
 		
 		options.put("dump", new DumpCommand(data));              //TODO: 1.07 - Need to fix
 		options.put("dump urldownloads", new DumpCommand(data)); //TODO: 1.08 - Need to fix
@@ -161,6 +161,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		 *  Here is the download menu command list
 		 */
 		CLIOption downloadsShowmenu = new com.mimpidev.podsalinan.cli.options.downloads.ShowMenu(data);
+		options.put("downloads", downloadsShowmenu);
 		options.put("downloads showmenu", downloadsShowmenu);
 		options.put("downloads <downloadid> 9", downloadsShowmenu);
         CLIOption selectDownload = new SelectDownload(data);
@@ -323,7 +324,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	        	for (String key : options.keySet()){
 					score=0;
 	        		String[] splitValue = key.split(" ");
-					if ((debug)&&(key.equalsIgnoreCase("podcast <podcastid> <aa>"))){
+					if ((debug)&&(key.equalsIgnoreCase("remove all downloads"))){
 						Podsalinan.debugLog.logInfo(this, 319, key);
 						Podsalinan.debugLog.logInfo(this, 320, "length:"+splitValue.length);
 					}
@@ -376,9 +377,6 @@ public class CLInterface extends CLIOption implements Runnable{
 	        				} else {
 	        					if (splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
 	        						score++;
-	        						if (splitValue[svc].equalsIgnoreCase("all")){
-	        							menuCommand.parameterMap.put("all", "true");
-	        						}
 	        					}
 	        				}
 	        				svc++;
@@ -400,6 +398,9 @@ public class CLInterface extends CLIOption implements Runnable{
 	            }
 	        } else {
         	    menuCommand.methodCall=input;
+				if (input.contains("all")){
+					menuCommand.parameterMap.put("all", "true");
+				}
         	    if (debug) Podsalinan.debugLog.logInfo(this, 402, menuCommand.methodCall);
         	    menuCommand.debug(debug);
         	    menuCommand.execute=true;
@@ -415,15 +416,16 @@ public class CLInterface extends CLIOption implements Runnable{
 						   !input.contains(returnObject.methodCall) &&
 						   input.length()>0){
 					if (debug) Podsalinan.debugLog.logInfo(this,416, "Error: Adding methodCall to input.");
-					input=returnObject.methodCall+" "+input;
-				} else if (returnObject.methodCall.length()>0){
 					System.out.println("Error: Invalid input - "+input);
-					input=returnObject.methodCall;
-					if (debug) Podsalinan.debugLog.logInfo(this, 421, "Error: '"+input+"'");
+					input=returnObject.methodCall+" "+input;
 				} else if (cliGlobals.getGlobalSelection().size()>0 && input.length()>0){
 					input=cliGlobals.globalSelectionToString()+" "+input;
 					if (debug) Podsalinan.debugLog.logMap(this, cliGlobals.getGlobalSelection());
-					if (debug) Podsalinan.debugLog.logInfo(this, 425, "'"+menuCommand.methodCall+"'");
+					if (debug) Podsalinan.debugLog.logInfo(this, 424, "'"+menuCommand.methodCall+"'");
+				} else if (returnObject.methodCall.length()>0){
+					System.out.println("Error: Invalid input - "+input);
+					input=returnObject.methodCall;
+					if (debug) Podsalinan.debugLog.logInfo(this, 428, "Error: '"+input+"'");
 				} else {
 					failedMatch=true;
 				}
