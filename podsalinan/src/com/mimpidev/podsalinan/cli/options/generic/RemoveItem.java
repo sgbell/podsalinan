@@ -71,7 +71,11 @@ public class RemoveItem extends CLIOption {
 			} else if (functionParms.containsKey("all")){
 				// This is used to purge all download from the download queue.
 				CLInput input = new CLInput();
-				
+				if (input.confirmRemoval("all downloads from the queue")){
+					data.getUrlDownloads().deleteAllDownloads();
+				}
+				returnObject.methodCall="mainmenu showmenu";
+				returnObject.execute=true;
 			} else {
 				System.out.println("Error: Invalid User Input");
 				returnObject.execute=true;

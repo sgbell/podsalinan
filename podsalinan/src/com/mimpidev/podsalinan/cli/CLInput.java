@@ -88,7 +88,11 @@ public class CLInput {
 	}
 
 	public boolean confirmRemoval(){
-		System.out.println("Are you sure you want to delete this (Y/N)?");
+		return confirmRemoval("this");
+	}
+	
+	public boolean confirmRemoval(String additionalText){
+		System.out.println("Are you sure you want to delete "+additionalText+" (Y/N)?");
 		String deletePrompt = getStringInput();
 		if ((deletePrompt.equalsIgnoreCase("Y"))||
 			(deletePrompt.equalsIgnoreCase("Yes"))){

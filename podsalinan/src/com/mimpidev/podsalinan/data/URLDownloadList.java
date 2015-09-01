@@ -227,6 +227,16 @@ public class URLDownloadList extends DownloadDetails {
 			}
 	}
 
+	/**
+	 * 
+	 */
+	public void deleteAllDownloads(){
+		for (URLDownload selectedDownload : downloads){
+			cancelDownload(selectedDownload);
+			deleteDownload(selectedDownload);
+		}
+	}
+	
 	/** This is a wrapper for cancelDownload(URLDownload)
 	 * @param download
 	 */
