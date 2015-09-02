@@ -29,25 +29,18 @@ public class DumpCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		String menuInput = command.replaceFirst(command.split(" ")[0]+" ", "");
-		
-		if ((menuInput.equalsIgnoreCase("dump"))||
-			(menuInput.equalsIgnoreCase("urldownloads"))){
-			
-			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-			Date date = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		Date date = new Date();
 				
-			Podsalinan.debugLog.logInfo("--URLDownload Contents - "+dateFormat.format(date)+" --");
-			Podsalinan.debugLog.logInfo("DownladURL,status,destination,podcastid");
-			for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
-				Podsalinan.debugLog.logInfo(currentDownload.getURL().toString()+
-						","+currentDownload.getCurrentStatus()+
-						","+currentDownload.getDestination()+
-						","+currentDownload.getPodcastSource());
-			}
-			Podsalinan.debugLog.logInfo("-- URLDownload Contents end --");
+		Podsalinan.debugLog.logInfo("--URLDownload Contents - "+dateFormat.format(date)+" --");
+		Podsalinan.debugLog.logInfo("DownladURL,status,destination,podcastid");
+		for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
+			Podsalinan.debugLog.logInfo(currentDownload.getURL().toString()+
+					","+currentDownload.getCurrentStatus()+
+					","+currentDownload.getDestination()+
+					","+currentDownload.getPodcastSource());
 		}
+		Podsalinan.debugLog.logInfo("-- URLDownload Contents end --");
 		return returnObject;
 	}
 

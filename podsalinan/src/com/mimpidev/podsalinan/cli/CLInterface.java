@@ -104,8 +104,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		// New command to implement
 		options.put("remove all downloads", removeItem);
 		
-		options.put("dump", new DumpCommand(data));              //TODO: 1.07 - Need to fix
-		options.put("dump urldownloads", new DumpCommand(data)); //TODO: 1.08 - Need to fix
+		options.put("dump", new DumpCommand(data));
+		options.put("dump urldownloads", new DumpCommand(data));
 
 		/** 
 		 *  The following group of cli options are for the podcast menu & submenu
@@ -167,16 +167,16 @@ public class CLInterface extends CLIOption implements Runnable{
         CLIOption selectDownload = new SelectDownload(data);
 		options.put("downloads <a-z>", selectDownload);
 		options.put("select download <a-z>", selectDownload);
-		options.put("select download <downloadid>", selectDownload);  //TODO: 1.09.01 - Need to fix
+		options.put("select download <downloadid>", selectDownload);
 		CLIOption showSelectedDownloadMenu = new com.mimpidev.podsalinan.cli.options.downloads.ShowSelectedMenu(data);
 		options.put("downloads <downloadid>", showSelectedDownloadMenu);
 		options.put("downloads <downloadid> showmenu", showSelectedDownloadMenu);
         CLIOption deleteDownload = new DeleteDownload(data);
 		options.put("downloads <downloadid> 1", deleteDownload);
-		options.put("remove download", deleteDownload);				//TODO: 1.09.02 - Need to fix
+		options.put("remove download", deleteDownload);	
 		CLIOption restartDownload = new RestartDownload(data);
 		options.put("downloads <downloadid> 2", restartDownload);		
-		options.put("restart downloads", restartDownload);		    //TODO: 1.09.03 - Need to fix
+		options.put("restart download", restartDownload);		    //TODO: 1.09.03 - Need to fix
 		CLIOption stopDownload =new StopDownload(data);
 		options.put("downloads <downloadid> 3", stopDownload);		
 		options.put("stop download", stopDownload);					//TODO: 1.09.04 - Need to fix

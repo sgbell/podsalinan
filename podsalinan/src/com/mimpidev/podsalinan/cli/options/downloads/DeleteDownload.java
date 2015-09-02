@@ -29,6 +29,12 @@ public class DeleteDownload extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 
+		if (!functionParms.containsKey("uid") &&
+			(CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads"))){
+			if (debug) Podsalinan.debugLog.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
+			functionParms.put("uid", CLInterface.cliGlobals.getGlobalSelection().get("downloads"));
+		}
+		
 		if (functionParms.containsKey("uid")){
 			ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
 			printDetails.execute(functionParms);
@@ -44,6 +50,10 @@ public class DeleteDownload extends CLIOption {
 				
 			}
 			returnObject.methodCall = "downloads showmenu";
+			returnObject.execute=true;
+		} else{
+			System.out.println("Error: Invalid command.");
+			returnObject.execute=false;
 		}
 		
 		returnObject.parameterMap.clear();
