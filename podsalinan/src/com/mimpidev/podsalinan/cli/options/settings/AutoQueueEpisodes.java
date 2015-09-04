@@ -40,8 +40,8 @@ public class AutoQueueEpisodes extends CLIOption {
 		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 		String userInput="";
 
-		if (functionParms.containsKey("<true|false>")){
-			userInput=functionParms.get("<true|false>");
+		if (functionParms.containsKey("userInput")){
+			userInput=functionParms.get("userInput");
 			returnObject.methodCall="";
 			returnObject.execute=false;
 		} else {
@@ -51,9 +51,9 @@ public class AutoQueueEpisodes extends CLIOption {
 		}
 		
 		if (userInput.length()==1){
-			switch (userInput.charAt(0)){
-				case 'Y':
+			switch (userInput.toLowerCase().charAt(0)){
 				case 'y':
+				case '1':
 					if (!data.getSettings().updateSetting("autoQueue","true"))
 						data.getSettings().addSetting("autoQueue","true");
 					try {
@@ -62,8 +62,8 @@ public class AutoQueueEpisodes extends CLIOption {
 						// Just catching an error, incase nothing is waiting to do an update
 					}
 					break;
-				case 'N':
 				case 'n':
+				case '0':
 					if (!data.getSettings().updateSetting("autoQueue","false"))
 						data.getSettings().addSetting("autoQueue","false");
 					break;
@@ -72,11 +72,13 @@ public class AutoQueueEpisodes extends CLIOption {
 					break;
 			}
 		} else if (userInput.length()>1) {
-			if (userInput.equalsIgnoreCase("yes"))
+			if (userInput.equalsIgnoreCase("yes")||
+				userInput.equalsIgnoreCase("true"))
 				data.getSettings().updateSetting("autoQueue","true");
-			else if (userInput.equalsIgnoreCase("no"))
+			else if (userInput.equalsIgnoreCase("no")||
+					 userInput.equalsIgnoreCase("false"))
 				data.getSettings().updateSetting("autoQueue","false");
-			else if (userInput.equalsIgnoreCase("no"))
+			else if (!userInput.equalsIgnoreCase("no"))
 				System.out.println ("Error: User entered Value is invalid. No change made");
 		}
 		System.out.println("Auto Queue Downloads: "+data.getSettings().findSetting("autoQueue"));

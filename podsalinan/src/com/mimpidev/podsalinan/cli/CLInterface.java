@@ -215,7 +215,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("set defaultdirectory <path>", downloadDirectory);
 		CLIOption autoqueueEpisodes =new com.mimpidev.podsalinan.cli.options.settings.AutoQueueEpisodes(data); 
 		options.put("settings 4", autoqueueEpisodes);
-		options.put("set autoqueue <0|1|true|false>", autoqueueEpisodes);           //TODO: 1.10.4 - Fix input scan to match 0|1|true|false
+		options.put("set autoqueue <0|1|true|false>", autoqueueEpisodes);
 		CLIOption downloadSpeedLimit = new DownloadSpeedLimit(data); 
 		options.put("settings 5", downloadSpeedLimit);
 		options.put("set downloadlimit <00M>", downloadSpeedLimit);                //TODO: 1.10.5 - Fix input scan to match <00M> to speed
@@ -373,9 +373,11 @@ public class CLInterface extends CLIOption implements Runnable{
 	        						} else {
 	        							failedMatch=true;
 	        						}
-	        					} else if (splitValue[svc].equals("<0-9>") &&
-	        							methodCallSplit[svc].matches("[0-9]{1,4}")){
-	        						if (debug) Podsalinan.debugLog.logInfo(this, 378, "<0-9> set userInput:"+methodCallSplit[svc]);
+	        					} else if ((splitValue[svc].equals("<0|1|true|false>") &&
+	        							methodCallSplit[svc].toLowerCase().matches("(0|1|true|false)"))||
+	        							(splitValue[svc].equals("<0-9>") &&
+	        							methodCallSplit[svc].matches("[0-9]{1,4}"))){
+	        						if (debug) Podsalinan.debugLog.logInfo(this, 380, splitValue[svc]+" set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
 	        					}
