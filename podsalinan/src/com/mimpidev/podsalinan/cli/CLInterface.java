@@ -208,8 +208,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("settings 1", podcastUpdateRate);         
 		options.put("set updateinterval <0-9>", podcastUpdateRate);
 		CLIOption maxDownloads = new MaxDownloaders(data);
-		options.put("settings 2", maxDownloads);				 //TODO: 1.10.2 - Fix User Input
-		options.put("set maxdownloaders <0-9>", maxDownloads);   //TODO: 1.10.2.2 - Fix pass in value
+		options.put("settings 2", maxDownloads);
+		options.put("set maxdownloaders <0-9>", maxDownloads);
 		CLIOption downloadDirectory =new DownloadDirectory(data); 
 		options.put("settings 3", downloadDirectory);
 		options.put("set defaultdirectory <path>", downloadDirectory);   //TODO: 1.10.3 - Fix input scan to match path to file system
