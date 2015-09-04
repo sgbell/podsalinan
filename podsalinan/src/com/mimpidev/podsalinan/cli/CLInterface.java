@@ -176,7 +176,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("remove download", deleteDownload);	
 		CLIOption restartDownload = new RestartDownload(data);
 		options.put("downloads <downloadid> 2", restartDownload);		
-		options.put("restart download", restartDownload);		    //TODO: 1.09.03 - Need to fix
+		options.put("restart download", restartDownload);
 		CLIOption stopDownload =new StopDownload(data);
 		options.put("downloads <downloadid> 3", stopDownload);		
 		options.put("stop download", stopDownload);					//TODO: 1.09.04 - Need to fix
