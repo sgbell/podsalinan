@@ -212,7 +212,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("set maxdownloaders <0-9>", maxDownloads);
 		CLIOption downloadDirectory =new DownloadDirectory(data); 
 		options.put("settings 3", downloadDirectory);
-		options.put("set defaultdirectory <path>", downloadDirectory);   //TODO: 1.10.3 - Fix input scan to match path to file system
+		options.put("set defaultdirectory <path>", downloadDirectory);
 		CLIOption autoqueueEpisodes =new com.mimpidev.podsalinan.cli.options.settings.AutoQueueEpisodes(data); 
 		options.put("settings 4", autoqueueEpisodes);
 		options.put("set autoqueue <0|1|true|false>", autoqueueEpisodes);           //TODO: 1.10.4 - Fix input scan to match 0|1|true|false
@@ -441,7 +441,7 @@ public class CLInterface extends CLIOption implements Runnable{
 			menuCommand.execute=true;
 		}
 		if (menuCommand.methodCall.length()==0){
-			menuCommand.methodCall="mainmenu showMenu";
+			menuCommand.methodCall="mainmenu showmenu";
 			menuCommand.execute=true;
 		}
 		

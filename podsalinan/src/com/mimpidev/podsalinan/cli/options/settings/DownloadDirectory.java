@@ -40,6 +40,11 @@ public class DownloadDirectory extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		String userInput="";
+
+		if (functionParms.containsKey("path") &&
+			!functionParms.containsKey("passedDirectory")){
+			functionParms.put("passedDirectory", functionParms.get("path"));
+		}
 		
         if (functionParms.containsKey("passedDirectory")){
         	userInput = functionParms.get("passedDirectory");
