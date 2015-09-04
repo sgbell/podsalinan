@@ -206,10 +206,10 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("settings <0-9> 9", showSettingsMenu);
 		CLIOption podcastUpdateRate =new PodcastUpdateRate(data);
 		options.put("settings 1", podcastUpdateRate);         
-		options.put("set updateinterval <0-9>", podcastUpdateRate); //TODO: 1.10.1 - Fix it
+		options.put("set updateinterval <0-9>", podcastUpdateRate);
 		CLIOption maxDownloads = new MaxDownloaders(data);
-		options.put("settings 2", maxDownloads);				 //TODO:1.10.2 - Fix User Input
-		options.put("set maxdownloaders <0-9>", maxDownloads);   //TODO:1.10.2.2 - Fix pass in value
+		options.put("settings 2", maxDownloads);				 //TODO: 1.10.2 - Fix User Input
+		options.put("set maxdownloaders <0-9>", maxDownloads);   //TODO: 1.10.2.2 - Fix pass in value
 		CLIOption downloadDirectory =new DownloadDirectory(data); 
 		options.put("settings 3", downloadDirectory);
 		options.put("set defaultdirectory <path>", downloadDirectory);   //TODO: 1.10.3 - Fix input scan to match path to file system
@@ -374,7 +374,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	        							failedMatch=true;
 	        						}
 	        					} else if (splitValue[svc].equals("<0-9>") &&
-	        							methodCallSplit[svc].matches("[0-9]{1}")){
+	        							methodCallSplit[svc].matches("[0-9]{1,4}")){
 	        						if (debug) Podsalinan.debugLog.logInfo(this, 378, "<0-9> set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;

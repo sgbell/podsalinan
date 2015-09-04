@@ -30,14 +30,30 @@ public class PodcastUpdateRate extends CLIOption {
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		String updateValue="";
 		
+		if (!functionParms.containsKey("updateInterval") &&
+			functionParms.containsKey("userInput")){
+			functionParms.put("updateInterval", functionParms.get("userInput"));
+		}
+
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		
 		if (!functionParms.containsKey("updateInterval")){
 			updateValue=executeMenuOption();
 		} else {
 			try {
-				// Check that the second value passed in is a number, and between 1 & 6
-			    if ((Integer.parseInt(functionParms.get("updateInterval"))<1)||
-			    	(Integer.parseInt(functionParms.get("updateInterval"))>6)){
-			    	throw new NumberFormatException("Number out of Bounds");
+				// Check that the value passed in is a number, and between 1 & 6
+				int updateInterval = Integer.parseInt(functionParms.get("updateInterval"));
+				if (debug) Podsalinan.debugLog.logInfo(this, 46, "Update interval is an int: "+updateInterval);
+				if ((updateInterval!=60)&&
+			    	(updateInterval!=120)&&
+			    	(updateInterval!=180)&&
+			    	(updateInterval!=360)&&
+			    	(updateInterval!=720)&&
+			    	(updateInterval!=1440)){
+					if ((updateInterval<1)||
+						(updateInterval>6)){
+						throw new NumberFormatException("Number out of Bounds");
+					}
 			    }
 			    updateValue=functionParms.get("updateInterval");
 			} catch (NumberFormatException e){
