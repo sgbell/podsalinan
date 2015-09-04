@@ -29,10 +29,15 @@ public class DecreasePriority extends CLIOption {
 		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 
 		boolean decreased=false;
+		if (!functionParms.containsKey("uid") &&
+			(CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads"))){
+			functionParms.put("uid", CLInterface.cliGlobals.getGlobalSelection().get("downloads"));
+		}
+		
 		if (functionParms.containsKey("uid")){
 			decreased=data.getUrlDownloads().decreasePriority(functionParms.get("uid"));
 			if (decreased){
-				   System.out.println("Decreased Priority: "+data.getUrlDownloads().findDownloadByUid(functionParms.get("uid")));
+				   System.out.println("Decreased Priority: "+functionParms.get("uid"));
 			} else {
 				System.out.println("Error: Download already at the bottom of the list.");
 			}

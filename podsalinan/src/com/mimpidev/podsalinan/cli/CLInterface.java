@@ -185,8 +185,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("downloads <downloadid> 4", new StartDownload(data));	
         CLIOption increasePriority = new IncreasePriority(data);
 		options.put("downloads <downloadid> 5", increasePriority);		
-		options.put("increase", increasePriority);					     //TODO: 1.09.07 Need to fix
-		options.put("increase download <downloadid>", increasePriority); //TODO: 1.09.08 Need to fix
+		options.put("increase", increasePriority);
+		options.put("increase download <downloadid>", increasePriority);
 		CLIOption decreasePriority = new DecreasePriority(data);
 		options.put("downloads <downloadid> 6", decreasePriority);		
 		options.put("decrease", decreasePriority);                       //TODO: 1.09.09 Need to fix

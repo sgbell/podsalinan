@@ -8,6 +8,7 @@ import java.util.Map;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
+import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
 /**
@@ -28,10 +29,15 @@ public class IncreasePriority extends CLIOption {
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 
 		boolean increased=false;
+		if (!functionParms.containsKey("uid") &&
+			(CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads"))){
+			functionParms.put("uid", CLInterface.cliGlobals.getGlobalSelection().get("downloads"));
+		}
+		
 		if (functionParms.containsKey("uid")){
 			increased=data.getUrlDownloads().increasePriority(functionParms.get("uid"));
 			if (increased){
-				   System.out.println("Increased Priority: "+data.getUrlDownloads().findDownloadByUid(functionParms.get("uid")));
+				   System.out.println("Increased Priority: "+functionParms.get("uid"));
 			} else {
 				System.out.println("Error: Download already at the top of the list.");
 			}
