@@ -197,6 +197,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				download.setStatus(URLDetails.FINISHED);
 				if (download.getPodcastSource().length()>0)
 					data.getUrlDownloads().deleteDownload(download);
+				else {
+					//TODO: Read first line of file... if it's xml, then read it, and add a podcast to the system
+				}
 			} else if ((percentage<100)&&(download.getStatus()!=URLDetails.DESTINATION_INVALID)){
 				synchronized(download){
 					try {
