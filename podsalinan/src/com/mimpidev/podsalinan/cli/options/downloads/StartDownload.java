@@ -21,7 +21,6 @@ public class StartDownload extends CLIOption {
 	 */
 	public StartDownload(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
 	@Override

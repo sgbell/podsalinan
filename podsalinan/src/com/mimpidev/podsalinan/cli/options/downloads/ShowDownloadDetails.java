@@ -60,7 +60,6 @@ public class ShowDownloadDetails extends CLIOption {
 	
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 
 		if (functionParms.containsKey("uid")){

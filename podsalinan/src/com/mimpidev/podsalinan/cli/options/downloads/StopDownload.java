@@ -22,7 +22,6 @@ public class StopDownload extends CLIOption {
 	 */
 	public StopDownload(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
 	@Override

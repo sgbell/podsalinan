@@ -3,7 +3,6 @@
  */
 package com.mimpidev.podsalinan.cli.options.podcast;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
@@ -30,7 +29,6 @@ public class ListEpisodes extends CLIOption {
 
 	@Override
 	public ReturnObject execute(final Map<String, String> functionParms) {
-		debug=true;
 		
 		CLInput input = new CLInput();
 		

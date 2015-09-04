@@ -25,7 +25,6 @@ public class SelectEpisode extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
 		Podcast selectedPodcast=null;
 		
 		if (debug) Podsalinan.debugLog.logMap(this,functionParms);

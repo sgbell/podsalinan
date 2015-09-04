@@ -27,7 +27,6 @@ public class ChangeDestination extends CLIOption {
 	 */
 	public ChangeDestination(DataStorage newData) {
 		super(newData);
-		debug=true;
 		input= new CLInput();
 	}
 

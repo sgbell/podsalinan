@@ -21,7 +21,6 @@ public class ShowSelectedMenu extends CLIOption {
 	 */
 	public ShowSelectedMenu(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 	
 	@Override

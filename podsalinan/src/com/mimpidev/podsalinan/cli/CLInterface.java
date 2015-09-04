@@ -219,7 +219,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		CLIOption downloadSpeedLimit = new DownloadSpeedLimit(data); 
 		options.put("settings 5", downloadSpeedLimit);
 		options.put("set downloadlimit <00M>", downloadSpeedLimit);                //TODO: 1.10.5 - Fix input scan to match <00M> to speed
-		options.put("set menuvisible <0|1|true|false>", new MenuVisibility(data)); //TODO: 1.10.6 - Need to fix
+		options.put("set menuvisible <0|1|true|false>", new MenuVisibility(data));
 		/**
 		 *  End settings options
 		 */
@@ -239,9 +239,8 @@ public class CLInterface extends CLIOption implements Runnable{
 		 */
 	}
 
-	//TODO: 2. remove all debug=true
-	//TODO: 3. Change input to character input
-	//TODO: 4. Add the ability for multiple child download threads to facilitate faster downloading.
+	//TODO: 2. Change input to character input
+	//TODO: 3. Add the ability for multiple child download threads to facilitate faster downloading.
 	
 	@Override
 	public void run() {

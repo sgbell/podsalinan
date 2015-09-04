@@ -45,7 +45,6 @@ public class CancelDownload extends BaseEpisodeOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		Episode episode=null;
 		

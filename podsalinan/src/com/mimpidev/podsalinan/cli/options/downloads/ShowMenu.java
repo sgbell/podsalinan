@@ -26,7 +26,6 @@ public class ShowMenu extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 
 		if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){

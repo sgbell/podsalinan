@@ -26,7 +26,6 @@ public class ListPodcasts extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
 		int podcastCount=1;
 		
 		for (Podcast podcast : data.getPodcasts().getList()){

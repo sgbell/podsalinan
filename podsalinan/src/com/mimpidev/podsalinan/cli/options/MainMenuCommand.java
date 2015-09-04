@@ -51,7 +51,6 @@ public class MainMenuCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logMap(functionParms);
 
 		if (functionParms.size()==0){

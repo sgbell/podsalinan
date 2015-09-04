@@ -44,7 +44,6 @@ public class ChangeStatus extends BaseEpisodeOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		CLInput input = new CLInput();
 		Episode episode = null;

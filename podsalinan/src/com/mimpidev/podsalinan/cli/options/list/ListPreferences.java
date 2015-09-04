@@ -26,10 +26,8 @@ public class ListPreferences extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] command: "+command);
-		if (debug) Podsalinan.debugLog.logInfo("["+getClass().getName()+"] Size of Preferences: "+data.getSettings().getMap().size());
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) Podsalinan.debugLog.logInfo(this, "Size of Preferences: "+data.getSettings().getMap().size());
 		Set<String> settings = data.getSettings().getMap().keySet();
 		System.out.println("Settings");
 		System.out.println("--------");

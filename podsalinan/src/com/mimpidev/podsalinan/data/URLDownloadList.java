@@ -308,7 +308,6 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	public boolean restartDownload(URLDownload download){
-		debug=true;
 		if (deleteFile(download)){
 			download.setStatus(URLDetails.DOWNLOAD_QUEUED);
 			return true;
@@ -446,7 +445,6 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public void restartDownload(String downloadUid) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Download Uid:"+downloadUid);
 		URLDownload currentDownload = findDownloadByUid(downloadUid);
 		if (currentDownload!=null){

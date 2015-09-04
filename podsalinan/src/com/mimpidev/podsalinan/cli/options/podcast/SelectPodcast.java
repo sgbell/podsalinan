@@ -27,8 +27,6 @@ public class SelectPodcast extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
-
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in
 		 * global selection
 		 */
