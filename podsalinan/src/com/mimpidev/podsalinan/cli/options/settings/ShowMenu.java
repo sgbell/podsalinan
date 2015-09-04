@@ -28,14 +28,16 @@ public class ShowMenu extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
 
-		System.out.println();
-		System.out.println("1. Change Podcast Update Rate");
-		System.out.println("2. Number of Downloaders");
-		System.out.println("3. Default Download Directory");
-		System.out.println("4. Automatically Download New Podcast Episodes");
-		System.out.println("5. Set Download Speed Limit");
-		System.out.println();
-		System.out.println("9. Return to Preferences Menu");
+		if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+			System.out.println();
+			System.out.println("1. Change Podcast Update Rate");
+			System.out.println("2. Number of Downloaders");
+			System.out.println("3. Default Download Directory");
+			System.out.println("4. Automatically Download New Podcast Episodes");
+			System.out.println("5. Set Download Speed Limit");
+			System.out.println();
+			System.out.println("9. Return to Preferences Menu");
+		}
 
 		if (!CLInterface.cliGlobals.getGlobalSelection().isEmpty()){
 			CLInterface.cliGlobals.getGlobalSelection().put("settings", "");

@@ -25,13 +25,15 @@ public class ShowMenu extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		System.out.println(data.getPodcasts().getList().size()+" - Podcasts. "+data.getUrlDownloads().visibleSize()+" - Downloads Queued");
-		System.out.println();
-		System.out.println("1. Podcasts Menu");
-		System.out.println("2. Downloads Menu");
-		System.out.println("3. Preferences");
-		System.out.println();
-		System.out.println("4. Quit");
+		if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+			System.out.println(data.getPodcasts().getList().size()+" - Podcasts. "+data.getUrlDownloads().visibleSize()+" - Downloads Queued");
+			System.out.println();
+			System.out.println("1. Podcasts Menu");
+			System.out.println("2. Downloads Menu");
+			System.out.println("3. Preferences");
+			System.out.println();
+			System.out.println("4. Quit");
+		}
 		returnObject.execute=false;
 		return returnObject;
 	}

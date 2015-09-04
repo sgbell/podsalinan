@@ -29,19 +29,22 @@ public class ShowSelectedMenu extends CLIOption {
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 
 		if (functionParms.containsKey("uid")){
-			ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
-			functionParms.put("menuCall", "true");
-			printDetails.execute(functionParms);
+			if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+				ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
+				functionParms.put("menuCall", "true");
+				printDetails.execute(functionParms);
 
-			System.out.println("1. Delete Download");
-			System.out.println("2. Restart Download");
-			System.out.println("3. Stop Download");
-			System.out.println("4. Start Download (Add to active Queue)");
-			System.out.println("5. Increase Priority");
-			System.out.println("6. Decrease Priority");
-			System.out.println("7. Change Destination");
-			System.out.println();
-			System.out.println("9. Return to Download List");
+				System.out.println("1. Delete Download");
+				System.out.println("2. Restart Download");
+				System.out.println("3. Stop Download");
+				System.out.println("4. Start Download (Add to active Queue)");
+				System.out.println("5. Increase Priority");
+				System.out.println("6. Decrease Priority");
+				System.out.println("7. Change Destination");
+				System.out.println();
+				System.out.println("9. Return to Download List");
+			}
+
 			returnObject.methodCall="downloads "+functionParms.get("uid");
 		} else {
 			System.out.println("Error: Invalid input.");

@@ -22,15 +22,14 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		debug=true;
-		if (debug) Podsalinan.debugLog.logInfo(this,"Called");
-		if (debug) Podsalinan.debugLog.logMap(functionParms);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		Episode episode = null;
 
 		if (functionParms.containsKey("uid") && functionParms.containsKey("userInput")){
 			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("userInput"));
 		} 
         if (episode!=null){
+			if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
 				ShowEpisodeDetails printDetails = new ShowEpisodeDetails(data);
 				functionParms.put("menuCalled", "true");
 				printDetails.execute(functionParms);
@@ -43,12 +42,13 @@ public class ShowSelectedMenu extends BaseEpisodeOption {
 				System.out.println ();
 				System.out.println ("9. Return to Podcast Menu");
 				System.out.println ();
-				
-				returnObject.methodCall = "podcast "+getPodcast().getDatafile()+" episode ";
-				returnObject.methodCall+=functionParms.get("episode");
-				returnObject.parameterMap.clear();
-				returnObject.execute=false;
 			}
+				
+			returnObject.methodCall = "podcast "+getPodcast().getDatafile()+" episode ";
+			returnObject.methodCall+=functionParms.get("episode");
+			returnObject.parameterMap.clear();
+			returnObject.execute=false;
+		}
             
 		
 		return returnObject;

@@ -23,27 +23,24 @@ public class ShowMenu extends CLIOption {
 	 */
 	public ShowMenu(DataStorage newData) {
 		super(newData);
-		debug=true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mimpidev.podsalinan.cli.CLIOption#execute(java.lang.String)
-	 */
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		String command="";
-		if (debug) Podsalinan.debugLog.logInfo(command);
+		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
 		System.out.println();
 		
-		ListPodcasts list = new ListPodcasts(data);
-		returnObject = new ReturnObject();
-		returnObject.parameterMap.put("showcount", "");
-		list.execute(returnObject.parameterMap);
+		if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+			ListPodcasts list = new ListPodcasts(data);
+			returnObject = new ReturnObject();
+			returnObject.parameterMap.put("showcount", "");
+			list.execute(returnObject.parameterMap);
 
-		System.out.println();
-		System.out.println("(A-Z) Enter Podcast letter to select Podcast.");
-		System.out.println();
-		System.out.println("9. Return to Main Menu");
+			System.out.println();
+			System.out.println("(A-Z) Enter Podcast letter to select Podcast.");
+			System.out.println();
+			System.out.println("9. Return to Main Menu");
+		}
         returnObject.methodCall="podcast";
         returnObject.parameterMap.clear();
 		returnObject.execute=false;

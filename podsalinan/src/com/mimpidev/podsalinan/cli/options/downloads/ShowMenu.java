@@ -28,15 +28,18 @@ public class ShowMenu extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		debug=true;
 		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
-		
-		ListDownloads listDownloads = new ListDownloads(data);
-		
-		listDownloads.execute(null);
-		System.out.println();
-		System.out.println("(A-ZZ) Enter Download letter to select Download.");
-		System.out.println("To add a new download to the queue just enter the the url to be downloaded.");
-		System.out.println();
-		System.out.println("9. Return to Main Menu");
+
+		if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+			ListDownloads listDownloads = new ListDownloads(data);
+			
+			listDownloads.execute(null);
+			System.out.println();
+			System.out.println("(A-ZZ) Enter Download letter to select Download.");
+			System.out.println("To add a new download to the queue just enter the the url to be downloaded.");
+			System.out.println();
+			System.out.println("9. Return to Main Menu");
+		}
+			
 		returnObject.methodCall="downloads";
 		returnObject.execute=false;
 		
