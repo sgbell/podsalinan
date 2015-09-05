@@ -375,7 +375,9 @@ public class CLInterface extends CLIOption implements Runnable{
 	        					} else if ((splitValue[svc].equals("<0|1|true|false>") &&
 	        							methodCallSplit[svc].toLowerCase().matches("(0|1|true|false)"))||
 	        							(splitValue[svc].equals("<0-9>") &&
-	        							methodCallSplit[svc].matches("[0-9]{1,4}"))){
+	        							methodCallSplit[svc].matches("[0-9]{1,4}")||
+	        							(splitValue[svc].equals("<00M>") &&
+	        							methodCallSplit[svc].toLowerCase().matches("([0-9]{1,}(m|mb|mbps|\n))")))){
 	        						if (debug) Podsalinan.debugLog.logInfo(this, 380, splitValue[svc]+" set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
