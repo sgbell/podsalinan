@@ -373,6 +373,11 @@ public class CLInterface extends CLIOption implements Runnable{
 	        						} else {
 	        							failedMatch=true;
 	        						}
+	        					} else if (splitValue[svc].equals("<0-9>") &&
+	        							methodCallSplit[svc].matches("[0-9]{1}")){
+	        						if (debug) Podsalinan.debugLog.logInfo(this, 378, "<0-9> set userInput:"+methodCallSplit[svc]);
+	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
+	        						score++;
 	        					}
 	        				} else {
 	        					if (splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
