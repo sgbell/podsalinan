@@ -75,8 +75,6 @@ public class SelectPodcast extends CLIOption {
 				returnObject.methodCall="podcast "+selectedPodcast.getDatafile();
 				CLInterface.cliGlobals.getGlobalSelection().clear();
 				CLInterface.cliGlobals.getGlobalSelection().put("podcastid",selectedPodcast.getDatafile());
-				//TODO: Working here. for some reason it is not setting podcastid a second time :(
-				// Test with: select podcast, delete podcast, select podcast
 			} else {
 				returnObject.methodCall="podcast showmenu";
 			}
