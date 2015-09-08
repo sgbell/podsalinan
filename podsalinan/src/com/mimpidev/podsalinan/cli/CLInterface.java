@@ -218,7 +218,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("set autoqueue <0|1|true|false>", autoqueueEpisodes);
 		CLIOption downloadSpeedLimit = new DownloadSpeedLimit(data); 
 		options.put("settings 5", downloadSpeedLimit);
-		options.put("set downloadlimit <00M>", downloadSpeedLimit);                //TODO: 1.10.5 - Fix input scan to match <00M> to speed
+		options.put("set downloadlimit <00M>", downloadSpeedLimit);
 		options.put("set menuvisible <0|1|true|false>", new MenuVisibility(data));
 		/**
 		 *  End settings options
@@ -323,7 +323,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	        	for (String key : options.keySet()){
 					score=0;
 	        		String[] splitValue = key.split(" ");
-					if ((debug)&&(key.equalsIgnoreCase("remove all downloads"))){
+					if ((debug)&&(key.equalsIgnoreCase("set downloadlimit <00M>"))){
 						Podsalinan.debugLog.logInfo(this, 319, key);
 						Podsalinan.debugLog.logInfo(this, 320, "length:"+splitValue.length);
 					}
@@ -375,9 +375,10 @@ public class CLInterface extends CLIOption implements Runnable{
 	        					} else if ((splitValue[svc].equals("<0|1|true|false>") &&
 	        							methodCallSplit[svc].toLowerCase().matches("(0|1|true|false)"))||
 	        							(splitValue[svc].equals("<0-9>") &&
-	        							methodCallSplit[svc].matches("[0-9]{1,4}")||
+	        							methodCallSplit[svc].matches("[0-9]{1,4}"))||
 	        							(splitValue[svc].equals("<00M>") &&
-	        							methodCallSplit[svc].toLowerCase().matches("([0-9]{1,}(m|mb|mbps|\n))")))){
+	        							(methodCallSplit[svc].toLowerCase().matches("([0-9]{1,}(m|mb|mbps))")||
+	        							methodCallSplit[svc].matches("[0-9]{1,4}")))){
 	        						if (debug) Podsalinan.debugLog.logInfo(this, 380, splitValue[svc]+" set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
