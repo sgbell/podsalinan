@@ -21,6 +21,11 @@
  */
 package com.mimpidev.podsalinan;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Vector;
 
 import com.mimpidev.podsalinan.data.URLDetails;
@@ -198,7 +203,18 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				if (download.getPodcastSource().length()>0)
 					data.getUrlDownloads().deleteDownload(download);
 				else {
-					//TODO: Read first line of file... if it's xml, then read it, and add a podcast to the system
+					try {
+						InputStream testFileStream = new FileInputStream(download.getDestinationFile());
+						byte[] buffer = null;
+						if (testFileStream.read(buffer) > 0 && buffer.toString().contains("rss")){
+							
+						}
+						testFileStream.close();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			} else if ((percentage<100)&&(download.getStatus()!=URLDetails.DESTINATION_INVALID)){
 				synchronized(download){
