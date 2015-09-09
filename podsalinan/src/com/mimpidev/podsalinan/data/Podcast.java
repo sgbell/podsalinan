@@ -24,8 +24,12 @@ package com.mimpidev.podsalinan.data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -105,6 +109,52 @@ public class Podcast extends DownloadDetails{
 	public Podcast(Map<String, String> record) {
 		this();
 		populateFromRecord(record);
+	}
+
+	/**
+	 * This constructor will take a freshly downloaded rssFeed and create a podcast
+	 * from the download 
+	 * @param rssFeed
+	 */
+	public Podcast(URLDownload rssFeed){
+		this();
+		setURL(rssFeed.getURL());
+		try {
+			readPodcastFile(rssFeed.getDestinationFile(),true);
+			String newDataFile = createUID(getName());
+			if (newDataFile!=null)
+				this.setDatafile(newDataFile);
+			String fileSystemSlash = "";
+			if (System.getProperty("os.name").equalsIgnoreCase("linux")){
+				fileSystemSlash = "/";
+			}else if (System.getProperty("os.name").startsWith("Windows")){
+				fileSystemSlash = "\\";
+			}			
+			setDirectory(System.getProperty("user.home")+fileSystemSlash+"Videos"+fileSystemSlash+getName());
+			File localDir = new File(getDirectory());
+			if (!localDir.exists()){
+				localDir.mkdirs();
+			}
+		} catch (FileNotFoundException e) {
+			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+		}
+		
+	}
+	
+	public String createUID(String value){
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+			byte[] bytesPodcastName = value.getBytes("UTF-8");
+			md.update(bytesPodcastName, 0, getName().length());
+			return (new BigInteger(1, md.digest()).toString().substring(0,8));
+		} catch (NoSuchAlgorithmException e) {
+			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+		} catch (UnsupportedEncodingException e) {
+			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+		}
+		
+		return null;
 	}
 	
 	public Vector<Episode> getEpisodes(){
@@ -186,38 +236,48 @@ public class Podcast extends DownloadDetails{
 					Downloader downloader = new Downloader(new URL(fields.get("url").getValue()), outputFile);
 					int result = downloader.getFile();
 					if (result==Downloader.DOWNLOAD_COMPLETE){
-						XmlReader xmlfile = new XmlReader();
-						
-						// Read the episode list from the xml file.
-						Vector<Episode> newEpisodeList = xmlfile.parseEpisodes(new FileInputStream(outputFile));
-						synchronized(episodeList){
-							if (episodeList!=null){
-								for (Episode newEpisode : newEpisodeList){
-									boolean foundEpisode=false;
-									int episodeCount=0;
-									// Using a while loop here, because we don't want to continue looking for an episode
-									// if it is already found
-									while ((!foundEpisode)&&(episodeCount<episodeList.size())){
-										// This code does not seem to be working, as it should be finding the url :(
-										Episode currentEpisode = episodeList.get(episodeCount);
-										if (newEpisode.getURL().toString().equalsIgnoreCase(currentEpisode.getURL().toString()))
-											foundEpisode=true;
-										else
-											episodeCount++;
-									}
-									if (!foundEpisode){
-										addEpisode(newEpisode);
-										//System.out.println("Not Found Episode: "+newEpisode.getURL().toString());
-									}// else
-									//	System.out.println("Found Episode: "+newEpisode.getURL().toString());
-								}
-							}
-						}
+						readPodcastFile(outputFile,false);
 					}
 					// Delete the temp file from the filesystem
 					outputFile.delete();
 				} catch (MalformedURLException e) {
 				} catch (FileNotFoundException e) {
+				}
+			}
+		}
+	}
+	
+	/**
+	 * This function is used to read the downloaded XML file
+	 * @param xmlFile
+	 * @throws FileNotFoundException 
+	 */
+	public void readPodcastFile(File xmlFile, boolean newPodcast) throws FileNotFoundException{
+		XmlReader xmlfile = new XmlReader();
+		
+		// Read the episode list from the xml file.
+		Vector<Episode> newEpisodeList = xmlfile.parseEpisodes(new FileInputStream(xmlFile));
+		if (newPodcast){
+			setName(xmlfile.getTitle().replaceAll("\'",""));
+		}
+		synchronized(episodeList){
+			if (episodeList!=null){
+				for (Episode newEpisode : newEpisodeList){
+					boolean foundEpisode=false;
+					int episodeCount=0;
+					// Using a while loop here, because we don't want to continue looking for an episode
+					// if it is already found
+					while ((!foundEpisode)&&(episodeCount<episodeList.size())){
+						// This code does not seem to be working, as it should be finding the url :(
+						Episode currentEpisode = episodeList.get(episodeCount);
+						if (newEpisode.getURL().toString().equalsIgnoreCase(currentEpisode.getURL().toString()))
+							foundEpisode=true;
+						else
+							episodeCount++;
+					}
+					if (!foundEpisode){
+						addEpisode(newEpisode);
+					}
 				}
 			}
 		}

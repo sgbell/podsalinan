@@ -206,9 +206,12 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					try {
 						InputStream testFileStream = new FileInputStream(download.getDestinationFile());
 						byte[] buffer = null;
-						if (testFileStream.read(buffer) > 0 && buffer.toString().contains("rss")){
-							
-						}
+						if (testFileStream.read(buffer) > 0)
+							if (buffer.toString().contains("rss")){
+								testFileStream.close();
+								Podcast newPodcast = new Podcast(download);
+								data.getPodcasts().add(newPodcast);
+							}
 						testFileStream.close();
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
