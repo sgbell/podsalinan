@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Vector;
 
 import com.mimpidev.podsalinan.data.URLDetails;
@@ -210,6 +211,10 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 							if (buffer.toString().contains("rss")){
 								testFileStream.close();
 								Podcast newPodcast = new Podcast(download);
+								// The following makes sure we don't have multiple podcasts uid's
+								while (data.getPodcasts().getPodcastByUid(newPodcast.getDatafile())!=null){
+									newPodcast.setDatafile(newPodcast.createUID(newPodcast.getName()+(new Date().toString())));
+								}
 								data.getPodcasts().add(newPodcast);
 							}
 						testFileStream.close();
