@@ -21,7 +21,6 @@
  */
 package com.mimpidev.podsalinan;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -96,6 +95,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 								download.setStatus(URLDetails.CURRENTLY_DOWNLOADING);
 								downloader.setDownload(download);
 								startDownload(downloader);
+								downloadStarted=true;
 							}
 							
 							downloadCount++;
