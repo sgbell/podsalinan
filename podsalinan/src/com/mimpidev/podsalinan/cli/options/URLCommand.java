@@ -31,7 +31,7 @@ public class URLCommand extends CLIOption {
 			try {
 				// newURL is only used to confirm that the user input is a url
 				URL newURL = new URL(functionParms.get("url"));
-				data.getUrlDownloads().addDownload(functionParms.get("url"), data.getSettings().getSettingValue("defaultDirectory"),"-1",false);
+				data.getUrlDownloads().addDownload(functionParms.get("url"), data.getSettings().getSettingValue("defaultDirectory"),"-1",true);
 				System.out.println("Downloading URL: "+functionParms.get("url"));
 			} catch (MalformedURLException e) {
 				System.out.println("Error: Invalid Input");
