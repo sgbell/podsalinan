@@ -85,6 +85,7 @@ public class URLDownloadList extends DownloadDetails {
             	Podsalinan.downloadQueueSyncObject.notify();
             }
 		}
+		Podsalinan.debugLog.logMap(this, newFile.getFields());
 	}
 	
 	public void addDownload(URLDownload newDownload, int priority) {
@@ -478,13 +479,15 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public String getDownloadUid(int select) {
-		
+		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "getDownloadUid("+select+")");
 		int downloadCount=0,
 			activeCount=0;
 		boolean found=false;
 		if (debug) Podsalinan.debugLog.logInfo(this, "Download Count:"+getNumberOfQueuedDownloads());
-		while (!found && downloadCount<getNumberOfQueuedDownloads()){
+		while (!found && downloadCount<downloads.size()){
+			if (debug) Podsalinan.debugLog.logInfo(this, "Download "+(downloads.get(downloadCount).isRemoved()?"Removed":"Not Removed")+
+					" :"+downloads.get(downloadCount).getURL());
 			if (!downloads.get(downloadCount).isRemoved()){
 				if (activeCount==select){
 					found=true;

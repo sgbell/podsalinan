@@ -53,6 +53,7 @@ public class Downloader extends NotifyingRunnable{
     private Object syncObject = new Object();
     
     private boolean active=false;
+    private boolean debug=true;
 	
     public Downloader(URLDownload download, String newFileSystemSlash){
     	downloadItem = download;
@@ -126,7 +127,8 @@ public class Downloader extends NotifyingRunnable{
 	 */
 	public void setDownload(URLDownload downloadItem){
 		this.downloadItem = downloadItem;
-
+        setResult(NO_STATUS);
+		
         if (downloadItem.getURL().length()>0){
     		try {
     			downloadURL = new URL(downloadItem.getURL().toString());
@@ -140,6 +142,7 @@ public class Downloader extends NotifyingRunnable{
 			synchronized(syncObject){
 				syncObject.notify();
 			}
+			if (debug) Podsalinan.debugLog.logInfo(this, "Download Passed in."); 
 		} else {
 			downloadItem=null;
 		}
@@ -215,14 +218,14 @@ public class Downloader extends NotifyingRunnable{
 		int numTries=0;
 		URLConnection conn;
 		
-		//System.out.print("Is internet Reachable? ");
+		if (debug) Podsalinan.debugLog.logInfo(this, "Is internet Reachable? ");
 		if (isInternetReachable()){
 			setResult(CURRENTLY_DOWNLOADING);
-			//System.out.println("Yes it is.");
+			if (debug) Podsalinan.debugLog.logInfo(this, "Yes it is.");
 			byte buf[]=new byte[1024];
 			int byteRead;	// Number of bytes read from file being downloaded
-				
-			//System.out.println("Internet is reachable.");
+			
+			if (debug) Podsalinan.debugLog.logInfo(this, "Attempting to download:"+downloadItem.getURL()); 				
 			
 			while ((!remoteFileExists)&&(numTries<2)
 					&&(!isStopThread())){
@@ -326,44 +329,54 @@ public class Downloader extends NotifyingRunnable{
 				try {
 					if ((saved<Long.parseLong(downloadItem.getSize()))||
 						(Long.parseLong(downloadItem.getSize())==-1)){
-						
-						outStream = new RandomAccessFile(downloadItem.getDestinationFile(),"rw");
-						outStream.seek(saved);
-						
-						conn = downloadURL.openConnection();
-						/* Skip incoming connection ahead before we connect a stream to it,
-						 * otherwise it'll waste user bandwidth						
-						 */
-						conn.setRequestProperty("Range", "bytes="+ saved + "-");
-						conn.connect();
-						InputStream inStream = conn.getInputStream();
-						
-						
-						long time=System.currentTimeMillis();
-						int chunkCount=0;
-						//System.out.println("before the download while");
-						while (((byteRead = inStream.read(buf)) > 0)
-								&&(!isStopThread())
-								&&(downloadItem.getStatus()==URLDetails.CURRENTLY_DOWNLOADING)){
-							//System.out.println("Downloading....");
-							outStream.write(buf, 0, byteRead);
-							saved+=byteRead;
-							chunkCount++;
-							
-							// Download speed limited to 300kb/sec
-							if (chunkCount>=300){
-								try {
-									if ((System.currentTimeMillis()-time)<1000){
-										Thread.sleep(1000-(System.currentTimeMillis()-time));
-									}
-								} catch (InterruptedException e) {
-									// sleep interrupted
-								}
-							}
-								
-						}
-						inStream.close();
-						outStream.close();					
+						if (debug) Podsalinan.debugLog.logInfo(this, "Filename to save to:"+downloadItem.getDestinationFile()); 
+                        File outputFile = downloadItem.getDestinationFile();
+                        if (outputFile.exists() && outputFile.canWrite()){
+    						outStream = new RandomAccessFile(downloadItem.getDestinationFile(),"rw");
+    						outStream.seek(saved);
+    						
+    						conn = downloadURL.openConnection();
+    						/* Skip incoming connection ahead before we connect a stream to it,
+    						 * otherwise it'll waste user bandwidth						
+    						 */
+    						conn.setRequestProperty("Range", "bytes="+ saved + "-");
+    						conn.connect();
+    						InputStream inStream = conn.getInputStream();
+    						if (debug) Podsalinan.debugLog.logInfo(this, "External socket opened to download."); 
+    						
+    						
+    						long time=System.currentTimeMillis();
+    						int chunkCount=0;
+    						//System.out.println("before the download while");
+    						if (debug) Podsalinan.debugLog.logInfo(this, "Start to read."); 
+    						while (((byteRead = inStream.read(buf)) > 0)
+    								&&(!isStopThread())
+    								&&(downloadItem.getStatus()==URLDetails.CURRENTLY_DOWNLOADING)){
+    							//System.out.println("Downloading....");
+    							outStream.write(buf, 0, byteRead);
+    							saved+=byteRead;
+    							chunkCount++;
+    							
+    							// Download speed limited to 300kb/sec
+    							if (chunkCount>=300){
+    								try {
+    									if ((System.currentTimeMillis()-time)<1000){
+    										Thread.sleep(1000-(System.currentTimeMillis()-time));
+    									}
+    								} catch (InterruptedException e) {
+    									// sleep interrupted
+    								}
+    							}
+    								
+    						}
+    						inStream.close();
+    						outStream.close();					
+    						if (debug) Podsalinan.debugLog.logInfo(this, "Finished reading."); 
+                        } else {
+                        	if (debug) Podsalinan.debugLog.logInfo(this, "Can not open local file to save.");
+                        	downloadItem.setStatus(URLDetails.DOWNLOAD_FAULT);
+                        	setResult(DOWNLOAD_ERROR);
+                        }
 					}
 					
 					if (saved==Long.parseLong(downloadItem.getSize())){
@@ -407,6 +420,7 @@ public class Downloader extends NotifyingRunnable{
 				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 			}
 		}
+		if (debug) Podsalinan.debugLog.logInfo(this, "doRun is awake");
 		if (!isStopThread()){
 			result = getFile();
 		}

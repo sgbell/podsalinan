@@ -32,7 +32,8 @@ public class SelectDownload extends CLIOption {
 
 		if (functionParms.containsKey("userInput")){
 			String userInput=functionParms.get("userInput");
-			
+
+			if (debug) Podsalinan.debugLog.logInfo(this, "Number of Queued Downloads:"+data.getUrlDownloads().getNumberOfQueuedDownloads());
 			if (data.getUrlDownloads().getNumberOfQueuedDownloads()>convertCharToNumber(userInput)){
 				selectedDownload = data.getUrlDownloads().getDownloadUid(convertCharToNumber(userInput));
 			}

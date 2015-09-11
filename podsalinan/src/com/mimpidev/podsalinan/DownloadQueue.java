@@ -38,6 +38,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private boolean isFinished;
 	private	Object downloadQueueObject;
 
+	private boolean debug=true;
 
 	public DownloadQueue(){
 		
@@ -97,7 +98,6 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 								startDownload(downloader);
 								downloadStarted=true;
 							}
-							
 							downloadCount++;
 						}
 					}
