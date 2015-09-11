@@ -331,6 +331,7 @@ public class Downloader extends NotifyingRunnable{
 						(Long.parseLong(downloadItem.getSize())==-1)){
 						if (debug) Podsalinan.debugLog.logInfo(this, "Filename to save to:"+downloadItem.getDestinationFile()); 
                         File outputFile = downloadItem.getDestinationFile();
+                        //TODO : Fix this so it will try saving
                         if (outputFile.exists() && outputFile.canWrite()){
     						outStream = new RandomAccessFile(downloadItem.getDestinationFile(),"rw");
     						outStream.seek(saved);
