@@ -21,10 +21,12 @@
  */
 package com.mimpidev.podsalinan;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Vector;
 
@@ -38,7 +40,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	private boolean isFinished;
 	private	Object downloadQueueObject;
 
-	private boolean debug=true;
+	private boolean debug=false;
 
 	public DownloadQueue(){
 		
@@ -97,6 +99,11 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 								downloader.setDownload(download);
 								startDownload(downloader);
 								downloadStarted=true;
+							} else {
+								if (downloader.getURLDownload()!=null && 
+									downloader.getURLDownload().getUid().equals(download.getUid())){
+									downloadStarted=true;
+								}
 							}
 							downloadCount++;
 						}
@@ -206,9 +213,12 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				else {
 					try {
 						InputStream testFileStream = new FileInputStream(download.getDestinationFile());
-						byte[] buffer = null;
-						if (testFileStream.read(buffer) > 0)
-							if (buffer.toString().contains("rss")){
+						if (debug) Podsalinan.debugLog.logInfo(this, "Destination File:"+download.getDestinationFile().toString());
+						BufferedReader reader = new BufferedReader(new InputStreamReader(testFileStream));
+						String line=reader.readLine();
+						if (line != null){
+							if (debug) Podsalinan.debugLog.logInfo(this, "First Line:"+line.toString());
+							if (line.contains("rss")){
 								testFileStream.close();
 								Podcast newPodcast = new Podcast(download);
 								// The following makes sure we don't have multiple podcasts uid's
@@ -217,6 +227,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 								}
 								data.getPodcasts().add(newPodcast);
 							}
+						}
 						testFileStream.close();
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
@@ -225,6 +236,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					}
 				}
 			} else if ((percentage<100)&&(download.getStatus()!=URLDetails.DESTINATION_INVALID)){
+				if (debug) Podsalinan.debugLog.logInfo(this, "download.status="+download.getStatus());
 				synchronized(download){
 					try {
 						download.wait(5000);
@@ -271,6 +283,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			getDownloadQueueObject().notify();
 		}
 		downloader.downloaderFinished(true);
+		downloader.clearDownload();
 	}
 		
 	public Vector<Downloader> getDownloaders(){

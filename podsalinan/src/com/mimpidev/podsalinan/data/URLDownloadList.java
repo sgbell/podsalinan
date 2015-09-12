@@ -67,6 +67,9 @@ public class URLDownloadList extends DownloadDetails {
 			downloads.add(newFile);
 			checkDownloadSize(newFile);
 		}
+        synchronized(Podsalinan.downloadQueueSyncObject){
+        	Podsalinan.downloadQueueSyncObject.notify();
+        }
 	}
 	
 	public void addDownload(String url, String destination, String size, boolean added) {
@@ -106,6 +109,9 @@ public class URLDownloadList extends DownloadDetails {
 		} else {
 			System.out.println ("Download already queued in the system");
 		}
+        synchronized(Podsalinan.downloadQueueSyncObject){
+        	Podsalinan.downloadQueueSyncObject.notify();
+        }
 	}
 	
 	public void addDownload(Episode episode, Podcast podcast){
@@ -130,6 +136,9 @@ public class URLDownloadList extends DownloadDetails {
 				download.setPodcastSource(podcast.getDatafile());
 			}
 		}
+        synchronized(Podsalinan.downloadQueueSyncObject){
+        	Podsalinan.downloadQueueSyncObject.notify();
+        }
 	}
 	/**
 	 * This will move the selected download up the queue
@@ -316,11 +325,14 @@ public class URLDownloadList extends DownloadDetails {
 	}
 	
 	public boolean restartDownload(URLDownload download){
-		if (deleteFile(download)){
-			download.setStatus(URLDetails.DOWNLOAD_QUEUED);
-			return true;
-		}
-		return false;
+		deleteFile(download);
+		
+		download.setStatus(URLDetails.DOWNLOAD_QUEUED);
+        synchronized(Podsalinan.downloadQueueSyncObject){
+        	Podsalinan.downloadQueueSyncObject.notify();
+        }
+
+		return true;
 	}
 	
 	public boolean deleteFile(URLDownload download){
@@ -479,7 +491,6 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public String getDownloadUid(int select) {
-		debug=true;
 		if (debug) Podsalinan.debugLog.logInfo(this, "getDownloadUid("+select+")");
 		int downloadCount=0,
 			activeCount=0;

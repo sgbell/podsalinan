@@ -53,7 +53,7 @@ public class Downloader extends NotifyingRunnable{
     private Object syncObject = new Object();
     
     private boolean active=false;
-    private boolean debug=true;
+    private boolean debug=false;
 	
     public Downloader(URLDownload download, String newFileSystemSlash){
     	downloadItem = download;
@@ -273,6 +273,7 @@ public class Downloader extends NotifyingRunnable{
 						}
 					} else if ((!destinationFile.exists())&&(!destinationFile.getParentFile().exists())){
 						downloadItem.setStatus(URLDetails.DESTINATION_INVALID);
+						if (debug) Podsalinan.debugLog.logInfo(this, "Destination does not exist.");
 						return DESTINATION_INVALID;
 					}
 					
@@ -332,7 +333,8 @@ public class Downloader extends NotifyingRunnable{
 						if (debug) Podsalinan.debugLog.logInfo(this, "Filename to save to:"+downloadItem.getDestinationFile()); 
                         File outputFile = downloadItem.getDestinationFile();
                         //TODO : Fix this so it will try saving
-                        if (outputFile.exists() && outputFile.canWrite()){
+                        if ((outputFile.exists() && outputFile.canWrite())||
+                        	 outputFile.createNewFile()){
     						outStream = new RandomAccessFile(downloadItem.getDestinationFile(),"rw");
     						outStream.seek(saved);
     						
@@ -375,30 +377,36 @@ public class Downloader extends NotifyingRunnable{
     						if (debug) Podsalinan.debugLog.logInfo(this, "Finished reading."); 
                         } else {
                         	if (debug) Podsalinan.debugLog.logInfo(this, "Can not open local file to save.");
-                        	downloadItem.setStatus(URLDetails.DOWNLOAD_FAULT);
+                        	downloadItem.setStatus(URLDetails.DESTINATION_INVALID);
                         	setResult(DOWNLOAD_ERROR);
                         }
 					}
-					
-					if (saved==Long.parseLong(downloadItem.getSize())){
-						downloadItem.setStatus(URLDetails.FINISHED);
-						setResult(DOWNLOAD_COMPLETE);
-					} else if (saved<Long.parseLong(downloadItem.getSize())){
-						downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
-						setResult(DOWNLOAD_INCOMPLETE);
-					} else if ((saved>Long.parseLong(downloadItem.getSize()))&&
-							    (Long.parseLong(downloadItem.getSize())>0)){
-						downloadItem.setStatus(URLDetails.DOWNLOAD_FAULT);
-						setResult(DOWNLOAD_ERROR);
-					} else if ((Long.parseLong(downloadItem.getSize())==-1)&&saved>0){
-						downloadItem.setStatus(URLDetails.FINISHED);
-						setResult(DOWNLOAD_COMPLETE);
+					if (downloadItem.getStatus()!=URLDetails.DESTINATION_INVALID){
+						if (saved==Long.parseLong(downloadItem.getSize())){
+							downloadItem.setStatus(URLDetails.FINISHED);
+							setResult(DOWNLOAD_COMPLETE);
+						} else if (saved<Long.parseLong(downloadItem.getSize())){
+							downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
+							setResult(DOWNLOAD_INCOMPLETE);
+						} else if ((saved>Long.parseLong(downloadItem.getSize()))&&
+								    (Long.parseLong(downloadItem.getSize())>0)){
+							downloadItem.setStatus(URLDetails.DOWNLOAD_FAULT);
+							setResult(DOWNLOAD_ERROR);
+						} else if ((Long.parseLong(downloadItem.getSize())==-1)&&saved>0){
+							downloadItem.setStatus(URLDetails.FINISHED);
+							setResult(DOWNLOAD_COMPLETE);
+						}
 					}
 				} catch (UnknownHostException e){
 					downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
 					setResult(CONNECTION_FAILED);
 				} catch (IOException e) {
-					downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
+                    File outputFile = downloadItem.getDestinationFile();
+                    if (!outputFile.exists()){
+                    	downloadItem.setStatus(URLDetails.DESTINATION_INVALID);
+                    } else {
+                    	downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
+                    }
 					setResult(CONNECTION_FAILED);
 				}
 			}
@@ -468,5 +476,9 @@ public class Downloader extends NotifyingRunnable{
 
 	public void downloaderFinished(boolean finished) {
 		active=!finished;
+	}
+
+	public void clearDownload() {
+		downloadItem = null;
 	}
 }
