@@ -460,10 +460,10 @@ public class CLInterface extends CLIOption implements Runnable{
 		while (returnObject.execute){
 
 			if (debug) Podsalinan.debugLog.logInfo(this, "Calling requested function: "+returnObject.methodCall);
-			if (returnObject.parameterMap.size()==0){
+			if (debug && returnObject.parameterMap.size()==0){
 				cliGlobals.createReturnParameters(returnObject.parameterMap);				
 			}
-			returnObject.debug(true);
+			returnObject.debug(debug);
 			returnObject=getMenuCommand(returnObject.methodCall);
 			if (!options.containsKey(returnObject.methodCall)){
 				System.out.println("Error: command does not exist.");
