@@ -123,7 +123,7 @@ public class Podsalinan {
 				try {
 					// Wake up the downloadQueue, so it can kill all the downloader threads, and we can exit
 					synchronized (downloaderList.getDownloadQueueObject()){
-						downloaderList.getDownloadQueueObject().notifyAll();
+						downloaderList.getDownloadQueueObject().notify();
 					}
 					data.getFinishWait().wait();
 				} catch (InterruptedException e) {
