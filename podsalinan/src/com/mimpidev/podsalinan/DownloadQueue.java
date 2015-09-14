@@ -204,7 +204,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		Downloader downloader = (Downloader) runnable;
 		URLDownload download = downloader.getURLDownload();
 		
-		if (download.getURL().length()>0){
+		// download = null when downloader is asleep and is nut currently working. This can happen when the system is being shutdown
+		if (download!=null && download.getURL().length()>0){
 			int percentage = (int)((double)download.getDestinationFile().length()/(Double.parseDouble(download.getSize()))*100);
 			if (percentage==100){
 				download.setStatus(URLDetails.FINISHED);
@@ -278,6 +279,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			if (data.getSettings().isFinished()){
 				downloaders.remove(downloader);
 			}
+		} else if (download==null &&
+				   data.getSettings().isFinished()){
+				downloaders.remove(downloader);
 		}
 		synchronized(getDownloadQueueObject()){
 			getDownloadQueueObject().notify();

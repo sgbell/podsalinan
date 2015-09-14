@@ -153,6 +153,20 @@ public class PodcastLoader extends TableLoader {
 					try {
 						insert(podcast.getDatabaseRecord());
 						sqlType=TableView.ITEM_ADDED_TO_DATABASE;
+						final File podcastFile = new File(this.getDbFile().getParent()+"/"+podcast.getDatafile()+".pod");
+						if (!podcastFile.exists()){
+							Database podcastDB=null;
+							try {
+								podcastDB = new Database(podcastFile.getAbsolutePath());
+								if (podcastDB!=null){
+									EpisodeLoader episodeLoader = new EpisodeLoader(podcast,podcastDB);
+									episodeLoaders.add(episodeLoader);
+								}
+							} catch (ClassNotFoundException
+									| SqliteException e) {
+								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+							}
+						}
 					} catch (SqlException e) {
 						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 					}
