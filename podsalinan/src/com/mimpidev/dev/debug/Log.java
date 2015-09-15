@@ -196,7 +196,7 @@ public class Log {
 		println("----------------");
 		while (it.hasNext()){
 			Map.Entry pair = (Map.Entry)it.next();
-			if ((String)pair.getValue()!=null){
+			if ((String)pair.getValue().toString()!=null){
 			   println((String)pair.getKey()+" = "+(String)pair.getValue().toString());
 			} else {
 			   println((String)pair.getKey()+" = null");
