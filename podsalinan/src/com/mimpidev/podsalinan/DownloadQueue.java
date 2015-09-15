@@ -129,7 +129,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		
 		// While Downloaders still shutting down we need to put a pause in until all downloaders have finished
 		while (downloaders.size()>0){
-			downloaders.get(0).endThread();
+		//	downloaders.get(0).endThread();
 			synchronized(data.getFinishWait()){
 				try {
 					data.getFinishWait().wait(1000);
