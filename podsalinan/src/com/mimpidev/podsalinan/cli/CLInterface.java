@@ -425,7 +425,6 @@ public class CLInterface extends CLIOption implements Runnable{
 						   !input.contains(returnObject.methodCall) &&
 						   input.length()>0){
 					if (debug) Podsalinan.debugLog.logInfo(this,416, "Error: Adding methodCall to input.");
-					System.out.println("Error: Invalid input - "+input);
 					input=returnObject.methodCall+" "+input;
 				} else if (cliGlobals.getGlobalSelection().size()>0 && input.length()>0){
 					input=cliGlobals.globalSelectionToString()+" "+input;
@@ -441,6 +440,7 @@ public class CLInterface extends CLIOption implements Runnable{
 			}
 		}
 		if(failedMatch){
+			System.out.println("Error: Invalid input - "+input);
 			menuCommand.methodCall=cliGlobals.globalSelectionToString();
 			menuCommand.execute=true;
 		}

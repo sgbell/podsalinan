@@ -62,10 +62,6 @@ public class Podcast extends DownloadDetails{
 	/**
 	 * 
 	 */
-	private String settingsDir = null;
-	/**
-	 * 
-	 */
 	public Podcast() {
 		super();
 		fields.put("image", new StringType());
@@ -173,18 +169,6 @@ public class Podcast extends DownloadDetails{
 	 */
 	public void setImage(String image) {
 		fields.get("image").setValue(image);
-	}
-
-	/**
-	 * 
-	 * @param string
-	 */
-	public void setSettingsDir(String newSettingsDir) {
-		settingsDir = newSettingsDir;
-	}
-	
-	public String getSettingsDir() {
-		return settingsDir;
 	}
 
 	/**

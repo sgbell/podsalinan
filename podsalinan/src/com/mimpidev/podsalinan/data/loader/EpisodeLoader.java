@@ -43,7 +43,7 @@ public class EpisodeLoader extends TableLoader {
 	public void updateDatabase() {
 
 		// TODO: 1111 Not updating episode list because podcast.settingsDir is null
-		if (podcast.getSettingsDir()!=null){
+		if (isDbOpen()){
 			for (final Episode episode : podcast.getEpisodes()){
 				if (!episode.isAdded()){
 					try {
