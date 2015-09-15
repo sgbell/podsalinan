@@ -79,7 +79,7 @@ public class EpisodeLoader extends TableLoader {
                 // Updating table from using published field to date field
 				if ((!newEpisode.getDatabaseRecord().containsKey("published"))&&
 					(record.containsKey("published"))&&
-					(newEpisode.getDate().equals("")||newEpisode.getDate()!=null)){
+					(newEpisode.getDate().equals("")||newEpisode.getDate()==null)){
 					newEpisode.setDate(record.get("published"));
 					try {
 						update(newEpisode.getDatabaseRecord(),

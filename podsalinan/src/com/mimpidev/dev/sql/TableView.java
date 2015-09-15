@@ -516,7 +516,8 @@ public class TableView {
 				return true;
 			} catch (SqliteException e) {
 				log.printStackTrace(e.getStackTrace());
-				throw new SqlException(SqlException.FAILED_SET_TABLE);
+				log.logError("Failed to Find Table");
+				return false;
 			}
 		} else if (table!=null){
 			return true;

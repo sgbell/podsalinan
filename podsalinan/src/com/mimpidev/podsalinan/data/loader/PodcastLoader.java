@@ -89,8 +89,8 @@ public class PodcastLoader extends TableLoader {
 				final Podcast newPodcast = new Podcast(record);
 				// If we are working with an older version of the database, bring the value of localFile over to datafile
 				if ((!newPodcast.getDatabaseRecord().containsKey("localFile"))&&
-						(record.containsKey("localFile"))&&
-						(newPodcast.getDatafile().equals("")||newPodcast.getDatafile()!=null)){
+						(record.containsKey("localFile") && record.get("localFile")!=null)&&
+						(newPodcast.getDatafile().equals("")||newPodcast.getDatafile()==null)){
 					    newPodcast.setDatafile(record.get("localFile"));
 					    try {
 							update(newPodcast.getDatabaseRecord(), 
@@ -99,32 +99,48 @@ public class PodcastLoader extends TableLoader {
 							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 						}
 				}
-				newPodcast.setAdded(true);
-				podcastList.add(newPodcast);
-				final File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
-				if (podcastFile.exists()){
-					// To increase the speed of start up time, I have moved the episode loading to the background
-					Database podcastDB=null;
+				// If the podcast record is faulty. delete it
+				if (newPodcast.getDatafile().equals("")){
 					try {
-						podcastDB = new Database(podcastFile.getAbsolutePath());
-					} catch (SqliteException e){
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-					} catch  (ClassNotFoundException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-					}
+						delete(new HashMap<String, FieldDetails>(){/**
+							 * 
+							 */
+							private static final long serialVersionUID = -7040466909383675903L;
 
-					if (podcastDB!=null){
-						EpisodeLoader episodeLoader;
-						try {
-							episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
-							//episodeLoader.readTable();
-							episodeLoaders.add(episodeLoader);
-						} catch (ClassNotFoundException e) {
-							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
-						}
+						{
+							put("url",new StringType(newPodcast.getURL()));
+						}});
+					} catch (SqlException e) {
+						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 					}
 				} else {
-					Podsalinan.debugLog.logError("File does not exist");
+					newPodcast.setAdded(true);
+					podcastList.add(newPodcast);
+					final File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
+					if (podcastFile.exists()){
+						// To increase the speed of start up time, I have moved the episode loading to the background
+						Database podcastDB=null;
+						try {
+							podcastDB = new Database(podcastFile.getAbsolutePath());
+						} catch (SqliteException e){
+							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						} catch  (ClassNotFoundException e) {
+							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						}
+
+						if (podcastDB!=null){
+							EpisodeLoader episodeLoader;
+							try {
+								episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
+								//episodeLoader.readTable();
+								episodeLoaders.add(episodeLoader);
+							} catch (ClassNotFoundException e) {
+								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+							}
+						}
+					} else {
+						Podsalinan.debugLog.logError("File does not exist");
+					}
 				}
 			}
 			// Loading the episodes in 1 background thread

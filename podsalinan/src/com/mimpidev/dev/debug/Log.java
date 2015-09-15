@@ -196,7 +196,11 @@ public class Log {
 		println("----------------");
 		while (it.hasNext()){
 			Map.Entry pair = (Map.Entry)it.next();
-			println((String)pair.getKey()+" = "+(String)pair.getValue().toString());
+			if ((String)pair.getValue()!=null){
+			   println((String)pair.getKey()+" = "+(String)pair.getValue().toString());
+			} else {
+			   println((String)pair.getKey()+" = null");
+			}
 		}
 		println("----------------");
 		println("End Map Key List");

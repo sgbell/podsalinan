@@ -280,8 +280,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			if (data.getSettings().isFinished()){
 				downloaders.remove(downloader);
 			}
-		} else if (download==null &&
-				   data.getSettings().isFinished()){
+		} else if ((download==null ||
+				   download.getURL().equals("")) &&
+				   (data.getSettings().isFinished())){
 				downloaders.remove(downloader);
 		}
 		synchronized(getDownloadQueueObject()){
