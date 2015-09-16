@@ -244,7 +244,7 @@ public class Podcast extends DownloadDetails{
 		if (newPodcast){
 			setName(xmlfile.getTitle().replaceAll("\'",""));
 		}
-		if (!getURL().equalsIgnoreCase(xmlfile.getAtomLink())){
+		if (xmlfile.getAtomLink()!=null && !getURL().equalsIgnoreCase(xmlfile.getAtomLink())){
 			setURL(xmlfile.getAtomLink());
 			setUpdated(true);
 			Podsalinan.debugLog.logInfo(this, getName()+"Url updated:"+getURL());
