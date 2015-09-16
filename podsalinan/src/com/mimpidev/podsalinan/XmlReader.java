@@ -37,6 +37,7 @@ import com.mimpidev.podsalinan.data.Episode;
  */
 public class XmlReader {
 	private String title;
+	private String atomLink=null;
 	
 	public XmlReader(){
 	}
@@ -104,6 +105,18 @@ public class XmlReader {
 								episodes.add(newEpisode);
 							}
 						}
+						if (r.getName().toString().equalsIgnoreCase("atom:link")){
+							String href="";
+							boolean self=false;
+							for (int count=0; count < r.getAttributeCount(); count++){
+								if (r.getAttributeName(count).toString().equalsIgnoreCase("href"))
+									href=r.getAttributeValue(count);
+								if (r.getAttributeName(count).toString().equalsIgnoreCase("rel"))
+									self=r.getAttributeValue(count).equalsIgnoreCase("self");
+							}
+							if (self)
+								atomLink=href;
+						}
 						/*
 						 * We are not currently using the Author for individual episodes. We may decide to change
 						 * this later.
@@ -142,5 +155,13 @@ public class XmlReader {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	public String getAtomLink() {
+	    return atomLink;	
+	}
+	
+	public void setAtomLink(String href){
+		atomLink=href;
 	}
 }

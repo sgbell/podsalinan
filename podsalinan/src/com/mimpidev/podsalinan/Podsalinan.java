@@ -28,8 +28,11 @@
  */
 package com.mimpidev.podsalinan;
 
+import java.util.Vector;
+
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLInterface;
+import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 
 public class Podsalinan {
@@ -85,10 +88,9 @@ public class Podsalinan {
 		while(!data.getSettings().isFinished()){
 			// List the podcast titles.
 			for (Podcast podcast : data.getPodcasts().getList()){
-				/*if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
+				if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
 					podcast.updateList(data.getSettingsDir());
-					podcast.updateDatabase();
-				}*/
+				}
 				
 				// The following will scan the directory for already downloaded episodes of the podcast and mark them as downloaded
 				podcast.scanDirectory(data);
@@ -96,18 +98,20 @@ public class Podsalinan {
 				/* If autoQueue is set in the program settings to true, or autoQueue is set in the podcast,
 				 * scan the podcast lists for episodes not yet downloaded, and queue them to download. 
 				 */
-				/*if (((data.getSettings().findSetting("autoQueue")!=null)&&
-						 (data.getSettings().findSetting("autoQueue").equalsIgnoreCase("true")))||
-						 (podcast.isAutomaticQueue())){
-						Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Details.NOT_QUEUED);
-						if (podcastEpisodes.size()>0)
-							for (Episode episode : podcastEpisodes){
-								episode.setStatus(Details.CURRENTLY_DOWNLOADING);
-								data.getUrlDownloads().addDownload(episode, podcast);
-							}
-					}*/
+				if (((data.getSettings().findSetting("autoQueue")!=null)&&
+					 (data.getSettings().findSetting("autoQueue").equalsIgnoreCase("true")))||
+					 (podcast.isAutomaticQueue())){
+					Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Episode.NOT_QUEUED);
+					if (podcastEpisodes.size()>0)
+						for (Episode episode : podcastEpisodes){
+							episode.setStatus(Episode.CURRENTLY_DOWNLOADING);
+							data.getUrlDownloads().addDownload(episode, podcast);
+						}
+				}
 			}
-				
+			// Intermittent saving of data
+			data.saveSettings();
+			
 			// Put this thread to sleep till it is next woken up to check for updates in the podcasts
 			try {
 				synchronized (data.getSettings().getWaitObject()){

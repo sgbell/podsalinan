@@ -187,24 +187,11 @@ public class DataStorage {
 	 * This is used to save the locally stored information to the databases
 	 */
 	public void saveSettings(){
-		saveSettings(podcasts,urlDownloads,settings);
-	}
-
-    /**
-     * This is used to save the passed in information to the databases 
-     * @param podcasts The podcast Vector
-     * @param downloads The downloads Array
-     * @param settings The settings Array
-     */
-	public void saveSettings(PodcastList podcasts,
-							 URLDownloadList downloads,
-							 ProgSettings settings) {
-
 	    for (TableLoader loader : tableLoaders){
 	    	loader.updateDatabase();
 	    }
 	}
-	
+
 	/**
 	 * 
 	 * @return String for settings directory 
