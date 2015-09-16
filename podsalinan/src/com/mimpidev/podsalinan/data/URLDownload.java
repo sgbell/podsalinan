@@ -103,8 +103,16 @@ public class URLDownload extends URLDetails {
 	 */
 	public String getDestination() {
 		String destination;
-		
-		destination = fields.get("directory").getValue()+"/"+getFilenameDownload();
+
+		// Need to test if directory is actually a file and not a directory
+		File test = new File (fields.get("directory").getValue());
+		if (test.exists() && test.isDirectory()){
+		   destination = fields.get("directory").getValue()+"/"+getFilenameDownload();
+		} else if (fields.get("directory").getValue().endsWith(".xml")){
+			destination = fields.get("directory").getValue();
+		} else {
+			destination = fields.get("directory").getValue()+"/"+getFilenameDownload();
+		}
 		
 		return destination;
 	}

@@ -290,7 +290,7 @@ public class Downloader extends NotifyingRunnable{
 						if (Long.parseLong(downloadItem.getSize())!=tempfileSize)
 							downloadItem.setSize(length);
 					}
-					if (downloadItem.getSize()==null)
+					if (downloadItem.getSize()==null || downloadItem.getSize().equals(""))
 						downloadItem.setSize("-1");
 					remoteFileExists=true;
 				} catch (MalformedURLException e) {
@@ -332,7 +332,6 @@ public class Downloader extends NotifyingRunnable{
 						(Long.parseLong(downloadItem.getSize())==-1)){
 						if (debug) Podsalinan.debugLog.logInfo(this, "Filename to save to:"+downloadItem.getDestinationFile()); 
                         File outputFile = downloadItem.getDestinationFile();
-                        //TODO : Fix this so it will try saving
                         if ((outputFile.exists() && outputFile.canWrite())||
                         	 outputFile.createNewFile()){
     						outStream = new RandomAccessFile(downloadItem.getDestinationFile(),"rw");
