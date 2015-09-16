@@ -177,8 +177,9 @@ public class PodcastLoader extends TableLoader {
 									EpisodeLoader episodeLoader = new EpisodeLoader(podcast,podcastDB);
 									episodeLoaders.add(episodeLoader);
 								}
-							} catch (ClassNotFoundException
-									| SqliteException e) {
+							} catch (ClassNotFoundException e){
+								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+							} catch (SqliteException e) {
 								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
 							}
 						}
