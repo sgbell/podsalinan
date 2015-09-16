@@ -479,8 +479,7 @@ public class TableView {
 				Double.parseDouble((String)conditions.get(field));
 				where+=conditions.get(field);
 			}catch (NumberFormatException e){
-				//TODO: add conversion of ' to &apos;
-				where+="'"+conditions.get(field)+"'";
+				where+="'"+conditions.get(field).toString().replaceAll("'", "&apos;")+"'";
 			}
 		}
 		return where;
