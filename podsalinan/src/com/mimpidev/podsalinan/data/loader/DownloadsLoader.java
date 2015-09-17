@@ -76,54 +76,56 @@ public class DownloadsLoader extends TableLoader {
 	@Override
 	public void updateDatabase() {
 		if (isDbOpen()){
-			for (final URLDownload download : downloads.getDownloads()){
-				int sqlType=TableView.NOTHING_CHANGED;
-				if (!download.isAdded()){
-					// Used to set the correct flag
-					try {
-						insert(download.getDatabaseRecord());
-						sqlType=TableView.ITEM_ADDED_TO_DATABASE;
-					} catch (SqlException e) {
-						e.printStackTrace();
-					}
-				} else if (download.isRemoved()){
-					try {
-						delete(new HashMap<String, FieldDetails>(){/**
-							 * 
-							 */
-							private static final long serialVersionUID = 5750706774356825968L;
-
-						{
-							put("url",new StringType(download.getURL().toString()));
-						}});
-					} catch (SqlException e) {
-						e.printStackTrace();
-					}
-					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
-				} else if (download.isUpdated()){
-					try {
-						update(download.getDatabaseRecord(), 
-							new HashMap<String, FieldDetails>(){/**
+			synchronized(downloads){
+				for (final URLDownload download : downloads.getDownloads()){
+					int sqlType=TableView.NOTHING_CHANGED;
+					if (!download.isAdded()){
+						// Used to set the correct flag
+						try {
+							insert(download.getDatabaseRecord());
+							sqlType=TableView.ITEM_ADDED_TO_DATABASE;
+						} catch (SqlException e) {
+							e.printStackTrace();
+						}
+					} else if (download.isRemoved()){
+						try {
+							delete(new HashMap<String, FieldDetails>(){/**
 								 * 
 								 */
-								private static final long serialVersionUID = 6980779916796068770L;
+								private static final long serialVersionUID = 5750706774356825968L;
 
 							{
 								put("url",new StringType(download.getURL().toString()));
-						}});
-					} catch (SqlException e) {
-						e.printStackTrace();
+							}});
+						} catch (SqlException e) {
+							e.printStackTrace();
+						}
+						sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
+					} else if (download.isUpdated()){
+						try {
+							update(download.getDatabaseRecord(), 
+								new HashMap<String, FieldDetails>(){/**
+									 * 
+									 */
+									private static final long serialVersionUID = 6980779916796068770L;
+
+								{
+									put("url",new StringType(download.getURL().toString()));
+							}});
+						} catch (SqlException e) {
+							e.printStackTrace();
+						}
+						sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
 					}
-					sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
-				}
-				switch (sqlType){
-					case TableView.ITEM_ADDED_TO_DATABASE:
-						downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setAdded(true);
-						break;
-					case TableView.ITEM_UPDATED_IN_DATABASE:
-						downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setUpdated(true);
-						break;
-				}
+					switch (sqlType){
+						case TableView.ITEM_ADDED_TO_DATABASE:
+							downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setAdded(true);
+							break;
+						case TableView.ITEM_UPDATED_IN_DATABASE:
+							downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setUpdated(true);
+							break;
+					}
+				}				
 			}
 		} else {
 			Podsalinan.debugLog.logError("Error db connection is closed");

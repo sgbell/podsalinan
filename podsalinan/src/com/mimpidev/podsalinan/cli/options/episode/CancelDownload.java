@@ -60,8 +60,7 @@ public class CancelDownload extends BaseEpisodeOption {
 				System.out.println("Error: Invalid URL");
 			}
 		}
-		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode ";
-		returnObject.methodCall+=functionParms.get("episode");
+		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode "+functionParms.get("userInput");
 		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		

@@ -51,10 +51,14 @@ public class ShowEpisodeDetails extends BaseEpisodeOption {
 		
 		if (functionParms.containsKey("uid") && functionParms.containsKey("userInput")){
 			episode = this.getEpisode(functionParms.get("uid"), functionParms.get("userInput"));
+			returnObject.methodCall = "podcast "+getPodcast().getDatafile()+" episode "+functionParms.get("userInput");
+			returnObject.parameterMap.clear();
 		} 
 		if (episode!=null){
 			printDetails(episode,!functionParms.containsKey("menuCalled"));
+			returnObject.methodCall="";
 		}
+		returnObject.execute=false;
 		
 		return returnObject;
 	}

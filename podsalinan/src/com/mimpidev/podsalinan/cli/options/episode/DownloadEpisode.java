@@ -55,8 +55,7 @@ public class DownloadEpisode extends BaseEpisodeOption {
 			System.out.println("Downloading: "+episode.getTitle());
 		}
 		
-		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode ";
-		returnObject.methodCall+=functionParms.get("episode");
+		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode "+functionParms.get("userInput");
 		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		return returnObject;

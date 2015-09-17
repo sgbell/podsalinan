@@ -65,8 +65,7 @@ public class ChangeStatus extends BaseEpisodeOption {
 				System.out.println(episode.getTitle() + " - Status Updated: " + episode.getCurrentStatus());
 			}
 		}
-		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode ";
-		returnObject.methodCall+=functionParms.get("episode");
+		returnObject.methodCall="podcast "+getPodcast().getDatafile()+" episode "+functionParms.get("userInput");
 		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
