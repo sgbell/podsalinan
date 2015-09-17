@@ -39,7 +39,7 @@ public class FilterLoader extends TableLoader {
 		super("filters",dbConnection);
 		setFilters(filterList);
 		createColumnList(new Filter().getDatabaseRecord());
-		
+		setdbTable(dbConnection);
 	}
 
 	@Override
