@@ -33,7 +33,7 @@ public class Filter extends DataRecord {
 		fields.put("match", new StringType());
 		fields.put("commandList", new StringType());
 		fields.get("id").setPrimaryKey(true);
-		
+		fields.get("id").setAutoIncrement(true);
 	}
 	
 	public Filter(String matchString, String commands) {

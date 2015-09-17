@@ -55,6 +55,7 @@ public class TableView {
 	 * The list of columns in the database table
 	 */
 	private Map<String,String> columnList;
+	private Map<String,String> constraintList;
 	/**
 	 * The log.
 	 */
@@ -89,6 +90,7 @@ public class TableView {
 	
 	public TableView(){
 		log = Podsalinan.debugLog;
+		constraintList = new HashMap<String,String>();
 	}
 	
 	public TableView(String databaseFile, String tableName, Log debugLog) throws ClassNotFoundException, SqliteException{
@@ -102,6 +104,7 @@ public class TableView {
 		columnList = newColumnList;
 		log = debugLog;
 		name=tableName;
+		constraintList = new HashMap<String,String>();
 	}
 	
 	public TableView(String databaseFile, Map<String,String> newColumnList, String tableName, Log debugLog) throws ClassNotFoundException, SqliteException{
@@ -121,6 +124,7 @@ public class TableView {
 		name = tableName;
 		columnList = new HashMap<String,String>();
 		log = Podsalinan.debugLog;
+		constraintList = new HashMap<String,String>();
 	}
 
 	/**
@@ -181,6 +185,13 @@ public class TableView {
 				if (columnList==null)
 					columnList=new HashMap<String,String>();
 				getColumnList().put(pair.getKey(), pair.getValue().getDbFieldType());
+				if (pair.getValue().isPrimaryKey()){
+					constraintList.put(pair.getKey(), "PRIMARY KEY");
+				}
+				if (pair.getValue().isAutoIncrement()){
+					constraintList.put(pair.getKey(), 
+							(constraintList.get(pair.getKey())!=null?(String)constraintList.get(pair.getKey())+" AUTOINCREMENT":"AUTOINCREMENT"));
+				}
 			} catch (DataDefinitionException e) {
 				e.printStackTrace();
 			}
@@ -237,7 +248,8 @@ public class TableView {
 			Iterator<Entry<String, String>> it = columnList.entrySet().iterator();
 			while (it.hasNext()){
 				Map.Entry<String,String> pairs = (Map.Entry<String,String>)it.next();
-				sql+=(String)pairs.getKey()+" "+(String)pairs.getValue()+",";
+				sql+=(String)pairs.getKey()+" "+(String)pairs.getValue();
+				sql+=(constraintList.get(pairs.getKey())!=null?" "+constraintList.get(pairs.getKey()):"")+",";
 			}
 			sql=sql.substring(0, sql.length()-1);
 			sql+=");";

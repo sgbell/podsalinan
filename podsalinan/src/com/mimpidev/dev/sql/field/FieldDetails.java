@@ -43,6 +43,8 @@ public class FieldDetails {
 	private boolean persistant=true;
 	
 	private boolean isPrimaryKey=false;
+	
+	private boolean isAutoIncrement=false;
 	/**
 	 * 
 	 */
@@ -99,7 +101,7 @@ public class FieldDetails {
 	/**
 	 * @return the isprimaryKey
 	 */
-	public boolean isIsprimaryKey() {
+	public boolean isPrimaryKey() {
 		return isPrimaryKey;
 	}
 	/**
@@ -107,6 +109,14 @@ public class FieldDetails {
 	 */
 	public void setPrimaryKey(boolean primaryKey) {
 		isPrimaryKey = primaryKey;
+	}
+	
+	public void setAutoIncrement(boolean autoIncrement){
+		isAutoIncrement = autoIncrement;
+	}
+	
+	public boolean isAutoIncrement(){
+		return isAutoIncrement;
 	}
 	/**
 	 * @return the dbFieldType
