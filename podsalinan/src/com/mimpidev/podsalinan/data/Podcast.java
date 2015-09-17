@@ -416,7 +416,6 @@ public class Podcast extends DownloadDetails{
 		File directoryFile = new File (directoryToScan);
 		data.scanDirectory(directoryFile, filesInDir);
 		for (Episode episode : episodeList)
-			// TODO: Need to fix this scanner as it's marking downloaded episodes as not found
 			if (episode.getStatus()==URLDetails.FINISHED){
 				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
 				boolean found=false;
