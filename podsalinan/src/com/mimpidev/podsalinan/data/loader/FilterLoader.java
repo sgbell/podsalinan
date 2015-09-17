@@ -43,7 +43,7 @@ public class FilterLoader extends TableLoader {
 	}
 
 	@Override
-	public void readTable() throws ClassNotFoundException {
+	public void readTable() {
 		// TODO Auto-generated method stub
 
 	}

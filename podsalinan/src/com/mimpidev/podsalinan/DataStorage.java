@@ -22,10 +22,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mimpidev.podsalinan.data.FilterList;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 import com.mimpidev.podsalinan.data.loader.DownloadsLoader;
+import com.mimpidev.podsalinan.data.loader.FilterLoader;
 import com.mimpidev.podsalinan.data.loader.PodcastLoader;
 import com.mimpidev.podsalinan.data.loader.SettingsLoader;
 import com.mimpidev.podsalinan.data.loader.TableLoader;
@@ -49,6 +51,7 @@ public class DataStorage {
 	 * settings is where the program settings are listed
 	 */
 	private ProgSettings settings;
+	private FilterList filters;
 	private String settingsDir;
 	private Object finishWait= new Object();
 	/**
@@ -142,11 +145,13 @@ public class DataStorage {
 			PodcastLoader podcastHandler=null;
 			DownloadsLoader downloadHandler=null;
 			SettingsLoader settingsHandler=null;
+			FilterLoader filtersHandler=null;
 			if (podsalinanDB!=null){
 				try {
 					podcastHandler = new PodcastLoader(podcasts,podsalinanDB);
 					downloadHandler = new DownloadsLoader(downloads,podsalinanDB);
 					settingsHandler = new SettingsLoader(settings,podsalinanDB);
+					filtersHandler = new FilterLoader(filters,podsalinanDB);
 				} catch (ClassNotFoundException e) {
 					Podsalinan.debugLog.logError(this, "Error opening database");
 					Podsalinan.debugLog.logError(this, e.getMessage());
@@ -155,6 +160,7 @@ public class DataStorage {
 				tableLoaders.add(podcastHandler);
 				tableLoaders.add(downloadHandler);
 				tableLoaders.add(settingsHandler);
+				tableLoaders.add(filtersHandler);
 				for (TableLoader loader : tableLoaders){
 					try {
 						loader.readTable();
