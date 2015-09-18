@@ -84,9 +84,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				while (downloaders.size()>maxDownloaders){
 					downloaders.get(downloaders.size()-1).endThread();
 				}
-				
-				
-				if (data.getUrlDownloads().getNumberOfQueuedDownloads()>0){
+				URLDownload test = data.getUrlDownloads().getHighestQueuedItem();
+				boolean test2=sleepingDownloaderFound();
+				while (data.getUrlDownloads().getHighestQueuedItem()!=null && sleepingDownloaderFound()){
 					//search downloadList for next queued item.
 					URLDownload download = data.getUrlDownloads().getHighestQueuedItem();
 					if (download!=null){
@@ -157,6 +157,15 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		synchronized(data.getFinishWait()){
 			data.getFinishWait().notify();
 		}
+	}
+
+	private boolean sleepingDownloaderFound() {
+		boolean sleeping=false;
+		for (Downloader downloader: downloaders){
+			if (!downloader.currentlyDownloading())
+				sleeping=true;
+		}
+		return sleeping;
 	}
 
 	/**

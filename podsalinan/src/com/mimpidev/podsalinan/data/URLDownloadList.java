@@ -440,6 +440,10 @@ public class URLDownloadList extends DownloadDetails {
 	public void reQueueDownload(URLDownload download) {
 		if (download!=null)
 			download.setStatus(URLDetails.DOWNLOAD_QUEUED);
+        synchronized(Podsalinan.downloadQueueSyncObject){
+        	Podsalinan.downloadQueueSyncObject.notify();
+        }
+
 	}
 	
 	public void setPodcasts(Vector<Podcast> newPodcasts){

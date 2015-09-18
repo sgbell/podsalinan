@@ -139,6 +139,7 @@ public class Downloader extends NotifyingRunnable{
         	downloadURL=null;
         }
 		if (downloadURL!=null){
+			active=true;
 			synchronized(syncObject){
 				syncObject.notify();
 			}
