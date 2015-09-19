@@ -95,6 +95,11 @@ public class URLDownload extends URLDetails {
 	 */
 	public URLDownload(Map<String, String> record) {
 		this();
+		// If previously saved as downloading, This will load it into the
+		// system as queued
+		if (record.get("status").equals(""+CURRENTLY_DOWNLOADING)){
+			record.put("status", ""+DOWNLOAD_QUEUED);
+		}
 		populateFromRecord(record);
 	}
 	
