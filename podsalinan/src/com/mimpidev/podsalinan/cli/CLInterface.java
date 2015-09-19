@@ -232,7 +232,7 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("mainmenu showmenu", mainMenuShow);
 		options.put("podcast 9", mainMenuShow);
 		options.put("downloads 9", mainMenuShow);
-		options.put("setting 9", mainMenuShow);
+		options.put("settings 9", mainMenuShow);
 		options.put("mainmenu <0-9>", mainMenuCommands);
 		/**
 		 *  End Main Menu calls
