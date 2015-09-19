@@ -85,8 +85,6 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				while (downloaders.size()>maxDownloaders){
 					downloaders.get(downloaders.size()-1).endThread();
 				}
-				URLDownload test = data.getUrlDownloads().getHighestQueuedItem();
-				boolean test2=sleepingDownloaderFound();
 				while (data.getUrlDownloads().getHighestQueuedItem()!=null && sleepingDownloaderFound()){
 					//search downloadList for next queued item.
 					URLDownload download = data.getUrlDownloads().getHighestQueuedItem();
