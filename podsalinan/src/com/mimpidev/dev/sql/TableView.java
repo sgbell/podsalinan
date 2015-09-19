@@ -527,8 +527,6 @@ public class TableView {
 				table = (SqliteTable)db.getTable(name);
 				return true;
 			} catch (SqliteException e) {
-				log.printStackTrace(e.getStackTrace());
-				log.logError("Failed to Find Table");
 				return false;
 			}
 		} else if (table!=null){
