@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.podcast;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Podcast;
@@ -26,7 +26,7 @@ public class AutoQueueEpisodes extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logInfo(this,"Called");
+		if (debug) if (Log.isDebug())Log.logInfo(this,"Called");
 		returnObject.debug(debug);
 		
 		if (functionParms.containsKey("uid")){

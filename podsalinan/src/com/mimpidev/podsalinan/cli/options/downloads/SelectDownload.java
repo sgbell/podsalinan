@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.downloads;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -27,13 +27,13 @@ public class SelectDownload extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 		String selectedDownload=null;
 
 		if (functionParms.containsKey("userInput")){
 			String userInput=functionParms.get("userInput");
 
-			if (debug) Podsalinan.debugLog.logInfo(this, "Number of Queued Downloads:"+data.getUrlDownloads().getNumberOfQueuedDownloads());
+			if (debug) if (Log.isDebug())Log.logInfo(this, "Number of Queued Downloads:"+data.getUrlDownloads().getNumberOfQueuedDownloads());
 			if (data.getUrlDownloads().getNumberOfQueuedDownloads()>convertCharToNumber(userInput)){
 				selectedDownload = data.getUrlDownloads().getDownloadUid(convertCharToNumber(userInput));
 			}

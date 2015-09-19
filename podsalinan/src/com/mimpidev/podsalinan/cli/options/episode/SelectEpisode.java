@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.episode;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -27,14 +27,14 @@ public class SelectEpisode extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		Podcast selectedPodcast=null;
 		
-		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
-		if (debug) Podsalinan.debugLog.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
+		if (debug) if (Log.isDebug())Log.logMap(this,functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
 		if (!functionParms.containsKey("uid") && 
 			functionParms.containsKey("userInput") &&
 			CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid")){
 			functionParms.put("uid", CLInterface.cliGlobals.getGlobalSelection().get("podcastid"));
 		}
-		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this,functionParms);
 		if (functionParms.containsKey("uid") && functionParms.containsKey("userInput")){
 			selectedPodcast=data.getPodcasts().getPodcastByUid(functionParms.get("uid"));
 			

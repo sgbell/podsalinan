@@ -57,9 +57,9 @@ public class Table {
 		try {
 			tableDefinition = new SqliteTable(database,tableName);
 		} catch (SqliteException e) {
-			Podsalinan.debugLog.logError(this, "Error opening database");
-			Podsalinan.debugLog.logError(this, e.getMessage());
-			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			if (Log.isDebug())Log.logError(this, "Error opening database");
+			if (Log.isDebug())Log.logError(this, e.getMessage());
+			if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 		}
 	}
 

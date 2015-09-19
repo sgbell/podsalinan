@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
@@ -26,8 +26,8 @@ public class ListPreferences extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
-		if (debug) Podsalinan.debugLog.logInfo(this, "Size of Preferences: "+data.getSettings().getMap().size());
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logInfo(this, "Size of Preferences: "+data.getSettings().getMap().size());
 		Set<String> settings = data.getSettings().getMap().keySet();
 		System.out.println("Settings");
 		System.out.println("--------");

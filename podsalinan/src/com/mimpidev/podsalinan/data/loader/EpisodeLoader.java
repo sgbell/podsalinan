@@ -10,7 +10,7 @@ import java.util.Map;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.Episode;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.sql.sqlitejdbc.Database;
@@ -49,7 +49,7 @@ public class EpisodeLoader extends TableLoader {
 						insert(episode.getDatabaseRecord());
 						episode.setAdded(true);
 					} catch (SqlException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}					
 				} else if (episode.isUpdated()){
 					try {
@@ -59,7 +59,7 @@ public class EpisodeLoader extends TableLoader {
 								       }});
 						episode.setUpdated(false);
 					} catch (SqlException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}
 				}
 			}
@@ -87,7 +87,7 @@ public class EpisodeLoader extends TableLoader {
 							        put("url", new StringType(newEpisode.getURL().toString().replaceAll("\'", "&apos;")));
 						        }});
 					} catch (SqlException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}
 				}
 				newEpisode.setAdded(true);

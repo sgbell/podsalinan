@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -46,7 +46,7 @@ public class ListSelection extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 
 		System.out.println("Currently Selected");
 		Set<Entry<String,String>> selectedObjects= CLInterface.cliGlobals.getGlobalSelection().entrySet();

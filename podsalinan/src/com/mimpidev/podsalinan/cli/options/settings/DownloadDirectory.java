@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -38,7 +38,7 @@ public class DownloadDirectory extends CLIOption {
 	}
 	
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 		String userInput="";
 
 		if (functionParms.containsKey("path") &&

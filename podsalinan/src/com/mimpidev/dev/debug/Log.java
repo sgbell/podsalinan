@@ -38,12 +38,13 @@ public class Log {
      * This is used to define if the program should be outputting debug information,
      * either to the output file, or to the screen
      */
-	private boolean showMeTheDebug=true;
-	private boolean outputToScreen=true;
-	private boolean showShortName=false;
+	private static boolean logDebug=true;
+	private static boolean outputToScreen=true;
+	private static boolean showShortName=false;
 
-	private RandomAccessFile fileOutput=null;
-	private String dataDirectory="mimpidev-debug";
+	private static RandomAccessFile fileOutput=null;
+	private static String dataDirectory="mimpidev-debug";
+	private static boolean isOpen=true;
 	
 	public Log(){
 		
@@ -61,17 +62,18 @@ public class Log {
 		setNewLog(filename, mode);
 	}
 	
-	public void setNewLog(String filename, String mode){
+	public static void setNewLog(String filename, String mode){
 		setNewLog(new File(filename), mode);
 	}
 	
-	public void setNewLog (File filename, String mode){
+	public static void setNewLog (File filename, String mode){
 		try {
 			if (!filename.exists()){
 				filename.createNewFile();
 			}
 			fileOutput = new RandomAccessFile(filename, mode);
 			fileOutput.seek(fileOutput.length());
+			isOpen=true;
 		} catch (IOException e) {
 			System.err.println("[Error] Cannot open file");
 			e.printStackTrace();
@@ -82,7 +84,7 @@ public class Log {
 	 * 
 	 * @param stackTrace
 	 */
-	public synchronized void printStackTrace(StackTraceElement[] stackTrace){
+	public static synchronized void printStackTrace(StackTraceElement[] stackTrace){
 		println("[Error] Oh no! It's another error.");
 		for (StackTraceElement traceElement : stackTrace){
 			println("[Debug] "+traceElement.toString());
@@ -94,15 +96,15 @@ public class Log {
 	 * 
 	 * @param debugLine
 	 */
-	public synchronized void logInfo(String debugLine){
+	public synchronized static void logInfo(String debugLine){
 		println ("[Info] "+debugLine);
 	}
 	
-	public synchronized void logInfo(Object object, String debugLine){
+	public synchronized static void logInfo(Object object, String debugLine){
 		println ("[Info]["+getShortClassName(object.getClass().getName())+"] "+debugLine);
 	}
 
-	public synchronized void logInfo(Object object, int lineNum, String debugLine) {
+	public synchronized static void logInfo(Object object, int lineNum, String debugLine) {
 		logInfo(object,"Line:"+lineNum+" - "+debugLine);
 	}
 	
@@ -114,14 +116,14 @@ public class Log {
 		println ("[Error] "+debugLine);
 	}
 	
-	public synchronized void logError (Object object, String debugLine){
+	public synchronized static void logError (Object object, String debugLine){
 		println ("[Error]["+getShortClassName(object.getClass().getName())+"] "+debugLine);
 	}
 	/**
 	 * 
 	 * @param debugLine
 	 */
-	private synchronized void println(String debugLine){
+	private synchronized static void println(String debugLine){
 		try {
 			if (fileOutput==null)
 				initialise();
@@ -139,13 +141,18 @@ public class Log {
 	/**
 	 * @return showMeTheDebug Value (used to tell program if we want the debug information outputted). 
 	 */
-	public boolean showDebug() {
-		return showMeTheDebug;
+	public static boolean isDebug() {
+		return logDebug;
+	}
+	
+	public static void setLogDebug(boolean newLogDebug){
+		logDebug=newLogDebug;
 	}
 
-	public void close() {
+	public static void close() {
 		try {
 			fileOutput.close();
+			isOpen=false;
 		} catch (IOException e) {
 			System.err.println("[Error] Problem closing debug log");
 			e.printStackTrace();
@@ -156,7 +163,7 @@ public class Log {
 	 * 
 	 * @return
 	 */
-    public boolean initialise(){
+    public static boolean initialise(){
     	return initialise("debug.log");
     }
 	
@@ -165,7 +172,7 @@ public class Log {
      * @param filename
      * @return
      */
-	public boolean initialise(String filename){
+	public static boolean initialise(String filename){
 		if (fileOutput==null){
 			String settingsDir="";
 			String fileSystemSlash="";
@@ -189,7 +196,7 @@ public class Log {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void logMap(Map mapObject){
+	public static void logMap(Map mapObject){
 		Iterator<Entry> it = mapObject.entrySet().iterator();
 		
 		println("Map Object Debug");
@@ -206,7 +213,7 @@ public class Log {
 		println("End Map Key List");
 	}
 	
-	protected String getShortClassName(String className){
+	protected static String getShortClassName(String className){
 		if (showShortName)
 			return className.substring(className.lastIndexOf(".")+1).trim();
 		else
@@ -217,21 +224,25 @@ public class Log {
 		return dataDirectory;
 	}
 
-	public void setDataDirectory(String dataDirectory) {
-		this.dataDirectory = dataDirectory;
+	public void setDataDirectory(String newDataDirectory) {
+		dataDirectory = newDataDirectory;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void logMap(Object object,
+	public static void logMap(Object object,
 			 Map mapObject) {
 		logInfo(object,"Map used:");
 		logMap(mapObject);
 	}
 
-	public void logInfo(Object object, int lineNum, String[] stringArray) {
+	public static void logInfo(Object object, int lineNum, String[] stringArray) {
 		logInfo(object,lineNum,"Array of Strings found:");
 		for (String item : stringArray){
 			logInfo(object,lineNum,item);
 		}
+	}
+
+	public static boolean isOpen() {
+		return isOpen;
 	}
 }

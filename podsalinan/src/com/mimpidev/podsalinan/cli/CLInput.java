@@ -25,7 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 
 /**
  * @author bugman
@@ -44,8 +44,7 @@ public class CLInput {
 		try {
 			input = (char) stdInReader.read();
 		} catch (IOException e){
-			if (Podsalinan.debugLog.showDebug())
-				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 		}
 		return input;
 	}
@@ -55,8 +54,7 @@ public class CLInput {
 		try {
 			input = stdInReader.readLine();
 		} catch (IOException e) {
-			if (Podsalinan.debugLog.showDebug())
-				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 		}
 
 		return input;

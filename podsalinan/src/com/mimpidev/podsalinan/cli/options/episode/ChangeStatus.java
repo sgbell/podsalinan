@@ -24,7 +24,7 @@ package com.mimpidev.podsalinan.cli.options.episode;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Episode;
@@ -44,7 +44,7 @@ public class ChangeStatus extends BaseEpisodeOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 		CLInput input = new CLInput();
 		Episode episode = null;
 
@@ -60,7 +60,7 @@ public class ChangeStatus extends BaseEpisodeOption {
 			System.out.print("Please select status ["+episode.getCurrentStatus()+"]: ");
 			String statusInput=input.getValidLetter('A','D');
 			if (statusInput!=null){
-				if (debug) Podsalinan.debugLog.logInfo(this, "Status Input: " + statusInput + " - " + convertCharToNumber(statusInput));
+				if (debug) if (Log.isDebug())Log.logInfo(this, "Status Input: " + statusInput + " - " + convertCharToNumber(statusInput));
 				episode.setStatus(convertCharToNumber(statusInput));
 				System.out.println(episode.getTitle() + " - Status Updated: " + episode.getCurrentStatus());
 			}

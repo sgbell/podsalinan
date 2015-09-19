@@ -5,8 +5,8 @@ package com.mimpidev.podsalinan.cli.options.downloads;
 
 import java.util.Map;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -27,11 +27,11 @@ public class DeleteDownload extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
+		if (debug) Log.logMap(this,functionParms);
 
 		if (!functionParms.containsKey("uid") &&
 			(CLInterface.cliGlobals.getGlobalSelection().containsKey("downloads"))){
-			if (debug) Podsalinan.debugLog.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
+			if (debug) Log.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
 			functionParms.put("uid", CLInterface.cliGlobals.getGlobalSelection().get("downloads"));
 		}
 		

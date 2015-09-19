@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.settings;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -27,7 +27,7 @@ public class PodcastUpdateRate extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 		String updateValue="";
 		
 		if (!functionParms.containsKey("updateInterval") &&
@@ -35,7 +35,7 @@ public class PodcastUpdateRate extends CLIOption {
 			functionParms.put("updateInterval", functionParms.get("userInput"));
 		}
 
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 		
 		if (!functionParms.containsKey("updateInterval")){
 			updateValue=executeMenuOption();
@@ -43,7 +43,7 @@ public class PodcastUpdateRate extends CLIOption {
 			try {
 				// Check that the value passed in is a number, and between 1 & 6
 				int updateInterval = Integer.parseInt(functionParms.get("updateInterval"));
-				if (debug) Podsalinan.debugLog.logInfo(this, 46, "Update interval is an int: "+updateInterval);
+				if (debug) if (Log.isDebug())Log.logInfo(this, 46, "Update interval is an int: "+updateInterval);
 				if ((updateInterval!=60)&&
 			    	(updateInterval!=120)&&
 			    	(updateInterval!=180)&&

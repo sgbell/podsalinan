@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.generic;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -29,15 +29,15 @@ public class RemoveItem extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 		
 		if (functionParms.isEmpty()){
 			String[] deleteType = {"downloads","podcastid"};
 			boolean found=false;
 			for (String deleteItem: deleteType){
-				if (debug) Podsalinan.debugLog.logInfo(this, "Check: "+deleteItem);
+				if (debug) if (Log.isDebug())Log.logInfo(this, "Check: "+deleteItem);
 				if (!found && CLInterface.cliGlobals.getGlobalSelection().containsKey(deleteItem)){
-				    if (debug) Podsalinan.debugLog.logInfo(this, "Global Selection contains: "+deleteItem);
+				    if (debug) if (Log.isDebug())Log.logInfo(this, "Global Selection contains: "+deleteItem);
 				    if (deleteItem.equals("downloads"))
 				    	returnObject.methodCall="remove download";
 				    else {
@@ -82,7 +82,7 @@ public class RemoveItem extends CLIOption {
 			}
 		}
 		
-		if (debug) Podsalinan.debugLog.logInfo(this, "methodCall: "+returnObject.methodCall);
+		if (debug) if (Log.isDebug())Log.logInfo(this, "methodCall: "+returnObject.methodCall);
 		
 		return returnObject;
 	}

@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.data;
 import java.net.URL;
 
 import com.mimpidev.dev.sql.field.IntegerType;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 
 /**
  * @author sbell
@@ -72,7 +72,7 @@ public class URLDetails extends BaseURL {
 		} catch (NumberFormatException e){
 			status = UNKNOWN_STATUS;
 		} catch (NullPointerException e){
-			Podsalinan.debugLog.logMap(this, fields);
+			if (Log.isDebug())Log.logMap(this, fields);
 			status = UNKNOWN_STATUS;
 		}
 		return status; 

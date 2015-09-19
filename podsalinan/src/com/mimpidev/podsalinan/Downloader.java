@@ -32,6 +32,7 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.URLDetails;
 import com.mimpidev.podsalinan.data.URLDownload;
 
@@ -143,7 +144,7 @@ public class Downloader extends NotifyingRunnable{
 			synchronized(syncObject){
 				syncObject.notify();
 			}
-			if (debug) Podsalinan.debugLog.logInfo(this, "Download Passed in."); 
+			if (Log.isDebug())Log.logInfo(this, "Download Passed in."); 
 		} else {
 			downloadItem=null;
 		}
@@ -219,14 +220,14 @@ public class Downloader extends NotifyingRunnable{
 		int numTries=0;
 		URLConnection conn;
 		
-		if (debug) Podsalinan.debugLog.logInfo(this, "Is internet Reachable? ");
+		if (debug)Log.logInfo(this, "Is internet Reachable? ");
 		if (isInternetReachable()){
 			setResult(CURRENTLY_DOWNLOADING);
-			if (debug) Podsalinan.debugLog.logInfo(this, "Yes it is.");
+			if (debug)Log.logInfo(this, "Yes it is.");
 			byte buf[]=new byte[1024];
 			int byteRead;	// Number of bytes read from file being downloaded
 			
-			if (debug) Podsalinan.debugLog.logInfo(this, "Attempting to download:"+downloadItem.getURL()); 				
+			if (debug)Log.logInfo(this, "Attempting to download:"+downloadItem.getURL()); 				
 			
 			while ((!remoteFileExists)&&(numTries<2)
 					&&(!isStopThread())){
@@ -274,7 +275,7 @@ public class Downloader extends NotifyingRunnable{
 						}
 					} else if ((!destinationFile.exists())&&(!destinationFile.getParentFile().exists())){
 						downloadItem.setStatus(URLDetails.DESTINATION_INVALID);
-						if (debug) Podsalinan.debugLog.logInfo(this, "Destination does not exist.");
+						if (debug) Log.logInfo(this, "Destination does not exist.");
 						return DESTINATION_INVALID;
 					}
 					
@@ -331,7 +332,7 @@ public class Downloader extends NotifyingRunnable{
 				try {
 					if ((saved<Long.parseLong(downloadItem.getSize()))||
 						(Long.parseLong(downloadItem.getSize())==-1)){
-						if (debug) Podsalinan.debugLog.logInfo(this, "Filename to save to:"+downloadItem.getDestinationFile()); 
+						if (debug) Log.logInfo(this, "Filename to save to:"+downloadItem.getDestinationFile()); 
                         File outputFile = downloadItem.getDestinationFile();
                         if ((outputFile.exists() && outputFile.canWrite())||
                         	 outputFile.createNewFile()){
@@ -345,13 +346,13 @@ public class Downloader extends NotifyingRunnable{
     						conn.setRequestProperty("Range", "bytes="+ saved + "-");
     						conn.connect();
     						InputStream inStream = conn.getInputStream();
-    						if (debug) Podsalinan.debugLog.logInfo(this, "External socket opened to download."); 
+    						if (debug) Log.logInfo(this, "External socket opened to download."); 
     						
     						
     						long time=System.currentTimeMillis();
     						int chunkCount=0;
     						//System.out.println("before the download while");
-    						if (debug) Podsalinan.debugLog.logInfo(this, "Start to read."); 
+    						if (debug) Log.logInfo(this, "Start to read."); 
     						while (((byteRead = inStream.read(buf)) > 0)
     								&&(!isStopThread())
     								&&(downloadItem.getStatus()==URLDetails.CURRENTLY_DOWNLOADING)){
@@ -374,9 +375,9 @@ public class Downloader extends NotifyingRunnable{
     						}
     						inStream.close();
     						outStream.close();					
-    						if (debug) Podsalinan.debugLog.logInfo(this, "Finished reading."); 
+    						if (debug) Log.logInfo(this, "Finished reading."); 
                         } else {
-                        	if (debug) Podsalinan.debugLog.logInfo(this, "Can not open local file to save.");
+                        	if (debug) Log.logInfo(this, "Can not open local file to save.");
                         	downloadItem.setStatus(URLDetails.DESTINATION_INVALID);
                         	setResult(DOWNLOAD_ERROR);
                         }
@@ -426,10 +427,10 @@ public class Downloader extends NotifyingRunnable{
 			try {
 				syncObject.wait();
 			} catch (InterruptedException e) {
-				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+				if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 			}
 		}
-		if (debug) Podsalinan.debugLog.logInfo(this, "doRun is awake");
+		if (debug) Log.logInfo(this, "doRun is awake");
 		if (!isStopThread()){
 			result = getFile();
 		}

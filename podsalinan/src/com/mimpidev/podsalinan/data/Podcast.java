@@ -42,7 +42,7 @@ import com.mimpidev.dev.sql.field.BooleanType;
 import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.Downloader;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.XmlReader;
 
 /**
@@ -132,7 +132,7 @@ public class Podcast extends DownloadDetails{
 				localDir.mkdirs();
 			}
 		} catch (FileNotFoundException e) {
-			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 		}
 		
 	}
@@ -145,9 +145,9 @@ public class Podcast extends DownloadDetails{
 			md.update(bytesPodcastName, 0, getName().length());
 			return (new BigInteger(1, md.digest()).toString().substring(0,8));
 		} catch (NoSuchAlgorithmException e) {
-			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 		} catch (UnsupportedEncodingException e) {
-			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 		}
 		
 		return null;
@@ -247,7 +247,7 @@ public class Podcast extends DownloadDetails{
 		if (xmlfile.getAtomLink()!=null && !getURL().equalsIgnoreCase(xmlfile.getAtomLink())){
 			setURL(xmlfile.getAtomLink());
 			setUpdated(true);
-			Podsalinan.debugLog.logInfo(this, getName()+"Url updated:"+getURL());
+			if (Log.isDebug())Log.logInfo(this, getName()+"Url updated:"+getURL());
 		}
 		synchronized(episodeList){
 			if (episodeList!=null){
@@ -307,8 +307,8 @@ public class Podcast extends DownloadDetails{
 					else if (System.getProperty("os.name").startsWith("Windows"))
 						destinationFile = new File(getDirectory()+"\\"+selectedEpisode.getFilename());
 				} catch (MalformedURLException e){
-					Podsalinan.debugLog.logError("Invalid URL");
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					if (Log.isDebug())Log.logError(this,"Invalid URL");
+					if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				}
 				if (destinationFile!=null){
 					if (destinationFile.exists()){
@@ -333,7 +333,7 @@ public class Podcast extends DownloadDetails{
 			synchronized(episodeList){
 				if (episodeList.size()>0){
 					try {
-						if (debug) Podsalinan.debugLog.logInfo(getClass(),"Date in new episode: "+newEpisode.getDate());
+						if (debug) if (Log.isDebug())Log.logInfo(getClass(),"Date in new episode: "+newEpisode.getDate());
 						Date newEpisodeDate = df.parse(newEpisode.getDate());
 						boolean found=false;
 						int epCount=0;

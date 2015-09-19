@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.podcast;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -33,7 +33,7 @@ public class ListEpisodes extends CLIOption {
 		CLInput input = new CLInput();
 		
 		int epCount=1;
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
         if (functionParms.containsKey("uid") || CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid")){
     		Podcast selectedPodcast = data.getPodcasts().getPodcastByUid(functionParms.get("uid"));
     		if (selectedPodcast==null && CLInterface.cliGlobals.getGlobalSelection().containsKey("podcastid")){

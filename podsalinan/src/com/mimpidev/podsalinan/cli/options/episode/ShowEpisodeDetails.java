@@ -7,7 +7,7 @@ import java.net.MalformedURLException;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Episode;
 
@@ -36,9 +36,9 @@ public class ShowEpisodeDetails extends BaseEpisodeOption {
 				try {
 					System.out.println ("Destination: "+episode.getFilename());
 				} catch (MalformedURLException e) {
-					Podsalinan.debugLog.logError(this, "Faulty URL");
-					Podsalinan.debugLog.logError(this, "URL: "+episode.getURL());
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					if (Log.isDebug())Log.logError(this, "Faulty URL");
+					if (Log.isDebug())Log.logError(this, "URL: "+episode.getURL());
+					if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				}
 			}
 		}
@@ -46,7 +46,7 @@ public class ShowEpisodeDetails extends BaseEpisodeOption {
 	
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(functionParms);
 		Episode episode=null;
 		
 		if (functionParms.containsKey("uid") && functionParms.containsKey("userInput")){

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
@@ -29,7 +29,7 @@ public class MenuVisibility extends CLIOption {
 
 	public ReturnObject execute(Map<String, String> functionParms) {
 
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 		
 		Set<String> trueList = new HashSet<String>(Arrays.asList(new String[] {"true","1","yes","y"}));
 		Set<String> falseList = new HashSet<String>(Arrays.asList(new String[] {"false","0","no","n"}));

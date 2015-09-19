@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Vector;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.URLDetails;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
@@ -115,7 +116,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 						getDownloadQueueObject().wait();
 					}
 				} catch (InterruptedException e) {
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				}
 			}
 			// Stop all downloaders when the program is exiting
@@ -197,7 +198,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 						try {
 							Thread.sleep(10000);
 						} catch (InterruptedException e) {
-							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 						}
 					}
 					selectedPodcast.getEpisodeByURL(url).setStatus(newStatus);
@@ -224,11 +225,11 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				else {
 					try {
 						InputStream testFileStream = new FileInputStream(download.getDestinationFile());
-						if (debug) Podsalinan.debugLog.logInfo(this, "Destination File:"+download.getDestinationFile().toString());
+						if (debug) if (Log.isDebug())Log.logInfo(this, "Destination File:"+download.getDestinationFile().toString());
 						BufferedReader reader = new BufferedReader(new InputStreamReader(testFileStream));
 						String line=reader.readLine();
 						if (line != null){
-							if (debug) Podsalinan.debugLog.logInfo(this, "First Line:"+line.toString());
+							if (debug) if (Log.isDebug())Log.logInfo(this, "First Line:"+line.toString());
 							if (line.contains("rss")){
 								testFileStream.close();
 								Podcast newPodcast = new Podcast(download);
@@ -247,7 +248,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					}
 				}
 			} else if ((percentage<100)&&(download.getStatus()!=URLDetails.DESTINATION_INVALID)){
-				if (debug) Podsalinan.debugLog.logInfo(this, "download.status="+download.getStatus());
+				if (debug) if (Log.isDebug())Log.logInfo(this, "download.status="+download.getStatus());
 				synchronized(download){
 					try {
 						download.wait(5000);

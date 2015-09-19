@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli.options.podcast;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInterface;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -27,10 +27,10 @@ public class UpdatePodcast extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this, functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 		
 		String tempDir=data.getSettingsDir();
-		if (debug) Podsalinan.debugLog.logInfo(this, "tempDir:"+tempDir);
+		if (debug) if (Log.isDebug())Log.logInfo(this, "tempDir:"+tempDir);
 		Podcast selectedPodcast = null;
 		
         if (functionParms.containsKey("uid"))

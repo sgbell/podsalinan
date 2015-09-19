@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.FilterList;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.podsalinan.data.ProgSettings;
@@ -135,11 +136,11 @@ public class DataStorage {
 			try {
 				podsalinanDB = new Database(podsalinanDBFile.getAbsolutePath());
 			} catch (SqliteException e) {
-				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+				if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 			} catch (ClassNotFoundException e) {
-				Podsalinan.debugLog.logError("JDBC library not found. Exiting");
+				if (Log.isDebug())Log.logError(this,"JDBC library not found. Exiting");
 				System.exit(1);
-				//Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+				//if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 			}
 			
 			PodcastLoader podcastHandler=null;
@@ -153,9 +154,9 @@ public class DataStorage {
 					settingsHandler = new SettingsLoader(settings,podsalinanDB);
 					filtersHandler = new FilterLoader(filters,podsalinanDB);
 				} catch (ClassNotFoundException e) {
-					Podsalinan.debugLog.logError(this, "Error opening database");
-					Podsalinan.debugLog.logError(this, e.getMessage());
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					if (Log.isDebug())Log.logError(this, "Error opening database");
+					if (Log.isDebug())Log.logError(this, e.getMessage());
+					if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				}
 				tableLoaders.add(podcastHandler);
 				tableLoaders.add(downloadHandler);
@@ -165,7 +166,7 @@ public class DataStorage {
 					try {
 						loader.readTable();
 					} catch (ClassNotFoundException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}
 				}
 			}
@@ -175,7 +176,7 @@ public class DataStorage {
 			try {
 				podsalinanDB.close();
 			} catch (SqlJetException e) {
-				Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+				if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				return -1;
 			}
 			*/

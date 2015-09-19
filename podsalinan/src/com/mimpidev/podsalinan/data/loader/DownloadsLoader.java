@@ -29,7 +29,7 @@ import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.URLDownload;
 import com.mimpidev.podsalinan.data.URLDownloadList;
 import com.mimpidev.sql.sqlitejdbc.Database;
@@ -128,7 +128,7 @@ public class DownloadsLoader extends TableLoader {
 				}				
 			}
 		} else {
-			Podsalinan.debugLog.logError("Error db connection is closed");
+			if (Log.isDebug())Log.logError(this, "Error db connection is closed");
 		}
 	}
 

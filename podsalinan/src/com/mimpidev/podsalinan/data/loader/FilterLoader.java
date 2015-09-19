@@ -28,7 +28,11 @@ import com.mimpidev.sql.sqlitejdbc.Database;
  */
 public class FilterLoader extends TableLoader {
 
+	/**
+	 * 
+	 */
 	private FilterList filters;
+	
 	/**
 	 * @param tableName
 	 * @param newDb

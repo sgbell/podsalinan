@@ -28,8 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.options.*;
 import com.mimpidev.podsalinan.cli.options.downloads.*;
 import com.mimpidev.podsalinan.cli.options.episode.*;
@@ -317,15 +317,15 @@ public class CLInterface extends CLIOption implements Runnable{
 			if (!options.containsKey(input)){
 				int score=0;
 				boolean match=false;
-	        	if (debug) Podsalinan.debugLog.logInfo(this, 312, "user input: '"+input+"'");
+	        	if (debug) Log.logInfo(this, 312, "user input: '"+input+"'");
 				String[] methodCallSplit = input.split(" ");
-				if (debug) Podsalinan.debugLog.logInfo(this, 314, "length:"+methodCallSplit.length);
+				if (debug) Log.logInfo(this, 314, "length:"+methodCallSplit.length);
 	        	for (String key : options.keySet()){
 					score=0;
 	        		String[] splitValue = key.split(" ");
-					if ((debug)&&(key.equalsIgnoreCase("set downloadlimit <00M>"))){
-						Podsalinan.debugLog.logInfo(this, 319, key);
-						Podsalinan.debugLog.logInfo(this, 320, "length:"+splitValue.length);
+					if (debug && (key.equalsIgnoreCase("set downloadlimit <00M>"))){
+						Log.logInfo(this, 319, key);
+						Log.logInfo(this, 320, "length:"+splitValue.length);
 					}
 	        		if (splitValue.length==methodCallSplit.length){
 	        			int svc=0;
@@ -347,18 +347,18 @@ public class CLInterface extends CLIOption implements Runnable{
 	        						score++;
 	        					} else if (splitValue[svc].matches("<podcastName>")&&
 	        						!methodCallSplit[svc].matches("^[a-fA-F0-9]{8}")){
-	        						if (debug) Podsalinan.debugLog.logInfo(this, 349, "<podcastName> set userInput:"+methodCallSplit[svc]);
+	        						if (debug) if (Log.isDebug())Log.logInfo(this, 349, "<podcastName> set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
 	        					} else if (splitValue[svc].matches("<a-z>") &&
 	        						methodCallSplit[svc].matches("[a-zA-Z]{1,2}")){
-	        						if (debug) Podsalinan.debugLog.logInfo(this, 349, "<a-z> set userInput:"+methodCallSplit[svc]);
+	        						if (debug) if (Log.isDebug())Log.logInfo(this, 349, "<a-z> set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
 	        					} else if (splitValue[svc].matches("<path>") &&
 	        						methodCallSplit[svc].contains(data.getFileSystemSlash())){
 	        						String newPath[] = methodCallSplit[svc].split(data.getFileSystemSlash());
-	        						if (debug) Podsalinan.debugLog.logInfo(this, 358, newPath);
+	        						if (debug) Log.logInfo(this, 358, newPath);
 	        						String testPath="";
 	        						if (newPath.length>1){
 	        							testPath=newPath[0]+data.getFileSystemSlash()+newPath[1];
@@ -379,7 +379,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	        							(splitValue[svc].equals("<00M>") &&
 	        							(methodCallSplit[svc].toLowerCase().matches("([0-9]{1,}(m|mb|mbps))")||
 	        							methodCallSplit[svc].matches("[0-9]{1,4}")))){
-	        						if (debug) Podsalinan.debugLog.logInfo(this, 380, splitValue[svc]+" set userInput:"+methodCallSplit[svc]);
+	        						if (debug) if (Log.isDebug())Log.logInfo(this, 380, splitValue[svc]+" set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
 	        					}
@@ -394,7 +394,7 @@ public class CLInterface extends CLIOption implements Runnable{
 	        				match=true;
 	        				menuCommand.methodCall=key;
 	        				menuCommand.execute=true;
-	        				if (debug) Podsalinan.debugLog.logInfo(this, 389, "matched");
+	        				if (debug) if (Log.isDebug())Log.logInfo(this, 389, "matched");
 	        				break;
 	        			} else {
 	    	    			menuCommand.parameterMap.clear();
@@ -403,14 +403,14 @@ public class CLInterface extends CLIOption implements Runnable{
 	        	}
 	            if (!match){
 	            	menuCommand.execute=false;
-					if (debug) Podsalinan.debugLog.logInfo(this, 398, "not matched");
+					if (debug) if (Log.isDebug())Log.logInfo(this, 398, "not matched");
 	            }
 	        } else {
         	    menuCommand.methodCall=input;
 				if (input.contains("all")){
 					menuCommand.parameterMap.put("all", "true");
 				}
-        	    if (debug) Podsalinan.debugLog.logInfo(this, 402, menuCommand.methodCall);
+        	    if (debug) if (Log.isDebug())Log.logInfo(this, 402, menuCommand.methodCall);
         	    menuCommand.debug(debug);
         	    menuCommand.execute=true;
 			}
@@ -424,19 +424,19 @@ public class CLInterface extends CLIOption implements Runnable{
 				} else if (returnObject.methodCall.length()>0 && 
 						   !input.contains(returnObject.methodCall) &&
 						   input.length()>0){
-					if (debug) Podsalinan.debugLog.logInfo(this,416, "Error: Adding methodCall to input.");
+					if (debug) if (Log.isDebug())Log.logInfo(this,416, "Error: Adding methodCall to input.");
 					input=returnObject.methodCall+" "+input;
 				} else if (cliGlobals.getGlobalSelection().size()>0 && input.length()>0){
 					if (!input.contains(cliGlobals.globalSelectionToString()))
 						input=cliGlobals.globalSelectionToString()+" "+input;
 					else 
 						failedMatch=true;
-					if (debug) Podsalinan.debugLog.logMap(this, cliGlobals.getGlobalSelection());
-					if (debug) Podsalinan.debugLog.logInfo(this, 424, "'"+menuCommand.methodCall+"'");
+					if (debug) Log.logMap(this, cliGlobals.getGlobalSelection());
+					if (debug) Log.logInfo(this, 424, "'"+menuCommand.methodCall+"'");
 				} else if (returnObject.methodCall.length()>0){
 					System.out.println("Error: Invalid input - "+input);
 					input=returnObject.methodCall;
-					if (debug) Podsalinan.debugLog.logInfo(this, 428, "Error: '"+input+"'");
+					if (debug) Log.logInfo(this, 428, "Error: '"+input+"'");
 				} else {
 					failedMatch=true;
 				}
@@ -462,7 +462,7 @@ public class CLInterface extends CLIOption implements Runnable{
     	
 		while (returnObject.execute){
 
-			if (debug) Podsalinan.debugLog.logInfo(this, "Calling requested function: "+returnObject.methodCall);
+			if (debug) if (Log.isDebug())Log.logInfo(this, "Calling requested function: "+returnObject.methodCall);
 			if (debug && returnObject.parameterMap.size()==0){
 				cliGlobals.createReturnParameters(returnObject.parameterMap);				
 			}

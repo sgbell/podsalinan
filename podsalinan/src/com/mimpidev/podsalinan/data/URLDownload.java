@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import com.mimpidev.dev.sql.field.StringType;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 
 /**
  * @author bugman
@@ -178,9 +178,9 @@ public class URLDownload extends URLDetails {
 			md.update(bytesUid, 0, bytesUid.length);
 			fields.get("uid").setValue(new BigInteger(1, md.digest()).toString().substring(0,8));
 		} catch (NoSuchAlgorithmException e) {
-			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 		} catch (UnsupportedEncodingException e) {
-			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 		}
 	}
 	

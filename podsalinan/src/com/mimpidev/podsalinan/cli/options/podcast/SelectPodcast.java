@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.CLInput;
 import com.mimpidev.podsalinan.cli.CLInterface;
@@ -30,7 +30,7 @@ public class SelectPodcast extends CLIOption {
         /* Only go through this code, if the podcast being passed in is different to the podcast stored in
 		 * global selection
 		 */
-		if (debug) Podsalinan.debugLog.logMap(functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(functionParms);
 		if (functionParms.containsKey("userInput")){
 			String userInput=functionParms.get("userInput");
 			Podcast selectedPodcast=null;
@@ -41,7 +41,7 @@ public class SelectPodcast extends CLIOption {
 			}
 			if (selectedPodcast==null){
 				Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
-				if (debug) Podsalinan.debugLog.logInfo(this, "Line:45, PodcastList.size="+podcastList.size());
+				if (debug) if (Log.isDebug())Log.logInfo(this, "Line:45, PodcastList.size="+podcastList.size());
 				if (podcastList.size()==1){
 					CLInterface.cliGlobals.getGlobalSelection().clear();
 					CLInterface.cliGlobals.getGlobalSelection().put("podcast",podcastList.get(0).getDatafile());
@@ -71,7 +71,7 @@ public class SelectPodcast extends CLIOption {
 				}
 			}
 			if (selectedPodcast!=null){
-				if (debug) Podsalinan.debugLog.logInfo(this, 76, "Set selected podcast:"+selectedPodcast.getDatafile());
+				if (debug) if (Log.isDebug())Log.logInfo(this, 76, "Set selected podcast:"+selectedPodcast.getDatafile());
 				returnObject.methodCall="podcast "+selectedPodcast.getDatafile();
 				CLInterface.cliGlobals.getGlobalSelection().clear();
 				CLInterface.cliGlobals.getGlobalSelection().put("podcastid",selectedPodcast.getDatafile());
@@ -82,8 +82,8 @@ public class SelectPodcast extends CLIOption {
 		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
-		if (debug) Podsalinan.debugLog.logInfo(this, "Global Selection check");
-		if (debug) Podsalinan.debugLog.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
+		if (debug) if (Log.isDebug())Log.logInfo(this, "Global Selection check");
+		if (debug) if (Log.isDebug())Log.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
 		
 		return returnObject;
 	}

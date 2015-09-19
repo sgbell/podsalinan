@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 import com.mimpidev.podsalinan.data.Podcast;
@@ -24,7 +24,7 @@ public class ShowSelectedMenu extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(this,functionParms);
+		if (debug) if (Log.isDebug())Log.logMap(this,functionParms);
 		final String podcastId = functionParms.get("uid");
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){

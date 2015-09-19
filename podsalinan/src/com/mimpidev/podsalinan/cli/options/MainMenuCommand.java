@@ -24,8 +24,8 @@ package com.mimpidev.podsalinan.cli.options;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.DataStorage;
-import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
 
@@ -51,7 +51,7 @@ public class MainMenuCommand extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (debug) Podsalinan.debugLog.logMap(functionParms);
+		if (debug) Log.logMap(functionParms);
 
 		if (functionParms.size()==0){
 			returnObject.methodCall="mainmenu showMenu";
@@ -67,7 +67,7 @@ public class MainMenuCommand extends CLIOption {
 		}
 		returnObject.parameterMap.clear();
 		returnObject.execute=true;
-		if (debug) Podsalinan.debugLog.logInfo(this, 75, "Finish");
+		if (debug) if (Log.isDebug())Log.logInfo(this, 75, "Finish");
 		returnObject.debug(debug);
 		
 		return returnObject;

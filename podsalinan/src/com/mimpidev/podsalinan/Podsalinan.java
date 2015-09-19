@@ -44,10 +44,6 @@ public class Podsalinan {
 	private String[] cmdLineArgs;
 	// Storing the program name here, as we can use it for the data directory and other uses
 	public static final String PROGRAM_NAME = "Podsalinan";
-    /**
-     *  debugLog is going to be handed through all of the system so we can write to the debug log
-     */
-	public static final Log debugLog = new Log(PROGRAM_NAME.toLowerCase());
 	
 	/**
 	 *  Object used to wake and put to sleep the DownloadQueue
@@ -62,7 +58,6 @@ public class Podsalinan {
 	 *   Nothing to pass in just yet
 	 */
 	public static void main(String[] args) {
-		debugLog.initialise();
 		Podsalinan mainProgram = new Podsalinan();
 		mainProgram.setCmdLineArgs(args);
 		mainProgram.initialize();
@@ -136,8 +131,8 @@ public class Podsalinan {
 		}
 			
 		data.saveSettings();
-		if (Podsalinan.debugLog!=null)
-		   Podsalinan.debugLog.close();
+		if (Log.isOpen())
+		   Log.close();
 		System.out.println("Goodbye.");
 		// added line below so program exits, as having gui changes things
 		System.exit(0);

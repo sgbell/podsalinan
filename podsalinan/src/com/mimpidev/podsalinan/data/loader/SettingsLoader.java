@@ -28,7 +28,7 @@ import java.util.Map;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.ProgSettings;
 import com.mimpidev.sql.sqlitejdbc.Database;
 
@@ -83,13 +83,13 @@ public class SettingsLoader extends TableLoader {
 						put("value",new StringType(entry.getValue()));
 					}});
 				} catch (SqlException e) {
-					Podsalinan.debugLog.logError(this, "Error inserting record into settings table");
-					Podsalinan.debugLog.logError(this, e.getMessage());
-					Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+					if (Log.isDebug())Log.logError(this, "Error inserting record into settings table");
+					if (Log.isDebug())Log.logError(this, e.getMessage());
+					if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				}
 			}
 		} else {
-			Podsalinan.debugLog.logError("Error db connection is closed");
+			if (Log.isDebug())Log.logError(this,"Error db connection is closed");
 		}
 	}
 

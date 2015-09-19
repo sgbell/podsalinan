@@ -25,7 +25,7 @@ package com.mimpidev.podsalinan.cli;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 
 /**
  * @author bugman
@@ -48,9 +48,9 @@ public class ReturnObject {
 
 	public void debug(boolean debug) {
 		if (debug) {
-			Podsalinan.debugLog.logInfo(this, "methodCall="+methodCall);
-			Podsalinan.debugLog.logInfo(this, "parameterMap contents");
-			Podsalinan.debugLog.logMap(parameterMap);
+			Log.logInfo(this, "methodCall="+methodCall);
+			Log.logInfo(this, "parameterMap contents");
+			Log.logMap(parameterMap);
 		}
 	}
 

@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.Podsalinan;
 
 /**
@@ -88,7 +89,7 @@ public class URLDownloadList extends DownloadDetails {
             	Podsalinan.downloadQueueSyncObject.notify();
             }
 		}
-		Podsalinan.debugLog.logMap(this, newFile.getFields());
+		if (Log.isDebug())Log.logMap(this, newFile.getFields());
 	}
 	
 	public void addDownload(URLDownload newDownload, int priority) {
@@ -310,7 +311,7 @@ public class URLDownloadList extends DownloadDetails {
 	public boolean deleteActiveDownload(String uid) {
 		for (URLDownload currentDownload: downloads){
 			if (currentDownload.getUid().equals(uid)){
-				Podsalinan.debugLog.logInfo("Deleting Download:"+uid);
+				if (Log.isDebug())Log.logInfo("Deleting Download:"+uid);
 				return deleteDownload(currentDownload);
 			}
 		}
@@ -462,18 +463,18 @@ public class URLDownloadList extends DownloadDetails {
 	public URLDownload findDownloadByUid(String downloadUid) {
 		for (URLDownload currentDownload : downloads)
 			if (currentDownload.getUid().equals(downloadUid)){
-				if (debug) Podsalinan.debugLog.logInfo(this, "findDownloadByUid(String) Download: "+currentDownload.getURL());
+				if (debug) if (Log.isDebug())Log.logInfo(this, "findDownloadByUid(String) Download: "+currentDownload.getURL());
 				return currentDownload;
 			}
 		return null;
 	}
 
 	public void restartDownload(String downloadUid) {
-		if (debug) Podsalinan.debugLog.logInfo(this, "Download Uid:"+downloadUid);
+		if (debug) if (Log.isDebug())Log.logInfo(this, "Download Uid:"+downloadUid);
 		URLDownload currentDownload = findDownloadByUid(downloadUid);
 		if (currentDownload!=null){
-			if (debug) Podsalinan.debugLog.logInfo(this, "restartDownload(String) Download: "+currentDownload.getURL());
-			if (debug) Podsalinan.debugLog.logInfo("Status: "+currentDownload.getCurrentStatus());
+			if (debug) if (Log.isDebug())Log.logInfo(this, "restartDownload(String) Download: "+currentDownload.getURL());
+			if (debug) if (Log.isDebug())Log.logInfo("Status: "+currentDownload.getCurrentStatus());
 			restartDownload(currentDownload);
 		}
 	}
@@ -495,13 +496,13 @@ public class URLDownloadList extends DownloadDetails {
 	}
 
 	public String getDownloadUid(int select) {
-		if (debug) Podsalinan.debugLog.logInfo(this, "getDownloadUid("+select+")");
+		if (debug) if (Log.isDebug())Log.logInfo(this, "getDownloadUid("+select+")");
 		int downloadCount=0,
 			activeCount=0;
 		boolean found=false;
-		if (debug) Podsalinan.debugLog.logInfo(this, "Download Count:"+getNumberOfQueuedDownloads());
+		if (debug) if (Log.isDebug())Log.logInfo(this, "Download Count:"+getNumberOfQueuedDownloads());
 		while (!found && downloadCount<downloads.size()){
-			if (debug) Podsalinan.debugLog.logInfo(this, "Download "+(downloads.get(downloadCount).isRemoved()?"Removed":"Not Removed")+
+			if (debug) if (Log.isDebug())Log.logInfo(this, "Download "+(downloads.get(downloadCount).isRemoved()?"Removed":"Not Removed")+
 					" :"+downloads.get(downloadCount).getURL());
 			if (!downloads.get(downloadCount).isRemoved()){
 				if (activeCount==select){
@@ -513,7 +514,7 @@ public class URLDownloadList extends DownloadDetails {
 				downloadCount++;
 		}
         if (found){
-        	if (debug) Podsalinan.debugLog.logInfo(this, downloads.get(downloadCount).getUid());
+        	if (debug) if (Log.isDebug())Log.logInfo(this, downloads.get(downloadCount).getUid());
         	return downloads.get(downloadCount).getUid();
         } else
         	return null;

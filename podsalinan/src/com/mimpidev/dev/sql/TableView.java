@@ -32,7 +32,6 @@ import java.util.Set;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.field.FieldDetails;
-import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.sql.sqlitejdbc.Database;
 import com.mimpidev.sql.sqlitejdbc.cursors.SqliteCursor;
 import com.mimpidev.sql.sqlitejdbc.cursors.internal.SqliteResult;
@@ -56,10 +55,6 @@ public class TableView {
 	 */
 	private Map<String,String> columnList;
 	private Map<String,String> constraintList;
-	/**
-	 * The log.
-	 */
-	private Log log;
     /**
      * The name of the table this is related to.
      */
@@ -89,7 +84,6 @@ public class TableView {
 	public static final int ITEM_UPDATED_IN_DATABASE = 3;
 	
 	public TableView(){
-		log = Podsalinan.debugLog;
 		constraintList = new HashMap<String,String>();
 	}
 	
@@ -97,12 +91,10 @@ public class TableView {
 		this (new HashMap<String,String>(), tableName, debugLog);
 		db = new Database(databaseFile);
 		initializeTable();
-		log = debugLog;
 	}
 	
 	private TableView(Map<String,String> newColumnList, String tableName, Log debugLog){
 		columnList = newColumnList;
-		log = debugLog;
 		name=tableName;
 		constraintList = new HashMap<String,String>();
 	}
@@ -123,7 +115,6 @@ public class TableView {
 		db = newDb;
 		name = tableName;
 		columnList = new HashMap<String,String>();
-		log = Podsalinan.debugLog;
 		constraintList = new HashMap<String,String>();
 	}
 
@@ -155,7 +146,7 @@ public class TableView {
 			try {
 				newResult = addNewColumn((String)pairs.getKey(),(String)pairs.getValue());
 			} catch (SqlException e) {
-	        	log.logInfo("[Table:"+name+"] Error Adding Column:"+(String)pairs.getKey());
+	        	if (Log.isDebug()) Log.logInfo("[Table:"+name+"] Error Adding Column:"+(String)pairs.getKey());
 	        	newResult = -1;
 			}
 			if (result>=0)
@@ -210,9 +201,9 @@ public class TableView {
 				initializeTable();
 			}
 		} catch (DataDefinitionException e) {
-			Podsalinan.debugLog.logError(this, "Error connecting to table");
-			Podsalinan.debugLog.logError(this, e.getMessage());
-			Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+			if (Log.isDebug())Log.logError(this, "Error connecting to table");
+			if (Log.isDebug())Log.logError(this, e.getMessage());
+			if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 		}
 	}
 	
@@ -258,7 +249,7 @@ public class TableView {
 					db.createTable(sql);
 					return true;
 				} catch (SqliteException e) {
-					log.printStackTrace(e.getStackTrace());
+					if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					throw new SqlException(SqlException.CREATE_TABLE_FAILED);
 				}
 			}
@@ -303,7 +294,7 @@ public class TableView {
 				table.insert(values);
 				return true;
 			} catch (SqliteException e) {
-				log.printStackTrace(e.getStackTrace());
+				if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_INSERT_RECORD);
 			}
 		} else if (!isDbOpen()){
@@ -330,7 +321,7 @@ public class TableView {
 			try{
 				table.update(values, where);
 			} catch (SqliteException e) {
-				log.printStackTrace(e.getStackTrace());
+				if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_UPDATING_RECORD);
 			}
 		} else if (!isDbOpen()){
@@ -392,7 +383,7 @@ public class TableView {
 				columns = db.getSchema().getTable(name).getColumns();
 			} catch (SqliteException e) {
 				e.printStackTrace();
-				log.printStackTrace(e.getStackTrace());
+				if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.ERROR_READING_TABLE_SCHEMA);
 			}
 			if (columns!=null){
@@ -407,10 +398,10 @@ public class TableView {
 			if (!columnFound){
 				try {
 					db.alterTable("ALTER TABLE "+name+" ADD COLUMN "+columnName+" "+columnType.toUpperCase()+";");
-					if (debug) log.logInfo("[Table:"+name+"] Added Column:"+columnName);
+					if (Log.isDebug())Log.logInfo("[Table:"+name+"] Added Column:"+columnName);
 					return NEW_COLUMNS_ADDED;
 				} catch (SqliteException e) {
-					log.printStackTrace(e.getStackTrace());
+					if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					throw new SqlException(SqlException.FAILED_ADDING_NEW_COLUMN);
 				}
 			}
@@ -431,7 +422,7 @@ public class TableView {
 			try {
 				currentLine = table.order(table.getDefinition().getPrimaryKeyName());
 			} catch (SqliteException e) {
-				log.printStackTrace(e.getStackTrace());
+				if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
 			}
 			return currentLine;
@@ -444,7 +435,7 @@ public class TableView {
 			try {
 				return findItemsWithCondition(conditions);
 			} catch (SqlException e) {
-				log.printStackTrace(e.getStackTrace());
+				if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 				throw new SqlException(SqlException.FAILED_READING_RECORDS);
 			}
 		} else if (!isDbOpen()){
@@ -460,7 +451,7 @@ public class TableView {
 		if ((isDbOpen())&&(where.length()>0)){
 			try {
 				if (debug){
-					log.logMap(conditions);
+					if (Log.isDebug())Log.logMap(conditions);
 				}
 				SqliteCursor recordResults = table.lookupByWhere(where);
 				return recordResults;
@@ -470,8 +461,8 @@ public class TableView {
 		} else if (!isDbOpen()){
 			throw new SqlException(SqlException.ERROR_DB_FAILURE);
 		} else if (where.length()==0) {
-			log.logMap(conditions);
-			log.logInfo(getClass(), "validated values: 0");
+			if (Log.isDebug())Log.logMap(conditions);
+			if (Log.isDebug())Log.logInfo(this, "validated values: 0");
 			throw new SqlException(SqlException.ERROR_INVALID_TABLE);
 		}
 		return null;

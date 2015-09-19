@@ -30,7 +30,7 @@ import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.PodcastList;
 import com.mimpidev.sql.sqlitejdbc.Database;
@@ -83,7 +83,7 @@ public class PodcastLoader extends TableLoader {
 				// Traverse the Map and create a podcast object
 				if (isDebug())
 					for (final Map.Entry<String, String> entry : record.entrySet()){
-						Podsalinan.debugLog.logError(entry.getKey()+" - "+entry.getValue());
+						if (Log.isDebug())Log.logError(this,entry.getKey()+" - "+entry.getValue());
 					}
 				final Podcast newPodcast = new Podcast(record);
 				// If we are working with an older version of the database, bring the value of localFile over to datafile
@@ -95,7 +95,7 @@ public class PodcastLoader extends TableLoader {
 							update(newPodcast.getDatabaseRecord(), 
 								"localFile="+newPodcast.getDatafile());
 						} catch (SqlException e) {
-							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 						}
 				}
 				// If the podcast record is faulty. delete it
@@ -110,7 +110,7 @@ public class PodcastLoader extends TableLoader {
 							put("url",new StringType(newPodcast.getURL()));
 						}});
 					} catch (SqlException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}
 				} else {
 					newPodcast.setAdded(true);
@@ -122,9 +122,9 @@ public class PodcastLoader extends TableLoader {
 						try {
 							podcastDB = new Database(podcastFile.getAbsolutePath());
 						} catch (SqliteException e){
-							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 						} catch  (ClassNotFoundException e) {
-							Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 						}
 
 						if (podcastDB!=null){
@@ -134,11 +134,11 @@ public class PodcastLoader extends TableLoader {
 								//episodeLoader.readTable();
 								episodeLoaders.add(episodeLoader);
 							} catch (ClassNotFoundException e) {
-								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+								if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 							}
 						}
 					} else {
-						Podsalinan.debugLog.logError("File does not exist");
+						if (Log.isDebug())Log.logError(this,"File does not exist");
 					}
 				}
 			}
@@ -152,7 +152,7 @@ public class PodcastLoader extends TableLoader {
 			};
 			episodeLoader.start();
 		} else {
-			Podsalinan.debugLog.logError("Error reading from Podcast Table");
+			if (Log.isDebug())Log.logError(this,"Error reading from Podcast Table");
 		}
 	}
 
@@ -178,13 +178,13 @@ public class PodcastLoader extends TableLoader {
 									episodeLoaders.add(episodeLoader);
 								}
 							} catch (ClassNotFoundException e){
-								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+								if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 							} catch (SqliteException e) {
-								Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+								if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 							}
 						}
 					} catch (SqlException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}
 				} else if (podcast.isRemoved()){
 					try {
@@ -197,7 +197,7 @@ public class PodcastLoader extends TableLoader {
 							put("url",new StringType(podcast.getURL()));
 						}});
 					} catch (SqlException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}
 					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
 				} else if (podcast.isUpdated()){
@@ -212,7 +212,7 @@ public class PodcastLoader extends TableLoader {
 								put("datafile",new StringType(podcast.getDatafile()));
 						}});
 					} catch (SqlException e) {
-						Podsalinan.debugLog.printStackTrace(e.getStackTrace());
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}
 					sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
 				}
@@ -229,7 +229,7 @@ public class PodcastLoader extends TableLoader {
 				}
 			}
 		} else {
-			Podsalinan.debugLog.logError("Error db connection is closed");
+			if (Log.isDebug())Log.logError(this,"Error db connection is closed");
 		}
 	}
 }

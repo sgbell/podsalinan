@@ -6,7 +6,7 @@ package com.mimpidev.podsalinan.cli;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mimpidev.podsalinan.Podsalinan;
+import com.mimpidev.dev.debug.Log;
 
 /**
  * @author sbell
@@ -47,8 +47,8 @@ public class CLIGlobals {
 	 */
 	public Map<String, String> getGlobalSelection(){
 		if (debug){
-			Podsalinan.debugLog.logInfo(this, "getGlobalSelection() called");
-			Podsalinan.debugLog.logInfo(this, "Size: "+globalSelection.size());
+			if (Log.isDebug())Log.logInfo(this, "getGlobalSelection() called");
+			if (Log.isDebug())Log.logInfo(this, "Size: "+globalSelection.size());
 		}
 		
 		return globalSelection;
