@@ -427,7 +427,10 @@ public class CLInterface extends CLIOption implements Runnable{
 					if (debug) Podsalinan.debugLog.logInfo(this,416, "Error: Adding methodCall to input.");
 					input=returnObject.methodCall+" "+input;
 				} else if (cliGlobals.getGlobalSelection().size()>0 && input.length()>0){
-					input=cliGlobals.globalSelectionToString()+" "+input;
+					if (!input.contains(cliGlobals.globalSelectionToString()))
+						input=cliGlobals.globalSelectionToString()+" "+input;
+					else 
+						failedMatch=true;
 					if (debug) Podsalinan.debugLog.logMap(this, cliGlobals.getGlobalSelection());
 					if (debug) Podsalinan.debugLog.logInfo(this, 424, "'"+menuCommand.methodCall+"'");
 				} else if (returnObject.methodCall.length()>0){
