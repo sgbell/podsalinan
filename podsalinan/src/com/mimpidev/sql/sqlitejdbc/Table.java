@@ -6,7 +6,6 @@ package com.mimpidev.sql.sqlitejdbc;
 import java.util.Map;
 
 import com.mimpidev.dev.debug.Log;
-import com.mimpidev.podsalinan.Podsalinan;
 import com.mimpidev.sql.sqlitejdbc.exceptions.SqliteException;
 import com.mimpidev.sql.sqlitejdbc.schema.SqliteTable;
 
