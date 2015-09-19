@@ -32,13 +32,15 @@ public class Filter extends DataRecord {
 		fields.put("id", new IntegerType());
 		fields.put("match", new StringType());
 		fields.put("commandList", new StringType());
+		fields.put("commandName", new StringType());
 		fields.get("id").setPrimaryKey(true);
 		fields.get("id").setAutoIncrement(true);
 	}
 	
-	public Filter(String matchString, String commands) {
+	public Filter(String matchString, String commands, String commandName) {
 		setMatch(matchString);
-		
+		setCommandList(commands);
+		setCommandName(commandName);
 	}
 
 	public String getMatch(){
@@ -55,5 +57,13 @@ public class Filter extends DataRecord {
 	
 	public void setCommandList(String commandList){
 		fields.get("commandList").setValue(commandList);
+	}
+
+	public void setCommandName(String commandName) {
+		fields.get("commandName").setValue(commandName);
+	}
+
+	public String getCommandName() {
+		return fields.get("commandName").getValue();
 	}
 }

@@ -20,6 +20,7 @@ package com.mimpidev.podsalinan.data.loader;
 
 import com.mimpidev.podsalinan.data.Filter;
 import com.mimpidev.podsalinan.data.FilterList;
+import com.mimpidev.podsalinan.exception.MatchingFilterFound;
 import com.mimpidev.sql.sqlitejdbc.Database;
 
 /**
@@ -46,18 +47,6 @@ public class FilterLoader extends TableLoader {
 		setdbTable(dbConnection);
 	}
 
-	@Override
-	public void readTable() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void updateDatabase() {
-		// TODO Auto-generated method stub
-
-	}
-
 	/**
 	 * @return the filters
 	 */
@@ -72,4 +61,35 @@ public class FilterLoader extends TableLoader {
 		this.filters = filters;
 	}
 
+	@Override
+	public void readTable() {
+		//TODO: Read filters from database
+		
+		Filter newFilter = new Filter();
+		newFilter.setMatch("download <filename>.matches('^hak5--[0-9]{4}')");
+		newFilter.setCommandList("<destination_dir>=<destination_dir>'/'"
+				+ "<filename>.split('--')[1].split(0,1)+'/'");
+		newFilter.setCommandName("Hak 5 Episodes");
+		try {
+			filters.addFilter(newFilter);
+		} catch (MatchingFilterFound e) {
+			System.out.println("Error: Filter Already exists.");
+		}
+		newFilter = new Filter();
+		newFilter.setMatch("download <filename>.matches('^hak5--haktip')");
+		newFilter.setCommandList("<destination_dir>=<destination_dir>'/'"
+				+ "'haktip/'");
+		newFilter.setCommandName("Haktips");
+		try {
+			filters.addFilter(newFilter);
+		} catch (MatchingFilterFound e) {
+			System.out.println("Error: Filter already exists.");
+		}
+	}
+
+	@Override
+	public void updateDatabase() {
+		// TODO Auto-generated method stub
+
+	}
 }

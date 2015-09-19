@@ -23,6 +23,11 @@ import java.util.ArrayList;
 import com.mimpidev.podsalinan.exception.FilterNotFound;
 import com.mimpidev.podsalinan.exception.MatchingFilterFound;
 
+
+/* TODO: Need to code FilterLoader to do the normal database updates
+ * for the filter objects.
+ * Need to code the Filter parser. 
+ */
 /**
  * @author Sam Bell
  *
@@ -49,8 +54,12 @@ public class FilterList {
 		this.filters = filters;
 	}
 	
-	public boolean addFilter(String matchString, String commands) throws MatchingFilterFound{
-		Filter newFilter=new Filter(matchString, commands);
+	public boolean addFilter(String matchString, String commands, String commandName) throws MatchingFilterFound{
+		Filter newFilter=new Filter(matchString, commands, commandName);
+		return addFilter(newFilter);
+	}
+
+	public boolean addFilter(Filter newFilter) throws MatchingFilterFound {
 		if (findFilter(newFilter.getMatch())==null){
 			filters.add(newFilter);
 			return true;
