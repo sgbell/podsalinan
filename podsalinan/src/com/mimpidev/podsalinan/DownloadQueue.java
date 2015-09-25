@@ -215,7 +215,13 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		
 		// download = null when downloader is asleep and is nut currently working. This can happen when the system is being shutdown
 		if (download!=null && download.getURL().length()>0){
-			int percentage = (int)((double)download.getDestinationFile().length()/(Double.parseDouble(download.getSize()))*100);
+			int percentage;
+			// if download doesn't have a stored value (because the server wouldn't supply one, set the download percentage to 100%
+			if (download.getSize().length()==0 || download.getSize().equals("-1")){
+				percentage=100;
+			} else {
+			    percentage = (int)((double)download.getDestinationFile().length()/(Double.parseDouble(download.getSize()))*100);
+			}
 			if (percentage==100){
 				download.setStatus(URLDetails.FINISHED);
 				if (download.getPodcastSource().length()>0)
@@ -228,7 +234,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 						String line=reader.readLine();
 						if (line != null){
 							if (debug) if (Log.isDebug())Log.logInfo(this, "First Line:"+line.toString());
-							if (line.contains("rss")){
+							if (line.contains("rss") || line.contains("xml")){
 								testFileStream.close();
 								Podcast newPodcast = new Podcast(download);
 								// The following makes sure we don't have multiple podcasts uid's
@@ -236,6 +242,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 									newPodcast.setDatafile(newPodcast.createUID(newPodcast.getName()+(new Date().toString())));
 								}
 								data.getPodcasts().add(newPodcast);
+								// Because it is a podcast initiator we want to remove it from the download list automatically
+								data.getUrlDownloads().deleteDownload(download);
 							}
 						}
 						testFileStream.close();

@@ -30,7 +30,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.URLDetails;
@@ -281,6 +284,8 @@ public class Downloader extends NotifyingRunnable{
 					
 					if (values != null && !values.isEmpty()){
 						length = (String) values.get(0);
+					} else {
+						length = "-1";
 					}
 					if (downloadItem.getDestinationFile().exists()){
 						saved=downloadItem.getDestinationFile().length();
@@ -289,7 +294,7 @@ public class Downloader extends NotifyingRunnable{
 					long tempfileSize=-1;
 					if (length!=null){
 						tempfileSize = Long.parseLong(length);
-						if (Long.parseLong(downloadItem.getSize())!=tempfileSize)
+						if (downloadItem.getSize().length()==0 || Long.parseLong(downloadItem.getSize())!=tempfileSize)
 							downloadItem.setSize(length);
 					}
 					if (downloadItem.getSize()==null || downloadItem.getSize().equals(""))
@@ -383,7 +388,8 @@ public class Downloader extends NotifyingRunnable{
                         }
 					}
 					if (downloadItem.getStatus()!=URLDetails.DESTINATION_INVALID){
-						if (saved==Long.parseLong(downloadItem.getSize())){
+						if (saved==Long.parseLong(downloadItem.getSize()) || 
+							Long.parseLong(downloadItem.getSize())==-1){
 							downloadItem.setStatus(URLDetails.FINISHED);
 							setResult(DOWNLOAD_COMPLETE);
 						} else if (saved<Long.parseLong(downloadItem.getSize())){
