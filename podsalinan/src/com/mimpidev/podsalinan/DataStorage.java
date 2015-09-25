@@ -69,6 +69,7 @@ public class DataStorage {
 		urlDownloads = new URLDownloadList(podcasts);
 		settings = new ProgSettings();
 		tableLoaders = new ArrayList<TableLoader>();
+		filters= new FilterList();
 		
 		checkSettingsDirectory();
 	}
@@ -80,6 +81,7 @@ public class DataStorage {
 		urlDownloads.setPodcasts(podcasts.getList());
 		setSettings(settings);
 		tableLoaders = new ArrayList<TableLoader>();
+		filters= new FilterList();
 		
 		checkSettingsDirectory();
 	}
