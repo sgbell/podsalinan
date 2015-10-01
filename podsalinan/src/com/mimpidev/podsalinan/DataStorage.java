@@ -212,42 +212,42 @@ public class DataStorage {
 	/**
 	 * @return Download List
 	 */
-	public URLDownloadList getUrlDownloads() {
+	public synchronized URLDownloadList getUrlDownloads() {
 		return urlDownloads;
 	}
 
 	/**
 	 * @param urlDownloads Array of Downloads
 	 */
-	public void setUrlDownloads(URLDownloadList urlDownloads) {
+	public synchronized void setUrlDownloads(URLDownloadList urlDownloads) {
 		this.urlDownloads = urlDownloads;
 	}
 
 	/**
 	 * @return Array list of Podcasts
 	 */
-	public PodcastList getPodcasts() {
+	public synchronized PodcastList getPodcasts() {
 		return podcasts;
 	}
 
 	/**
 	 * @param podcasts Array of Podcasts
 	 */
-	public void setPodcasts(PodcastList podcasts) {
+	public synchronized void setPodcasts(PodcastList podcasts) {
 		this.podcasts = podcasts;
 	}
 
 	/**
 	 * @return Array list of Settings
 	 */
-	public ProgSettings getSettings() {
+	public synchronized ProgSettings getSettings() {
 		return settings;
 	}
 
 	/**
 	 * @param settings Array of Program Settings
 	 */
-	public void setSettings(ProgSettings settings) {
+	public synchronized void setSettings(ProgSettings settings) {
 		this.settings = settings;
 	}
 

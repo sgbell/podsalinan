@@ -30,11 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.data.URLDetails;
 import com.mimpidev.podsalinan.data.URLDownload;
