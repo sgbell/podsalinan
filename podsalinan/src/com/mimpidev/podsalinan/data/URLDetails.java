@@ -30,14 +30,14 @@ public class URLDetails extends BaseURL {
 	 */
 	public URLDetails() {
 		super();
-		fields.put("size", new IntegerType());
-		fields.put("status", new IntegerType());
+		put("size", new IntegerType());
+		put("status", new IntegerType());
 	}
 	
 	public URLDetails(String url){
 		super(url);
-		fields.put("size", new IntegerType());
-		fields.put("status", new IntegerType());
+		put("size", new IntegerType());
+		put("status", new IntegerType());
 		setSize("0");
 	}
 	
@@ -53,33 +53,33 @@ public class URLDetails extends BaseURL {
 	
 	public URLDetails(String url, boolean added){
 		super(url,added);
-		fields.put("size", new IntegerType());
-		fields.put("status", new IntegerType());
+		put("size", new IntegerType());
+		put("status", new IntegerType());
 	}
 	
 	public String getSize(){
-		return fields.get("size").getValue();
+		return get("size").getValue();
 	}
 	
 	public void setSize(String size){
-		fields.get("size").setValue(size);
+		get("size").setValue(size);
 	}
 	
 	public int getStatus(){
 		int status;
 		try {
-			status = Integer.parseInt(fields.get("status").getValue());
+			status = Integer.parseInt(get("status").getValue());
 		} catch (NumberFormatException e){
 			status = UNKNOWN_STATUS;
 		} catch (NullPointerException e){
-			if (Log.isDebug())Log.logMap(this, fields);
+			if (Log.isDebug())Log.logMap(this, getFields());
 			status = UNKNOWN_STATUS;
 		}
 		return status; 
 	}
 	
 	public void setStatus(int newStatus){
-		fields.get("status").setValue(""+newStatus);
+		get("status").setValue(""+newStatus);
 		setUpdated(true);
 	}
 	

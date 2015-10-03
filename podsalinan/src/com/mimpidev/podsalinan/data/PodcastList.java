@@ -36,9 +36,11 @@ public class PodcastList {
 	}
 
 	public Podcast getPodcastByUid(String podcastUid) {
-		for (Podcast currentPodcast: podcasts)
-			if (currentPodcast.getDatafile().equals(podcastUid))
-			   return currentPodcast;
+		synchronized (podcasts){
+			for (Podcast currentPodcast: podcasts)
+				if (currentPodcast.getDatafile().equals(podcastUid))
+				   return currentPodcast;
+		}
 		return null;
 	}
 	
@@ -50,10 +52,12 @@ public class PodcastList {
 	public Vector<Podcast> getPodcastListByName(String podcastName){
 		Vector<Podcast> results = new Vector<Podcast>();
 		
-		for (Podcast currentPodcast: podcasts){
-			if ((currentPodcast.getName().toLowerCase().contains(podcastName.toLowerCase()))&&
-				(!currentPodcast.isRemoved())){
-				results.add(currentPodcast);
+		synchronized (podcasts){
+			for (Podcast currentPodcast: podcasts){
+				if ((currentPodcast.getName().toLowerCase().contains(podcastName.toLowerCase()))&&
+					(!currentPodcast.isRemoved())){
+					results.add(currentPodcast);
+				}
 			}
 		}
 		return results;

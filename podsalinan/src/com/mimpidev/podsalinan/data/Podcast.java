@@ -363,9 +363,11 @@ public class Podcast extends DownloadDetails{
 	}
 
 	public Episode getEpisodeByURL(String string) {
-		for (Episode currentEpisode : episodeList)
-			if (currentEpisode.getURL().toString().equalsIgnoreCase(string))
-				return currentEpisode;
+		synchronized(episodeList){
+			for (Episode currentEpisode : episodeList)
+				if (currentEpisode.getURL().toString().equalsIgnoreCase(string))
+					return currentEpisode;
+		}
 		
 		return null;
 	}
@@ -373,18 +375,22 @@ public class Podcast extends DownloadDetails{
 	public Vector<Episode> getEpisodesByDate(Date searchDate){
 		Vector<Episode> searchResults = new Vector<Episode>();
 		
-		for (Episode currentEpisode : episodeList){
-			if (currentEpisode.dateEquals(searchDate))
-				searchResults.add(currentEpisode);
+		synchronized(episodeList){
+			for (Episode currentEpisode : episodeList){
+				if (currentEpisode.dateEquals(searchDate))
+					searchResults.add(currentEpisode);
+			}
 		}
 		
 		return searchResults;
 	}
 
 	public int getEpisodeId(Episode episode) {
-		for (int episodeCount=0; episodeCount< episodeList.size(); episodeCount++)
-			if (episodeList.get(episodeCount).equals(episode))
-				return episodeCount;
+		synchronized(episodeList){
+			for (int episodeCount=0; episodeCount< episodeList.size(); episodeCount++)
+				if (episodeList.get(episodeCount).equals(episode))
+					return episodeCount;
+		}
 		
 		return -1;
 	}
@@ -392,9 +398,11 @@ public class Podcast extends DownloadDetails{
 	public Vector<Episode> getEpisodesByStatus(int statusValue){
 		Vector<Episode> searchResults = new Vector<Episode>();
 		
-		for (Episode episode : episodeList){
-			if (episode.getStatus()==statusValue)
-				searchResults.add(episode);
+		synchronized(episodeList){
+			for (Episode episode : episodeList){
+				if (episode.getStatus()==statusValue)
+					searchResults.add(episode);
+			}
 		}
 		
 		return searchResults;
@@ -415,38 +423,40 @@ public class Podcast extends DownloadDetails{
 		}
 		File directoryFile = new File (directoryToScan);
 		data.scanDirectory(directoryFile, filesInDir);
-		for (Episode episode : episodeList)
-			if (episode.getStatus()==URLDetails.FINISHED){
-				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
-				boolean found=false;
-				int fileCount=0;
-				File file=null;
-				while ((fileCount<filesInDir.size())&&(!found)){
-					file = filesInDir.get(fileCount);
-					if (file.getName().equalsIgnoreCase(filename))
-						found=true;
-					fileCount++;
-				}
-				if (!found)
-					episode.setStatus(URLDetails.NOT_QUEUED);
-			} else if (episode.getStatus()!=URLDetails.FINISHED){
-				String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
-				boolean found=false;
-				int fileCount=0;
-				File file=null;
-				while ((fileCount<filesInDir.size())&&(!found)){
-					file = filesInDir.get(fileCount);
-					if ((file.getName().equalsIgnoreCase(filename))&&
-						(file.length()>=Long.parseLong(episode.getSize()))){
-						episode.setStatus(URLDetails.FINISHED);
-						found=true;
-					} else
+		synchronized(episodeList){
+			for (Episode episode : episodeList)
+				if (episode.getStatus()==URLDetails.FINISHED){
+					String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
+					boolean found=false;
+					int fileCount=0;
+					File file=null;
+					while ((fileCount<filesInDir.size())&&(!found)){
+						file = filesInDir.get(fileCount);
+						if (file.getName().equalsIgnoreCase(filename))
+							found=true;
 						fileCount++;
+					}
+					if (!found)
+						episode.setStatus(URLDetails.NOT_QUEUED);
+				} else if (episode.getStatus()!=URLDetails.FINISHED){
+					String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
+					boolean found=false;
+					int fileCount=0;
+					File file=null;
+					while ((fileCount<filesInDir.size())&&(!found)){
+						file = filesInDir.get(fileCount);
+						if ((file.getName().equalsIgnoreCase(filename))&&
+							(file.length()>=Long.parseLong(episode.getSize()))){
+							episode.setStatus(URLDetails.FINISHED);
+							found=true;
+						} else
+							fileCount++;
+					}
+					// The reason for removing the file from the filesInDir array, is it means 1 less record for the system to check against.
+					if (found)
+						filesInDir.remove(file);
 				}
-				// The reason for removing the file from the filesInDir array, is it means 1 less record for the system to check against.
-				if (found)
-					filesInDir.remove(file);
-			}
+		}
 	}
 	
 }

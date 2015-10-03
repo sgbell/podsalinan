@@ -27,11 +27,13 @@ public class ListDownloads extends CLIOption {
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
 		int downloadCount=1;
-			
-		for (URLDownload download : data.getUrlDownloads().getDownloads()){
-			if (!download.isRemoved()){
-				System.out.println(getEncodingFromNumber(downloadCount)+". ("+download.getCharStatus()+") "+download.getURL().toString());
-				downloadCount++;
+		
+		synchronized(data.getUrlDownloads().getDownloads()){
+			for (URLDownload download : data.getUrlDownloads().getDownloads()){
+				if (!download.isRemoved()){
+					System.out.println(getEncodingFromNumber(downloadCount)+". ("+download.getCharStatus()+") "+download.getURL().toString());
+					downloadCount++;
+				}
 			}
 		}
 		

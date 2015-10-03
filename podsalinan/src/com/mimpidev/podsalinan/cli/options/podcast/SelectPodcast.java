@@ -37,14 +37,21 @@ public class SelectPodcast extends CLIOption {
             // See if userInput is a value of a podcast in the list and load it
 			if (data.getPodcasts().getList().size()>convertCharToNumber(userInput) && 
 				convertCharToNumber(userInput)>=0){
-				selectedPodcast = data.getPodcasts().getActivePodcast(convertCharToNumber(userInput));
+				synchronized (data.getPodcasts()){
+					selectedPodcast = data.getPodcasts().getActivePodcast(convertCharToNumber(userInput));
+				}
 			}
 			if (selectedPodcast==null){
+				synchronized (data.getPodcasts()){
+					Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
+				}
 				Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
 				if (debug) if (Log.isDebug())Log.logInfo(this, "Line:45, PodcastList.size="+podcastList.size());
 				if (podcastList.size()==1){
-					CLInterface.cliGlobals.getGlobalSelection().clear();
-					CLInterface.cliGlobals.getGlobalSelection().put("podcast",podcastList.get(0).getDatafile());
+					synchronized(CLInterface.cliGlobals){
+						CLInterface.cliGlobals.getGlobalSelection().clear();
+						CLInterface.cliGlobals.getGlobalSelection().put("podcast",podcastList.get(0).getDatafile());
+					}
 					selectedPodcast=podcastList.get(0);
 				} else if (podcastList.size()>1){
 					int podcastCount=1;
@@ -73,8 +80,10 @@ public class SelectPodcast extends CLIOption {
 			if (selectedPodcast!=null){
 				if (debug) if (Log.isDebug())Log.logInfo(this, 76, "Set selected podcast:"+selectedPodcast.getDatafile());
 				returnObject.methodCall="podcast "+selectedPodcast.getDatafile();
-				CLInterface.cliGlobals.getGlobalSelection().clear();
-				CLInterface.cliGlobals.getGlobalSelection().put("podcastid",selectedPodcast.getDatafile());
+				synchronized(CLInterface.cliGlobals){
+					CLInterface.cliGlobals.getGlobalSelection().clear();
+					CLInterface.cliGlobals.getGlobalSelection().put("podcastid",selectedPodcast.getDatafile());
+				}
 			} else {
 				returnObject.methodCall="podcast showmenu";
 			}
@@ -82,8 +91,10 @@ public class SelectPodcast extends CLIOption {
 		returnObject.parameterMap.clear();
 		returnObject.execute=true;
 		
-		if (debug) if (Log.isDebug())Log.logInfo(this, "Global Selection check");
-		if (debug) if (Log.isDebug())Log.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
+		if (Log.isDebug()) Log.logInfo(this, "Global Selection check");
+		synchronized(CLInterface.cliGlobals){
+			if (Log.isDebug()) Log.logMap(this, CLInterface.cliGlobals.getGlobalSelection());
+		}
 		
 		return returnObject;
 	}

@@ -43,23 +43,25 @@ public class EpisodeLoader extends TableLoader {
 	public void updateDatabase() {
 
 		if (isDbOpen()){
-			for (final Episode episode : podcast.getEpisodes()){
-				if (!episode.isAdded()){
-					try {
-						insert(episode.getDatabaseRecord());
-						episode.setAdded(true);
-					} catch (SqlException e) {
-						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
-					}					
-				} else if (episode.isUpdated()){
-					try {
-						update(episode.getDatabaseRecord(), 
-								       new HashMap<String, FieldDetails>(){{
-											put("url", new StringType(episode.getURL().toString().replaceAll("\'", "&apos;")));
-								       }});
-						episode.setUpdated(false);
-					} catch (SqlException e) {
-						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+			synchronized(podcast.getEpisodes()){
+				for (final Episode episode : podcast.getEpisodes()){
+					if (!episode.isAdded()){
+						try {
+							insert(episode.getDatabaseRecord());
+							episode.setAdded(true);
+						} catch (SqlException e) {
+							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+						}					
+					} else if (episode.isUpdated()){
+						try {
+							update(episode.getDatabaseRecord(), 
+									       new HashMap<String, FieldDetails>(){{
+												put("url", new StringType(episode.getURL().toString().replaceAll("\'", "&apos;")));
+									       }});
+							episode.setUpdated(false);
+						} catch (SqlException e) {
+							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+						}
 					}
 				}
 			}

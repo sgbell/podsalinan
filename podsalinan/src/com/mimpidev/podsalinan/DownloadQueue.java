@@ -68,43 +68,46 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				 */
 				int downloadCount=0;
 				// Starting download threads
-				if (downloaders.size()<maxDownloaders){
-					for (downloadCount=downloaders.size(); downloadCount<maxDownloaders; downloadCount++){
-						Downloader newDownloader = new Downloader(data.getFileSystemSlash());
-						synchronized (downloaders){
+				synchronized (downloaders){
+					if (downloaders.size()<maxDownloaders){
+						for (downloadCount=downloaders.size(); downloadCount<maxDownloaders; downloadCount++){
+							Downloader newDownloader = new Downloader(data.getFileSystemSlash());
 							downloaders.add(newDownloader);
+							newDownloader.addListener(this);
+							Thread downloadThread = new Thread(newDownloader,"Downloader");
+							downloadThread.start();
 						}
-						newDownloader.addListener(this);
-						Thread downloadThread = new Thread(newDownloader,"Downloader");
-						downloadThread.start();
+					}
+				
+					// If the number of downloaders has been dropped, we need to make sure that the system
+					// reflects this, and removes a downloader
+					while (downloaders.size()>maxDownloaders){
+						downloaders.get(downloaders.size()-1).endThread();
 					}
 				}
-				
-				// If the number of downloaders has been dropped, we need to make sure that the system
-				// reflects this, and removes a downloader
-				while (downloaders.size()>maxDownloaders){
-					downloaders.get(downloaders.size()-1).endThread();
-				}
-				while (data.getUrlDownloads().getHighestQueuedItem()!=null && sleepingDownloaderFound()){
-					//search downloadList for next queued item.
-					URLDownload download = data.getUrlDownloads().getHighestQueuedItem();
-					if (download!=null){
-						boolean downloadStarted=false;
-						downloadCount=0;
-						while (downloadCount<downloaders.size() && !downloadStarted){
-							Downloader downloader=downloaders.get(downloadCount);
-							if (!downloader.currentlyDownloading()){
-								download.setStatus(URLDetails.CURRENTLY_DOWNLOADING);
-								downloader.setDownload(download);
-								startDownload(downloader);
-								downloadStarted=true;
-							} else {
-								if (downloader.getURLDownload()!=null && 
-									downloader.getURLDownload().getUid().equals(download.getUid())){
+
+				synchronized(data.getUrlDownloads()){
+					while (data.getUrlDownloads().getHighestQueuedItem()!=null && sleepingDownloaderFound()){
+						//search downloadList for next queued item.
+						URLDownload download = data.getUrlDownloads().getHighestQueuedItem();
+						if (download!=null){
+							boolean downloadStarted=false;
+							downloadCount=0;
+							while (downloadCount<downloaders.size() && !downloadStarted){
+								Downloader downloader=downloaders.get(downloadCount);
+								if (!downloader.currentlyDownloading()){
+									download.setStatus(URLDetails.CURRENTLY_DOWNLOADING);
+									downloader.setDownload(download);
+									startDownload(downloader);
 									downloadStarted=true;
+								} else {
+									if (downloader.getURLDownload()!=null && 
+										downloader.getURLDownload().getUid().equals(download.getUid())){
+										downloadStarted=true;
+									}
 								}
+								downloadCount++;
 							}
-							downloadCount++;
 						}
 					}
 				}
@@ -140,18 +143,20 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		// Set incomplete downloads to queued, on exit.
 		int downloadCount=0;
 		boolean foundQueuedItem=false;
-		while ((downloadCount<data.getUrlDownloads().size())&&
-			   (!foundQueuedItem)){
-			URLDownload download =data.getUrlDownloads().getDownloads().get(downloadCount);
-			// If download is set to incomplete set it to queued for next start
-			if ((download.getStatus()==URLDetails.INCOMPLETE_DOWNLOAD)||
-				(download.getStatus()==URLDetails.CURRENTLY_DOWNLOADING))
-				download.setStatus(URLDetails.DOWNLOAD_QUEUED);
-			// If Queued, exit the while loop
-			if (download.getStatus()==URLDetails.DOWNLOAD_QUEUED)
-				foundQueuedItem=true;
-			downloadCount++;
-		}			
+		synchronized(data.getUrlDownloads()){
+			while ((downloadCount<data.getUrlDownloads().size())&&
+					   (!foundQueuedItem)){
+					URLDownload download =data.getUrlDownloads().getDownloads().get(downloadCount);
+					// If download is set to incomplete set it to queued for next start
+					if ((download.getStatus()==URLDetails.INCOMPLETE_DOWNLOAD)||
+						(download.getStatus()==URLDetails.CURRENTLY_DOWNLOADING))
+						download.setStatus(URLDetails.DOWNLOAD_QUEUED);
+					// If Queued, exit the while loop
+					if (download.getStatus()==URLDetails.DOWNLOAD_QUEUED)
+						foundQueuedItem=true;
+					downloadCount++;
+			}			
+		}
 		isFinished=true;
 		synchronized(data.getFinishWait()){
 			data.getFinishWait().notify();
@@ -160,9 +165,11 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 
 	private boolean sleepingDownloaderFound() {
 		boolean sleeping=false;
-		for (Downloader downloader: downloaders){
-			if (!downloader.currentlyDownloading())
-				sleeping=true;
+		synchronized(downloaders){
+			for (Downloader downloader: downloaders){
+				if (!downloader.currentlyDownloading())
+					sleeping=true;
+			}
 		}
 		return sleeping;
 	}
@@ -213,99 +220,107 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		Downloader downloader = (Downloader) runnable;
 		URLDownload download = downloader.getURLDownload();
 		
-		// download = null when downloader is asleep and is nut currently working. This can happen when the system is being shutdown
-		if (download!=null && download.getURL().length()>0){
-			int percentage;
-			// if download doesn't have a stored value (because the server wouldn't supply one, set the download percentage to 100%
-			if (download.getSize().length()==0 || download.getSize().equals("-1")){
-				percentage=100;
-			} else {
-			    percentage = (int)((double)download.getDestinationFile().length()/(Double.parseDouble(download.getSize()))*100);
-			}
-			if (percentage==100){
-				download.setStatus(URLDetails.FINISHED);
-				if (download.getPodcastSource().length()>0)
-					data.getUrlDownloads().deleteDownload(download);
-				else {
-					try {
-						InputStream testFileStream = new FileInputStream(download.getDestinationFile());
-						if (debug) if (Log.isDebug())Log.logInfo(this, "Destination File:"+download.getDestinationFile().toString());
-						BufferedReader reader = new BufferedReader(new InputStreamReader(testFileStream));
-						String line=reader.readLine();
-						if (line != null){
-							if (debug) if (Log.isDebug())Log.logInfo(this, "First Line:"+line.toString());
-							if (line.contains("rss") || line.contains("xml")){
-								testFileStream.close();
-								Podcast newPodcast = new Podcast(download);
-								// The following makes sure we don't have multiple podcasts uid's
-								while (data.getPodcasts().getPodcastByUid(newPodcast.getDatafile())!=null){
-									newPodcast.setDatafile(newPodcast.createUID(newPodcast.getName()+(new Date().toString())));
+		synchronized(download){
+			// download = null when downloader is asleep and is nut currently working. This can happen when the system is being shutdown
+			if (download!=null && download.getURL().length()>0){
+				int percentage;
+				// if download doesn't have a stored value (because the server wouldn't supply one, set the download percentage to 100%
+				if (download.getSize().length()==0 || download.getSize().equals("-1")){
+					percentage=100;
+				} else {
+				    percentage = (int)((double)download.getDestinationFile().length()/(Double.parseDouble(download.getSize()))*100);
+				}
+				if (percentage==100){
+					download.setStatus(URLDetails.FINISHED);
+					if (download.getPodcastSource().length()>0)
+						data.getUrlDownloads().deleteDownload(download);
+					else {
+						try {
+							InputStream testFileStream = new FileInputStream(download.getDestinationFile());
+							if (debug) if (Log.isDebug())Log.logInfo(this, "Destination File:"+download.getDestinationFile().toString());
+							BufferedReader reader = new BufferedReader(new InputStreamReader(testFileStream));
+							String line=reader.readLine();
+							if (line != null){
+								if (debug) if (Log.isDebug())Log.logInfo(this, "First Line:"+line.toString());
+								if (line.contains("rss") || line.contains("xml")){
+									testFileStream.close();
+									Podcast newPodcast = new Podcast(download);
+									// The following makes sure we don't have multiple podcasts uid's
+									while (data.getPodcasts().getPodcastByUid(newPodcast.getDatafile())!=null){
+										newPodcast.setDatafile(newPodcast.createUID(newPodcast.getName()+(new Date().toString())));
+									}
+									data.getPodcasts().add(newPodcast);
+									// Because it is a podcast initiator we want to remove it from the download list automatically
+									data.getUrlDownloads().deleteDownload(download);
 								}
-								data.getPodcasts().add(newPodcast);
-								// Because it is a podcast initiator we want to remove it from the download list automatically
-								data.getUrlDownloads().deleteDownload(download);
 							}
+							testFileStream.close();
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-						testFileStream.close();
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
+					}
+				} else if ((percentage<100)&&(download.getStatus()!=URLDetails.DESTINATION_INVALID)){
+					if (debug) if (Log.isDebug())Log.logInfo(this, "download.status="+download.getStatus());
+					synchronized(download){
+						try {
+							download.wait(5000);
+						} catch (InterruptedException e) {
+						}
+					}
+					data.getUrlDownloads().decreasePriority(download);
+					download.setStatus(URLDetails.DOWNLOAD_QUEUED);
+				} else if ((!download.getDestinationFile().isFile())||
+						   (!download.getDestinationFile().exists())){
+					synchronized(download){
+						try {
+							download.wait(5000);
+						} catch (InterruptedException e) {
+						}
+					}
+					data.getUrlDownloads().decreasePriority(download);
+					download.setStatus(URLDetails.DESTINATION_INVALID);
+				} else if (percentage>100){
+					synchronized(download){
+						try {
+							download.wait(5000);
+						} catch (InterruptedException e) {
+						}
+					}
+					data.getUrlDownloads().decreasePriority(download);
+					download.setStatus(URLDetails.DOWNLOAD_FAULT);
+				}
+				int newEpisodeStatus=0;
+				switch (download.getStatus()){
+					case URLDetails.FINISHED:
+					case URLDetails.DOWNLOAD_QUEUED:
+						newEpisodeStatus=download.getStatus();
+						break;
+					case URLDetails.DOWNLOAD_FAULT:
+						newEpisodeStatus=URLDetails.DOWNLOAD_QUEUED;
+				}
+				updatePodcastEpisodeStatus(download.getPodcastSource(),download.getURL().toString(), newEpisodeStatus);
+				if (data.getSettings().isFinished()){
+					synchronized(downloaders){
+						downloaders.remove(downloader);
 					}
 				}
-			} else if ((percentage<100)&&(download.getStatus()!=URLDetails.DESTINATION_INVALID)){
-				if (debug) if (Log.isDebug())Log.logInfo(this, "download.status="+download.getStatus());
-				synchronized(download){
-					try {
-						download.wait(5000);
-					} catch (InterruptedException e) {
-					}
+			} else if ((download==null ||
+					   download.getURL().equals("")) &&
+					   (data.getSettings().isFinished())){
+				synchronized(downloaders){
+					downloaders.remove(downloader);
 				}
-				data.getUrlDownloads().decreasePriority(download);
-				download.setStatus(URLDetails.DOWNLOAD_QUEUED);
-			} else if ((!download.getDestinationFile().isFile())||
-					   (!download.getDestinationFile().exists())){
-				synchronized(download){
-					try {
-						download.wait(5000);
-					} catch (InterruptedException e) {
-					}
-				}
-				data.getUrlDownloads().decreasePriority(download);
-				download.setStatus(URLDetails.DESTINATION_INVALID);
-			} else if (percentage>100){
-				synchronized(download){
-					try {
-						download.wait(5000);
-					} catch (InterruptedException e) {
-					}
-				}
-				data.getUrlDownloads().decreasePriority(download);
-				download.setStatus(URLDetails.DOWNLOAD_FAULT);
 			}
-			int newEpisodeStatus=0;
-			switch (download.getStatus()){
-				case URLDetails.FINISHED:
-				case URLDetails.DOWNLOAD_QUEUED:
-					newEpisodeStatus=download.getStatus();
-					break;
-				case URLDetails.DOWNLOAD_FAULT:
-					newEpisodeStatus=URLDetails.DOWNLOAD_QUEUED;
-			}
-			updatePodcastEpisodeStatus(download.getPodcastSource(),download.getURL().toString(), newEpisodeStatus);
-			if (data.getSettings().isFinished()){
-				downloaders.remove(downloader);
-			}
-		} else if ((download==null ||
-				   download.getURL().equals("")) &&
-				   (data.getSettings().isFinished())){
-				downloaders.remove(downloader);
 		}
 		synchronized(getDownloadQueueObject()){
 			getDownloadQueueObject().notify();
 		}
-		downloader.downloaderFinished(true);
-		downloader.clearDownload();
+		synchronized(downloaders){
+			downloader.downloaderFinished(true);
+			downloader.clearDownload();
+		}
 	}
 		
 	public Vector<Downloader> getDownloaders(){

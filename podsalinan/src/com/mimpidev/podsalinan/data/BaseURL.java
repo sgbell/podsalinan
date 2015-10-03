@@ -35,7 +35,7 @@ import com.mimpidev.dev.sql.field.StringType;
 public class BaseURL extends DataRecord{
 
 	public BaseURL (){
-		fields.put("url", new StringType());
+		put("url", new StringType());
 	}
 	
 	public BaseURL (String url){
@@ -57,25 +57,11 @@ public class BaseURL extends DataRecord{
 	}
 	
 	public String getURL(){
-		return fields.get("url").getValue();
+		return get("url").getValue();
 	}
 	
 	public void setURL(String url){
-		fields.get("url").setValue(url);
-	}
-	
-	/**
-	 * @return the fields
-	 */
-	public Map<String,FieldDetails> getFields() {
-		return fields;
-	}
-
-	/**
-	 * @param fields the fields to set
-	 */
-	public void setFields(Map<String,FieldDetails> fields) {
-		this.fields = fields;
+		get("url").setValue(url);
 	}
 }
 /*

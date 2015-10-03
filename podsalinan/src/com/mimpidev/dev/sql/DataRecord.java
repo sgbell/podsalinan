@@ -20,16 +20,16 @@ public class DataRecord {
 	/**
 	 * 
 	 */
-	protected Map<String,FieldDetails> fields;
+	private Map<String,FieldDetails> fields;
 	protected boolean debug=false;
 	/**
 	 * 
 	 */
 	public DataRecord() {
 		fields=new HashMap<String,FieldDetails>();
-		fields.put("added", new BooleanType(false));
-		fields.put("remove", new BooleanType(false));
-		fields.put("updated", new BooleanType(false));
+		put("added", new BooleanType(false));
+		put("remove", new BooleanType(false));
+		put("updated", new BooleanType(false));
 	}
 	/**
 	 * 
@@ -56,40 +56,40 @@ public class DataRecord {
 	 * @return
 	 */
 	public boolean isAdded(){
-		return (fields.get("added").getValue().equals("TRUE"));
+		return (get("added").getValue().equals("TRUE"));
 	}
 	/**
 	 * 
 	 * @param added
 	 */
 	public void setAdded(boolean added){
-		fields.get("added").setValue((added?"TRUE":"FALSE"));
+		get("added").setValue((added?"TRUE":"FALSE"));
 	}
 	/**
 	 * 
 	 * @return
 	 */
 	public boolean isRemoved(){
-		return (fields.get("remove").getValue().equals("TRUE"));
+		return (get("remove").getValue().equals("TRUE"));
 	}
 	/**
 	 * 
 	 * @param removed
 	 */
 	public void setRemoved(boolean removed){
-		fields.get("remove").setValue((removed?"TRUE":"FALSE"));
+		get("remove").setValue((removed?"TRUE":"FALSE"));
 	}
 	/**
 	 * @return the updated
 	 */
 	public boolean isUpdated() {
-		return (fields.get("updated").getValue().equals("TRUE"));
+		return (get("updated").getValue().equals("TRUE"));
 	}
 	/**
 	 * @param updated the updated to set
 	 */
 	public void setUpdated(boolean updated) {
-		fields.get("updated").setValue((updated?"TRUE":"FALSE"));;
+		get("updated").setValue((updated?"TRUE":"FALSE"));;
 	}
 	/**
 	 * 
@@ -97,12 +97,40 @@ public class DataRecord {
 	 */
 	public Map<String,FieldDetails> getDatabaseRecord(){
 		Map<String,FieldDetails> databaseRecord = new HashMap<String,FieldDetails>();
-		Iterator<Entry<String, FieldDetails>> it=fields.entrySet().iterator();
-		while (it.hasNext()){
-			Entry<String, FieldDetails> pairs = it.next();
-			if (((FieldDetails)pairs.getValue()).isPersistent())
-				databaseRecord.put((String)pairs.getKey(), (FieldDetails)pairs.getValue());
+		synchronized(fields){
+			Iterator<Entry<String, FieldDetails>> it=fields.entrySet().iterator();
+			while (it.hasNext()){
+				Entry<String, FieldDetails> pairs = it.next();
+				if (((FieldDetails)pairs.getValue()).isPersistent())
+					databaseRecord.put((String)pairs.getKey(), (FieldDetails)pairs.getValue());
+			}
 		}
 		return databaseRecord;
+	}
+	
+	public FieldDetails get(String key){
+		synchronized(fields){
+			return fields.get(key);
+		}
+	}
+	
+	public FieldDetails put(String key, FieldDetails value){
+		synchronized(fields){
+			return fields.put(key, value);
+		}
+	}
+
+	/**
+	 * @return the fields
+	 */
+	public Map<String,FieldDetails> getFields() {
+		return fields;
+	}
+
+	/**
+	 * @param fields the fields to set
+	 */
+	public void setFields(Map<String,FieldDetails> fields) {
+		this.fields = fields;
 	}
 }

@@ -34,11 +34,13 @@ public class DumpCommand extends CLIOption {
 				
 		if (Log.isDebug())Log.logInfo("--URLDownload Contents - "+dateFormat.format(date)+" --");
 		if (Log.isDebug())Log.logInfo("DownladURL,status,destination,podcastid");
-		for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
-			if (Log.isDebug())Log.logInfo(currentDownload.getURL().toString()+
-					","+currentDownload.getCurrentStatus()+
-					","+currentDownload.getDestination()+
-					","+currentDownload.getPodcastSource());
+		synchronized(data.getUrlDownloads()){
+			for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
+				if (Log.isDebug())Log.logInfo(currentDownload.getURL().toString()+
+						","+currentDownload.getCurrentStatus()+
+						","+currentDownload.getDestination()+
+						","+currentDownload.getPodcastSource());
+			}
 		}
 		if (Log.isDebug())Log.logInfo("-- URLDownload Contents end --");
 		return returnObject;

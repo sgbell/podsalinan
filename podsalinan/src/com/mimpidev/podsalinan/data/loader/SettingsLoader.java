@@ -57,7 +57,9 @@ public class SettingsLoader extends TableLoader {
 		
 		if ((recordSet!=null)&&(recordSet.size()>0))
 		for (Map<String,String> record: recordSet){
-			settings.getMap().put(record.get("name"),record.get("value"));
+			synchronized(settings.getMap()){
+				settings.getMap().put(record.get("name"),record.get("value"));
+			}
 		}
 	}
 
@@ -70,27 +72,27 @@ public class SettingsLoader extends TableLoader {
 				e.printStackTrace();
 			}
 			
-			
-			for (final Map.Entry<String, String> entry : settings.getMap().entrySet()){
-				try {
-					insert(new HashMap<String, FieldDetails>(){/**
-						 * 
-						 */
-						private static final long serialVersionUID = 6745125487319079752L;
+			synchronized(settings.getMap()){
+				for (final Map.Entry<String, String> entry : settings.getMap().entrySet()){
+					try {
+						insert(new HashMap<String, FieldDetails>(){/**
+							 * 
+							 */
+							private static final long serialVersionUID = 6745125487319079752L;
 
-					{
-						put("name",new StringType(entry.getKey()));
-						put("value",new StringType(entry.getValue()));
-					}});
-				} catch (SqlException e) {
-					if (Log.isDebug())Log.logError(this, "Error inserting record into settings table");
-					if (Log.isDebug())Log.logError(this, e.getMessage());
-					if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+						{
+							put("name",new StringType(entry.getKey()));
+							put("value",new StringType(entry.getValue()));
+						}});
+					} catch (SqlException e) {
+						if (Log.isDebug())Log.logError(this, "Error inserting record into settings table");
+						if (Log.isDebug())Log.logError(this, e.getMessage());
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+					}
 				}
 			}
 		} else {
 			if (Log.isDebug())Log.logError(this,"Error db connection is closed");
 		}
 	}
-
 }

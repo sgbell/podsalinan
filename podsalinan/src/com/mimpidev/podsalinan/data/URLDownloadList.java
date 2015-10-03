@@ -249,8 +249,10 @@ public class URLDownloadList extends DownloadDetails {
 	 * 
 	 */
 	public void deleteAllDownloads(){
-		for (URLDownload selectedDownload : downloads){
-			cancelDownload(selectedDownload);
+		synchronized(downloads){
+			for (URLDownload selectedDownload : downloads){
+				cancelDownload(selectedDownload);
+			}
 		}
 	}
 	
@@ -279,13 +281,15 @@ public class URLDownloadList extends DownloadDetails {
 	 */
 	public void cancelDownload (URLDownload download){
 		if (download.getPodcastSource()!=""){
-			for (Podcast currentPodcast : podcasts)
-				if (currentPodcast.getDatafile().equalsIgnoreCase(download.getPodcastSource())){
-					download.setRemoved(true);
-					Episode selectedEpisode = currentPodcast.getEpisodeByURL(download.getURL().toString());
-					if (selectedEpisode!=null)
-						selectedEpisode.setStatus(URLDetails.DOWNLOAD_CANCELLED);
-				}
+			synchronized(podcasts){
+				for (Podcast currentPodcast : podcasts)
+					if (currentPodcast.getDatafile().equalsIgnoreCase(download.getPodcastSource())){
+						download.setRemoved(true);
+						Episode selectedEpisode = currentPodcast.getEpisodeByURL(download.getURL().toString());
+						if (selectedEpisode!=null)
+							selectedEpisode.setStatus(URLDetails.DOWNLOAD_CANCELLED);
+					}
+			}
 		}
 		download.setStatus(URLDetails.DOWNLOAD_CANCELLED);
 	}
@@ -309,10 +313,12 @@ public class URLDownloadList extends DownloadDetails {
 	 * @param string
 	 */
 	public boolean deleteActiveDownload(String uid) {
-		for (URLDownload currentDownload: downloads){
-			if (currentDownload.getUid().equals(uid)){
-				if (Log.isDebug())Log.logInfo("Deleting Download:"+uid);
-				return deleteDownload(currentDownload);
+		synchronized (downloads){
+			for (URLDownload currentDownload: downloads){
+				if (currentDownload.getUid().equals(uid)){
+					if (Log.isDebug())Log.logInfo("Deleting Download:"+uid);
+					return deleteDownload(currentDownload);
+				}
 			}
 		}
 		return false;
@@ -327,8 +333,9 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public boolean restartDownload(URLDownload download){
 		deleteFile(download);
-		
-		download.setStatus(URLDetails.DOWNLOAD_QUEUED);
+		synchronized (download){
+			download.setStatus(URLDetails.DOWNLOAD_QUEUED);
+		}
         synchronized(Podsalinan.downloadQueueSyncObject){
         	Podsalinan.downloadQueueSyncObject.notify();
         }
@@ -357,10 +364,12 @@ public class URLDownloadList extends DownloadDetails {
 	
 	public int visibleSize() {
 		int count=0;
-		
-		for (URLDownload download : downloads){
-			if (!download.isRemoved())
-				count++;
+
+		synchronized (downloads){
+			for (URLDownload download : downloads){
+				if (!download.isRemoved())
+					count++;
+			}
 		}
 		
 		return count;
@@ -374,23 +383,27 @@ public class URLDownloadList extends DownloadDetails {
 		/* The following loop is for double checking the system to make sure
 		 *  we dont have double ups of downloads in the system
 		 */
-		for (URLDownload download : downloads){
-			if ((lastUrl!=null)&&
-				(download.getURL().toString().equalsIgnoreCase(lastUrl))&&
-				((lastDestination!=null) &&(download.getDirectory().equalsIgnoreCase(lastDestination)))){
-				download.setRemoved(true);
-			} else {
-				lastUrl = download.getURL();
-				lastDestination = download.getDirectory();
+		synchronized(downloads){
+			for (URLDownload download : downloads){
+				if ((lastUrl!=null)&&
+					(download.getURL().toString().equalsIgnoreCase(lastUrl))&&
+					((lastDestination!=null) &&(download.getDirectory().equalsIgnoreCase(lastDestination)))){
+					download.setRemoved(true);
+				} else {
+					lastUrl = download.getURL();
+					lastDestination = download.getDirectory();
+				}
 			}
 		}
-		
-		for (URLDownload download : downloads){
-			if ((download.getURL().toString().equalsIgnoreCase(url))&&
-				((destination!=null)&&(download.getDirectory().toString().equalsIgnoreCase(destination)))){
-				return count;
+
+		synchronized(downloads){
+			for (URLDownload download : downloads){
+				if ((download.getURL().toString().equalsIgnoreCase(url))&&
+					((destination!=null)&&(download.getDirectory().toString().equalsIgnoreCase(destination)))){
+					return count;
+				}
+				count ++;
 			}
-			count ++;
 		}
 		
 		return -1;
@@ -440,7 +453,9 @@ public class URLDownloadList extends DownloadDetails {
 
 	public void reQueueDownload(URLDownload download) {
 		if (download!=null)
-			download.setStatus(URLDetails.DOWNLOAD_QUEUED);
+			synchronized(downloads){
+				download.setStatus(URLDetails.DOWNLOAD_QUEUED);
+			}
         synchronized(Podsalinan.downloadQueueSyncObject){
         	Podsalinan.downloadQueueSyncObject.notify();
         }
@@ -461,11 +476,13 @@ public class URLDownloadList extends DownloadDetails {
 	 * @return
 	 */
 	public URLDownload findDownloadByUid(String downloadUid) {
-		for (URLDownload currentDownload : downloads)
-			if (currentDownload.getUid().equals(downloadUid)){
-				if (debug) if (Log.isDebug())Log.logInfo(this, "findDownloadByUid(String) Download: "+currentDownload.getURL());
-				return currentDownload;
-			}
+		synchronized(downloads){
+			for (URLDownload currentDownload : downloads)
+				if (currentDownload.getUid().equals(downloadUid)){
+					if (debug) if (Log.isDebug())Log.logInfo(this, "findDownloadByUid(String) Download: "+currentDownload.getURL());
+					return currentDownload;
+				}
+		}
 		return null;
 	}
 
@@ -500,18 +517,20 @@ public class URLDownloadList extends DownloadDetails {
 		int downloadCount=0,
 			activeCount=0;
 		boolean found=false;
-		if (debug) if (Log.isDebug())Log.logInfo(this, "Download Count:"+getNumberOfQueuedDownloads());
-		while (!found && downloadCount<downloads.size()){
-			if (debug) if (Log.isDebug())Log.logInfo(this, "Download "+(downloads.get(downloadCount).isRemoved()?"Removed":"Not Removed")+
-					" :"+downloads.get(downloadCount).getURL());
-			if (!downloads.get(downloadCount).isRemoved()){
-				if (activeCount==select){
-					found=true;
+		synchronized(downloads){
+			if (debug) if (Log.isDebug())Log.logInfo(this, "Download Count:"+getNumberOfQueuedDownloads());
+			while (!found && downloadCount<downloads.size()){
+				if (debug) if (Log.isDebug())Log.logInfo(this, "Download "+(downloads.get(downloadCount).isRemoved()?"Removed":"Not Removed")+
+						" :"+downloads.get(downloadCount).getURL());
+				if (!downloads.get(downloadCount).isRemoved()){
+					if (activeCount==select){
+						found=true;
+					}
+					activeCount++;
 				}
-				activeCount++;
+				if (!found)
+					downloadCount++;
 			}
-			if (!found)
-				downloadCount++;
 		}
         if (found){
         	if (debug) if (Log.isDebug())Log.logInfo(this, downloads.get(downloadCount).getUid());

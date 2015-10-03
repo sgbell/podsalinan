@@ -49,10 +49,13 @@ public class ListSelection extends CLIOption {
 		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 
 		System.out.println("Currently Selected");
-		Set<Entry<String,String>> selectedObjects= CLInterface.cliGlobals.getGlobalSelection().entrySet();
-		for (Entry<String,String> object : selectedObjects){
-			System.out.println(object.getKey()+" : "+object.getValue()); 
+		synchronized(CLInterface.cliGlobals){
+			Set<Entry<String,String>> selectedObjects= CLInterface.cliGlobals.getGlobalSelection().entrySet();
+			for (Entry<String,String> object : selectedObjects){
+				System.out.println(object.getKey()+" : "+object.getValue()); 
+			}
 		}
+		
 		return returnObject;
 	}
 

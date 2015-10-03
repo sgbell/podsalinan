@@ -52,9 +52,9 @@ public class Episode extends URLDetails {
 	
 	public Episode() {
 		super();
-		fields.put("date", new StringType());
-		fields.put("title", new StringType());
-		fields.put("description", new StringType());
+		put("date", new StringType());
+		put("title", new StringType());
+		put("description", new StringType());
 	}
 	
 	public Episode(Map<String,String> record){
@@ -66,13 +66,13 @@ public class Episode extends URLDetails {
 		// Original Timestamp in xml file
 		DateFormat df = new SimpleDateFormat(originalDateFormat);
 		try {
-			Date newDate = df.parse(fields.get("date").getValue());
+			Date newDate = df.parse(get("date").getValue());
 			DateFormat newFormat = new SimpleDateFormat(dateFormat);
 			return newFormat.format(newDate);
 		} catch (ParseException e) {
 			// If date in data file is now set to the user readable format
 			setUpdated(true);
-			return fields.get("date").getValue();
+			return get("date").getValue();
 		}
 	}
 	
@@ -83,18 +83,18 @@ public class Episode extends URLDetails {
 	public String getOriginalDate(){
 		DateFormat df = new SimpleDateFormat(dateFormat);
 		try {
-			Date newDate = df.parse(fields.get("date").getValue());
+			Date newDate = df.parse(get("date").getValue());
 			DateFormat newFormat = new SimpleDateFormat(originalDateFormat);
 			// If date is in the user readable format, reformat it.
 			return newFormat.format(newDate);
 		} catch (ParseException e) {
 			// If date is in original format return it
-			return fields.get("date").getValue();
+			return get("date").getValue();
 		}
 	}
 	
 	public void setDate(String newDate){
-		fields.get("date").setValue(newDate);
+		get("date").setValue(newDate);
 	}
 	
 	public static String getDateFormat(){
@@ -102,28 +102,28 @@ public class Episode extends URLDetails {
 	}
 	
 	public String getDescription(){
-		return fields.get("description").getValue();
+		return get("description").getValue();
 	}
 	
 	public void setDescription(String newDescription){
-		fields.get("description").setValue(newDescription);
+		get("description").setValue(newDescription);
 	}
 	
 	public String getTitle(){
-		return fields.get("title").getValue();
+		return get("title").getValue();
 	}
 	
 	public void setTitle(String newTitle){
-		fields.get("title").setValue(newTitle);
+		get("title").setValue(newTitle);
 	}
 
 	public String getFilename() throws MalformedURLException {
-		return (new URL(fields.get("url").getValue())).getFile();
+		return (new URL(get("url").getValue())).getFile();
 	}
 	public boolean dateEquals(Date searchDate) {
 		DateFormat df = new SimpleDateFormat(originalDateFormat);
 		try {
-			Date episodeDate = df.parse(fields.get("date").getValue());
+			Date episodeDate = df.parse(get("date").getValue());
 			Calendar episodeCalendar = Calendar.getInstance();
 			Calendar searchCalendar = Calendar.getInstance();
 			episodeCalendar.setTime(episodeDate);

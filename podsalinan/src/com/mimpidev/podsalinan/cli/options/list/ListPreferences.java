@@ -27,13 +27,18 @@ public class ListPreferences extends CLIOption {
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
 		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
-		if (debug) if (Log.isDebug())Log.logInfo(this, "Size of Preferences: "+data.getSettings().getMap().size());
-		Set<String> settings = data.getSettings().getMap().keySet();
-		System.out.println("Settings");
-		System.out.println("--------");
-		for (String setting : settings){
-			System.out.println(setting+":"+data.getSettings().findSetting(setting));
+  
+		synchronized(data.getSettings().getMap()){
+			if (debug) if (Log.isDebug())Log.logInfo(this, "Size of Preferences: "+data.getSettings().getMap().size());
+
+			Set<String> settings = data.getSettings().getMap().keySet();
+			System.out.println("Settings");
+			System.out.println("--------");
+			for (String setting : settings){
+				System.out.println(setting+":"+data.getSettings().findSetting(setting));
+			}
 		}
+		
 		return returnObject;
 	}
 }

@@ -164,11 +164,13 @@ public class DataStorage {
 				tableLoaders.add(downloadHandler);
 				tableLoaders.add(settingsHandler);
 				tableLoaders.add(filtersHandler);
-				for (TableLoader loader : tableLoaders){
-					try {
-						loader.readTable();
-					} catch (ClassNotFoundException e) {
-						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+				synchronized(tableLoaders){
+					for (TableLoader loader : tableLoaders){
+						try {
+							loader.readTable();
+						} catch (ClassNotFoundException e) {
+							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+						}
 					}
 				}
 			}
@@ -196,9 +198,11 @@ public class DataStorage {
 	 * This is used to save the locally stored information to the databases
 	 */
 	public void saveSettings(){
-	    for (TableLoader loader : tableLoaders){
-	    	loader.updateDatabase();
-	    }
+		synchronized(tableLoaders){
+		    for (TableLoader loader : tableLoaders){
+		    	loader.updateDatabase();
+		    }
+		}
 	}
 
 	/**
