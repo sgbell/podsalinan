@@ -239,7 +239,6 @@ public class CLInterface extends CLIOption implements Runnable{
 		 */
 	}
 
-	//TODO: 1. Need to wrap foreach loops, and podcast, episode, and download access methods in synchronized
 	//TODO: 2. Change input to character input
 	//TODO: 3. Add the ability for multiple child download threads to facilitate faster downloading.
 	

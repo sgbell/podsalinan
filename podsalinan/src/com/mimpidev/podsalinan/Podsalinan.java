@@ -58,6 +58,7 @@ public class Podsalinan {
 	 *   Nothing to pass in just yet
 	 */
 	public static void main(String[] args) {
+		//TODO: 1. Fix Synchronization across all data values and downloaders, so that the downloaders will work, and stop when they should.
 		Podsalinan mainProgram = new Podsalinan();
 		mainProgram.setCmdLineArgs(args);
 		mainProgram.initialize();
