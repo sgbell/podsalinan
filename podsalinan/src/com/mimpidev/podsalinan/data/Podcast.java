@@ -64,8 +64,8 @@ public class Podcast extends DownloadDetails{
 	 */
 	public Podcast() {
 		super();
-		fields.put("image", new StringType());
-		fields.put("automaticQueue", new BooleanType());
+		put("image", new StringType());
+		put("automaticQueue", new BooleanType());
 		df = new SimpleDateFormat(Episode.getDateFormat());
 	}
 	/**This is used to create a new Podcast with only a url.
@@ -161,28 +161,28 @@ public class Podcast extends DownloadDetails{
 	 * @return the image
 	 */
 	public String getImage() {
-		return fields.get("image").getValue();
+		return get("image").getValue();
 	}
 
 	/**
 	 * @param image the image to set
 	 */
 	public void setImage(String image) {
-		fields.get("image").setValue(image);
+		get("image").setValue(image);
 	}
 
 	/**
 	 * @return the automaticQueue
 	 */
 	public boolean isAutomaticQueue() {
-		return fields.get("automaticQueue").equals("TRUE");
+		return get("automaticQueue").equals("TRUE");
 	}
 
 	/**
 	 * @param automaticQueue the automaticQueue to set
 	 */
 	public void setAutomaticQueue(boolean automaticQueue) {
-		fields.get("automaticQueue").setValue((automaticQueue?"TRUE":"FALSE"));
+		get("automaticQueue").setValue((automaticQueue?"TRUE":"FALSE"));
 	}	
 	
 	/**
@@ -217,7 +217,7 @@ public class Podcast extends DownloadDetails{
 			 */
 			if (!outputFile.exists()){
 				try {
-					Downloader downloader = new Downloader(new URL(fields.get("url").getValue()), outputFile);
+					Downloader downloader = new Downloader(new URL(get("url").getValue()), outputFile);
 					int result = downloader.getFile();
 					if (result==Downloader.DOWNLOAD_COMPLETE){
 						readPodcastFile(outputFile,false);
@@ -415,7 +415,7 @@ public class Podcast extends DownloadDetails{
 		ArrayList<File> filesInDir = new ArrayList<File>();
         //int count=0;
 		String directoryToScan;
-		String directory = fields.get("directory").getValue();
+		String directory = get("directory").getValue();
 		try {
 			directoryToScan=directory.substring(0, directory.indexOf("Download"));
 		} catch (StringIndexOutOfBoundsException e){

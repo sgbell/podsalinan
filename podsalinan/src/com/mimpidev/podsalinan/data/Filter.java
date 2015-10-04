@@ -29,12 +29,12 @@ import com.mimpidev.dev.sql.field.StringType;
 public class Filter extends DataRecord {
 
 	public Filter () {
-		fields.put("id", new IntegerType());
-		fields.put("match", new StringType());
-		fields.put("commandList", new StringType());
-		fields.put("commandName", new StringType());
-		fields.get("id").setPrimaryKey(true);
-		fields.get("id").setAutoIncrement(true);
+		put("id", new IntegerType());
+		put("match", new StringType());
+		put("commandList", new StringType());
+		put("commandName", new StringType());
+		get("id").setPrimaryKey(true);
+		get("id").setAutoIncrement(true);
 	}
 	
 	public Filter(String matchString, String commands, String commandName) {
@@ -44,26 +44,26 @@ public class Filter extends DataRecord {
 	}
 
 	public String getMatch(){
-		return fields.get("match").getValue();
+		return get("match").getValue();
 	}
 	
 	public void setMatch(String value){
-		fields.get("match").setValue(value);
+		get("match").setValue(value);
 	}
 	
 	public String getCommandList(){
-		return fields.get("commandList").getValue();
+		return get("commandList").getValue();
 	}
 	
 	public void setCommandList(String commandList){
-		fields.get("commandList").setValue(commandList);
+		get("commandList").setValue(commandList);
 	}
 
 	public void setCommandName(String commandName) {
-		fields.get("commandName").setValue(commandName);
+		get("commandName").setValue(commandName);
 	}
 
 	public String getCommandName() {
-		return fields.get("commandName").getValue();
+		return get("commandName").getValue();
 	}
 }

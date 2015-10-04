@@ -33,9 +33,9 @@ public class DownloadDetails extends BaseURL{
 
 	public DownloadDetails(){
 		super();
-		fields.put("name", new StringType());
-		fields.put("datafile", new StringType());
-		fields.put("directory", new StringType());
+		put("name", new StringType());
+		put("datafile", new StringType());
+		put("directory", new StringType());
 	}
 	
 	public DownloadDetails(String name){
@@ -44,26 +44,26 @@ public class DownloadDetails extends BaseURL{
 	}
 	
 	public void setName(String name) {
-		fields.get("name").setValue(name);
+		get("name").setValue(name);
 	}
 
 	public String getName() {
-		return fields.get("name").getValue();
+		return get("name").getValue();
 	}
 	
 	public void setDatafile(String newDatafile){
-		fields.get("datafile").setValue(newDatafile);
+		get("datafile").setValue(newDatafile);
 	}
 	
 	public String getDatafile(){
-		return fields.get("datafile").getValue();
+		return get("datafile").getValue();
 	}
 
 	public void setDirectory(String directory) {
-		fields.get("directory").setValue(directory);
+		get("directory").setValue(directory);
 	}
 
 	public String getDirectory() {
-		return fields.get("directory").getValue();
+		return get("directory").getValue();
 	}
 }
