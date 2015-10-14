@@ -114,9 +114,7 @@ public class PodcastLoader extends TableLoader {
 					}
 				} else {
 					newPodcast.setAdded(true);
-					synchronized(podcastList){
-						podcastList.add(newPodcast);
-					}
+					podcastList.add(newPodcast);
 					final File podcastFile = new File(this.getDbFile().getParent()+"/"+newPodcast.getDatafile()+".pod");
 					if (podcastFile.exists()){
 						// To increase the speed of start up time, I have moved the episode loading to the background
@@ -163,75 +161,79 @@ public class PodcastLoader extends TableLoader {
 	 */
 	public void updateDatabase(){
 		if (isDbOpen()){
+			ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
 			synchronized (podcastList){
-				for (final Podcast podcast : podcastList.getList()){
-					int sqlType=TableView.NOTHING_CHANGED;
-					if (!podcast.isAdded()){
-						// Used to set the correct flag
-						try {
-							insert(podcast.getDatabaseRecord());
-							sqlType=TableView.ITEM_ADDED_TO_DATABASE;
-							final File podcastFile = new File(this.getDbFile().getParent()+"/"+podcast.getDatafile()+".pod");
-							if (!podcastFile.exists()){
-								Database podcastDB=null;
-								try {
-									podcastDB = new Database(podcastFile.getAbsolutePath());
-									if (podcastDB!=null){
-										EpisodeLoader episodeLoader = new EpisodeLoader(podcast,podcastDB);
-										episodeLoaders.add(episodeLoader);
-									}
-								} catch (ClassNotFoundException e){
-									if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
-								} catch (SqliteException e) {
-									if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+				for (Podcast podcast : podcastList.getList()){
+					podcasts.add(new Podcast(podcast));
+				}
+			}
+			for (final Podcast podcast : podcasts){
+				int sqlType=TableView.NOTHING_CHANGED;
+				if (!podcast.isAdded()){
+					// Used to set the correct flag
+					try {
+						insert(podcast.getDatabaseRecord());
+						sqlType=TableView.ITEM_ADDED_TO_DATABASE;
+						final File podcastFile = new File(this.getDbFile().getParent()+"/"+podcast.getDatafile()+".pod");
+						if (!podcastFile.exists()){
+							Database podcastDB=null;
+							try {
+								podcastDB = new Database(podcastFile.getAbsolutePath());
+								if (podcastDB!=null){
+									EpisodeLoader episodeLoader = new EpisodeLoader(podcast,podcastDB);
+									episodeLoaders.add(episodeLoader);
 								}
+							} catch (ClassNotFoundException e){
+								if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+							} catch (SqliteException e) {
+								if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 							}
-						} catch (SqlException e) {
-							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 						}
-					} else if (podcast.isRemoved()){
-						try {
-							delete(new HashMap<String, FieldDetails>(){/**
+					} catch (SqlException e) {
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+					}
+				} else if (podcast.isRemoved()){
+					try {
+						delete(new HashMap<String, FieldDetails>(){/**
+							 * 
+							 */
+							private static final long serialVersionUID = -7040466909383675903L;
+
+						{
+							put("url",new StringType(podcast.getURL()));
+						}});
+					} catch (SqlException e) {
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
+					}
+					sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
+				} else if (podcast.isUpdated()){
+					try {
+						update(podcast.getDatabaseRecord(), 
+							new HashMap<String, FieldDetails>(){/**
 								 * 
 								 */
-								private static final long serialVersionUID = -7040466909383675903L;
+								private static final long serialVersionUID = -3602277504930209966L;
 
 							{
-								put("url",new StringType(podcast.getURL()));
-							}});
-						} catch (SqlException e) {
-							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
-						}
-						sqlType=TableView.ITEM_REMOVED_FROM_DATABASE;
-					} else if (podcast.isUpdated()){
-						try {
-							update(podcast.getDatabaseRecord(), 
-								new HashMap<String, FieldDetails>(){/**
-									 * 
-									 */
-									private static final long serialVersionUID = -3602277504930209966L;
-
-								{
-									put("datafile",new StringType(podcast.getDatafile()));
-							}});
-						} catch (SqlException e) {
-							if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
-						}
-						sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
+								put("datafile",new StringType(podcast.getDatafile()));
+						}});
+					} catch (SqlException e) {
+						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}
-					switch (sqlType){
-						case TableView.ITEM_ADDED_TO_DATABASE:
-							podcastList.getList().get(podcastList.getList().indexOf(podcast)).setAdded(true);
-							break;
-						case TableView.ITEM_UPDATED_IN_DATABASE:
-							podcastList.getList().get(podcastList.getList().indexOf(podcast)).setUpdated(false);
-							break;
-					}
-					for (EpisodeLoader currentLoader : episodeLoaders){
-						currentLoader.updateDatabase();
-					}
-				}				
-			}
+					sqlType=TableView.ITEM_UPDATED_IN_DATABASE;
+				}
+				switch (sqlType){
+					case TableView.ITEM_ADDED_TO_DATABASE:
+						podcastList.getList().get(podcastList.getList().indexOf(podcast)).setAdded(true);
+						break;
+					case TableView.ITEM_UPDATED_IN_DATABASE:
+						podcastList.getList().get(podcastList.getList().indexOf(podcast)).setUpdated(false);
+						break;
+				}
+				for (EpisodeLoader currentLoader : episodeLoaders){
+					currentLoader.updateDatabase();
+				}
+			}				
 		} else {
 			if (Log.isDebug())Log.logError(this,"Error db connection is closed");
 		}

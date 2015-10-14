@@ -81,7 +81,7 @@ public class DownloadsLoader extends TableLoader {
 			Vector<URLDownload> downloadList= new Vector<URLDownload>();
 			synchronized(downloads){
 				for (final URLDownload download : downloads.getDownloads()){
-					downloadList.add(new URLDownload((DataRecord)download));
+					downloadList.add(new URLDownload(download));
 				}
 			}
 			for (final URLDownload download : downloadList){

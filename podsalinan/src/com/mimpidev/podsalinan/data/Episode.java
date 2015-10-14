@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import com.mimpidev.dev.sql.DataRecord;
 import com.mimpidev.dev.sql.field.StringType;
 
 /**
@@ -60,6 +61,10 @@ public class Episode extends URLDetails {
 	public Episode(Map<String,String> record){
 		this();
 		populateFromRecord(record);
+	}
+
+	public Episode(DataRecord dataRecord) {
+		super(dataRecord);
 	}
 
 	public String getDate(){

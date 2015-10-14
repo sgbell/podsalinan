@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
 
+import com.mimpidev.dev.sql.DataRecord;
 import com.mimpidev.dev.sql.field.BooleanType;
 import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.podsalinan.DataStorage;
@@ -137,6 +138,9 @@ public class Podcast extends DownloadDetails{
 		
 	}
 	
+	public Podcast(DataRecord dataRecord) {
+		super(dataRecord);
+	}
 	public String createUID(String value){
 		MessageDigest md;
 		try {
@@ -249,24 +253,22 @@ public class Podcast extends DownloadDetails{
 			setUpdated(true);
 			if (Log.isDebug())Log.logInfo(this, getName()+"Url updated:"+getURL());
 		}
-		synchronized(episodeList){
-			if (episodeList!=null){
-				for (Episode newEpisode : newEpisodeList){
-					boolean foundEpisode=false;
-					int episodeCount=0;
-					// Using a while loop here, because we don't want to continue looking for an episode
-					// if it is already found
-					while ((!foundEpisode)&&(episodeCount<episodeList.size())){
-						// This code does not seem to be working, as it should be finding the url :(
-						Episode currentEpisode = episodeList.get(episodeCount);
-						if (newEpisode.getURL().toString().equalsIgnoreCase(currentEpisode.getURL().toString()))
-							foundEpisode=true;
-						else
-							episodeCount++;
-					}
-					if (!foundEpisode){
-						addEpisode(newEpisode);
-					}
+		if (episodeList!=null){
+			for (Episode newEpisode : newEpisodeList){
+				boolean foundEpisode=false;
+				int episodeCount=0;
+				// Using a while loop here, because we don't want to continue looking for an episode
+				// if it is already found
+				while ((!foundEpisode)&&(episodeCount<episodeList.size())){
+					// This code does not seem to be working, as it should be finding the url :(
+					Episode currentEpisode = episodeList.get(episodeCount);
+					if (newEpisode.getURL().toString().equalsIgnoreCase(currentEpisode.getURL().toString()))
+						foundEpisode=true;
+					else
+						episodeCount++;
+				}
+				if (!foundEpisode){
+					addEpisode(newEpisode);
 				}
 			}
 		}

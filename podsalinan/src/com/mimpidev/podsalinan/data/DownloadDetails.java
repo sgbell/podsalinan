@@ -22,6 +22,7 @@
 
 package com.mimpidev.podsalinan.data;
 
+import com.mimpidev.dev.sql.DataRecord;
 import com.mimpidev.dev.sql.field.StringType;
 
 /**
@@ -43,6 +44,10 @@ public class DownloadDetails extends BaseURL{
 		setName(name);
 	}
 	
+	public DownloadDetails(DataRecord dataRecord) {
+		super(dataRecord);
+	}
+
 	public void setName(String name) {
 		get("name").setValue(name);
 	}
