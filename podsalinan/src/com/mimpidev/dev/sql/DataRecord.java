@@ -31,6 +31,15 @@ public class DataRecord {
 		put("remove", new BooleanType(false));
 		put("updated", new BooleanType(false));
 	}
+	
+	public DataRecord(DataRecord original){
+		Map<String, FieldDetails> originalFields = original.getFields();
+		synchronized (originalFields){
+			for (String fieldName : originalFields.keySet()){
+				fields.put(fieldName, originalFields.get(fieldName));
+			}
+		}
+	}
 	/**
 	 * 
 	 * @param record

@@ -11,6 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
+import com.mimpidev.dev.sql.DataRecord;
 import com.mimpidev.dev.sql.field.StringType;
 import com.mimpidev.dev.debug.Log;
 
@@ -95,6 +96,10 @@ public class URLDownload extends URLDetails {
 		populateFromRecord(record);
 	}
 	
+	public URLDownload(DataRecord dataRecord) {
+		super(dataRecord);
+	}
+
 	/**
 	 * @return the destination, including the filename
 	 */

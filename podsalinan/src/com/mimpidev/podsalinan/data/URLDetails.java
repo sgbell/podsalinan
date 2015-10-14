@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.data;
 
 import java.net.URL;
 
+import com.mimpidev.dev.sql.DataRecord;
 import com.mimpidev.dev.sql.field.IntegerType;
 import com.mimpidev.dev.debug.Log;
 
@@ -57,6 +58,10 @@ public class URLDetails extends BaseURL {
 		put("status", new IntegerType());
 	}
 	
+	public URLDetails(DataRecord dataRecord) {
+		super(dataRecord);
+	}
+
 	public String getSize(){
 		return get("size").getValue();
 	}

@@ -22,10 +22,7 @@
 package com.mimpidev.podsalinan.data;
 
 import java.net.URL;
-import java.util.Map;
-
 import com.mimpidev.dev.sql.DataRecord;
-import com.mimpidev.dev.sql.field.FieldDetails;
 import com.mimpidev.dev.sql.field.StringType;
 
 /**
@@ -56,6 +53,10 @@ public class BaseURL extends DataRecord{
 		this(url.toString(),added);
 	}
 	
+	public BaseURL(DataRecord dataRecord) {
+		super(dataRecord);
+	}
+
 	public String getURL(){
 		return get("url").getValue();
 	}
