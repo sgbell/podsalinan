@@ -24,6 +24,7 @@ package com.mimpidev.podsalinan.data.loader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
@@ -76,7 +77,10 @@ public class DownloadsLoader extends TableLoader {
 	@Override
 	public void updateDatabase() {
 		if (isDbOpen()){
+			Vector<URLDownload> downloadList;
 			synchronized(downloads){
+				// do a deep copy
+			}
 				for (final URLDownload download : downloads.getDownloads()){
 					int sqlType=TableView.NOTHING_CHANGED;
 					if (!download.isAdded()){
@@ -125,7 +129,6 @@ public class DownloadsLoader extends TableLoader {
 							downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setUpdated(true);
 							break;
 					}
-				}				
 			}
 		} else {
 			if (Log.isDebug())Log.logError(this, "Error db connection is closed");
