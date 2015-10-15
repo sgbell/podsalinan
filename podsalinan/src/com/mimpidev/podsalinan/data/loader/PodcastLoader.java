@@ -132,7 +132,9 @@ public class PodcastLoader extends TableLoader {
 							try {
 								episodeLoader = new EpisodeLoader(newPodcast,podcastDB);
 								//episodeLoader.readTable();
-								episodeLoaders.add(episodeLoader);
+								synchronized (episodeLoaders){
+									episodeLoaders.add(episodeLoader);
+								}
 							} catch (ClassNotFoundException e) {
 								if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 							}
@@ -145,8 +147,10 @@ public class PodcastLoader extends TableLoader {
 			// Loading the episodes in 1 background thread
 			Thread episodeLoader = new Thread("EpisodeLoader"){
 				public void run(){
-					for (EpisodeLoader loader: episodeLoaders){
-						loader.readTable();
+					synchronized (episodeLoaders){
+						for (EpisodeLoader loader: episodeLoaders){
+							loader.readTable();
+						}
 					}
 				}
 			};

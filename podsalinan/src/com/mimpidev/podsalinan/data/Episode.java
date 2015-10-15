@@ -145,4 +145,7 @@ public class Episode extends URLDetails {
 		return false;
 	}
 
+	public String toString(){
+		return "Title - "+getTitle()+" - Date - "+getDate()+" -- Description "+getDescription();
+	}
 }

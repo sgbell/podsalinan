@@ -117,12 +117,16 @@ public class DownloadsLoader extends TableLoader {
 				switch (sqlType){
 					case TableView.ITEM_ADDED_TO_DATABASE:
 						synchronized(downloads){
-						   downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setAdded(true);
+							if (downloads.findDownloadByUid(download.getUid())!=null){
+						       downloads.findDownloadByUid(download.getUid()).setAdded(true);
+							}
 						}
 						break;
 					case TableView.ITEM_UPDATED_IN_DATABASE:
 						synchronized(downloads){
-							downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setUpdated(true);
+							if (downloads.findDownloadByUid(download.getUid())!=null){
+								downloads.findDownloadByUid(download.getUid()).setUpdated(true);
+							}
 						}
 						break;
 				}

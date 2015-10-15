@@ -188,4 +188,8 @@ public class URLDownload extends URLDetails {
 	public String getDirectory() {
 		return get("directory").getValue();
 	}
+	
+	public String toString(){
+		return "URL - "+getURL()+" -- "+this.getUid();
+	}
 }

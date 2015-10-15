@@ -66,7 +66,7 @@ public class FieldDetails {
 	 * 
 	 */
 	public FieldDetails(FieldDetails fieldDetails) {
-		value=fieldDetails+"";
+		value=fieldDetails.getValue()+"";
 		fieldType=fieldDetails.getFieldType();
 		persistant=fieldDetails.isPersistent();
 		isPrimaryKey=fieldDetails.isPrimaryKey();

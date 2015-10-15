@@ -143,7 +143,7 @@ public class Downloader extends NotifyingRunnable{
 			synchronized(syncObject){
 				syncObject.notify();
 			}
-			if (Log.isDebug())Log.logInfo(this, "Download Passed in."); 
+			if (debug && Log.isDebug())Log.logInfo(this, "Download Passed in."); 
 		} else {
 			downloadItem=null;
 		}

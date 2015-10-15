@@ -44,7 +44,7 @@ public class Log {
 
 	private static RandomAccessFile fileOutput=null;
 	private static String dataDirectory="mimpidev-debug";
-	private static boolean isOpen=true;
+	private static boolean isOpen=false;
 	
 	public Log(){
 		
@@ -151,7 +151,8 @@ public class Log {
 
 	public static void close() {
 		try {
-			fileOutput.close();
+			if (fileOutput!=null && isOpen)
+				fileOutput.close();
 			isOpen=false;
 		} catch (IOException e) {
 			System.err.println("[Error] Problem closing debug log");

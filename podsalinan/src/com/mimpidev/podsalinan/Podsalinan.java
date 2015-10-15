@@ -28,6 +28,7 @@
  */
 package com.mimpidev.podsalinan;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.mimpidev.dev.debug.Log;
@@ -58,7 +59,6 @@ public class Podsalinan {
 	 *   Nothing to pass in just yet
 	 */
 	public static void main(String[] args) {
-		//TODO: 1. Fix Synchronization across all data values and downloaders, so that the downloaders will work, and stop when they should.
 		Podsalinan mainProgram = new Podsalinan();
 		mainProgram.setCmdLineArgs(args);
 		mainProgram.initialize();
@@ -83,33 +83,35 @@ public class Podsalinan {
 		
 		while(!data.getSettings().isFinished()){
 			// List the podcast titles.
-
+			ArrayList<Podcast> podcastList=null;
 			synchronized (data.getPodcasts().getList()){
-				for (Podcast podcast : data.getPodcasts().getList()){
-					if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
-						podcast.updateList(data.getSettingsDir());
-					}
-					
-					// The following will scan the directory for already downloaded episodes of the podcast and mark them as downloaded
-					podcast.scanDirectory(data);
+				podcastList = data.getPodcasts().clone();
+			}
+			for (Podcast podcast : podcastList){
+				if ((!data.getSettings().isFinished())&&(!podcast.isRemoved())){
+					podcast.updateList(data.getSettingsDir());
+				}
+				
+				// The following will scan the directory for already downloaded episodes of the podcast and mark them as downloaded
+				podcast.scanDirectory(data);
 
-					/* If autoQueue is set in the program settings to true, or autoQueue is set in the podcast,
-					 * scan the podcast lists for episodes not yet downloaded, and queue them to download. 
-					 */
-					if (((data.getSettings().findSetting("autoQueue")!=null)&&
-						 (data.getSettings().findSetting("autoQueue").equalsIgnoreCase("true")))||
-						 (podcast.isAutomaticQueue())){
-						Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Episode.NOT_QUEUED);
-						if (podcastEpisodes.size()>0)
-							for (Episode episode : podcastEpisodes){
-								episode.setStatus(Episode.CURRENTLY_DOWNLOADING);
-								synchronized(data.getUrlDownloads()){
-									data.getUrlDownloads().addDownload(episode, podcast);
-								}
+				/* If autoQueue is set in the program settings to true, or autoQueue is set in the podcast,
+				 * scan the podcast lists for episodes not yet downloaded, and queue them to download. 
+				 */
+				if (((data.getSettings().findSetting("autoQueue")!=null)&&
+					 (data.getSettings().findSetting("autoQueue").equalsIgnoreCase("true")))||
+					 (podcast.isAutomaticQueue())){
+					Vector<Episode> podcastEpisodes = podcast.getEpisodesByStatus(Episode.NOT_QUEUED);
+					if (podcastEpisodes.size()>0)
+						for (Episode episode : podcastEpisodes){
+							episode.setStatus(Episode.CURRENTLY_DOWNLOADING);
+							synchronized(data.getUrlDownloads()){
+								data.getUrlDownloads().addDownload(episode, podcast);
 							}
-					}
+						}
 				}
 			}
+
 			// Intermittent saving of data
 			data.saveSettings();
 			

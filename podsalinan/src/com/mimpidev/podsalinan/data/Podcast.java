@@ -138,9 +138,16 @@ public class Podcast extends DownloadDetails{
 		
 	}
 	
+	/**
+	 * This method is generally used to clone
+	 * @param dataRecord
+	 */
 	public Podcast(DataRecord dataRecord) {
 		super(dataRecord);
+		episodeList = ((Podcast)dataRecord).getEpisodes();
+		df = new SimpleDateFormat(Episode.getDateFormat());
 	}
+	
 	public String createUID(String value){
 		MessageDigest md;
 		try {
@@ -335,7 +342,7 @@ public class Podcast extends DownloadDetails{
 			synchronized(episodeList){
 				if (episodeList.size()>0){
 					try {
-						if (debug) if (Log.isDebug())Log.logInfo(getClass(),"Date in new episode: "+newEpisode.getDate());
+						if (debug && Log.isDebug()) Log.logInfo(getClass(),"Date in new episode: "+newEpisode.getDate());
 						Date newEpisodeDate = df.parse(newEpisode.getDate());
 						boolean found=false;
 						int epCount=0;
