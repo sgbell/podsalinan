@@ -136,14 +136,12 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		//	downloaders.get(0).endThread();
 			synchronized(data.getFinishWait()){
 				try {
-					System.out.println("Waiting for "+downloaders.size()+" downloaders to shutdown");
 					data.getFinishWait().wait(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		System.out.println("Downloaders shutdown");
 		// Set incomplete downloads to queued, on exit.
 		int downloadCount=0;
 		boolean foundQueuedItem=false;
