@@ -81,7 +81,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				
 					// If the number of downloaders has been dropped, we need to make sure that the system
 					// reflects this, and removes a downloader
-					while (downloaders.size()>maxDownloaders){
+				}
+				while (downloaders.size()>maxDownloaders){
+					if (!downloaders.get(downloaders.size()-1).isStopThread()){
 						downloaders.get(downloaders.size()-1).endThread();
 					}
 				}
@@ -134,12 +136,14 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		//	downloaders.get(0).endThread();
 			synchronized(data.getFinishWait()){
 				try {
+					System.out.println("Waiting for "+downloaders.size()+" downloaders to shutdown");
 					data.getFinishWait().wait(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		}
+		System.out.println("Downloaders shutdown");
 		// Set incomplete downloads to queued, on exit.
 		int downloadCount=0;
 		boolean foundQueuedItem=false;
@@ -304,21 +308,17 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				} 
 			}			
 		}
-		if ((download==null ||
-		   download.getURL().equals("")) &&
-		   (data.getSettings().isFinished())){
-			synchronized(downloaders){
-				downloaders.remove(downloader);
-			}
+		downloader.downloaderFinished(true);
+		downloader.clearDownload();
+		if (((download==null ||
+			download.getURL().equals("")) &&
+			(data.getSettings().isFinished())) ||
+			(downloader.isStopThread())){
+			downloaders.remove(downloader);
 		}
-
 
 		synchronized(getDownloadQueueObject()){
 			getDownloadQueueObject().notify();
-		}
-		synchronized(downloaders){
-			downloader.downloaderFinished(true);
-			downloader.clearDownload();
 		}
 	}
 		

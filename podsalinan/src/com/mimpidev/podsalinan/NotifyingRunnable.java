@@ -51,6 +51,7 @@ public abstract class NotifyingRunnable implements Runnable{
 	}
 	
 	public void setStopThread(boolean newStopValue){
+		System.out.println("Stopping downloader.");
 		stopThread=newStopValue;
 	}
 	

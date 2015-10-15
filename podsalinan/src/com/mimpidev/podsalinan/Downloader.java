@@ -367,6 +367,8 @@ public class Downloader extends NotifyingRunnable{
     								try {
     									if ((System.currentTimeMillis()-time)<1000){
     										Thread.sleep(1000-(System.currentTimeMillis()-time));
+    										chunkCount=0;
+    										time=System.currentTimeMillis();
     									}
     								} catch (InterruptedException e) {
     									// sleep interrupted
