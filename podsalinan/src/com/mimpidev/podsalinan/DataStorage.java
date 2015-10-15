@@ -198,7 +198,6 @@ public class DataStorage {
 	 * This is used to save the locally stored information to the databases
 	 */
 	public void saveSettings(){
-		System.out.println("debug stop");
 		synchronized(tableLoaders){
 		    for (TableLoader loader : tableLoaders){
 		    	loader.updateDatabase();
