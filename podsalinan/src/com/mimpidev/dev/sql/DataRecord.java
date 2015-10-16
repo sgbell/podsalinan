@@ -33,6 +33,7 @@ public class DataRecord {
 	}
 	
 	public DataRecord(DataRecord original){
+		fields=new HashMap<String,FieldDetails>();
 		Map<String, FieldDetails> originalFields = original.getFields();
 		synchronized (originalFields){
 			for (String fieldName : originalFields.keySet()){

@@ -224,10 +224,14 @@ public class PodcastLoader extends TableLoader {
 				}
 				switch (sqlType){
 					case TableView.ITEM_ADDED_TO_DATABASE:
-						podcastList.getList().get(podcastList.getList().indexOf(podcast)).setAdded(true);
+						synchronized(podcastList){
+							podcastList.getPodcastByUid(podcast.getDatafile()).setAdded(true);
+						}
 						break;
 					case TableView.ITEM_UPDATED_IN_DATABASE:
-						podcastList.getList().get(podcastList.getList().indexOf(podcast)).setUpdated(false);
+						synchronized(podcastList){
+							podcastList.getPodcastByUid(podcast.getDatafile()).setUpdated(false);
+						}
 						break;
 				}
 				for (EpisodeLoader currentLoader : episodeLoaders){
