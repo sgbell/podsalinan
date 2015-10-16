@@ -60,6 +60,18 @@ public class FieldDetails {
 		this();
 		setPersistent(persistantState);
 	}
+	
+	/**
+	 * This is used to clone the object
+	 * 
+	 */
+	public FieldDetails(FieldDetails fieldDetails) {
+		value=fieldDetails+"";
+		fieldType=fieldDetails.getFieldType();
+		persistant=fieldDetails.isPersistent();
+		isPrimaryKey=fieldDetails.isPrimaryKey();
+		isAutoIncrement=fieldDetails.isAutoIncrement();
+	}
 	/**
 	 * @return the value
 	 */
@@ -135,7 +147,8 @@ public class FieldDetails {
 		}
 	}
 	
-	public String toString(){
-		return value;
-	}
+    public FieldDetails clone() {
+    	FieldDetails clone = new FieldDetails(this);
+    	return clone;
+    }
 }

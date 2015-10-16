@@ -43,17 +43,12 @@ public class EpisodeLoader extends TableLoader {
 	public void updateDatabase() {
 
 		if (isDbOpen()){
-			ArrayList<Episode> episodes = new ArrayList<Episode>();
-			synchronized(podcast.getEpisodes()){
-				for (Episode episode : podcast.getEpisodes()){
-					episodes.add(new Episode(episode));
-				}
-			}
+			ArrayList<Episode> episodes = podcast.cloneEpisodes();
 			for (final Episode episode : episodes){
 				if (!episode.isAdded()){
 					try {
 						insert(episode.getDatabaseRecord());
-						episode.setAdded(true);
+						podcast.getEpisodeByURL(episode.getURL()).setAdded(true);
 					} catch (SqlException e) {
 						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}					
@@ -63,7 +58,7 @@ public class EpisodeLoader extends TableLoader {
 								       new HashMap<String, FieldDetails>(){{
 											put("url", new StringType(episode.getURL().toString().replaceAll("\'", "&apos;")));
 								       }});
-						episode.setUpdated(false);
+						podcast.getEpisodeByURL(episode.getURL()).setUpdated(false);
 					} catch (SqlException e) {
 						if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					}

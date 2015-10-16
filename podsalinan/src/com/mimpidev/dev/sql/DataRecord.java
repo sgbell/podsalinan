@@ -36,7 +36,7 @@ public class DataRecord {
 		Map<String, FieldDetails> originalFields = original.getFields();
 		synchronized (originalFields){
 			for (String fieldName : originalFields.keySet()){
-				fields.put(fieldName, originalFields.get(fieldName));
+				fields.put(fieldName, originalFields.get(fieldName).clone());
 			}
 		}
 	}

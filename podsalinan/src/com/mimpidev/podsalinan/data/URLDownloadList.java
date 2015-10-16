@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
@@ -57,6 +58,21 @@ public class URLDownloadList extends DownloadDetails {
 		podcasts = podcastList.getList();
 	}
 
+	/**
+	 *   The following method is used to clone the array of objects, right down to it's little itty bittys
+	 *   to prevent concurrent errors
+	 */
+	public ArrayList<URLDownload> clone(){
+		ArrayList<URLDownload> cloneList = new ArrayList<URLDownload>();
+		synchronized (downloads){
+		   for (URLDownload download : downloads){
+			   cloneList.add(new URLDownload(download));
+           }
+		}
+		
+		return cloneList;
+	}
+	
 	public Vector<URLDownload> getDownloads(){
 		return downloads;
 	}
@@ -394,9 +410,6 @@ public class URLDownloadList extends DownloadDetails {
 					lastDestination = download.getDirectory();
 				}
 			}
-		}
-
-		synchronized(downloads){
 			for (URLDownload download : downloads){
 				if ((download.getURL().toString().equalsIgnoreCase(url))&&
 					((destination!=null)&&(download.getDirectory().toString().equalsIgnoreCase(destination)))){

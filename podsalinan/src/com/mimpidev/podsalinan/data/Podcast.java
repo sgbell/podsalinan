@@ -460,5 +460,19 @@ public class Podcast extends DownloadDetails{
 				}
 		}
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ArrayList<Episode> cloneEpisodes() {
+		ArrayList<Episode> cloneList = new ArrayList<Episode>();
+		synchronized (episodeList){
+		   for (Episode episode : episodeList){
+			   cloneList.add(new Episode(episode));
+           }
+		}
+		return cloneList;
+	}
 	
 }

@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -34,13 +35,15 @@ public class DumpCommand extends CLIOption {
 				
 		if (Log.isDebug())Log.logInfo("--URLDownload Contents - "+dateFormat.format(date)+" --");
 		if (Log.isDebug())Log.logInfo("DownladURL,status,destination,podcastid");
-		synchronized(data.getUrlDownloads()){
-			for (URLDownload currentDownload : data.getUrlDownloads().getDownloads()){
-				if (Log.isDebug())Log.logInfo(currentDownload.getURL().toString()+
-						","+currentDownload.getCurrentStatus()+
-						","+currentDownload.getDestination()+
-						","+currentDownload.getPodcastSource());
-			}
+		ArrayList<URLDownload> downloadList = new ArrayList<URLDownload>(); 
+		synchronized(data.getUrlDownloads().getDownloads()){
+			downloadList = data.getUrlDownloads().clone();
+		}
+		for (URLDownload currentDownload : downloadList){
+			if (Log.isDebug())Log.logInfo(currentDownload.getURL().toString()+
+					","+currentDownload.getCurrentStatus()+
+					","+currentDownload.getDestination()+
+					","+currentDownload.getPodcastSource());
 		}
 		if (Log.isDebug())Log.logInfo("-- URLDownload Contents end --");
 		return returnObject;

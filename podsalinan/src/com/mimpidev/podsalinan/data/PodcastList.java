@@ -3,6 +3,7 @@
  */
 package com.mimpidev.podsalinan.data;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -98,5 +99,19 @@ public class PodcastList {
 		}
 		
 		return selectedPodcast;
+	}
+
+	/**
+	 *   The following method is used to clone the array of objects, right down to it's little itty bittys
+	 *   to prevent concurrent errors
+	 */
+	public ArrayList<Podcast> clone(){
+		ArrayList<Podcast> cloneList = new ArrayList<Podcast>();
+		synchronized (podcasts){
+		   for (Podcast podcast : podcasts){
+			   cloneList.add(new Podcast(podcast));
+           }
+		}
+		return cloneList;
 	}
 }

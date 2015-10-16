@@ -263,30 +263,24 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 					}
 				} else if ((percentage<100)&&(download.getStatus()!=URLDetails.DESTINATION_INVALID)){
 					if (debug) if (Log.isDebug())Log.logInfo(this, "download.status="+download.getStatus());
-					synchronized(download){
-						try {
-							download.wait(5000);
-						} catch (InterruptedException e) {
-						}
+					try {
+						download.wait(5000);
+					} catch (InterruptedException e) {
 					}
 					data.getUrlDownloads().decreasePriority(download);
 					download.setStatus(URLDetails.DOWNLOAD_QUEUED);
 				} else if ((!download.getDestinationFile().isFile())||
 						   (!download.getDestinationFile().exists())){
-					synchronized(download){
-						try {
-							download.wait(5000);
-						} catch (InterruptedException e) {
-						}
+					try {
+						download.wait(5000);
+					} catch (InterruptedException e) {
 					}
 					data.getUrlDownloads().decreasePriority(download);
 					download.setStatus(URLDetails.DESTINATION_INVALID);
 				} else if (percentage>100){
-					synchronized(download){
-						try {
-							download.wait(5000);
-						} catch (InterruptedException e) {
-						}
+					try {
+						download.wait(5000);
+					} catch (InterruptedException e) {
 					}
 					data.getUrlDownloads().decreasePriority(download);
 					download.setStatus(URLDetails.DOWNLOAD_FAULT);

@@ -24,9 +24,6 @@ package com.mimpidev.podsalinan.data.loader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
-
-import com.mimpidev.dev.sql.DataRecord;
 import com.mimpidev.dev.sql.SqlException;
 import com.mimpidev.dev.sql.TableView;
 import com.mimpidev.dev.sql.field.FieldDetails;
@@ -78,12 +75,7 @@ public class DownloadsLoader extends TableLoader {
 	@Override
 	public void updateDatabase() {
 		if (isDbOpen()){
-			Vector<URLDownload> downloadList= new Vector<URLDownload>();
-			synchronized(downloads){
-				for (final URLDownload download : downloads.getDownloads()){
-					downloadList.add(new URLDownload(download));
-				}
-			}
+			ArrayList<URLDownload> downloadList = downloads.clone();
 			for (final URLDownload download : downloadList){
 				int sqlType=TableView.NOTHING_CHANGED;
 				if (!download.isAdded()){
@@ -124,10 +116,14 @@ public class DownloadsLoader extends TableLoader {
 				}
 				switch (sqlType){
 					case TableView.ITEM_ADDED_TO_DATABASE:
-						downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setAdded(true);
+						synchronized(downloads){
+						   downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setAdded(true);
+						}
 						break;
 					case TableView.ITEM_UPDATED_IN_DATABASE:
-						downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setUpdated(true);
+						synchronized(downloads){
+							downloads.getDownloads().get(downloads.getDownloads().indexOf(download)).setUpdated(true);
+						}
 						break;
 				}
 			}
