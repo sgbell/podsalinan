@@ -384,6 +384,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		}
 		if (currentTotalSpeed>downloadLimit){
 			return currentSpeed-(currentTotalSpeed-downloadLimit);
+		} else if (currentTotalSpeed<downloadLimit){
+			return currentSpeed+(downloadLimit-currentTotalSpeed);
 		} else {
 			return currentSpeed;
 		}
