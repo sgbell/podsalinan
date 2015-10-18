@@ -370,17 +370,16 @@ public class Downloader extends NotifyingRunnable{
     							//System.out.println("Downloading....");
     							outStream.write(buf, 0, byteRead);
     							saved+=byteRead;
-    							currentDownloadSpeed++;
+    							chunkCount++;
     							
     							// Download speed limited to 300kb/sec
-    							if (chunkCount>=getDownloadSpeedLimit()){
+    							if ((System.currentTimeMillis()-time)>=1000 || 
+    								chunkCount>=getDownloadSpeedLimit()){
     								try {
-    									if ((System.currentTimeMillis()-time)<1000){
-    										Thread.sleep(1000-(System.currentTimeMillis()-time));
-    										currentDownloadSpeed=0;
-    										time=System.currentTimeMillis();
-    										setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit());
-    									}
+   										Thread.sleep(1000-(System.currentTimeMillis()-time));
+   										currentDownloadSpeed=chunkCount;
+   										time=System.currentTimeMillis();
+   										setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
     								} catch (InterruptedException e) {
     									// sleep interrupted
     								}
@@ -504,7 +503,7 @@ public class Downloader extends NotifyingRunnable{
 	/**
 	 * @return the currentDownloadSpeed
 	 */
-	public long getCurrentDownloadSpeed() {
+	public int getCurrentDownloadSpeed() {
 		return currentDownloadSpeed;
 	}
 
@@ -518,7 +517,7 @@ public class Downloader extends NotifyingRunnable{
 	/**
 	 * @return the downloadSpeedLimit
 	 */
-	public long getDownloadSpeedLimit() {
+	public int getDownloadSpeedLimit() {
 		return downloadSpeedLimit;
 	}
 

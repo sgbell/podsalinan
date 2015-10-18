@@ -370,18 +370,22 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	 * 
 	 * @return
 	 */
-	public static int getDownloadSpeedLimit(){
+	public static int getDownloadSpeedLimit(int currentSpeed){
 		int downloadLimit=0;
+		int currentTotalSpeed=0;
 		try {
 			downloadLimit=Integer.parseInt(data.getSettings().getSettingValue("downloadLimit"));
 		} catch (NumberFormatException e){
 			downloadLimit=300;
 		}
-		for (Downloader downloader : downloaders){
-			//TODO: Calculate the speed of all downloaders, and return download speed
-			
-		}
 		
-		return -1;
+		for (Downloader downloader : downloaders){
+			currentTotalSpeed += downloader.getCurrentDownloadSpeed();
+		}
+		if (currentTotalSpeed>downloadLimit){
+			return currentSpeed-(currentTotalSpeed-downloadLimit);
+		} else {
+			return downloadLimit/downloaders.size();
+		}
 	}
 }
