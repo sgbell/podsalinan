@@ -36,8 +36,8 @@ import com.mimpidev.podsalinan.data.Podcast;
 import com.mimpidev.podsalinan.data.URLDownload;
 
 public class DownloadQueue implements Runnable, RunnableCompleteListener{
-	private Vector<Downloader> downloaders;	// Collection of running downloaders
-	private DataStorage data=null;
+	private static Vector<Downloader> downloaders;	// Collection of running downloaders
+	private static DataStorage data=null;
 	private boolean isFinished;
 	private	Object downloadQueueObject;
 
@@ -364,5 +364,24 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	 */
 	public void setDownloadQueueObject(Object downloadQueueObject) {
 		this.downloadQueueObject = downloadQueueObject;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static int getDownloadSpeedLimit(){
+		int downloadLimit=0;
+		try {
+			downloadLimit=Integer.parseInt(data.getSettings().getSettingValue("downloadLimit"));
+		} catch (NumberFormatException e){
+			downloadLimit=300;
+		}
+		for (Downloader downloader : downloaders){
+			//TODO: Calculate the speed of all downloaders, and return download speed
+			
+		}
+		
+		return -1;
 	}
 }

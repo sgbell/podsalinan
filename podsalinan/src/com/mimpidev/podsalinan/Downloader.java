@@ -51,6 +51,16 @@ public class Downloader extends NotifyingRunnable{
     private URL downloadURL;
     private long saved=0;
     private Object syncObject = new Object();
+
+    /**
+     * Used to report the current download speed 
+     */
+    private int currentDownloadSpeed=0;
+
+    /**
+     * Used to report back what speed to download at
+     */
+    private int downloadSpeedLimit=-1;
     
     private boolean active=false;
     private boolean debug=false;
@@ -360,15 +370,16 @@ public class Downloader extends NotifyingRunnable{
     							//System.out.println("Downloading....");
     							outStream.write(buf, 0, byteRead);
     							saved+=byteRead;
-    							chunkCount++;
+    							currentDownloadSpeed++;
     							
     							// Download speed limited to 300kb/sec
-    							if (chunkCount>=300){
+    							if (chunkCount>=getDownloadSpeedLimit()){
     								try {
     									if ((System.currentTimeMillis()-time)<1000){
     										Thread.sleep(1000-(System.currentTimeMillis()-time));
-    										chunkCount=0;
+    										currentDownloadSpeed=0;
     										time=System.currentTimeMillis();
+    										setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit());
     									}
     								} catch (InterruptedException e) {
     									// sleep interrupted
@@ -488,5 +499,33 @@ public class Downloader extends NotifyingRunnable{
 
 	public void clearDownload() {
 		downloadItem = null;
+	}
+
+	/**
+	 * @return the currentDownloadSpeed
+	 */
+	public long getCurrentDownloadSpeed() {
+		return currentDownloadSpeed;
+	}
+
+	/**
+	 * @param currentDownloadSpeed the currentDownloadSpeed to set
+	 */
+	public void setCurrentDownloadSpeed(int currentDownloadSpeed) {
+		this.currentDownloadSpeed = currentDownloadSpeed;
+	}
+
+	/**
+	 * @return the downloadSpeedLimit
+	 */
+	public long getDownloadSpeedLimit() {
+		return downloadSpeedLimit;
+	}
+
+	/**
+	 * @param downloadSpeedLimit the downloadSpeedLimit to set
+	 */
+	public void setDownloadSpeedLimit(int downloadSpeedLimit) {
+		this.downloadSpeedLimit = downloadSpeedLimit;
 	}
 }
