@@ -387,7 +387,7 @@ public class Downloader extends NotifyingRunnable{
 					}
 					if (downloadItem.getStatus()!=URLDetails.DESTINATION_INVALID){
 						if (saved==Long.parseLong(downloadItem.getSize()) || 
-							Long.parseLong(downloadItem.getSize())==-1){
+							(Long.parseLong(downloadItem.getSize())==-1 && !isStopThread())){
 							downloadItem.setStatus(URLDetails.FINISHED);
 							setResult(DOWNLOAD_COMPLETE);
 						} else if (saved<Long.parseLong(downloadItem.getSize())){
@@ -397,9 +397,12 @@ public class Downloader extends NotifyingRunnable{
 								    (Long.parseLong(downloadItem.getSize())>0)){
 							downloadItem.setStatus(URLDetails.DOWNLOAD_FAULT);
 							setResult(DOWNLOAD_ERROR);
-						} else if ((Long.parseLong(downloadItem.getSize())==-1)&&saved>0){
-							downloadItem.setStatus(URLDetails.FINISHED);
-							setResult(DOWNLOAD_COMPLETE);
+						} else if ((Long.parseLong(downloadItem.getSize())==-1) && 
+								   saved>0 && 
+								   isStopThread()){
+							// If downloader is stopped prematurely
+							downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
+							setResult(DOWNLOAD_INCOMPLETE);
 						}
 					}
 				} catch (UnknownHostException e){
