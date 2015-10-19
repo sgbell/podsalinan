@@ -377,7 +377,10 @@ public class Downloader extends NotifyingRunnable{
     								try {
     									// Every second, check the parent DownloadQueue, and see how many downloaders are active,
     									// and calculate how fast the downloader should be downloading at.
-   										Thread.sleep(1000-((System.currentTimeMillis()-time)>0?(System.currentTimeMillis()-time):0));
+    									long sleep = (System.currentTimeMillis()-time);
+    									if (sleep<800){
+    										Thread.sleep(1000-sleep);
+    									}
    										currentDownloadSpeed=chunkCount;
    										time=System.currentTimeMillis();
    										setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
