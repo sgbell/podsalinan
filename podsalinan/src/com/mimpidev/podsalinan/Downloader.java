@@ -371,13 +371,13 @@ public class Downloader extends NotifyingRunnable{
     							outStream.write(buf, 0, byteRead);
     							saved+=byteRead;
     							chunkCount++;
-    							
-    							if ((System.currentTimeMillis()-time)>=1000 || 
+
+    							long sleep = (System.currentTimeMillis()-time);
+    							if (sleep>=1000 || 
     								chunkCount>=getDownloadSpeedLimit()){
     								try {
     									// Every second, check the parent DownloadQueue, and see how many downloaders are active,
     									// and calculate how fast the downloader should be downloading at.
-    									long sleep = (System.currentTimeMillis()-time);
     									if (sleep<800){
     										Thread.sleep(1000-sleep);
     									}
