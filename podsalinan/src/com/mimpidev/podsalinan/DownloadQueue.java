@@ -385,12 +385,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		}
 		if (currentTotalSpeed>downloadLimit){
 		   newSpeedLimit= currentSpeed-(currentTotalSpeed-downloadLimit);
-		   Log.logInfo("DownloadQueue", "Total Download speed faster than limit. New Speed Limit: "+newSpeedLimit);
 		} else if (currentTotalSpeed<downloadLimit/(activeDownloadersCount()!=0?activeDownloadersCount():1)){
 		   newSpeedLimit = (downloadLimit/(activeDownloadersCount()!=0?activeDownloadersCount():1));
-		   Log.logInfo("DownloadQueue", "Total Download speed slower than limit. New Speed Limit: "+newSpeedLimit);
 		} else {
-           Log.logInfo("DownloadQueue", "No change to Speed Limit: "+newSpeedLimit);
 		   newSpeedLimit = currentSpeed;
 		}
 		if (newSpeedLimit<=0){

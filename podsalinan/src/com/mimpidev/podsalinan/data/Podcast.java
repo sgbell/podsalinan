@@ -360,10 +360,7 @@ public class Podcast extends DownloadDetails{
 							episodeList.add(newEpisode);
 						return 0;
 					} catch (ParseException e) {
-						Log.logError(this, "Podcast: "+getName());
-						Log.logError(this, "Episode error:"+newEpisode.toString());
 						e.printStackTrace();
-						System.exit(0);
 					}
 					
 				} else {

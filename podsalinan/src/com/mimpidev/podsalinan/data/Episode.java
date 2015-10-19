@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.dev.sql.DataRecord;
 import com.mimpidev.dev.sql.field.StringType;
 
@@ -147,5 +148,14 @@ public class Episode extends URLDetails {
 
 	public String toString(){
 		return "Title - "+getTitle()+" - Date - "+getDate()+" -- Description "+getDescription();
+	}
+	
+	
+	public int getStatus(){
+		if (super.getStatus()==UNKNOWN_STATUS){
+			setStatus(NOT_QUEUED);
+		}
+		
+		return super.getStatus(); 
 	}
 }

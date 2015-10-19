@@ -372,10 +372,11 @@ public class Downloader extends NotifyingRunnable{
     							saved+=byteRead;
     							chunkCount++;
     							
-    							// Download speed limited to 300kb/sec
     							if ((System.currentTimeMillis()-time)>=1000 || 
     								chunkCount>=getDownloadSpeedLimit()){
     								try {
+    									// Every second, check the parent DownloadQueue, and see how many downloaders are active,
+    									// and calculate how fast the downloader should be downloading at.
    										Thread.sleep(1000-(System.currentTimeMillis()-time));
    										currentDownloadSpeed=chunkCount;
    										time=System.currentTimeMillis();
