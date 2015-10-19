@@ -373,6 +373,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	public static int getDownloadSpeedLimit(int currentSpeed){
 		int downloadLimit=0;
 		int currentTotalSpeed=0;
+		int newSpeedLimit=0;
 		try {
 			downloadLimit=Integer.parseInt(data.getSettings().getSettingValue("downloadLimit"));
 		} catch (NumberFormatException e){
@@ -383,11 +384,30 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			currentTotalSpeed += downloader.getCurrentDownloadSpeed();
 		}
 		if (currentTotalSpeed>downloadLimit){
-			return currentSpeed-(currentTotalSpeed-downloadLimit);
-		} else if (currentTotalSpeed<downloadLimit/downloaders.size()){
-			return currentSpeed+(downloadLimit-currentTotalSpeed);
+		   newSpeedLimit= currentSpeed-(currentTotalSpeed-downloadLimit);
+		   Log.logInfo("DownloadQueue", "Total Download speed faster than limit. New Speed Limit: "+newSpeedLimit);
+		} else if (currentTotalSpeed<downloadLimit/(activeDownloadersCount()!=0?activeDownloadersCount():1)){
+		   newSpeedLimit = (downloadLimit/(activeDownloadersCount()!=0?activeDownloadersCount():1));
+		   Log.logInfo("DownloadQueue", "Total Download speed slower than limit. New Speed Limit: "+newSpeedLimit);
 		} else {
-			return currentSpeed;
+           Log.logInfo("DownloadQueue", "No change to Speed Limit: "+newSpeedLimit);
+		   newSpeedLimit = currentSpeed;
 		}
+		if (newSpeedLimit<=0){
+			newSpeedLimit=1;
+		}
+		
+		return newSpeedLimit;
+	}
+
+	private static int activeDownloadersCount() {
+		int activeCount=0;
+		for (Downloader downloader : downloaders){
+			if (downloader.currentlyDownloading()){
+				activeCount++;
+			}
+		}
+		
+		return activeCount;
 	}
 }

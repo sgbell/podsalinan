@@ -451,6 +451,7 @@ public class Downloader extends NotifyingRunnable{
 		if (!isStopThread()){
 			result = getFile();
 		}
+		currentDownloadSpeed=0;
 	}
 	
 	public String getFilenameDownload(){

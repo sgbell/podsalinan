@@ -338,6 +338,7 @@ public class Podcast extends DownloadDetails{
 	 * @return
 	 */
 	public int addEpisode(Episode newEpisode){
+		debug=false;
 		if (episodeList!=null)
 			synchronized(episodeList){
 				if (episodeList.size()>0){
@@ -359,7 +360,10 @@ public class Podcast extends DownloadDetails{
 							episodeList.add(newEpisode);
 						return 0;
 					} catch (ParseException e) {
+						Log.logError(this, "Podcast: "+getName());
+						Log.logError(this, "Episode error:"+newEpisode.toString());
 						e.printStackTrace();
+						System.exit(0);
 					}
 					
 				} else {
