@@ -171,31 +171,35 @@ public class Downloader extends NotifyingRunnable{
 	 * This test will cover if a download can occur or not.
 	 * @return if its connected to the internet
 	 */
-	@SuppressWarnings("unused")
 	public static boolean isInternetReachable()
     {
-            try {
-            	//System.out.println("Checking the internet");
-                //make a URL to a known source
-                URL url = new URL("http://www.google.com");
-
-                //open a connection to that source
-                HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
-
-                //trying to retrieve data from the source. If there
-                //is no connection, this line will fail
-                Object objData = urlConnect.getContent();
-            } catch (UnknownHostException e) {
-            		setResult(CONNECTION_FAILED);
-                    return false;
-            }
-            catch (IOException e) {
-            		setResult(CONNECTION_FAILED);
-                    return false;
-            }
-            return true;
+		return isInternetReachable("http://www.google.com");
     }
+	
+	public static boolean isInternetReachable(String urlString) {
+        try {
+        	//System.out.println("Checking the internet");
+            //make a URL to a known source
+            URL url = new URL(urlString);
 
+            //open a connection to that source
+            HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
+
+            //trying to retrieve data from the source. If there
+            //is no connection, this line will fail
+            @SuppressWarnings("unused")
+			Object objData = urlConnect.getContent();
+        } catch (UnknownHostException e) {
+        		setResult(CONNECTION_FAILED);
+                return false;
+        }
+        catch (IOException e) {
+        		setResult(CONNECTION_FAILED);
+                return false;
+        }
+        return true;
+	}
+	
 	public boolean checkURLRedirect(URL urlToCheck){
 		HttpURLConnection httpConn;
 		try {
@@ -389,6 +393,13 @@ public class Downloader extends NotifyingRunnable{
     								}
     							}
     								
+    						}
+    						if (byteRead==-1){
+    							// Check if the reason the file download stopped was because the downloader can't find the server
+    							if (!isInternetReachable(downloadItem.getURL())){
+    								downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
+    								setResult(CONNECTION_FAILED);
+    							}
     						}
     						inStream.close();
     						outStream.close();					
