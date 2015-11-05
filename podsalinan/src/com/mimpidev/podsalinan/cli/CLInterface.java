@@ -92,9 +92,11 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("list podcasts", new ListPodcasts(data));
 		options.put("list episodes", new ListEpisodes(data));
 		options.put("list select", new ListSelection(data));
-		options.put("list details", new ListDetails(data));
 		options.put("list downloads", new ListDownloads(data));
 		options.put("list preferences", new ListPreferences(data));
+		ListDetails listDetails = new ListDetails(data);
+		options.put("list details", listDetails);
+		options.put("show details", listDetails);
 		
 		options.put("show menu", new MenuVisible(data));  
 		options.put("hide menu", new MenuHidden(data));
