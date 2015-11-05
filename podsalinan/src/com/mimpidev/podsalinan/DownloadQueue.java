@@ -420,7 +420,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 			for (Downloader downloader : downloaders)
 			    tempDownloadList.add(downloader);
 		}
-		for (Downloader downloader : tempDownloadList){
+		for (final Downloader downloader : tempDownloadList){
 			if (downloader.currentlyDownloading()){
 				Map<String,String> details = new HashMap<String,String>(){
 					/**
