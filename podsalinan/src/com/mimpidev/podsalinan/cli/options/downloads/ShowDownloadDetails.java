@@ -4,9 +4,11 @@
 package com.mimpidev.podsalinan.cli.options.downloads;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.mimpidev.podsalinan.DataStorage;
+import com.mimpidev.podsalinan.DownloadQueue;
 import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -55,7 +57,12 @@ public class ShowDownloadDetails extends CLIOption {
 			}
 			
 			System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(fullSize));
-			//TODO: 0.1 - Create static method in DownloadQueue, that will create an array list of currently downloading urls, and speeds
+			ArrayList<Map<String,String>> downloaderDetails = DownloadQueue.getDownloaderDetails();
+			for (Map<String,String> details : downloaderDetails){
+				if (details.get("uid").equals(selectedDownload.getUid())){
+					System.out.println ("Current Speed: "+details.get("speed")+"Kb/s");
+				}
+			}
 		}
 	}
 	

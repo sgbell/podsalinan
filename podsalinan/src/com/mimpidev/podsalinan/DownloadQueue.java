@@ -27,7 +27,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import com.mimpidev.dev.debug.Log;
@@ -43,10 +46,6 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 
 	private boolean debug=false;
 
-	public DownloadQueue(){
-		
-	}
-	
 	public DownloadQueue(DataStorage newData){
 		setData(newData);
 	}
@@ -379,10 +378,13 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		} catch (NumberFormatException e){
 			downloadLimit=300;
 		}
-		
-		for (Downloader downloader : downloaders){
-			currentTotalSpeed += downloader.getCurrentDownloadSpeed();
+
+		synchronized (downloaders){
+			for (Downloader downloader : downloaders){
+				currentTotalSpeed += downloader.getCurrentDownloadSpeed();
+			}
 		}
+		
 		if (currentTotalSpeed>downloadLimit){
 		   newSpeedLimit= currentSpeed-(currentTotalSpeed-downloadLimit);
 		} else if (currentTotalSpeed<downloadLimit/(activeDownloadersCount()!=0?activeDownloadersCount():1)){
@@ -399,12 +401,45 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 
 	private static int activeDownloadersCount() {
 		int activeCount=0;
-		for (Downloader downloader : downloaders){
-			if (downloader.currentlyDownloading()){
-				activeCount++;
+		synchronized(downloaders){
+			for (Downloader downloader : downloaders){
+				if (downloader.currentlyDownloading()){
+					activeCount++;
+				}
 			}
 		}
 		
 		return activeCount;
+	}
+	
+	public static ArrayList<Map<String,String>> getDownloaderDetails(){
+		ArrayList<Map<String,String>> downloadDetails = new ArrayList<Map<String,String>>();
+		ArrayList<Downloader> tempDownloadList = new ArrayList<Downloader>();  
+		
+		synchronized (downloaders){
+			for (Downloader downloader : downloaders)
+			    tempDownloadList.add(downloader);
+		}
+		for (Downloader downloader : tempDownloadList){
+			if (downloader.currentlyDownloading()){
+				Map<String,String> details = new HashMap<String,String>(){
+					/**
+					  * 
+					  */
+					private static final long serialVersionUID = 4284980248970494739L;
+				{
+					put("url", downloader.getURLDownload().getURL());
+					put("destination", downloader.getFilenameDownload());
+					put("speed", ""+downloader.getCurrentDownloadSpeed());
+					put("maxSize", downloader.getURLDownload().getSize());
+					put("currentSize", ""+downloader.getSaved());
+					put("status", downloader.getURLDownload().getCurrentStatus());
+					put("uid", downloader.getURLDownload().getUid());
+				}};
+				downloadDetails.add(details);
+			}
+		}
+		
+		return downloadDetails;
 	}
 }
