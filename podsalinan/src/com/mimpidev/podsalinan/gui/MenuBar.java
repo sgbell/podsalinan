@@ -24,12 +24,14 @@
  *    Written By: Sam Bell
  */
 
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.gui;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+
+import com.mimpidev.podsalinan.XmlReader;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar{

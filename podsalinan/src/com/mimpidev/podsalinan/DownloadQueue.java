@@ -335,7 +335,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	 * @param data the data to set
 	 */
 	public void setData(DataStorage data) {
-		this.data = data;
+		DownloadQueue.data = data;
 	}
 
 	/**

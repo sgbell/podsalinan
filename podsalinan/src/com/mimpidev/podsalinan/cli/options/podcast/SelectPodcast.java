@@ -42,10 +42,10 @@ public class SelectPodcast extends CLIOption {
 				}
 			}
 			if (selectedPodcast==null){
+				Vector<Podcast> podcastList=null;
 				synchronized (data.getPodcasts()){
-					Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
+					podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
 				}
-				Vector<Podcast> podcastList = data.getPodcasts().getPodcastListByName(functionParms.get("userInput"));
 				if (debug) if (Log.isDebug())Log.logInfo(this, "Line:45, PodcastList.size="+podcastList.size());
 				if (podcastList.size()==1){
 					synchronized(CLInterface.cliGlobals){

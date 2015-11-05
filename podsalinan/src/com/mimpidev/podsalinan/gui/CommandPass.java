@@ -16,12 +16,14 @@
  * Contributors:
  *     Sam Bell - initial API and implementation
  ******************************************************************************/
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFileChooser;
+
+import com.mimpidev.podsalinan.DataStorage;
 
 /**
  * @author bugman

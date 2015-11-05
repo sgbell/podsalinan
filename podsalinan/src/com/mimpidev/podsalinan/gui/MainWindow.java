@@ -1,9 +1,11 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.gui;
 
 import javax.swing.JFrame;
+
+import com.mimpidev.podsalinan.DataStorage;
 
 /**
  * @author bugman

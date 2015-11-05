@@ -19,7 +19,7 @@
 /**
  * 
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.gui;
 
 import java.awt.Component;
 

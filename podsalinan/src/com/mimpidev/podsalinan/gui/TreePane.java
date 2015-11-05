@@ -19,7 +19,7 @@
 /**
  * This is the class for building the treepane.
  */
-package com.mimpidev.podsalinan;
+package com.mimpidev.podsalinan.gui;
 
 import java.awt.BorderLayout;
 

@@ -42,6 +42,7 @@ public class XmlReader {
 	public XmlReader(){
 	}
 	
+	@SuppressWarnings("unused")
 	public Vector<Episode> parseEpisodes(InputStream file){
 		Vector<Episode> episodes = new Vector<Episode>();
 		XMLInputFactory factory = XMLInputFactory.newInstance();

@@ -55,6 +55,7 @@ public class ShowDownloadDetails extends CLIOption {
 			}
 			
 			System.out.println ("Downloaded: "+humanReadableSize(fileSize)+" / "+humanReadableSize(fullSize));
+			//TODO: 0.1 - Create static method in DownloadQueue, that will create an array list of currently downloading urls, and speeds
 		}
 	}
 	
