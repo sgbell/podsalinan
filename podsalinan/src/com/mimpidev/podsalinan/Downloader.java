@@ -51,6 +51,7 @@ public class Downloader extends NotifyingRunnable{
     private URL downloadURL;
     private long saved=0;
     private Object syncObject = new Object();
+    private boolean speedUnlocked=false;
 
     /**
      * Used to report the current download speed 
@@ -115,6 +116,7 @@ public class Downloader extends NotifyingRunnable{
 		downloadItem.setURL(urlDownload.toString());
 		downloadItem.setDestination(outputFile);
 		downloadItem.setStatus(URLDetails.CURRENTLY_DOWNLOADING);
+		speedUnlocked=true;
 		try {
 			downloadURL = new URL(urlDownload.toString());
 		} catch (MalformedURLException e1) {
@@ -378,7 +380,7 @@ public class Downloader extends NotifyingRunnable{
 
     							long sleep = (System.currentTimeMillis()-time);
     							if (sleep>=1000 || 
-    								chunkCount>=getDownloadSpeedLimit()){
+    								chunkCount==getDownloadSpeedLimit()){
     								try {
     									// Every second, check the parent DownloadQueue, and see how many downloaders are active,
     									// and calculate how fast the downloader should be downloading at.
@@ -386,8 +388,12 @@ public class Downloader extends NotifyingRunnable{
     										Thread.sleep(1000-sleep);
     									}
    										currentDownloadSpeed=chunkCount;
+   										chunkCount=0;
    										time=System.currentTimeMillis();
-   										setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
+   										/* This if statement, makes sure that if it's is in the download queue it is limited, where as
+   										   a podcast feed is small, and your internet can handle a quick short burst */
+   										if (!speedUnlocked)
+   											setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
     								} catch (InterruptedException e) {
     									// sleep interrupted
     								}
@@ -542,5 +548,6 @@ public class Downloader extends NotifyingRunnable{
 	 */
 	public void setDownloadSpeedLimit(int downloadSpeedLimit) {
 		this.downloadSpeedLimit = downloadSpeedLimit;
+		Log.logInfo(this,"New Download speed limit="+downloadSpeedLimit);
 	}
 }
