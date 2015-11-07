@@ -548,6 +548,5 @@ public class Downloader extends NotifyingRunnable{
 	 */
 	public void setDownloadSpeedLimit(int downloadSpeedLimit) {
 		this.downloadSpeedLimit = downloadSpeedLimit;
-		Log.logInfo(this,"New Download speed limit="+downloadSpeedLimit);
 	}
 }

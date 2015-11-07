@@ -395,9 +395,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		if (newSpeedLimit<=0){
 			newSpeedLimit=1;
 		}
-        Log.logInfo("DownloadQueue", 398, "Current Speed Limit:"+currentSpeed);
-		Log.logInfo("DownloadQueue", 399, "New Speed Limit:"+newSpeedLimit);
-		Log.logInfo("", 400, "Total Download Speed: "+currentTotalSpeed);
+        if (Log.isDebug()) Log.logInfo("DownloadQueue", 398, "Current Speed Limit:"+currentSpeed);
+        if (Log.isDebug()) Log.logInfo("DownloadQueue", 399, "New Speed Limit:"+newSpeedLimit);
+        if (Log.isDebug()) Log.logInfo("", 400, "Total Download Speed: "+currentTotalSpeed);
 		
 		return newSpeedLimit;
 	}
