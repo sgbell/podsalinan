@@ -413,6 +413,9 @@ public class Downloader extends NotifyingRunnable{
    										setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
    										time=System.currentTimeMillis();
    										lastSize=outStream.length();
+   										if (!DownloadQueue.timeToDownload()){
+   											setStopThread(true);
+   										}
     								} catch (InterruptedException e) {
     									// sleep interrupted
     								}

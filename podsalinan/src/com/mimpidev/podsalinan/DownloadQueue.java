@@ -27,7 +27,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +72,23 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				int downloadCount=0;
 				// Starting download threads
 				synchronized (downloaders){
-					if (downloaders.size()<maxDownloaders){
+					boolean startDownloader=true;
+					if (!data.getSettings().getSettingValue("startTime").equals("")){
+						Calendar now = Calendar.getInstance();
+						DateFormat timeFormat = new SimpleDateFormat("HH:mma");
+						Calendar startTime = Calendar.getInstance();
+						try {
+							startTime.setTime(timeFormat.parse(data.getSettings().getSettingValue("startTime")));
+							if (now.getTimeInMillis()>startTime.getTimeInMillis()){
+								startDownloader=true;
+							} else {
+								startDownloader=false;
+							}
+						} catch (ParseException e) {
+							Log.logError(this, "Cannot convert preferences.startTime to Time Object");
+						}
+					}
+					if (startDownloader && downloaders.size()<maxDownloaders){
 						for (downloadCount=downloaders.size(); downloadCount<maxDownloaders; downloadCount++){
 							Downloader newDownloader = new Downloader(data.getFileSystemSlash());
 							downloaders.add(newDownloader);
@@ -441,5 +461,26 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		}
 		
 		return downloadDetails;
+	}
+
+	public static boolean timeToDownload() {
+		boolean canDownload=true;
+		if (!data.getSettings().getSettingValue("startTime").equals("")){
+			Calendar now = Calendar.getInstance();
+			DateFormat timeFormat = new SimpleDateFormat("HH:mma");
+			Calendar startTime = Calendar.getInstance();
+			try {
+				startTime.setTime(timeFormat.parse(data.getSettings().getSettingValue("endTime")));
+				if (now.getTimeInMillis()<startTime.getTimeInMillis()){
+					canDownload=true;
+				} else {
+					canDownload=false;
+				}
+			} catch (ParseException e) {
+				Log.logError("DownloadQueue", "Cannot convert preferences.startTime to Time Object");
+			}
+		}
+		
+		return canDownload;
 	}
 }

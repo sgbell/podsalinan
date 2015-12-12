@@ -35,6 +35,7 @@ public class ShowMenu extends CLIOption {
 			System.out.println("3. Default Download Directory");
 			System.out.println("4. Automatically Download New Podcast Episodes");
 			System.out.println("5. Set Download Speed Limit");
+			System.out.println("6. Limit download to time of day");
 			System.out.println();
 			System.out.println("9. Return to Preferences Menu");
 		}

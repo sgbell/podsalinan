@@ -221,6 +221,10 @@ public class CLInterface extends CLIOption implements Runnable{
 		CLIOption downloadSpeedLimit = new DownloadSpeedLimit(data); 
 		options.put("settings 5", downloadSpeedLimit);
 		options.put("set downloadlimit <00M>", downloadSpeedLimit);
+		CLIOption downloadTimeDay = new DownloadTimeDay(data);
+		options.put("settings 6", downloadTimeDay);
+		options.put("set downloadTimeDay <00:00PM> <00:00PM>", downloadTimeDay);
+		options.put("set downloadTimeDay <0|1|true|false>", downloadTimeDay);
 		options.put("set menuvisible <0|1|true|false>", new MenuVisibility(data));
 		/**
 		 *  End settings options
@@ -384,6 +388,14 @@ public class CLInterface extends CLIOption implements Runnable{
 	        						if (debug) if (Log.isDebug())Log.logInfo(this, 380, splitValue[svc]+" set userInput:"+methodCallSplit[svc]);
 	        						menuCommand.parameterMap.put("userInput", methodCallSplit[svc]);
 	        						score++;
+	        					} else if ((splitValue[svc].equals("<00:00PM>")&&
+	        							methodCallSplit[svc].toLowerCase().matches("[0-9]{1-2}:[0-9]{2}[AaPp][Mm]"))){
+	        						if (menuCommand.parameterMap.get("startTime")==null){
+	        							menuCommand.parameterMap.put("startTime", methodCallSplit[svc]);
+	        						} else {
+	        							menuCommand.parameterMap.put("endTime", methodCallSplit[svc]);
+	        						}
+	        						score++;	        						
 	        					}
 	        				} else {
 	        					if (splitValue[svc].equalsIgnoreCase(methodCallSplit[svc])){
