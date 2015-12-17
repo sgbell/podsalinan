@@ -73,7 +73,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				// Starting download threads
 				synchronized (downloaders){
 					boolean startDownloader=true;
-					if (!data.getSettings().getSettingValue("startTime").equals("")){
+					if (data.getSettings().getSettingValue("startTime")!=null && !data.getSettings().getSettingValue("startTime").equals("")){
 						Calendar now = Calendar.getInstance();
 						DateFormat timeFormat = new SimpleDateFormat("HH:mma");
 						Calendar startTime = Calendar.getInstance();
@@ -468,7 +468,8 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 
 	public static boolean timeToDownload() {
 		boolean canDownload=true;
-		if (!data.getSettings().getSettingValue("startTime").equals("")){
+		if (data.getSettings().getSettingValue("startTime")!=null &&
+			!data.getSettings().getSettingValue("startTime").equals("")){
 			Calendar now = Calendar.getInstance();
 			DateFormat timeFormat = new SimpleDateFormat("HH:mma");
 			Calendar startTime = Calendar.getInstance();

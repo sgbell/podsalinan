@@ -230,7 +230,7 @@ public class Podcast extends DownloadDetails{
 				try {
 					Downloader downloader = new Downloader(new URL(get("url").getValue()), outputFile);
 					int result = downloader.getFile();
-					if (result==Downloader.DOWNLOAD_COMPLETE){
+					if (result==Downloader.Status.DOWNLOAD_COMPLETE){
 						readPodcastFile(outputFile,false);
 					}
 					// Delete the temp file from the filesystem
