@@ -43,6 +43,7 @@ public class Downloader extends NotifyingRunnable{
     private URL downloadURL;
     private long saved=0;
     private Object syncObject = new Object();
+    private boolean speedUnlocked=false;
 
     public class Status {
         public final static int NO_STATUS=0;
@@ -130,6 +131,7 @@ public class Downloader extends NotifyingRunnable{
 		downloadItem.setURL(urlDownload.toString());
 		downloadItem.setDestination(outputFile);
 		downloadItem.setStatus(URLDetails.CURRENTLY_DOWNLOADING);
+		speedUnlocked=true;
 		try {
 			downloadURL = new URL(urlDownload.toString());
 		} catch (MalformedURLException e1) {
@@ -410,7 +412,8 @@ public class Downloader extends NotifyingRunnable{
     										Thread.sleep(1000-sleep);
     									}
    										currentDownloadSpeed=(int) ((outStream.length()-lastSize)/1024);
-   										setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
+   										if (!speedUnlocked)
+   											setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
    										time=System.currentTimeMillis();
    										lastSize=outStream.length();
    										if (!DownloadQueue.timeToDownload()){
