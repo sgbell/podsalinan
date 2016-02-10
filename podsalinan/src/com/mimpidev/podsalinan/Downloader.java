@@ -175,13 +175,6 @@ public class Downloader extends NotifyingRunnable{
 			downloadItem=null;
 		}
 	}
-	
-	public void endThread(){
-		synchronized(syncObject){
-			syncObject.notify();
-		}
-		this.setStopThread(true);
-	}
 
 	/** code found at: 
 	 * http://stackoverflow.com/questions/1139547/detect-internet-connection-using-java
