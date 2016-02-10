@@ -226,6 +226,9 @@ public class CLInterface extends CLIOption implements Runnable{
 		options.put("set downloadTimeDay <00:00PM> <00:00PM>", downloadTimeDay);
 		options.put("set downloadTimeDay <0|1|true|false>", downloadTimeDay);
 		options.put("set menuvisible <0|1|true|false>", new MenuVisibility(data));
+		CLIOption resetEpisodeStatus = new ResetEpisodeStatus(data);
+		options.put("settings 7", resetEpisodeStatus);
+		options.put("set resetEpisodeStatus <0|1|true|false>", resetEpisodeStatus);
 		/**
 		 *  End settings options
 		 */

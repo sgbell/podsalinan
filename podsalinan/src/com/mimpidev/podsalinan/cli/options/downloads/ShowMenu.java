@@ -28,7 +28,7 @@ public class ShowMenu extends CLIOption {
 	public ReturnObject execute(Map<String, String> functionParms) {
 		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 
-		if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+		if (!data.getSettings().isValidSetting("menuVisible") || data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
 			ListDownloads listDownloads = new ListDownloads(data);
 			
 			listDownloads.execute(null);

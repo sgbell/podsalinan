@@ -30,7 +30,7 @@ public class ShowMenu extends CLIOption {
 		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 		System.out.println();
 		
-		if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+		if (!data.getSettings().isValidSetting("menuVisible") || data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
 			ListPodcasts list = new ListPodcasts(data);
 			returnObject = new ReturnObject();
 			returnObject.parameterMap.put("showcount", "");

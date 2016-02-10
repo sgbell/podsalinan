@@ -5,6 +5,7 @@ package com.mimpidev.podsalinan.cli.options.mainmenu;
 
 import java.util.Map;
 
+import com.mimpidev.dev.debug.Log;
 import com.mimpidev.podsalinan.DataStorage;
 import com.mimpidev.podsalinan.cli.CLIOption;
 import com.mimpidev.podsalinan.cli.ReturnObject;
@@ -25,7 +26,7 @@ public class ShowMenu extends CLIOption {
 
 	@Override
 	public ReturnObject execute(Map<String, String> functionParms) {
-		if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+		if (!data.getSettings().isValidSetting("menuVisible") || data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
 			System.out.println(data.getPodcasts().getList().size()+" - Podcasts. "+data.getUrlDownloads().visibleSize()+" - Downloads Queued");
 			System.out.println();
 			System.out.println("1. Podcasts Menu");

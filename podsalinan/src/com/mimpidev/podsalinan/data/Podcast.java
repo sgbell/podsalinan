@@ -435,7 +435,9 @@ public class Podcast extends DownloadDetails{
 		data.scanDirectory(directoryFile, filesInDir);
 		synchronized(episodeList){
 			for (Episode episode : episodeList)
-				if (episode.getStatus()==URLDetails.FINISHED){
+				if (episode.getStatus()==URLDetails.FINISHED && 
+				    data.getSettings().isValidSetting("updateDownloadedEpisodeStatus") && 
+				    data.getSettings().getSettingValue("updateDownloadedEpisodeStatus").equals("true")){
 					String filename = episode.getURL().toString().split("/")[episode.getURL().toString().split("/").length-1];
 					boolean found=false;
 					int fileCount=0;
