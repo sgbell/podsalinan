@@ -69,5 +69,11 @@ public abstract class NotifyingRunnable implements Runnable{
 		}
 	}
 	
+	
 	public abstract void doRun();
+	
+	
+	public void endThread(){
+		this.setStopThread(true);
+	}	
 }

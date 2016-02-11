@@ -54,6 +54,9 @@ public class EpisodeLoader extends TableLoader {
 					}					
 				} else if (episode.isUpdated()){
 					try {
+						/*TODO:
+						 * 		NoclassDeffounderror line 61
+						 */
 						update(episode.getDatabaseRecord(), 
 								       new HashMap<String, FieldDetails>(){{
 											put("url", new StringType(episode.getURL().toString().replaceAll("\'", "&apos;")));

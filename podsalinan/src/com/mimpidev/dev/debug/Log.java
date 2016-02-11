@@ -39,7 +39,7 @@ public class Log {
      * either to the output file, or to the screen
      */
 	private static boolean logDebug=true;
-	private static boolean outputToScreen=true;
+	private static boolean outputToScreen=false;
 	private static boolean showShortName=false;
 
 	private static RandomAccessFile fileOutput=null;
