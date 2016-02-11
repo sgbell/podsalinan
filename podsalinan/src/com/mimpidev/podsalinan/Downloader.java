@@ -399,6 +399,7 @@ public class Downloader extends NotifyingRunnable{
     						while (((byteRead = inStream.read(buf)) > 0)
     								&&(!isStopThread())
     								&&(downloadItem.getStatus()==URLDetails.CURRENTLY_DOWNLOADING)){
+    							if (isStopThread()) Log.logInfo(this, "Thread Should be stopping.");
     							outStream.write(buf, 0, byteRead);
     							saved+=byteRead;
 
@@ -422,10 +423,12 @@ public class Downloader extends NotifyingRunnable{
     								} catch (InterruptedException e) {
     									// sleep interrupted
     								}
+    								/*
             						if (Log.isDebug()) Log.logInfo(this, "Downloading: "+(outStream.length()/1024)+" Kb");
             						
             						if (Log.isDebug()) Log.logInfo(this, "Download Speed: "+currentDownloadSpeed+" KB\\sec");
             						if (Log.isDebug()) Log.logInfo(this, "Download Speed Limit: "+getDownloadSpeedLimit()+" KB\\sec");
+            						*/
     							}
     								
     						}

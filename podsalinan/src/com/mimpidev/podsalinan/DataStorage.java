@@ -184,6 +184,9 @@ public class DataStorage {
 				return -1;
 			}
 			*/
+		} else {
+			//TODO: 1. Need to create the files, otherwise we wont have any history :(
+			
 		}
 		if (!settings.isValidSetting("defaultDirectory")){
 			if (System.getProperty("os.name").startsWith("Windows"))

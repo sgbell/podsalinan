@@ -25,6 +25,8 @@ package com.mimpidev.podsalinan;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import com.mimpidev.dev.debug.Log;
+
 /**
  * @author bugman
  *
@@ -52,6 +54,8 @@ public abstract class NotifyingRunnable implements Runnable{
 	
 	public void setStopThread(boolean newStopValue){
 		stopThread=newStopValue;
+		if (newStopValue) Log.logInfo(this, "Stop thread requested");
+		if (!newStopValue) Log.logInfo(this, "Start thread requested");
 	}
 	
 	@Override

@@ -28,7 +28,7 @@ public class ShowSelectedMenu extends CLIOption {
 		if (debug) if (Log.isDebug())Log.logMap(this, functionParms);
 
 		if (functionParms.containsKey("uid")){
-			if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+			if (!data.getSettings().isValidSetting("menuVisible") || data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
 				ShowDownloadDetails printDetails = new ShowDownloadDetails(data);
 				functionParms.put("menuCall", "true");
 				printDetails.execute(functionParms);
