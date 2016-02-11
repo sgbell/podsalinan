@@ -242,6 +242,7 @@ public class Downloader extends NotifyingRunnable{
 		boolean remoteFileExists=false;
 		int numTries=0;
 		URLConnection conn;
+		List<String> values;
 		
 		if (Log.isDebug())Log.logInfo(this, "Is internet Reachable? ");
 		if (isInternetReachable()){
@@ -264,7 +265,7 @@ public class Downloader extends NotifyingRunnable{
 					 * 2GB
 					 */
 					String length=null;
-					List<String> values = conn.getHeaderFields().get("content-Length");
+					values = conn.getHeaderFields().get("Content-Length");
 					boolean isDirectory=false;
 
 					File destinationFile=downloadItem.getDestinationFile();
@@ -301,7 +302,7 @@ public class Downloader extends NotifyingRunnable{
 						if (Log.isDebug()) Log.logInfo(this, "Destination does not exist.");
 						return Status.DESTINATION_INVALID;
 					}
-					
+
 					if (values != null && !values.isEmpty()){
 						length = (String) values.get(0);
 					} else {
@@ -480,6 +481,13 @@ public class Downloader extends NotifyingRunnable{
 			setResult(Status.CONNECTION_FAILED);
 		}
 		return result;
+	}
+	
+	public void endThread(){
+		super.endThread();
+		synchronized(syncObject){
+			syncObject.notify();
+		}
 	}
 	
 	/**

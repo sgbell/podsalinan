@@ -19,6 +19,7 @@
 package com.mimpidev.podsalinan;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,6 +134,13 @@ public class DataStorage {
 							ProgSettings settings){
 		
 		File podsalinanDBFile = new File(settingsDir.concat(fileSystemSlash+"podsalinan.db"));
+		if (!podsalinanDBFile.exists()){
+			try {
+				podsalinanDBFile.createNewFile();
+			} catch (IOException e) {
+				if (Log.isDebug()) Log.printStackTrace(e.getStackTrace());
+			}
+		}
 		if (podsalinanDBFile.exists()){
 			Database podsalinanDB=null;
 			try {
@@ -184,9 +192,6 @@ public class DataStorage {
 				return -1;
 			}
 			*/
-		} else {
-			//TODO: 1. Need to create the files, otherwise we wont have any history :(
-			
 		}
 		if (!settings.isValidSetting("defaultDirectory")){
 			if (System.getProperty("os.name").startsWith("Windows"))

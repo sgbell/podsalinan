@@ -247,13 +247,13 @@ public class TableView {
 			if (isDbOpen()){
 				try {
 					db.createTable(sql);
+					setTable();
 					return true;
 				} catch (SqliteException e) {
 					if (Log.isDebug())Log.printStackTrace(e.getStackTrace());
 					throw new SqlException(SqlException.CREATE_TABLE_FAILED);
 				}
 			}
-			setTable();
 		}
 		throw new SqlException(SqlException.ERROR_DB_FAILURE);
 	}
