@@ -195,9 +195,9 @@ public class DataStorage {
 		}
 		if (!settings.isValidSetting("defaultDirectory")){
 			if (System.getProperty("os.name").startsWith("Windows"))
-			    settings.addSetting("defaultDirectory", System.getProperty("user.home").concat("\\Download"));
+			    settings.addSetting("defaultDirectory", System.getProperty("user.home").concat("\\Downloads"));
 			else
-			    settings.addSetting("defaultDirectory", System.getProperty("user.home").concat("/Download"));
+			    settings.addSetting("defaultDirectory", System.getProperty("user.home").concat("/Downloads"));
 		}
 		return 0;
 	}
