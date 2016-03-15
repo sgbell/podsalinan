@@ -278,7 +278,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 								}
 								testFileStream.close();
 							} catch (FileNotFoundException e) {
-								e.printStackTrace();
+								download.setStatus(URLDetails.DESTINATION_INVALID);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
