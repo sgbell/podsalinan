@@ -28,7 +28,7 @@ public class ShowSelectedMenu extends CLIOption {
 		final String podcastId = functionParms.get("uid");
 		Podcast currentPodcast = data.getPodcasts().getPodcastByUid(podcastId);
 			if (currentPodcast!=null){
-				if (data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
+				if (data.getSettings().getSettingValue("menuVisible")==null || data.getSettings().getSettingValue("menuVisible").equalsIgnoreCase("true")){
 					System.out.println();
 					ShowPodcastDetails podcastDetail=new ShowPodcastDetails(data);
 					podcastDetail.execute(new HashMap<String,String>(){/**
