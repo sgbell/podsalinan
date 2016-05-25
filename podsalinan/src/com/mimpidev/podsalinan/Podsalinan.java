@@ -93,6 +93,8 @@ public class Podsalinan {
 				}
 				
 				// The following will scan the directory for already downloaded episodes of the podcast and mark them as downloaded
+				//TODO: Add config item that will say whether to mark episodes as not downloaded
+				//TODO: Add config item that will allow us to scan all file systems for files, incase directory has moved
 				podcast.scanDirectory(data);
 
 				/* If autoQueue is set in the program settings to true, or autoQueue is set in the podcast,
