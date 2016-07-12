@@ -195,10 +195,14 @@ public class Downloader extends NotifyingRunnable{
             //open a connection to that source
             HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
 
-            //trying to retrieve data from the source. If there
-            //is no connection, this line will fail
-            @SuppressWarnings("unused")
-			Object objData = urlConnect.getContent();
+            urlConnect.setConnectTimeout(2000);
+            urlConnect.setReadTimeout(2000);
+            //trying to retrieve data from the source.
+            InputStream is = urlConnect.getInputStream();
+			if (is.available()<1){
+				setResult(Status.CONNECTION_FAILED);
+				return false;
+			}
         } catch (UnknownHostException e) {
         		setResult(Status.CONNECTION_FAILED);
                 return false;
@@ -260,6 +264,7 @@ public class Downloader extends NotifyingRunnable{
 					checkURLRedirect(new URL(downloadItem.getURL()));
 					
 					conn = downloadURL.openConnection();
+		            conn.setConnectTimeout(2000);
 					/* The following line gets the file size of the Download. had to do it this 
 					 * way cos URLConnection.getContentLength was an int and couldn't handle over
 					 * 2GB
@@ -390,43 +395,54 @@ public class Downloader extends NotifyingRunnable{
     						//System.out.println("before the download while");
     						if (Log.isDebug()) Log.logInfo(this, "Start to read.");
     						long lastSize=outStream.length();
-    						while (((byteRead = inStream.read(buf)) > 0)
-    								&&(!isStopThread())
-    								&&(downloadItem.getStatus()==URLDetails.CURRENTLY_DOWNLOADING)){
-    							if (isStopThread()) Log.logInfo(this, "Thread Should be stopping.");
-    							outStream.write(buf, 0, byteRead);
-    							saved+=byteRead;
+    						// BufferedStreamReader is locking up when internet connection is lost
+    						boolean keepReading=true;
+    						while (keepReading &&
+    								!isStopThread() &&
+    								downloadItem.getStatus()==URLDetails.CURRENTLY_DOWNLOADING){
+    							if (inStream.available()>0){
+    								if ((byteRead = inStream.read(buf)) == -1){
+    									keepReading=false;
+    								} else {
+    	    							if (isStopThread()) Log.logInfo(this, "Thread Should be stopping.");
+    	    							outStream.write(buf, 0, byteRead);
+    	    							saved+=byteRead;
 
-    							long sleep = (System.currentTimeMillis()-time);
-    							if (((saved-lastSize)/1024)>=getDownloadSpeedLimit() ||
-    									sleep>=1000){
-    								try {
-    									// Every second, check the parent DownloadQueue, and see how many downloaders are active,
-    									// and calculate how fast the downloader should be downloading at.
-    									if (sleep<800){
-    										Thread.sleep(1000-sleep);
-    									}
-   										currentDownloadSpeed=(int) ((outStream.length()-lastSize)/1024);
-   										if (!speedUnlocked)
-   											setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
-   										time=System.currentTimeMillis();
-   										lastSize=outStream.length();
-   										if (!DownloadQueue.timeToDownload()){
-   											setStopThread(true);
-   										}
-    								} catch (InterruptedException e) {
-    									// sleep interrupted
+    	    							long sleep = (System.currentTimeMillis()-time);
+    	    							if (((saved-lastSize)/1024)>=getDownloadSpeedLimit() ||
+    	    									sleep>=1000){
+    	    								try {
+    	    									// Every second, check the parent DownloadQueue, and see how many downloaders are active,
+    	    									// and calculate how fast the downloader should be downloading at.
+    	    									if (sleep<800){
+    	    										Thread.sleep(1000-sleep);
+    	    									}
+    	   										currentDownloadSpeed=(int) ((outStream.length()-lastSize)/1024);
+    	   										if (!speedUnlocked)
+    	   											setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
+    	   										time=System.currentTimeMillis();
+    	   										lastSize=outStream.length();
+    	   										if (!DownloadQueue.timeToDownload()){
+    	   											setStopThread(true);
+    	   										}
+    	    								} catch (InterruptedException e) {
+    	    									// sleep interrupted
+    	    								}
+    	            						/*if (Log.isDebug()) Log.logInfo(this, "Downloading: "+(outStream.length()/1024)+" Kb");
+    	            						if (Log.isDebug()) Log.logInfo(this, "Download Speed: "+currentDownloadSpeed+" KB\\sec");
+    	            						if (Log.isDebug()) Log.logInfo(this, "Download Speed Limit: "+getDownloadSpeedLimit()+" KB\\sec");*/
+    	    							}
+    	    							if (Log.isDebug()) Log.logInfo(this, "While Loop");    									
     								}
-    								/*
-            						if (Log.isDebug()) Log.logInfo(this, "Downloading: "+(outStream.length()/1024)+" Kb");
-            						
-            						if (Log.isDebug()) Log.logInfo(this, "Download Speed: "+currentDownloadSpeed+" KB\\sec");
-            						if (Log.isDebug()) Log.logInfo(this, "Download Speed Limit: "+getDownloadSpeedLimit()+" KB\\sec");
-            						*/
     							}
-    								
+    							if ((isInternetReachable(downloadItem.getURL())) &&
+    								(saved<Long.parseLong(conn.getHeaderFields().get("Content-Length").get(0)))){
+    								keepReading=true;
+    							} else {
+    								keepReading=false;
+    							}
     						}
-    						if (byteRead==-1){
+    						if (!keepReading){
     							// Check if the reason the file download stopped was because the downloader can't find the server
     							if (!isInternetReachable(downloadItem.getURL())){
     								if (Log.isDebug()) Log.logInfo(this, "Can't find the server");
