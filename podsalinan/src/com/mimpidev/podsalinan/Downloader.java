@@ -409,8 +409,8 @@ public class Downloader extends NotifyingRunnable{
     	    							saved+=byteRead;
 
     	    							long sleep = (System.currentTimeMillis()-time);
-    	    							if (((saved-lastSize)/1024)>=getDownloadSpeedLimit() ||
-    	    									sleep>=1000){
+    	    							if ((((saved-lastSize)/1024)>=getDownloadSpeedLimit()) ||
+    	    								(sleep>=1000)){
     	    								try {
     	    									// Every second, check the parent DownloadQueue, and see how many downloaders are active,
     	    									// and calculate how fast the downloader should be downloading at.
@@ -418,8 +418,9 @@ public class Downloader extends NotifyingRunnable{
     	    										Thread.sleep(1000-sleep);
     	    									}
     	   										currentDownloadSpeed=(int) ((outStream.length()-lastSize)/1024);
-    	   										if (!speedUnlocked)
+    	   										if (!speedUnlocked){
     	   											setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
+    	   										}
     	   										time=System.currentTimeMillis();
     	   										lastSize=outStream.length();
     	   										if (!DownloadQueue.timeToDownload()){
@@ -428,19 +429,20 @@ public class Downloader extends NotifyingRunnable{
     	    								} catch (InterruptedException e) {
     	    									// sleep interrupted
     	    								}
-    	            						/*if (Log.isDebug()) Log.logInfo(this, "Downloading: "+(outStream.length()/1024)+" Kb");
+    	            						if (Log.isDebug()) Log.logInfo(this, "Downloading: "+(outStream.length()/1024)+" Kb");
     	            						if (Log.isDebug()) Log.logInfo(this, "Download Speed: "+currentDownloadSpeed+" KB\\sec");
-    	            						if (Log.isDebug()) Log.logInfo(this, "Download Speed Limit: "+getDownloadSpeedLimit()+" KB\\sec");*/
+    	            						if (Log.isDebug()) Log.logInfo(this, "Download Speed Limit: "+getDownloadSpeedLimit()+" KB\\sec");
     	    							}
     	    							if (Log.isDebug()) Log.logInfo(this, "While Loop");    									
     								}
     							}
     							if ((isInternetReachable(downloadItem.getURL())) &&
-    								(saved<Long.parseLong(conn.getHeaderFields().get("Content-Length").get(0)))){
-    								keepReading=true;
-    							} else {
-    								keepReading=false;
-    							}
+           							((conn.getHeaderFields().get("Content-Length")!=null) && 
+           							 (saved<Long.parseLong(conn.getHeaderFields().get("Content-Length").get(0))))){
+       								keepReading=true;
+       							} else {
+       								keepReading=false;
+       							}
     						}
     						if (!keepReading){
     							// Check if the reason the file download stopped was because the downloader can't find the server
@@ -598,5 +600,6 @@ public class Downloader extends NotifyingRunnable{
 	 */
 	public void setDownloadSpeedLimit(int downloadSpeedLimit) {
 		this.downloadSpeedLimit = downloadSpeedLimit;
+		if (Log.isDebug()) Log.logInfo(this, "Speed Limit: "+downloadSpeedLimit);
 	}
 }

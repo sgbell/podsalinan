@@ -404,8 +404,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				currentTotalSpeed += downloader.getCurrentDownloadSpeed();
 			}
 		}
-		
-		if (currentTotalSpeed>downloadLimit){
+		if (activeDownloadersCount()==1){
+			newSpeedLimit=downloadLimit;
+		} else if (currentTotalSpeed>downloadLimit){
 		   newSpeedLimit = (downloadLimit/(activeDownloadersCount()!=0?activeDownloadersCount():1));
 		} else if (currentTotalSpeed<downloadLimit/(activeDownloadersCount()!=0?activeDownloadersCount():1)){
 		   newSpeedLimit = currentSpeed+10;
@@ -415,9 +416,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 		if (newSpeedLimit<=0){
 			newSpeedLimit=1;
 		}
-        /*if (Log.isDebug()) Log.logInfo("DownloadQueue", 398, "Current Speed Limit:"+currentSpeed);
-        if (Log.isDebug()) Log.logInfo("DownloadQueue", 399, "New Speed Limit:"+newSpeedLimit);
-        if (Log.isDebug()) Log.logInfo("", 400, "Total Download Speed: "+currentTotalSpeed);*/
+        /*if (Log.isDebug()) Log.logInfo("DownloadQueue", 418, "Current Speed Limit:"+currentSpeed);
+        if (Log.isDebug()) Log.logInfo("DownloadQueue", 419, "New Speed Limit:"+newSpeedLimit);
+        if (Log.isDebug()) Log.logInfo("DownloadQueue", 420, "Total Download Speed: "+currentTotalSpeed);*/
 		
 		return newSpeedLimit;
 	}
