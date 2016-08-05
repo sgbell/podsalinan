@@ -404,8 +404,9 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 				currentTotalSpeed += downloader.getCurrentDownloadSpeed();
 			}
 		}
-		//TODO: Fix this code, as it's limiting the download to 11kbps and downloads are only going at 1kbps :(
-		if (currentTotalSpeed>downloadLimit){
+		if (activeDownloadersCount()==1){
+			newSpeedLimit=downloadLimit;
+		} else if (currentTotalSpeed>downloadLimit){
            if (Log.isDebug()) Log.logInfo("DownloadQueue", 409, ""+currentTotalSpeed+">"+downloadLimit);
 		   newSpeedLimit = (downloadLimit/(activeDownloadersCount()!=0?activeDownloadersCount():1));
 		} else if (currentTotalSpeed<downloadLimit/(activeDownloadersCount()!=0?activeDownloadersCount():1)){
