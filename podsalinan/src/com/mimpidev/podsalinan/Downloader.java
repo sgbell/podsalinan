@@ -441,6 +441,7 @@ public class Downloader extends NotifyingRunnable{
 								time=System.currentTimeMillis();
         						if (Log.isDebug()) Log.logInfo(this, "Available: "+inStream.available());
     							if (inStream.available()>0){
+    								checkAvailable=0;
        								keepReading=true;
        							} else {
        								checkAvailable++;
