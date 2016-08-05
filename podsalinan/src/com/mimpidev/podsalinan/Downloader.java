@@ -411,6 +411,8 @@ public class Downloader extends NotifyingRunnable{
     	    							long sleep = (System.currentTimeMillis()-time);
     	    							if ((((saved-lastSize)/1024)>=getDownloadSpeedLimit()) ||
     	    								(sleep>=1000)){
+    	    								if (Log.isDebug()) Log.logInfo(this, "Sleep:"+sleep);
+    	    								if (Log.isDebug()) Log.logInfo(this, "Saved:"+(saved-lastSize));
     	    								try {
     	    									// Every second, check the parent DownloadQueue, and see how many downloaders are active,
     	    									// and calculate how fast the downloader should be downloading at.
