@@ -423,7 +423,6 @@ public class Downloader extends NotifyingRunnable{
     	   										if (!speedUnlocked){
     	   											setDownloadSpeedLimit(DownloadQueue.getDownloadSpeedLimit(getCurrentDownloadSpeed()));
     	   										}
-    	   										time=System.currentTimeMillis();
     	   										lastSize=outStream.length();
     	   										if (!DownloadQueue.timeToDownload()){
     	   											setStopThread(true);
@@ -437,10 +436,9 @@ public class Downloader extends NotifyingRunnable{
     	    							}
     	    							if (Log.isDebug()) Log.logInfo(this, "While Loop");    									
     								}
+    								time=System.currentTimeMillis();
     							}
-    							if ((isInternetReachable(downloadItem.getURL())) &&
-           							((conn.getHeaderFields().get("Content-Length")!=null) && 
-           							 (saved<Long.parseLong(conn.getHeaderFields().get("Content-Length").get(0))))){
+    							if (inStream.available()>0){
        								keepReading=true;
        							} else {
        								keepReading=false;
