@@ -398,6 +398,8 @@ public class Downloader extends NotifyingRunnable{
     						// BufferedStreamReader is locking up when internet connection is lost
     						boolean keepReading=true;
     						int checkAvailable=0;
+    						int voidInputBytes=0;
+    						long originalSaved=saved;
     						while (keepReading &&
     								!isStopThread() &&
     								downloadItem.getStatus()==URLDetails.CURRENTLY_DOWNLOADING){
@@ -408,6 +410,13 @@ public class Downloader extends NotifyingRunnable{
     	    							if (isStopThread()) Log.logInfo(this, "Thread Should be stopping.");
     	    							outStream.write(buf, 0, byteRead);
     	    							saved+=byteRead;
+    	    							for (byte b : buf){
+    	    								if (b==0){
+    	    									voidInputBytes++;
+    	    								} else {
+    	    									voidInputBytes=0;
+    	    								}
+    	    							}
 
     	    							long sleep = (System.currentTimeMillis()-time);
     	    							if ((((saved-lastSize)/1024)>=getDownloadSpeedLimit()) ||
@@ -455,6 +464,11 @@ public class Downloader extends NotifyingRunnable{
        									}
        								}
        							}
+    							if (voidInputBytes>=1024000){
+    								keepReading=false;
+    								downloadItem.setStatus(URLDetails.INCOMPLETE_DOWNLOAD);
+    								setResult(Status.CONNECTION_FAILED);
+    							}
     						}
     						if (!keepReading){
     							// Check if the reason the file download stopped was because the downloader can't find the server
@@ -465,6 +479,9 @@ public class Downloader extends NotifyingRunnable{
     							}
     						}
     						inStream.close();
+    						if (voidInputBytes>=1024000){
+    							outStream.setLength(originalSaved);
+    						}
     						outStream.close();					
     						if (Log.isDebug()) Log.logInfo(this, "Finished reading."); 
                         } else {
