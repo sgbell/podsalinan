@@ -202,6 +202,7 @@ public class DownloadQueue implements Runnable, RunnableCompleteListener{
 	 */
 	public void startDownload(Downloader newDownloader){
 		URLDownload download = newDownloader.getURLDownload();
+		//TODO: live threw a nullpointer here
 		updatePodcastEpisodeStatus(download.getPodcastSource(),download.getURL().toString(),URLDetails.CURRENTLY_DOWNLOADING);
 	}
 	

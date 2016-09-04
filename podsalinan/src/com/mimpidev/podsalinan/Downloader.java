@@ -261,7 +261,7 @@ public class Downloader extends NotifyingRunnable{
 					&&(!isStopThread())){
 				//System.out.println("Inside first while");
 				try {
-					checkURLRedirect(new URL(downloadItem.getURL()));
+					//checkURLRedirect(new URL(downloadItem.getURL()));
 					
 					conn = downloadURL.openConnection();
 		            conn.setConnectTimeout(2000);
@@ -368,13 +368,15 @@ public class Downloader extends NotifyingRunnable{
                         if ((outputFile.exists() && outputFile.canWrite())||
                         	 outputFile.createNewFile()){
     						outStream = new RandomAccessFile(downloadItem.getDestinationFile(),"rw");
-    						outStream.seek(saved);
+    						if (saved>0)
+    						   outStream.seek(saved);
     						
     						conn = downloadURL.openConnection();
     						/* Skip incoming connection ahead before we connect a stream to it,
     						 * otherwise it'll waste user bandwidth						
     						 */
-    						conn.setRequestProperty("Range", "bytes="+ saved + "-");
+    						if (saved>0)
+    						   conn.setRequestProperty("Range", "bytes="+ saved + "-");
     						//if (Log.isDebug()) Log.logMap(this, conn.getHeaderFields());
     						if (conn.getHeaderFields().get("Content-Length")!=null){
     							if (saved<Long.parseLong(conn.getHeaderFields().get("Content-Length").get(0))){
@@ -411,7 +413,7 @@ public class Downloader extends NotifyingRunnable{
     	    							outStream.write(buf, 0, byteRead);
     	    							saved+=byteRead;
     	    							for (byte b : buf){
-    	    								if (b==0){
+    	    								if (b==0x0){
     	    									voidInputBytes++;
     	    								} else {
     	    									voidInputBytes=0;
